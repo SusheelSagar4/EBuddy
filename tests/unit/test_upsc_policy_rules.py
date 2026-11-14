@@ -36,6 +36,11 @@ class TestUPSCPolicyRules(unittest.TestCase):
         res_sem4 = self.policy.r1_workload_overload(semester=4, weekly_hours_available=5.0)
         self.assertFalse(res_sem4["triggered"])
 
+        # Placement active, BTP deadline within 21d, and end-sem within 14d triggers
+        self.assertTrue(self.policy.r1_workload_overload(semester=6, placement_season_active=True)["triggered"])
+        self.assertTrue(self.policy.r1_workload_overload(semester=7, btp_deadline_within_21d=True)["triggered"])
+        self.assertTrue(self.policy.r1_workload_overload(semester=6, end_sem_within_14d=True)["triggered"])
+
     def test_02_r02_cgpa_guard(self):
         """Rule R2: (b) CGPA 6.4 (< 6.5 floor) caps weekly UPSC hours and routes to fallback."""
         res = self.policy.r2_cgpa_guard(student_cgpa=6.4, semester=5, programme="BTECH_EE")
@@ -131,11 +136,30 @@ class TestUPSCPolicyRules(unittest.TestCase):
         # Confirms F04 warning is present
         self.assertIn("appears in any one Prelims paper", res["f04_warning"])
 
+        # Static pass1 completed (0.85) but 8 mocks with average below target triggers deferral
+        res_mocks = self.policy.r7_attempt_decision(
+            semester=8,
+            static_pass1_completion=0.85,
+            gs_mock_scores=[70.0] * 8
+        )
+        self.assertTrue(res_mocks["triggered"])
+        self.assertTrue(res_mocks["defer_first_attempt"])
+        self.assertEqual(res_mocks["gs_mock_count"], 8)
+
     def test_08_r08_late_start(self):
-        """Rule R8: (c) Sem 7 student with static_pass1_completion < 0.5 returns attempt-after-graduation default."""
+        """Rule R8: (c) sem >= 6 student with static_pass1_completion < 0.5 returns attempt-after-graduation default."""
         res_default = self.policy.r8_late_start(semester=7, static_pass1_completion=0.4, weekly_hours_available=10.0)
         self.assertTrue(res_default["triggered"])
         self.assertEqual(res_default["recommendation"], "attempt_after_graduation")
+
+        # Applies for sem 6 as well
+        res_sem6 = self.policy.r8_late_start(semester=6, static_pass1_completion=0.45)
+        self.assertTrue(res_sem6["triggered"])
+        self.assertEqual(res_sem6["recommendation"], "attempt_after_graduation")
+
+        # Sem 5 (before sem 6) does not trigger R8
+        res_sem5 = self.policy.r8_late_start(semester=5, static_pass1_completion=0.45)
+        self.assertFalse(res_sem5["triggered"])
 
         # Student insists on Sem 8 with >= 15 hrs available -> compressed static sprint
         res_sprint = self.policy.r8_late_start(semester=7, static_pass1_completion=0.4, weekly_hours_available=16.0, student_insists_sem8=True)
