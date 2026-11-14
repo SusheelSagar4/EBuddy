@@ -98,5 +98,56 @@ class LLMClient:
             self._log_call(f"{self.model}-fallback", purpose, len(prompt)//4, 50, duration_ms)
             return self.fake.complete(prompt, schema)
 
+    def completion(
+        self,
+        messages: Any,
+        temperature: float = 0.2,
+        timeout: int = 30,
+        num_retries: int = 2,
+        purpose: str = "recommender_explanation",
+    ) -> Optional[str]:
+        """Direct chat completion through LiteLLM reading config dynamically from env vars."""
+        start_t = time.time()
+        model = os.getenv("LLM_MODEL", self.model)
+        api_key = os.getenv("LLM_API_KEY", self.api_key or "")
+        api_base = os.getenv("LLM_API_BASE", self.api_base or "")
+
+        if (
+            os.getenv("PYTEST_CURRENT_TEST")
+            or not model
+            or model.lower() in ["fake", "test", "mock", ""]
+            or not api_key
+            or api_key.startswith("your_api_key")
+        ):
+            return None
+
+        try:
+            import litellm
+            litellm.telemetry = False
+            litellm.local_model_cost_map = True
+
+            kwargs: Dict[str, Any] = {
+                "model": model,
+                "messages": messages,
+                "temperature": temperature,
+                "timeout": timeout,
+                "num_retries": num_retries,
+            }
+            if api_base:
+                kwargs["api_base"] = api_base
+            if api_key:
+                kwargs["api_key"] = api_key
+
+            response = litellm.completion(**kwargs)
+            duration_ms = int((time.time() - start_t) * 1000)
+            raw_text = response.choices[0].message.content
+            prompt_toks = getattr(response.usage, "prompt_tokens", 50)
+            comp_toks = getattr(response.usage, "completion_tokens", len(raw_text) // 4)
+            self._log_call(model, purpose, prompt_toks, comp_toks, duration_ms)
+            return raw_text
+        except Exception as e:
+            logger.warning(f"LiteLLM completion failed ({str(e)}), returning None for template fallback.")
+            return None
+
 # Global singleton client
 llm_client = LLMClient()
