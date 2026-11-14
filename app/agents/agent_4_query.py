@@ -82,19 +82,37 @@ class QueryAdaptationAgent:
                 "disclaimer": context_card.disclaimer
             }
 
-        # 3. Excessive Credit Load Request -> Strict Regulatory Refusal
+        # 3. Credit Load Request -> Labelled Warning under unsourced_baseline rules
         if any(kw in msg_lower for kw in ["credit cap", "exceed", "30 credit", "32 credit", "35 credit", "overload"]):
             intent = Intent.PLAN_QUERY
+            proposal = ChangeProposal(
+                proposal_id=f"PROP_OVERLOAD_{uuid.uuid4().hex[:8]}",
+                student_id=student_id,
+                proposer_agent="agent_4_query",
+                proposal_type="credit_overload",
+                status="pending_student_approval",
+                reasoning=f"[WARNING: unsourced_baseline] Student requested credit overload ('{message}') exceeding baseline cap of 26.0 credits (RULE_SEM_CREDIT_CAP_REGULAR).",
+                target_week=context_card.current_semester,
+                proposed_modifications={
+                    "requested_credits": 30.0,
+                    "baseline_limit": 26.0,
+                    "condition": "requires_dean_senate_approval"
+                },
+                impact_summary="[WARNING: unsourced_baseline] Overload exceeds 26-credit baseline limit; recommendation subject to academic advisor confirmation.",
+                created_at=datetime.now(timezone.utc)
+            )
             resp_text = (
-                "Regulatory Notice: Under IIT Bhubaneswar academic regulations (RULE_SEM_CREDIT_CAP_REGULAR), "
-                "the regular semester credit ceiling is capped at 26 credits (normal workload 22-25 credits). "
-                "Exceeding this limit is not permitted in standard registration and requires special Senate/Dean approval. "
-                "I have constrained your study schedule within verified institutional credit boundaries."
+                "[WARNING: unsourced_baseline] Academic Advisory: Under IIT Bhubaneswar baseline guidelines "
+                "(RULE_SEM_CREDIT_CAP_REGULAR), the regular semester credit ceiling is normally 26 credits. "
+                "Because this limit originates from unverified baseline rules, I have prepared a provisional "
+                "Overload Proposal for you rather than hard-blocking your request. "
+                "Note that registering beyond 26 credits requires departmental advisor and Senate approval.\n\n"
+                "👉 *Please review the provisional overload proposal above.*"
             )
             return {
                 "inferred_intent": intent.value,
                 "response": resp_text,
-                "proposal": None,
+                "proposal": proposal.model_dump(),
                 "disclaimer": context_card.disclaimer
             }
 

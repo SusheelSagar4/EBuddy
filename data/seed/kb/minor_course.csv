@@ -1,0 +1,5 @@
+minor_id,course_id,is_mandatory,status,source_id
+MINOR_CSE,CS4L003,False,draft_for_review,DESIGN_TEAM
+MINOR_CSE,CS6L001,False,draft_for_review,DESIGN_TEAM
+MINOR_DS,CS4L003,False,draft_for_review,DESIGN_TEAM
+MINOR_DS,CS6L001,False,draft_for_review,DESIGN_TEAM

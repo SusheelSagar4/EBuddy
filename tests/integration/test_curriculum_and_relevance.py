@@ -93,7 +93,7 @@ def test_03_minor_course_eligibility_and_recommendation():
     """
     Minor courses are selectable subject to academic eligibility:
     Sem >= 5, CGPA >= 8.0, 0 backlogs.
-    If eligible and completed CS1L001 (prerequisite), CS4L003 (Machine Learning) is recommended.
+    If eligible and completed CS1L001 (prerequisite), CS4L003 (Artificial Intelligence) is recommended.
     If ineligible (e.g. CGPA < 8.0 or Sem < 5), minor courses are not recommended.
     """
     planner = Planner()
@@ -341,3 +341,78 @@ def test_10_elective_with_unmet_prereq_never_recommended():
     assert len(ranked_satisfied) == 1
     assert ranked_satisfied[0]["course_id"] == "CS4L003"
     assert ranked_satisfied[0]["prerequisites_satisfied"] is True
+
+def test_11_unsourced_baseline_rules_emit_warnings_without_hard_blocking():
+    """
+    Item 2: Unsourced baseline rules (credit cap, minor eligibility) must produce
+    labelled WARNINGS rather than hard-blocking or silently dropping courses.
+    """
+    planner = Planner()
+    validator = roadmap_orchestrator.agent_1.validator_engine
+
+    student = StudentProfile(
+        student_id="STU_OVERLOAD_TEST",
+        name="Ankit Mehra",
+        programme_id="BTECH_EE",
+        current_semester=5,
+        cgpa=8.5,
+        backlogs=0
+    )
+    goal = Goal(
+        goal_id="GOAL_EE_CORE_POWER",
+        name="Power Systems",
+        category="career",
+        description="Power",
+        source_id="TEST"
+    )
+
+    # In Sem 5 EE, core courses + electives + minor reaches 27.0 credits (> 26.0 baseline cap)
+    plan = planner.generate_plan(
+        student=student,
+        goal=goal,
+        gaps=[],
+        constraints=[],
+        preferences=[],
+        completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
+    )
+
+    # 1. Verify courses were NOT silently dropped
+    course_items = [it for it in plan.items if it.item_type == "course"]
+    assert len(course_items) >= 7
+
+    # 2. Verify labelled warning is attached to reason/compliance
+    warning_items = [it for it in course_items if any("unsourced_baseline" in w for w in it.reason.rule_compliance)]
+    assert len(warning_items) > 0, "Overload item must carry [WARNING: unsourced_baseline] label"
+
+    # 3. Verify PlanValidator validates without failing the plan
+    report = validator.validate_plan(plan, student, completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"])
+    assert report.passed is True, "Unsourced baseline warning must not hard-fail validation"
+    assert any("[WARNING" in msg for msg in report.messages), "Report messages must include labelled warning"
+
+def test_12_agent_4_overload_emits_unsourced_baseline_warning_proposal():
+    """
+    Item 2: Agent 4 handles credit overload request by generating a proposal
+    with [WARNING: unsourced_baseline] rather than hard refusal.
+    """
+    student_id = "STU_AGENT4_OVERLOAD"
+    onboard(OnboardRequest(
+        student_id=student_id,
+        name="Sanjay Rao",
+        programme_id="BTECH_EE",
+        current_semester=3,
+        cgpa=8.5,
+        backlogs=0,
+        goal_id="GOAL_EE_CORE_POWER",
+        completed_course_ids=["MA1L001", "CS1L001"]
+    ))
+    generate_plan(student_id)
+
+    chat_res = chat(
+        student_id=student_id,
+        req=ChatRequest(message="I want to take 30 credits this semester, please overload my courses.")
+    )
+
+    assert chat_res["proposal"] is not None, "Agent 4 must produce a proposal rather than hard-blocking"
+    assert "[WARNING: unsourced_baseline]" in chat_res["response"]
+    assert "unsourced_baseline" in chat_res["proposal"]["impact_summary"]
+

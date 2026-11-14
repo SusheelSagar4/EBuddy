@@ -33,7 +33,9 @@ class CourseRelevanceEngine:
                     gid = r["goal_id"].strip()
                     score = int(r["relevance_score"])
                     rationale = r.get("rationale", "")
-                    self.relevance_map[(cid, gid)] = (score, rationale)
+                    status = r.get("status", "draft_for_review")
+                    source_id = r.get("source_id", "DESIGN_TEAM")
+                    self.relevance_map[(cid, gid)] = (score, rationale, status, source_id)
 
         # 2. Load course skills for dynamic gap boosting
         cs_path = os.path.join(self.seed_dir, "course_skill.csv")
@@ -46,8 +48,19 @@ class CourseRelevanceEngine:
                     self.course_skills.setdefault(cid, set()).add(sid)
 
     def get_relevance(self, course_id: str, goal_id: str) -> Tuple[int, str]:
-        """Returns the canonical (score_0_to_3, rationale) for a course against a goal."""
-        return self.relevance_map.get((course_id, goal_id), (1, "General engineering curriculum"))
+        """Returns the canonical (score_0_to_3, rationale) for backwards compatibility."""
+        entry = self.relevance_map.get((course_id, goal_id), (1, "General engineering curriculum", "draft_for_review", "DESIGN_TEAM"))
+        return entry[0], entry[1]
+
+    def get_relevance_details(self, course_id: str, goal_id: str) -> Dict[str, Any]:
+        """Returns the full relevance metadata including status and source_id."""
+        entry = self.relevance_map.get((course_id, goal_id), (1, "General engineering curriculum", "draft_for_review", "DESIGN_TEAM"))
+        return {
+            "score": entry[0],
+            "rationale": entry[1],
+            "status": entry[2],
+            "source_id": entry[3]
+        }
 
     def rank_electives(
         self,
@@ -81,8 +94,12 @@ class CourseRelevanceEngine:
                 # Unmet prerequisite! Strictly exclude from recommendation
                 continue
 
-            # 3. Base relevance (0-3 scale)
-            base_score, rationale = self.get_relevance(cid, goal_id)
+            # 3. Base relevance (0-3 scale) with provenance metadata
+            rel_details = self.get_relevance_details(cid, goal_id)
+            base_score = rel_details["score"]
+            rationale = rel_details["rationale"]
+            status = rel_details["status"]
+            source_id = rel_details["source_id"]
 
             # 4. Skill gap boost (up to +1.0 for closing active gaps)
             gap_boost = 0.0
@@ -99,6 +116,8 @@ class CourseRelevanceEngine:
                 "base_relevance": base_score,
                 "total_rank": round(total_rank, 2),
                 "rationale": rationale,
+                "status": status,
+                "source_id": source_id,
                 "closed_gaps": closed_gaps,
                 "prerequisites_satisfied": True
             })
@@ -106,3 +125,4 @@ class CourseRelevanceEngine:
         # Sort descending by total_rank, then base_relevance
         ranked_candidates.sort(key=lambda x: (x["total_rank"], x["base_relevance"]), reverse=True)
         return ranked_candidates
+

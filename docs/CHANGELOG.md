@@ -2,6 +2,27 @@
 
 All notable changes and phase milestones are documented in this file.
 
+## [Contracts v1.1.0 & Four-Agent Architecture] - 2026-11-14
+### Added
+- **Domain Contracts (`app/contracts/`):**
+  - Bumped contract version to `1.1.0` in `app/contracts/VERSION`.
+  - Added `ChangeProposal` and `ProposalStatus` (`app/contracts/proposal.py`).
+  - Added `WeeklyRoadmap`, `DailyTask`, and `RoadmapVersionRecord` (`app/contracts/roadmap.py`).
+  - Exported 28 JSON schemas to `docs/contracts/*.json`.
+- **Four-Agent Architecture (`app/agents/`):**
+  - `RoadmapPlannerAgent` (Agent 1): Sole designated writer for roadmap versions and weekly roadmaps.
+  - `LearningResourceAgent` (Agent 2): Daily resource curation and backup alternative retrieval with zero URL fabrication.
+  - `AssessmentQuizAgent` (Agent 3): Diagnostic generation, grading, and remediation proposals for low mastery.
+  - `QueryAdaptationAgent` (Agent 4): Student conversation, prompt-injection defense, and workload reduction proposals.
+- **Curriculum and Course Relevance Engine:**
+  - `CourseRelevanceEngine` (`app/engine/relevance.py`) and seed dataset `relevance_tags.csv` (1,496 rows with `status="draft_for_review"` and `source_id="DESIGN_TEAM"`).
+  - Branch-specific core curriculum enforcement: major/core courses are fixed and never excluded by career relevance.
+  - Strict academic prerequisite gating: electives with unmet prerequisites are never recommended.
+  - Dynamic minor course track (`data/seed/kb/minor_course.csv`).
+  - Unsourced baseline rules (credit cap, minor eligibility) emit labeled warnings without silently dropping courses.
+- **Clean Architecture Import Boundaries:**
+  - Added `test_agents_import_boundaries` to `tests/unit/test_import_boundaries.py` ensuring `app/agents/` never imports `litellm` directly or `app/api/`.
+
 ## [Phase F: Foundation & Team Architecture] - 2026-11-14
 ### Added
 - **F1 Shared Frozen Contracts (`app/contracts/`):**

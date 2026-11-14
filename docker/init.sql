@@ -114,7 +114,9 @@ CREATE TABLE IF NOT EXISTS kb.minor (
 CREATE TABLE IF NOT EXISTS kb.minor_course (
     minor_id VARCHAR(50) REFERENCES kb.minor(minor_id) ON DELETE CASCADE,
     course_id VARCHAR(50) REFERENCES kb.course(course_id) ON DELETE CASCADE,
-    is_mandatory BOOLEAN DEFAULT TRUE,
+    is_mandatory BOOLEAN DEFAULT FALSE,
+    status VARCHAR(50) DEFAULT 'draft_for_review',
+    source_id VARCHAR(100) REFERENCES kb.source(source_id),
     PRIMARY KEY (minor_id, course_id)
 );
 
@@ -491,13 +493,13 @@ CREATE TABLE IF NOT EXISTS plan.change_proposal (
 
 CREATE TABLE IF NOT EXISTS plan.roadmap_version (
     version_id SERIAL PRIMARY KEY,
-    plan_id VARCHAR(100) NOT NULL,
+    plan_id VARCHAR(100) NOT NULL REFERENCES plan.plan(plan_id) ON DELETE CASCADE,
+    diff_id INT REFERENCES plan.plan_diff(diff_id),
     student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
     version_number INT NOT NULL,
     commit_reason TEXT NOT NULL,
     approved_proposal_id VARCHAR(100) REFERENCES plan.change_proposal(proposal_id),
     plan_snapshot JSONB NOT NULL,
-    diff_from_previous JSONB,
     committed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

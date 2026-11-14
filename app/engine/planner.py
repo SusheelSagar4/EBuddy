@@ -35,6 +35,7 @@ class Planner(IPlanner):
         self.course_info: Dict[str, Dict[str, Any]] = {}
         self.prog_requirements: Dict[Tuple[str, int], List[Dict[str, Any]]] = {} # (prog_id, sem) -> [req_row]
         self.slot_options: Dict[str, List[str]] = {} # slot_id -> [course_id]
+        self.minor_courses: Dict[str, List[str]] = {} # minor_id -> [course_id]
         self._load_knowledge_base()
 
     def _load_knowledge_base(self):
@@ -86,6 +87,16 @@ class Planner(IPlanner):
                     slot = r["slot_id"].strip()
                     cid = r["course_id"].strip()
                     self.slot_options.setdefault(slot, []).append(cid)
+
+        # 5. Minor courses
+        mc_file = os.path.join(self.seed_dir, "minor_course.csv")
+        if os.path.exists(mc_file):
+            with open(mc_file, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for r in reader:
+                    mid = r["minor_id"].strip()
+                    cid = r["course_id"].strip()
+                    self.minor_courses.setdefault(mid, []).append(cid)
 
     def _topological_sort_courses(self, course_ids: List[str]) -> List[str]:
         """Ensures courses within the same batch are ordered so prerequisites precede dependents."""
@@ -251,46 +262,51 @@ class Planner(IPlanner):
                         top_pick = ranked[0]
                         elec_cid = top_pick["course_id"]
                         elec_credits = self.course_info.get(elec_cid, {}).get("credits", 3.0)
-                        if current_sem_credits + elec_credits <= 26.0:
-                            current_sem_credits += elec_credits
-                            assigned_courses.add(elec_cid)
+                        exceeds_cap = (current_sem_credits + elec_credits > 26.0)
+                        current_sem_credits += elec_credits
+                        assigned_courses.add(elec_cid)
 
-                            items.append(PlanItem(
-                                item_id=f"ITEM_ELEC_{elec_cid}_{uuid.uuid4().hex[:6]}",
-                                item_type="course",
-                                course_id=elec_cid,
-                                semester_number=current_sem,
-                                estimated_hours=4.0,
-                                reason=StructuredReason(
-                                    intent=f"Recommended Elective ({slot_name})",
-                                    target_skills=self.course_skills.get(elec_cid, []),
-                                    why_this=f"Selected for slot {slot_id} based on career relevance to {goal.name} (Score: {top_pick['base_relevance']}/3: {top_pick['rationale']}) and skill gap alignment.",
-                                    prerequisite_for=[],
-                                    rule_compliance=["Prerequisites verified satisfied", "Complies with curriculum slot options"]
-                                )
-                            ))
-                            items.append(PlanItem(
-                                item_id=f"ITEM_EX_{elec_cid}_{uuid.uuid4().hex[:6]}",
-                                item_type="exercise",
-                                course_id=elec_cid,
-                                semester_number=current_sem,
-                                estimated_hours=2.0,
-                                reason=StructuredReason(
-                                    intent=f"Elective Practice: {elec_cid}",
-                                    target_skills=self.course_skills.get(elec_cid, []),
-                                    why_this=f"Active problem solving for elective course {elec_cid}.",
-                                    prerequisite_for=[],
-                                    rule_compliance=[]
-                                )
-                            ))
+                        why_this = f"Selected for slot {slot_id} based on career relevance to {goal.name} (Score: {top_pick['base_relevance']}/3: {top_pick['rationale']} [Status: {top_pick.get('status', 'draft_for_review')}, Source: {top_pick.get('source_id', 'DESIGN_TEAM')}]) and skill gap alignment."
+                        rule_comp = ["Prerequisites verified satisfied", "Complies with curriculum slot options"]
+                        if exceeds_cap:
+                            why_this += " [WARNING: unsourced_baseline] Total semester credits exceed 26.0 baseline credit cap."
+                            rule_comp.append("[WARNING: unsourced_baseline] Exceeds 26.0 baseline credit cap (RULE_SEM_CREDIT_CAP_REGULAR)")
+
+                        items.append(PlanItem(
+                            item_id=f"ITEM_ELEC_{elec_cid}_{uuid.uuid4().hex[:6]}",
+                            item_type="course",
+                            course_id=elec_cid,
+                            semester_number=current_sem,
+                            estimated_hours=4.0,
+                            reason=StructuredReason(
+                                intent=f"Recommended Elective ({slot_name})",
+                                target_skills=self.course_skills.get(elec_cid, []),
+                                why_this=why_this,
+                                prerequisite_for=[],
+                                rule_compliance=rule_comp
+                            )
+                        ))
+                        items.append(PlanItem(
+                            item_id=f"ITEM_EX_{elec_cid}_{uuid.uuid4().hex[:6]}",
+                            item_type="exercise",
+                            course_id=elec_cid,
+                            semester_number=current_sem,
+                            estimated_hours=2.0,
+                            reason=StructuredReason(
+                                intent=f"Elective Practice: {elec_cid}",
+                                target_skills=self.course_skills.get(elec_cid, []),
+                                why_this=f"Active problem solving for elective course {elec_cid}.",
+                                prerequisite_for=[],
+                                rule_compliance=[]
+                            )
+                        ))
 
             # =========================================================================
             # PHASE C: Minor Track (Optional Recommendation if Eligible)
             # =========================================================================
-            if self.rule_engine.check_minor_eligibility(student):
-                current_credits = sum(self.course_info.get(it.course_id, {}).get("credits", 0.0) for it in items if it.item_type == "course" and it.course_id)
-                # Candidates from Computer Science / Data Science minor (theory electives)
-                minor_candidates = [c for c in ["CS4L003", "CS6L001"] if c not in assigned_courses]
+            # Minor candidates are loaded from data/seed/kb/minor_course.csv (draft_for_review)
+            minor_candidates = [c for c in self.minor_courses.get("MINOR_CSE", []) if c not in assigned_courses]
+            if minor_candidates and self.rule_engine.check_minor_eligibility(student):
                 ranked_minor = self.relevance_engine.rank_electives(
                     candidate_course_ids=minor_candidates,
                     goal_id=goal.goal_id,
@@ -302,22 +318,30 @@ class Planner(IPlanner):
                     top_minor = ranked_minor[0]
                     m_cid = top_minor["course_id"]
                     m_credits = self.course_info.get(m_cid, {}).get("credits", 3.0)
-                    if self.rule_engine.check_credit_cap(student, current_credits + m_credits):
-                        assigned_courses.add(m_cid)
-                        items.append(PlanItem(
-                            item_id=f"ITEM_MIN_{m_cid}_{uuid.uuid4().hex[:6]}",
-                            item_type="course",
-                            course_id=m_cid,
-                            semester_number=current_sem,
-                            estimated_hours=4.0,
-                            reason=StructuredReason(
-                                intent="Approved Minor Course Track",
-                                target_skills=self.course_skills.get(m_cid, []),
-                                why_this=f"Student satisfies minor eligibility (Sem {current_sem} >= 5, CGPA {student.cgpa} >= 8.0). Course {m_cid} selected for CSE/DS Minor to accelerate {goal.name} (Relevance {top_minor['base_relevance']}/3: {top_minor['rationale']}).",
-                                prerequisite_for=[],
-                                rule_compliance=["Satisfies minor eligibility rules", "Complies with institutional credit cap"]
-                            )
-                        ))
+                    exceeds_minor_cap = (current_sem_credits + m_credits > 26.0)
+                    current_sem_credits += m_credits
+                    assigned_courses.add(m_cid)
+
+                    m_why = f"Student satisfies minor eligibility (Sem {current_sem} >= 5, CGPA {student.cgpa} >= 8.0). Course {m_cid} selected for CSE/DS Minor to accelerate {goal.name} (Relevance {top_minor['base_relevance']}/3: {top_minor['rationale']} [Status: {top_minor.get('status', 'draft_for_review')}])."
+                    m_comp = ["Satisfies minor eligibility rules [draft_for_review data]"]
+                    if exceeds_minor_cap:
+                        m_why += " [WARNING: unsourced_baseline] Total semester credits exceed 26.0 baseline credit cap."
+                        m_comp.append("[WARNING: unsourced_baseline] Exceeds 26.0 baseline credit cap (RULE_SEM_CREDIT_CAP_REGULAR)")
+
+                    items.append(PlanItem(
+                        item_id=f"ITEM_MIN_{m_cid}_{uuid.uuid4().hex[:6]}",
+                        item_type="course",
+                        course_id=m_cid,
+                        semester_number=current_sem,
+                        estimated_hours=4.0,
+                        reason=StructuredReason(
+                            intent="Approved Minor Course Track",
+                            target_skills=self.course_skills.get(m_cid, []),
+                            why_this=m_why,
+                            prerequisite_for=[],
+                            rule_compliance=m_comp
+                        )
+                    ))
 
         else:
             # Fallback for unconfigured programmes: plan from skill gaps
