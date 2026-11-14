@@ -250,32 +250,46 @@ python scripts/check_data.py
 │       ├── higher_studies/               # 14 relational tables for higher studies pathways
 │       ├── student/                      # Student profiles, completed courses, and goals
 │       └── survey/                       # Baseline survey instrument & diagnostic rubrics
-├── output/                               # Generated relational CSV knowledge bases
-│   ├── 01_roadmap.csv                    # 6-phase overview roadmap with objectives & outcomes
-│   ├── 02_phase_resources.csv            # 55 phase-wise curated learning resources
-│   ├── 03_prerequisites.csv             # Relational prerequisite DAG & high school math expansions
-│   ├── 01_events_master.csv              # Unified events catalog (FEST, HACKATHON, COMPETITION)
-│   ├── 02_phase_eligibility.csv          # Gating rules & user messages across learner stages
-│   ├── 03_recommendation_rules.csv       # Machine-readable recommendation engine rules (R01–R14)
-│   ├── 04_domain_to_phase_map.csv        # Topic tagging, prerequisite phases & beginner flags
-│   ├── 01_sde_roadmap_overview.csv       # 8-phase SDE prep roadmap overview (35 topics)
-│   ├── 02_phase_learning_content.csv     # 105 tiered learning resources (Tiers A, B, C)
-│   ├── 03_topic_checkpoints.csv          # 35 proof-of-learning checkpoints & passing criteria
-│   ├── 04_project_repos.csv              # 35 curated GitHub repos with required skills & phases
-│   ├── 05_portfolio_projects.csv         # 8 flagship resume portfolio projects
-│   ├── 01_sde_events_master.csv          # 41 curated SDE fests, hackathons & competitions
-│   ├── 02_sde_phase_eligibility.csv      # SDE stage-wise eligibility & unlock quotas (9 stages)
-│   └── 03_sde_recommendation_rules.csv   # Engine rules governing SDE event recommendations (R01–R14)
-├── AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx # Source learning roadmap Excel
-├── top7_iit_fests_26-27.xlsx             # Source Top 7 IIT fests & AI/ML hackathons Excel
-├── ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx # Verified mirror Excel
-├── SDE_Prep_Roadmap_with_Playlists.xlsx  # Source SDE prep roadmap & playlists Excel
-├── Top_SDE_Project_GitHub_Repos.xlsx     # Source top SDE GitHub repos & portfolio path Excel
-├── SDE_Competitions_Hackathons_2026-27.xlsx # Source SDE hackathons, fests & competitions Excel
-├── build_csvs.py                         # Single-run pipeline for roadmap knowledge base
-├── build_events_csvs.py                  # Single-run pipeline for events & competitions knowledge base
-├── build_sde_csvs.py                     # Single-run pipeline for SDE knowledge base
-├── build_sde_events_csvs.py              # Single-run pipeline for SDE events & competitions knowledge base
+├── sde/                                  # Software Development Engineer (SDE) domain package
+│   ├── data/                             # Raw SDE Excel knowledge base sources
+│   │   ├── SDE_Prep_Roadmap_with_Playlists.xlsx
+│   │   ├── Top_SDE_Project_GitHub_Repos.xlsx
+│   │   └── SDE_Competitions_Hackathons_2026-27.xlsx
+│   ├── scripts/                          # SDE transformation pipelines
+│   │   ├── build_sde_csvs.py             # SDE roadmap, playlists, checkpoints, repos & portfolio builder
+│   │   └── build_sde_events_csvs.py      # SDE hackathons & competitions knowledge base builder
+│   ├── output/                           # Generated SDE relational CSV datasets
+│   │   ├── 01_sde_roadmap_overview.csv
+│   │   ├── 02_phase_learning_content.csv
+│   │   ├── 03_topic_checkpoints.csv
+│   │   ├── 04_project_repos.csv
+│   │   ├── 05_portfolio_projects.csv
+│   │   ├── 01_events_master.csv
+│   │   ├── 02_phase_eligibility.csv
+│   │   └── 03_recommendation_rules.csv
+│   └── README.md                         # SDE domain catalog & execution guide
+├── aiml/                                 # AI & Machine Learning (AI/ML) domain package
+│   ├── data/                             # Raw AI/ML Excel knowledge base sources
+│   │   ├── AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx
+│   │   ├── top7_iit_fests_26-27.xlsx
+│   │   └── ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx
+│   ├── scripts/                          # AI/ML transformation pipelines
+│   │   ├── build_csvs.py                 # AI/ML curriculum, resources & prerequisite DAG builder
+│   │   └── build_events_csvs.py          # AI/ML hackathons, fests & recommendation rules builder
+│   ├── output/                           # Generated AI/ML relational CSV datasets
+│   │   ├── 01_roadmap.csv
+│   │   ├── 02_phase_resources.csv
+│   │   ├── 03_prerequisites.csv
+│   │   ├── 01_events_master.csv
+│   │   ├── 02_phase_eligibility.csv
+│   │   ├── 03_recommendation_rules.csv
+│   │   └── 04_domain_to_phase_map.csv
+│   └── README.md                         # AI/ML domain catalog & execution guide
+├── output/                               # Unified legacy output directory (synchronized mirrors)
+├── build_csvs.py                         # Root forwarder -> aiml/scripts/build_csvs.py
+├── build_events_csvs.py                  # Root forwarder -> aiml/scripts/build_events_csvs.py
+├── build_sde_csvs.py                     # Root forwarder -> sde/scripts/build_sde_csvs.py
+├── build_sde_events_csvs.py              # Root forwarder -> sde/scripts/build_sde_events_csvs.py
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
@@ -411,6 +425,38 @@ An automated data engineering pipeline (`build_sde_events_csvs.py`) ingests offi
 python build_sde_events_csvs.py
 ```
 *The pipeline executes automated validation assertions, verifying row counts (41 events, 9 stages, 14 rules), category distribution (2 FEST / 26 HACKATHON / 13 COMPETITION), period partition (27 Nov–Mar / 14 Apr–Nov), ISO month format compliance, and exact cell preservation against raw source data.*
+
+---
+
+## 15. Domain-Oriented Directory Architecture (SDE & AI/ML)
+
+The repository organizes data assets, transformation pipelines, and generated knowledge bases into two dedicated domain packages:
+
+1. **`sde/` Package**:
+   - `sde/data/`: Official Excel workbooks (`SDE_Prep_Roadmap_with_Playlists.xlsx`, `Top_SDE_Project_GitHub_Repos.xlsx`, `SDE_Competitions_Hackathons_2026-27.xlsx`).
+   - `sde/scripts/`: Standalone Python transformation scripts (`build_sde_csvs.py`, `build_sde_events_csvs.py`).
+   - `sde/output/`: Relational CSV outputs for curriculum overview, tiered learning resources, topic checkpoints, project repos, portfolio projects, events master, phase eligibility, and engine rules.
+   - `sde/README.md`: Detailed documentation and data dictionaries for the SDE track.
+
+2. **`aiml/` Package**:
+   - `aiml/data/`: Official Excel workbooks (`AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx`, `top7_iit_fests_26-27.xlsx`, `ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx`).
+   - `aiml/scripts/`: Standalone Python transformation scripts (`build_csvs.py`, `build_events_csvs.py`).
+   - `aiml/output/`: Relational CSV outputs for 6-phase roadmap, 55 curated resources, prerequisite DAG, events master, eligibility rules, recommendation rules, and domain taxonomy.
+   - `aiml/README.md`: Detailed documentation and data dictionaries for the AI/ML track.
+
+### Execution Flexibility
+All transformation pipelines include intelligent path resolution and can be invoked either from the root or directly within their package directories:
+```bash
+# SDE Pipelines
+python sde/scripts/build_sde_csvs.py
+python sde/scripts/build_sde_events_csvs.py
+
+# AI/ML Pipelines
+python aiml/scripts/build_csvs.py
+python aiml/scripts/build_events_csvs.py
+```
+*Root-level forwarders (`build_csvs.py`, `build_events_csvs.py`, `build_sde_csvs.py`, `build_sde_events_csvs.py`) and legacy `output/` directories are maintained for seamless backward compatibility.*
+
 
 
 
