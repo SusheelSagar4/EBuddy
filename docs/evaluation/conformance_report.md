@@ -1,8 +1,8 @@
 # Persona Conformance Report (F4)
 
-**Execution Date:** 2026-11-14 18:42:31 UTC
+**Execution Date:** 2026-11-14 19:11:00 UTC
 **Runner:** `FakeLLM` deterministic test runner (Zero outbound network calls)
-**Test Suite Result:** PASSED (8 checks executed)
+**Test Suite Result:** PASSED (8 test methods executed)
 
 ## Conformance Matrix: Persona x Profile x Check
 
@@ -11,6 +11,10 @@
 | `ee_power_core` | `CONF_STU_EE_POWER_01` | 5 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
 | `ee_power_core` | `CONF_STU_EE_POWER_02` | 4 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
 | `ee_power_core` | `CONF_STU_EE_POWER_03` | 3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
+| `ee_power_core` | `CONF_STU_EE_EDGE_BACKLOG` | 5 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
+| `ee_power_core` | `CONF_STU_EE_EDGE_CGPA_CUTOFF` | 5 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
+| `ee_power_core` | `CONF_STU_EE_EDGE_GOAL_PIVOT` | 4 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
+| `ee_power_core` | `CONF_STU_EE_EDGE_CONFLICT` | 3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
 
 ## Audit Summary
 - **Persona Profile Verification:** All registered personas verified to have concrete student profiles in `data/seed/personas/<id>/students.csv`.

@@ -10,7 +10,7 @@
       "min_diagnostic_score": 70.0
     },
     "status": "draft_for_review",
-    "source_id": "UNSOURCED_BASELINE"
+    "source_id": "AI_DRAFT"
   },
   {
     "criteria_id": "MASTERY_POWER",
@@ -23,7 +23,7 @@
       "min_diagnostic_score": 70.0
     },
     "status": "draft_for_review",
-    "source_id": "UNSOURCED_BASELINE"
+    "source_id": "AI_DRAFT"
   },
   {
     "criteria_id": "MASTERY_RESEARCH",
@@ -36,6 +36,6 @@
       "faculty_lab_mapping_required": true
     },
     "status": "draft_for_review",
-    "source_id": "UNSOURCED_BASELINE"
+    "source_id": "AI_DRAFT"
   }
 ]

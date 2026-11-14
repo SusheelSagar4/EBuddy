@@ -1,23 +1,21 @@
 import os
 import sys
-import unittest
-from datetime import datetime, timezone
-
-sys.path.insert(0, os.path.abspath("."))
-
-from tests.conformance.test_persona_conformance import TestPersonaConformance
-from app.personas.registry import persona_registry
-
-import os
-import sys
 import csv
 import unittest
 from datetime import datetime, timezone
+from typing import Dict, Any, List
 
 sys.path.insert(0, os.path.abspath("."))
 
 from tests.conformance.test_persona_conformance import TestPersonaConformance
 from app.personas.registry import persona_registry
+from app.contracts.student import StudentProfile, EvidenceItem
+from app.contracts.goal import Goal, GoalRequirement
+from app.contracts.plan import Plan, PlanItem, StructuredReason
+from app.engine.planner import Planner
+from app.engine.validator import PlanValidator
+from app.engine.gaps import GapAnalyzer
+from app.engine.skill_state import SkillStateUpdater
 
 def run_conformance_and_report():
     out_dir = os.path.join("docs", "evaluation")
@@ -48,11 +46,18 @@ def run_conformance_and_report():
 
     print(f"Verified {len(personas)} registered persona(s) and {sum(len(p) for p in persona_profiles_map.values())} profile(s).")
 
+    # Run unittest suite first
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPersonaConformance)
     runner = unittest.TextTestRunner(verbosity=2)
-    result = runner.run(suite)
+    unittest_result = runner.run(suite)
 
-    checks = [
+    # Initialize engines for per-profile check evaluation
+    planner = Planner()
+    validator = PlanValidator()
+    gap_analyzer = GapAnalyzer()
+    state_updater = SkillStateUpdater()
+
+    check_names = [
         "1. Plan Produced",
         "2. Prerequisites",
         "3. No Dupl Mastery",
@@ -67,20 +72,131 @@ def run_conformance_and_report():
         "# Persona Conformance Report (F4)",
         f"\n**Execution Date:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}",
         "**Runner:** `FakeLLM` deterministic test runner (Zero outbound network calls)",
-        f"**Test Suite Result:** {'PASSED' if result.wasSuccessful() else 'FAILED'} ({result.testsRun} checks executed)\n",
+        f"**Test Suite Result:** {'PASSED' if unittest_result.wasSuccessful() else 'FAILED'} ({unittest_result.testsRun} test methods executed)\n",
         "## Conformance Matrix: Persona x Profile x Check\n",
-        "| Persona ID | Profile / Student ID | Sem | " + " | ".join(checks) + " | Status |",
+        "| Persona ID | Profile / Student ID | Sem | " + " | ".join(check_names) + " | Status |",
         "|---|---|---|---|---|---|---|---|---|---|---|---|"
     ]
 
-    overall_pass = result.wasSuccessful()
-    for p in personas:
-        p_id = p.spec.persona_id
+    all_profiles_passed = True
+
+    for pkg in personas:
+        p_id = pkg.spec.persona_id
         for prof in persona_profiles_map[p_id]:
             stu_id = prof["student_id"]
-            sem = prof["current_semester"]
-            status_cols = " | ".join(["PASS" if overall_pass else "FAIL"] * len(checks))
-            report.append(f"| `{p_id}` | `{stu_id}` | {sem} | {status_cols} | **{'GREEN' if overall_pass else 'RED'}** |")
+            sem = int(prof["current_semester"])
+            completed = [c.strip() for c in prof.get("completed_courses", "").split(";") if c.strip()]
+            student = StudentProfile(
+                student_id=stu_id,
+                name=prof["name"].strip(),
+                programme_id=prof["programme_id"].strip(),
+                current_semester=sem,
+                cgpa=float(prof["cgpa"]) if prof.get("cgpa") else 8.0,
+                backlogs=int(prof.get("backlogs", 0)),
+                is_synthetic=True
+            )
+
+            goal = Goal(
+                goal_id=pkg.spec.goal_id,
+                name="Goal",
+                category="career",
+                description="Goal",
+                source_id="TEST"
+            )
+            reqs = [
+                GoalRequirement(
+                    goal_id=goal.goal_id,
+                    skill_id=r["skill_id"],
+                    required_level=float(r["required_level"]),
+                    importance=float(r.get("importance", 1.0)),
+                    source_id="TEST"
+                )
+                for r in pkg.requirements
+            ]
+            gaps = gap_analyzer.analyze_gaps(goal, reqs, [])
+            plan = planner.generate_plan(student, goal, gaps, [], [], completed_course_ids=completed)
+            v_report = validator.validate_plan(plan, student, completed_course_ids=completed)
+
+            # Check 1: Plan Produced & Valid
+            c1 = v_report.passed and len(plan.items) > 0
+
+            # Check 2: Catalog existence and prerequisites satisfied
+            course_check = next((c for c in v_report.checks if c.check_name == "course_existence"), None)
+            prereq_check = next((c for c in v_report.checks if c.check_name == "prerequisites"), None)
+            c2 = (course_check is not None and course_check.passed) and (prereq_check is not None and prereq_check.passed)
+
+            # Check 3: No mastered content
+            mastered_check = next((c for c in v_report.checks if c.check_name == "no_duplicate_mastery"), None)
+            c3 = mastered_check is not None and mastered_check.passed
+
+            # Check 4: Gaps covered
+            covered_skills = set()
+            for it in plan.items:
+                covered_skills.update(it.reason.target_skills)
+            c4 = all(g["skill_id"] in covered_skills for g in gaps if g["gap"] > 0)
+
+            # Check 5: Active practice
+            c5 = len([it for it in plan.items if it.item_type in ["exercise", "project"]]) >= 1
+
+            # Check 6: Adaptation on quiz results
+            target_sk = pkg.requirements[0]["skill_id"]
+            weak_ev = [EvidenceItem(evidence_id="EV_W", student_id=stu_id, skill_id=target_sk, source_type="quiz", score=30.0, recorded_at=datetime.now(timezone.utc))]
+            weak_states = state_updater.update_states(stu_id, weak_ev)
+            weak_gaps = gap_analyzer.analyze_gaps(goal, reqs, weak_states)
+            weak_plan = planner.generate_plan(student, goal, weak_gaps, [], [], completed_course_ids=completed)
+            rep_w = validator.validate_plan(weak_plan, student, completed_course_ids=completed)
+
+            strong_ev = [EvidenceItem(evidence_id="EV_S", student_id=stu_id, skill_id=target_sk, source_type="quiz", score=95.0, recorded_at=datetime.now(timezone.utc))]
+            strong_states = state_updater.update_states(stu_id, strong_ev)
+            strong_gaps = gap_analyzer.analyze_gaps(goal, reqs, strong_states)
+            strong_plan = planner.generate_plan(student, goal, strong_gaps, [], [], completed_course_ids=completed)
+            rep_s = validator.validate_plan(strong_plan, student, completed_course_ids=completed)
+            c6 = rep_w.passed and rep_s.passed
+
+            # Check 7: Determinism
+            plan_det = planner.generate_plan(student, goal, gaps, [], [], completed_course_ids=completed)
+            items_orig = [(it.item_type, it.course_id, it.reason.target_skills) for it in plan.items]
+            items_det = [(it.item_type, it.course_id, it.reason.target_skills) for it in plan_det.items]
+            c7 = (items_orig == items_det)
+
+            # Check 8: Unachievable request handling
+            excessive_items = [
+                PlanItem(
+                    item_id=f"ITEM_EXC_{i}",
+                    item_type="course",
+                    course_id=cid,
+                    reason=StructuredReason(intent="Overload", target_skills=["SKILL_CIRCUIT_ANALYSIS"], why_this="Test")
+                )
+                for i, cid in enumerate(["EE2L001", "EE2L002", "EE2L003", "EC2L001", "EC2L002", "MA2L003"])
+            ]
+            excessive_plan = Plan(
+                plan_id="PLAN_OVERLOAD",
+                student_id=stu_id,
+                goal_id=goal.goal_id,
+                items=excessive_items,
+                created_at=datetime.now(timezone.utc)
+            )
+            prob_student = StudentProfile(
+                student_id=f"{stu_id}_PROB",
+                name="Probation",
+                programme_id=student.programme_id,
+                current_semester=sem,
+                cgpa=5.50,
+                backlogs=1,
+                is_synthetic=True
+            )
+            rep_prob = validator.validate_plan(excessive_plan, prob_student)
+            prob_check = next((c for c in rep_prob.checks if "PROBATION" in c.check_name), None)
+            c8 = prob_check is not None and "exceeds" in prob_check.message.lower()
+
+            results = [c1, c2, c3, c4, c5, c6, c7, c8]
+            row_passed = all(results)
+            if not row_passed:
+                all_profiles_passed = False
+
+            status_cols = " | ".join(["PASS" if r else "FAIL" for r in results])
+            badge = "**GREEN**" if row_passed else "**RED**"
+            report.append(f"| `{p_id}` | `{stu_id}` | {sem} | {status_cols} | {badge} |")
 
     report.append("\n## Audit Summary")
     report.append("- **Persona Profile Verification:** All registered personas verified to have concrete student profiles in `data/seed/personas/<id>/students.csv`.")
@@ -94,7 +210,10 @@ def run_conformance_and_report():
 
     print("\n" + output_content + "\n")
     print(f"Conformance report written to {report_file}")
-    return 0 if overall_pass else 1
+    return 0 if (unittest_result.wasSuccessful() and all_profiles_passed) else 1
+
+if __name__ == "__main__":
+    sys.exit(run_conformance_and_report())
 
 if __name__ == "__main__":
     sys.exit(run_conformance_and_report())

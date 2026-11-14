@@ -20,7 +20,7 @@ exercises:
     flowing through the circuit and the voltage drop across the 8 Ohm resistor?
   rubric: Apply Ohm law and KVL to single loop series circuit.
   skill_id: SKILL_CIRCUIT_ANALYSIS
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: B
@@ -42,7 +42,7 @@ exercises:
     R_th seen from terminals A and B?
   rubric: Apply Thevenin theorem and voltage division principle.
   skill_id: SKILL_CIRCUIT_ANALYSIS
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: B
@@ -63,7 +63,7 @@ exercises:
     what is the secondary open-circuit voltage?
   rubric: Ideal transformer turns ratio relation.
   skill_id: SKILL_ELECTRIC_MACHINES
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: B
@@ -84,7 +84,7 @@ exercises:
     operating fractional rotor slip s?
   rubric: Synchronous speed and slip calculation for 3-phase induction machine.
   skill_id: SKILL_ELECTRIC_MACHINES
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: B
@@ -106,7 +106,7 @@ exercises:
     ratio D?
   rubric: Buck converter voltage conversion ratio in continuous conduction mode.
   skill_id: SKILL_POWER_ELECTRONICS
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: C
@@ -129,7 +129,7 @@ exercises:
     DC output voltage before any filtering capacitor?
   rubric: Harmonic ripple frequency in AC-DC full wave rectification.
   skill_id: SKILL_POWER_ELECTRONICS
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: B
@@ -150,7 +150,7 @@ exercises:
     domain?
   rubric: Laplace transform of standard causal exponential signal.
   skill_id: SKILL_SIGNALS_SYSTEMS
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: A
@@ -173,7 +173,7 @@ exercises:
     factor (pf) of the load?
   rubric: AC steady-state sinusoidal active power and power factor.
   skill_id: SKILL_CIRCUIT_ANALYSIS
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: A
@@ -194,7 +194,7 @@ exercises:
     E_b developed in the armature?
   rubric: DC motor armature voltage equation and back EMF calculation.
   skill_id: SKILL_ELECTRIC_MACHINES
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
 - answer_key:
     correct_option: C
@@ -215,7 +215,7 @@ exercises:
     ideal steady-state DC output voltage?
   rubric: Boost converter voltage conversion ratio in continuous conduction mode.
   skill_id: SKILL_POWER_ELECTRONICS
-  source_id: DESIGN_TEAM
+  source_id: AI_DRAFT
   status: draft_for_review
-source_id: DESIGN_TEAM
+source_id: AI_DRAFT
 status: draft_for_review

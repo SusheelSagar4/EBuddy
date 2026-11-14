@@ -76,8 +76,7 @@ class PlanValidator(IPlanValidator):
             # Standard 1st-year foundation courses completed in year 1
             if prog == "BTECH_EE":
                 completed_set.update(["MA1L001", "MA1L002", "EE1L001", "CS1L001"])
-            elif prog == "BTECH_MM":
-                completed_set.update(["MA1L001", "MA1L002", "CS1L001"])
+            # Note: For BTECH_MM, Sem I-II is simply missing from official raw documents; no courses or completions are assumed.
 
         # 1. Course Existence Check
         missing_courses = []

@@ -122,7 +122,7 @@ def test_adaptive_diagnostic_scale_and_stop():
     Item 7(c): Simple adaptive diagnostic (start medium difficulty 50, raise/lower by 15,
     stop at confidence threshold >= 0.85, 5-8 items).
     """
-    diag = AdaptiveDiagnostic(min_items=5, max_items=8, confidence_threshold=0.85)
+    diag = AdaptiveDiagnostic(item_bank=[], min_items=5, max_items=8, confidence_threshold=0.85)
 
     answers = []
     # Item 1: Start at medium difficulty 50.0
@@ -190,3 +190,55 @@ def test_rolling_conversation_memory_ops_summary():
     assert mem2 is not None
     # Rolling summary contains history from both interactions
     assert len(mem2) >= len(mem1)
+
+def test_exercise_option_shuffling_and_bias_elimination():
+    """
+    Item 5: Shuffles MCQ option order at serve time while preserving
+    answer key accuracy, eliminating letter position bias.
+    """
+    import random
+    from app.contracts.kb import Exercise
+    from app.engine.diagnostic import AdaptiveDiagnostic
+    from app.llm.tasks.grader import Grader
+
+    orig = Exercise(
+        exercise_id="EX_SHUFFLE_TEST",
+        skill_id="SKILL_CIRCUIT_ANALYSIS",
+        title="Test Circuit Question",
+        question_text="What is the equivalent resistance?",
+        exercise_type="mcq",
+        options=["A: 10 Ohm", "B: 20 Ohm", "C: 30 Ohm", "D: 40 Ohm"],
+        correct_answer="B: 20 Ohm",
+        difficulty_0_100=50.0,
+        status="draft_for_review",
+        source_id="AI_DRAFT",
+        verified=True
+    )
+
+    grader = Grader()
+
+    # 1. Shuffling with different RNG seeds produces different letter positions
+    letters_seen = set()
+    for seed in [1, 2, 3, 4, 42, 99]:
+        rng = random.Random(seed)
+        shuffled = AdaptiveDiagnostic.shuffle_exercise_options(orig, rng=rng)
+        assert len(shuffled.options) == 4
+        # Verify 20 Ohm is still the designated correct answer
+        assert "20 Ohm" in shuffled.correct_answer
+        correct_letter = shuffled.correct_answer.split(":")[0].strip()
+        letters_seen.add(correct_letter)
+
+        # 2. Grader verifies answer is correct regardless of new shuffled position
+        result = grader.grade_answer(shuffled, correct_letter)
+        assert result["is_correct"] is True
+        assert result["score"] == 100.0
+
+        # Wrong option graded as 0.0
+        wrong_letter = "A" if correct_letter != "A" else "B"
+        wrong_res = grader.grade_answer(shuffled, wrong_letter)
+        assert wrong_res["is_correct"] is False
+        assert wrong_res["score"] == 0.0
+
+    # Ensure option has rotated across multiple positions (no static 'B' bias)
+    assert len(letters_seen) > 1
+

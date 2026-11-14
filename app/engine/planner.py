@@ -160,8 +160,7 @@ class Planner(IPlanner):
                         completed_set.add(c)
             if prog_id == "BTECH_EE":
                 completed_set.update(["MA1L001", "MA1L002", "EE1L001", "CS1L001"])
-            elif prog_id == "BTECH_MM":
-                completed_set.update(["MA1L001", "MA1L002", "CS1L001"])
+            # Note: For BTECH_MM, Sem I-II is simply missing from official raw documents; no courses or completions are assumed.
             assigned_courses = set(completed_set)
 
         # Student-stated constraints (HARD bounds)

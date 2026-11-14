@@ -34,7 +34,7 @@ class CourseRelevanceEngine:
                     score = int(r["relevance_score"])
                     rationale = r.get("rationale", "")
                     status = r.get("status", "draft_for_review")
-                    source_id = r.get("source_id", "DESIGN_TEAM")
+                    source_id = r.get("source_id", "AI_DRAFT")
                     self.relevance_map[(cid, gid)] = (score, rationale, status, source_id)
 
         # 2. Load course skills for dynamic gap boosting
@@ -49,12 +49,12 @@ class CourseRelevanceEngine:
 
     def get_relevance(self, course_id: str, goal_id: str) -> Tuple[int, str]:
         """Returns the canonical (score_0_to_3, rationale) for backwards compatibility."""
-        entry = self.relevance_map.get((course_id, goal_id), (1, "General engineering curriculum", "draft_for_review", "DESIGN_TEAM"))
+        entry = self.relevance_map.get((course_id, goal_id), (1, "General engineering curriculum", "draft_for_review", "AI_DRAFT"))
         return entry[0], entry[1]
 
     def get_relevance_details(self, course_id: str, goal_id: str) -> Dict[str, Any]:
         """Returns the full relevance metadata including status and source_id."""
-        entry = self.relevance_map.get((course_id, goal_id), (1, "General engineering curriculum", "draft_for_review", "DESIGN_TEAM"))
+        entry = self.relevance_map.get((course_id, goal_id), (1, "General engineering curriculum", "draft_for_review", "AI_DRAFT"))
         return {
             "score": entry[0],
             "rationale": entry[1],

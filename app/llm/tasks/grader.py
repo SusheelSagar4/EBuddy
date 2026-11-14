@@ -8,7 +8,17 @@ class Grader:
         if exercise.exercise_type in ["mcq", "numeric"]:
             correct = (exercise.correct_answer or "").strip().lower()
             given = student_answer.strip().lower()
-            is_correct = (correct == given)
+
+            correct_letter = correct.split(":")[0].strip() if ":" in correct else correct
+            given_letter = given.split(":")[0].strip() if ":" in given else given
+
+            is_correct = (
+                (correct == given)
+                or (correct_letter == given_letter)
+                or (correct.startswith(given + ":"))
+                or (correct.endswith(given))
+                or (given.endswith(correct))
+            )
             score = 100.0 if is_correct else 0.0
             return {
                 "score": score,
