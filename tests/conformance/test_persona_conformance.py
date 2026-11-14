@@ -239,8 +239,68 @@ class TestPersonaConformance(unittest.TestCase):
         self.assertIsNotNone(probation_check)
         self.assertIn("exceeds probation cap", probation_check.message)
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_09_edge_case_profile_specific_assertions(self):
+        """
+        Item 5: Profile-specific edge assertions:
+        1. Backlog student gets the backlog course prioritised.
+        2. CGPA 7.95 student is NOT offered the minor and gets an explanation.
+        3. Pivot student's plan changes when the goal changes.
+        4. Conflict student has conflict_flag set.
+        """
+        pkg = self.personas[0]
+        goal = Goal(goal_id=pkg.spec.goal_id, name="Test Goal", category="career", description="Goal", source_id="TEST")
+        reqs = [GoalRequirement(goal_id=goal.goal_id, skill_id=r["skill_id"], required_level=float(r["required_level"]), source_id="TEST") for r in pkg.requirements]
+        
+        profiles_by_id = {s.student_id: (s, comp) for s, comp in self.persona_profiles[pkg.spec.persona_id]}
+
+        # Edge 1: Backlog Student (CONF_STU_EE_EDGE_BACKLOG)
+        if "CONF_STU_EE_EDGE_BACKLOG" in profiles_by_id:
+            stu, comp = profiles_by_id["CONF_STU_EE_EDGE_BACKLOG"]
+            gaps = self.gap_analyzer.analyze_gaps(goal, reqs, [])
+            plan = self.planner.generate_plan(stu, goal, gaps, [], [], completed_course_ids=comp)
+            backlog_items = [it for it in plan.items if "Backlog" in (it.reason.intent or "") or "BACKLOG" in it.item_id]
+            self.assertTrue(len(backlog_items) > 0, "Backlog course was not prioritized in plan for backlog student")
+            self.assertIn("EE2L003", [it.course_id for it in backlog_items])
+
+        # Edge 2: CGPA Cutoff Student (CONF_STU_EE_EDGE_CGPA_CUTOFF, CGPA 7.95 < 8.00)
+        if "CONF_STU_EE_EDGE_CGPA_CUTOFF" in profiles_by_id:
+            stu, comp = profiles_by_id["CONF_STU_EE_EDGE_CGPA_CUTOFF"]
+            gaps = self.gap_analyzer.analyze_gaps(goal, reqs, [])
+            plan = self.planner.generate_plan(stu, goal, gaps, [], [], completed_course_ids=comp)
+            minor_items = [it for it in plan.items if "Minor" in (it.reason.intent or "")]
+            self.assertEqual(len(minor_items), 0, "Minor course was offered to student with CGPA below 8.00 cutoff")
+            explanation = [p for p in (plan.optional_overload_proposals or []) if "ineligible" in (p.get("status") or "") or "cutoff" in (p.get("reason") or "")]
+            self.assertTrue(len(explanation) > 0, "No cutoff explanation provided for ineligible minor student")
+
+        # Edge 3: Pivot Student (CONF_STU_EE_EDGE_GOAL_PIVOT)
+        if "CONF_STU_EE_EDGE_GOAL_PIVOT" in profiles_by_id:
+            stu, comp = profiles_by_id["CONF_STU_EE_EDGE_GOAL_PIVOT"]
+            gaps_power = self.gap_analyzer.analyze_gaps(goal, reqs, [])
+            plan_power = self.planner.generate_plan(stu, goal, gaps_power, [], [], completed_course_ids=comp)
+
+            goal_sde = Goal(goal_id="GOAL_CROSS_SDE_DATA", name="SDE Goal", category="career", description="SDE", source_id="TEST")
+            reqs_sde = [
+                GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_PROGRAMMING_DS", required_level=85.0, source_id="TEST"),
+                GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_DATA_STRUCTURES_ALGO", required_level=85.0, source_id="TEST"),
+                GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_DATABASES_SQL", required_level=80.0, source_id="TEST"),
+                GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_AI_ML", required_level=80.0, source_id="TEST")
+            ]
+            gaps_sde = self.gap_analyzer.analyze_gaps(goal_sde, reqs_sde, [])
+            plan_sde = self.planner.generate_plan(stu, goal_sde, gaps_sde, [], [], completed_course_ids=comp)
+
+            power_courses = [it.course_id for it in plan_power.items if it.item_type == "course"]
+            sde_courses = [it.course_id for it in plan_sde.items if it.item_type == "course"]
+            self.assertNotEqual(power_courses, sde_courses, "Plan did not adapt when student pivoted goal to SDE")
+
+        # Edge 4: Conflict Student (CONF_STU_EE_EDGE_CONFLICT)
+        if "CONF_STU_EE_EDGE_CONFLICT" in profiles_by_id:
+            stu, comp = profiles_by_id["CONF_STU_EE_EDGE_CONFLICT"]
+            ev = [EvidenceItem(evidence_id="EV_CONF", student_id=stu.student_id, skill_id="SKILL_SIGNALS_SYSTEMS", source_type="diagnostic", score=25.0, recorded_at=datetime.now(timezone.utc))]
+            states = self.state_updater.update_states(stu.student_id, ev)
+            gaps_conf = self.gap_analyzer.analyze_gaps(goal, reqs, states, evidence=ev)
+            plan_conf = self.planner.generate_plan(stu, goal, gaps_conf, [], [], completed_course_ids=comp)
+            self.assertIsNotNone(plan_conf.conflict_flag, "Conflict flag was not set for student with interest vs evidence conflict")
+            self.assertIn("HIGH_INTEREST_LOW_FOUNDATION", plan_conf.conflict_flag)
 
 if __name__ == "__main__":
     unittest.main()

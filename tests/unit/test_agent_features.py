@@ -242,3 +242,43 @@ def test_exercise_option_shuffling_and_bias_elimination():
     # Ensure option has rotated across multiple positions (no static 'B' bias)
     assert len(letters_seen) > 1
 
+def test_diagnostic_convergence_consistent_vs_alternating():
+    """
+    Item 4: Diagnostic convergence rule.
+    A student with alternating answers continues to 8 items,
+    and a consistent student stops at 5-6 items.
+    """
+    from app.engine.diagnostic import AdaptiveDiagnostic
+
+    diag = AdaptiveDiagnostic(item_bank=[], min_items=5, max_items=8, confidence_threshold=0.85)
+
+    # 1. Consistent student (all correct)
+    consistent_answers = []
+    while not diag.is_complete(consistent_answers) and len(consistent_answers) < 8:
+        item = diag.select_next_item(["SKILL_CIRCUIT_ANALYSIS"], consistent_answers)
+        consistent_answers.append({
+            "exercise_id": item.exercise_id,
+            "is_correct": True,
+            "difficulty": item.difficulty_0_100
+        })
+
+    # Consistent student converges and stops at 5 or 6 items
+    assert 5 <= len(consistent_answers) <= 6
+    assert diag.is_complete(consistent_answers)
+
+    # 2. Alternating student (Correct, Incorrect, Correct, Incorrect...)
+    alternating_answers = []
+    while not diag.is_complete(alternating_answers) and len(alternating_answers) < 8:
+        item = diag.select_next_item(["SKILL_CIRCUIT_ANALYSIS"], alternating_answers)
+        is_corr = (len(alternating_answers) % 2 == 0)
+        alternating_answers.append({
+            "exercise_id": item.exercise_id,
+            "is_correct": is_corr,
+            "difficulty": item.difficulty_0_100
+        })
+
+    # Alternating student fails convergence and continues all the way to max 8 items
+    assert len(alternating_answers) == 8
+    assert diag.is_complete(alternating_answers)
+
+

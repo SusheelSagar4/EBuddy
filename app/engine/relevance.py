@@ -122,7 +122,16 @@ class CourseRelevanceEngine:
                 "prerequisites_satisfied": True
             })
 
-        # Sort descending by total_rank, then base_relevance
-        ranked_candidates.sort(key=lambda x: (x["total_rank"], x["base_relevance"]), reverse=True)
+        # Deterministic ranking & tie-breaking:
+        # 1. total_rank descending (relevance + skill gap boost)
+        # 2. base_relevance descending
+        # 3. Course level descending (advanced courses preferred over introductory)
+        # 4. course_id ascending (deterministic alphabetical tie-breaker)
+        def _sort_key(c_dict):
+            cid = c_dict["course_id"]
+            lvl_digit = int(cid[2]) if len(cid) > 2 and cid[2].isdigit() else 0
+            return (-c_dict["total_rank"], -c_dict["base_relevance"], -lvl_digit, cid)
+
+        ranked_candidates.sort(key=_sort_key)
         return ranked_candidates
 

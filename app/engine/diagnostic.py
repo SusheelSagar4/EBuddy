@@ -152,25 +152,46 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
             verified=exercise.verified
         )
 
+    def compute_running_ability(self, answers: List[Dict[str, Any]]) -> float:
+        """
+        Computes running ability estimate with CAT step adjustments.
+        Initial baseline: 50.0.
+        Each step size: 25.0 / (1.0 + 0.25 * k).
+        Bounded within [10.0, 95.0].
+        """
+        theta = 50.0
+        for k, a in enumerate(answers, 1):
+            step = 25.0 / (1.0 + 0.25 * k)
+            if a.get("is_correct"):
+                theta = min(95.0, theta + step)
+            else:
+                theta = max(10.0, theta - step)
+        return round(theta, 2)
+
     def estimate_ability_and_confidence(self, previous_answers: List[Dict[str, Any]]) -> Tuple[float, float]:
         if not previous_answers:
             return 50.0, 0.0
 
         n = len(previous_answers)
-        correct_count = sum(1 for a in previous_answers if a.get("is_correct"))
+        current_ability = self.compute_running_ability(previous_answers)
 
-        difficulties = [float(a.get("difficulty", 50.0)) for a in previous_answers]
-        avg_diff = sum(difficulties) / n
-        accuracy = correct_count / n
-        ability = max(10.0, min(95.0, avg_diff + (accuracy - 0.5) * 30.0))
+        if n < 3:
+            return current_ability, round(min(0.80, 0.30 + n * 0.15), 2)
 
-        confidence = min(0.95, 0.45 + (n * 0.08))
-        if n >= 3:
-            last_3 = [bool(a.get("is_correct")) for a in previous_answers[-3:]]
-            if all(last_3) or not any(last_3):
-                confidence = min(0.95, confidence + 0.10)
+        # Compute ability estimates for previous steps to measure convergence over last 2 items
+        theta_n = current_ability
+        theta_n_minus_1 = self.compute_running_ability(previous_answers[:-1])
+        theta_n_minus_2 = self.compute_running_ability(previous_answers[:-2])
 
-        return round(ability, 2), round(confidence, 2)
+        delta_1 = abs(theta_n - theta_n_minus_1)
+        delta_2 = abs(theta_n_minus_1 - theta_n_minus_2)
+        max_recent_delta = max(delta_1, delta_2)
+
+        # Confidence is derived from stability/convergence of the ability estimate
+        # When max_recent_delta <= 3.5, confidence >= 0.86 (converged)
+        confidence = max(0.20, min(0.95, 1.0 - (max_recent_delta / 25.0)))
+
+        return current_ability, round(confidence, 2)
 
     def select_next_item(
         self,
@@ -227,7 +248,17 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
             return False
         if n >= self.max_items:
             return True
-        _, confidence = self.estimate_ability_and_confidence(previous_answers)
-        return confidence >= self.confidence_threshold
+
+        # Stop when ability estimate changes less than threshold (3.5) over the last 2 items
+        theta_n = self.compute_running_ability(previous_answers)
+        theta_n_minus_1 = self.compute_running_ability(previous_answers[:-1])
+        theta_n_minus_2 = self.compute_running_ability(previous_answers[:-2])
+
+        delta_1 = abs(theta_n - theta_n_minus_1)
+        delta_2 = abs(theta_n_minus_1 - theta_n_minus_2)
+        max_delta = max(delta_1, delta_2)
+
+        convergence_threshold = 3.5
+        return max_delta <= convergence_threshold
 
 

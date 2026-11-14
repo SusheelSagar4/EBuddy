@@ -219,6 +219,36 @@ class Planner(IPlanner):
 
         if sem_reqs:
             # =========================================================================
+            # PHASE 0: Prioritized Backlog Clearance
+            # =========================================================================
+            # If student has backlogs, identify and prioritize uncompleted core courses
+            # from prior semesters before scheduling regular electives.
+            if current_sem > 1 and student.backlogs > 0:
+                for s in range(1, current_sem):
+                    for r in self.prog_requirements.get((prog_id, s), []):
+                        c = r.get("course_id", "").strip()
+                        if c and c not in completed_set and c not in assigned_courses:
+                            c_meta = self.course_info.get(c, {})
+                            c_title = c_meta.get("title", c)
+                            c_skills = self.course_skills.get(c, [])
+                            assigned_courses.add(c)
+                            current_sem_credits += c_meta.get("credits", 4.0)
+                            items.append(PlanItem(
+                                item_id=f"ITEM_BACKLOG_{c}_{uuid.uuid4().hex[:6]}",
+                                item_type="course",
+                                course_id=c,
+                                semester_number=current_sem,
+                                estimated_hours=4.0,
+                                reason=StructuredReason(
+                                    intent="Backlog Core Clearance Prioritized",
+                                    target_skills=c_skills,
+                                    why_this=f"PRIORITIZED BACKLOG: Mandatory core course {c} ({c_title}) from Semester {s} was uncompleted. Prioritized for clearance before advanced electives.",
+                                    prerequisite_for=[],
+                                    rule_compliance=["Academic standing rule: Prioritize uncompleted core backlog courses"]
+                                )
+                            ))
+
+            # =========================================================================
             # PHASE A: Fixed Major / Core Courses (Branch Curriculum Rule)
             # =========================================================================
             # Core courses are mandatory per branch curriculum and are FIXED.
@@ -458,6 +488,12 @@ class Planner(IPlanner):
                                 rule_compliance=m_comp
                             )
                         ))
+            elif minor_candidates and not self.rule_engine.check_minor_eligibility(student):
+                optional_overload_proposals.append({
+                    "proposal_id": f"PROP_MINOR_INELIGIBLE_{uuid.uuid4().hex[:6]}",
+                    "reason": f"Student CGPA ({student.cgpa:.2f}) is below the required 8.00 cutoff or has active backlogs ({student.backlogs}). Ineligible for Minor in Computer Science per academic regulations.",
+                    "status": "ineligible_explanation"
+                })
 
         else:
             # Fallback for unconfigured programmes: plan from skill gaps

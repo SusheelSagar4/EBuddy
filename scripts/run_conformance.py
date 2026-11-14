@@ -65,7 +65,8 @@ def run_conformance_and_report():
         "5. Active Practice",
         "6. Quiz Adapt",
         "7. Determinism",
-        "8. Unachievable Req"
+        "8. Unachievable Req",
+        "9. Edge Assertions"
     ]
 
     report = [
@@ -75,7 +76,7 @@ def run_conformance_and_report():
         f"**Test Suite Result:** {'PASSED' if unittest_result.wasSuccessful() else 'FAILED'} ({unittest_result.testsRun} test methods executed)\n",
         "## Conformance Matrix: Persona x Profile x Check\n",
         "| Persona ID | Profile / Student ID | Sem | " + " | ".join(check_names) + " | Status |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|"
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|"
     ]
 
     all_profiles_passed = True
@@ -189,7 +190,32 @@ def run_conformance_and_report():
             prob_check = next((c for c in rep_prob.checks if "PROBATION" in c.check_name), None)
             c8 = prob_check is not None and "exceeds" in prob_check.message.lower()
 
-            results = [c1, c2, c3, c4, c5, c6, c7, c8]
+            # Check 9: Profile-Specific Edge Assertions
+            c9 = True
+            if stu_id == "CONF_STU_EE_EDGE_BACKLOG":
+                backlog_items = [it for it in plan.items if "Backlog" in (it.reason.intent or "") or "BACKLOG" in it.item_id]
+                c9 = len(backlog_items) > 0 and "EE2L003" in [it.course_id for it in backlog_items]
+            elif stu_id == "CONF_STU_EE_EDGE_CGPA_CUTOFF":
+                minor_items = [it for it in plan.items if "Minor" in (it.reason.intent or "")]
+                explanation = [p for p in (plan.optional_overload_proposals or []) if "ineligible" in (p.get("status") or "") or "cutoff" in (p.get("reason") or "")]
+                c9 = (len(minor_items) == 0) and (len(explanation) > 0)
+            elif stu_id == "CONF_STU_EE_EDGE_GOAL_PIVOT":
+                goal_sde = Goal(goal_id="GOAL_CROSS_SDE_DATA", name="SDE Goal", category="career", description="SDE", source_id="TEST")
+                reqs_sde = [
+                    GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_PROGRAMMING_DS", required_level=85.0, source_id="TEST"),
+                    GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_DATA_STRUCTURES_ALGO", required_level=85.0, source_id="TEST"),
+                    GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_DATABASES_SQL", required_level=80.0, source_id="TEST"),
+                    GoalRequirement(goal_id=goal_sde.goal_id, skill_id="SKILL_AI_ML", required_level=80.0, source_id="TEST")
+                ]
+                gaps_sde = gap_analyzer.analyze_gaps(goal_sde, reqs_sde, [])
+                plan_sde = planner.generate_plan(student, goal_sde, gaps_sde, [], [], completed_course_ids=completed)
+                power_courses = [it.course_id for it in plan.items if it.item_type == "course"]
+                sde_courses = [it.course_id for it in plan_sde.items if it.item_type == "course"]
+                c9 = (power_courses != sde_courses)
+            elif stu_id == "CONF_STU_EE_EDGE_CONFLICT":
+                c9 = (plan.conflict_flag is not None and "HIGH_INTEREST_LOW_FOUNDATION" in plan.conflict_flag)
+
+            results = [c1, c2, c3, c4, c5, c6, c7, c8, c9]
             row_passed = all(results)
             if not row_passed:
                 all_profiles_passed = False
