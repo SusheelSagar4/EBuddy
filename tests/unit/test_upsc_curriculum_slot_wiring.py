@@ -14,22 +14,21 @@ class TestUPSCCurriculumSlotWiring(unittest.TestCase):
         pkg = persona_registry.get("btech_upsc")
         cls.policy: CustomPersonaPolicy = pkg.policy
 
-    def test_01_track_resolution_from_f21(self):
-        """F21 track rule: Sem 1-4 use NEP, Sem 5-8 use 2016-17 pre-NEP."""
-        slots_sem1 = self.policy.get_curriculum_slots("BTECH_EE", 1)
-        self.assertEqual(slots_sem1["track"], "NEP")
+    def test_01_track_resolution_from_admission_year(self):
+        """Track rule: admitted 2025-26 or later = NEP; earlier = 2016-17 pre-NEP."""
+        # Admitted 2025-26 or later -> NEP
+        slots_2025 = self.policy.get_curriculum_slots("BTECH_EE", 3, admission_year="2025-26")
+        self.assertEqual(slots_2025["track"], "NEP")
 
-        slots_sem3 = self.policy.get_curriculum_slots("BTECH_EE", 3)
-        self.assertEqual(slots_sem3["track"], "NEP")
+        slots_2026 = self.policy.get_curriculum_slots("BTECH_EE", 1, admission_year="2026-27")
+        self.assertEqual(slots_2026["track"], "NEP")
 
-        slots_sem5 = self.policy.get_curriculum_slots("BTECH_EE", 5)
-        self.assertEqual(slots_sem5["track"], "2016-17")
+        # Admitted prior to 2025-26 -> 2016-17 pre-NEP
+        slots_2024 = self.policy.get_curriculum_slots("BTECH_EE", 5, admission_year="2024-25")
+        self.assertEqual(slots_2024["track"], "2016-17")
 
-        slots_sem7 = self.policy.get_curriculum_slots("BTECH_EE", 7)
-        self.assertEqual(slots_sem7["track"], "2016-17")
-
-        slots_sem8 = self.policy.get_curriculum_slots("BTECH_EE", 8)
-        self.assertEqual(slots_sem8["track"], "2016-17")
+        slots_2023 = self.policy.get_curriculum_slots("BTECH_EE", 7, admission_year="2023-24")
+        self.assertEqual(slots_2023["track"], "2016-17")
 
     def test_02_ee_slot_classification_heavy_vs_light(self):
         """Verify heavy (Core/Lab) vs light (Breadth/Seminar) slot separation for EE."""
@@ -45,15 +44,15 @@ class TestUPSCCurriculumSlotWiring(unittest.TestCase):
         # Breadth and Seminar should be in light
         self.assertTrue(any("breadth" in t or "seminar" in t for t in light_titles))
 
-    def test_03_mme_slot_classification(self):
-        """Verify slot wiring for BTECH_MME."""
-        res_mme_sem6 = self.policy.get_curriculum_slots("BTECH_MME", 6, track="2016-17")
-        self.assertGreater(res_mme_sem6["total_slots"], 0)
-        self.assertEqual(res_mme_sem6["programme"], "BTECH_MME")
+    def test_03_mm_slot_classification(self):
+        """Verify slot wiring for BTECH_MM."""
+        res_mm_sem6 = self.policy.get_curriculum_slots("BTECH_MM", 6, track="2016-17")
+        self.assertGreater(res_mm_sem6["total_slots"], 0)
+        self.assertEqual(res_mm_sem6["programme"], "BTECH_MM")
 
         # Academic workload and available UPSC hours must be quantified
-        self.assertGreater(res_mme_sem6["estimated_academic_hours"], 0)
-        self.assertGreaterEqual(res_mme_sem6["recommended_weekly_upsc_hours"], 6.0)
+        self.assertGreater(res_mm_sem6["estimated_academic_hours"], 0)
+        self.assertGreaterEqual(res_mm_sem6["recommended_weekly_upsc_hours"], 6.0)
 
     def test_04_optional_recommendations_ee(self):
         """Verify that Electrical Engineering is recommended with strong overlap for EE."""
@@ -63,12 +62,13 @@ class TestUPSCCurriculumSlotWiring(unittest.TestCase):
         self.assertEqual(opt_ee["strong_overlap"][0]["optional"], "Electrical Engineering")
         self.assertEqual(opt_ee["strong_overlap"][0]["iitbbs_overlap"], "STRONG")
 
-    def test_05_optional_recommendations_mme(self):
-        """Verify optional recommendations for MME flag SME-pending review."""
-        opt_mme = self.policy.get_optional_recommendations("BTECH_MME")
-        self.assertEqual(len(opt_mme["strong_overlap"]), 0)
-        self.assertGreater(len(opt_mme["partial_overlap"]), 0)
-        self.assertIn("SME", opt_mme["warning"])
+    def test_05_optional_recommendations_mm(self):
+        """Verify optional recommendations for MM flag SME-pending review."""
+        opt_mm = self.policy.get_optional_recommendations("BTECH_MM")
+        self.assertEqual(len(opt_mm["strong_overlap"]), 0)
+        self.assertGreater(len(opt_mm["partial_overlap"]), 0)
+        self.assertIn("SME", opt_mm["warning"])
 
 if __name__ == "__main__":
     unittest.main()
+

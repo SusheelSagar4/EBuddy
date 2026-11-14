@@ -2,7 +2,7 @@ import os
 import csv
 import yaml
 from datetime import datetime, date, timedelta
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 from app.contracts.student import StudentProfile
 from app.contracts.plan import PlanItem
 from app.personas.policy import PersonaPolicy
@@ -19,6 +19,9 @@ class CustomPersonaPolicy(PersonaPolicy):
         self.base_dir = os.path.dirname(__file__)
         self.raw_data_dir = os.path.abspath(
             os.path.join(self.base_dir, "..", "..", "..", "data", "raw", "higher_studies", "upsc")
+        )
+        self.institute_dir = os.path.abspath(
+            os.path.join(self.base_dir, "..", "..", "..", "data", "raw", "institute")
         )
         self.rules_by_id: Dict[str, Dict[str, Any]] = {}
         self.facts: Dict[str, Dict[str, str]] = {}
@@ -52,15 +55,19 @@ class CustomPersonaPolicy(PersonaPolicy):
                 reader = csv.DictReader(f)
                 self.cutoffs = [r for r in reader if any(r.values())]
 
-        # 4. Load institute_calendar.csv
-        cal_path = os.path.join(self.raw_data_dir, "institute_calendar.csv")
+        # 4. Load institute_calendar.csv (from shared data/raw/institute/ or fallback)
+        cal_path = os.path.join(self.institute_dir, "institute_calendar.csv")
+        if not os.path.exists(cal_path):
+            cal_path = os.path.join(self.raw_data_dir, "institute_calendar.csv")
         if os.path.exists(cal_path):
             with open(cal_path, "r", encoding="utf-8") as f:
                 reader = csv.DictReader(f)
                 self.calendar = [r for r in reader if any(r.values())]
 
-        # 5. Load institute_curriculum_slots.csv
-        slots_path = os.path.join(self.raw_data_dir, "institute_curriculum_slots.csv")
+        # 5. Load institute_curriculum_slots.csv (from shared data/raw/institute/ or fallback)
+        slots_path = os.path.join(self.institute_dir, "institute_curriculum_slots.csv")
+        if not os.path.exists(slots_path):
+            slots_path = os.path.join(self.raw_data_dir, "institute_curriculum_slots.csv")
         if os.path.exists(slots_path):
             with open(slots_path, "r", encoding="utf-8") as f:
                 reader = csv.DictReader(f)
@@ -123,7 +130,7 @@ class CustomPersonaPolicy(PersonaPolicy):
         triggered = (student_cgpa < floor_hard) or (cgpa_drop_last_sem >= 0.3) or (active_backlogs > 0)
         if triggered:
             cap = params.get("cap_hours_sem12", 3) if semester in {1, 2} else params.get("cap_hours", 6)
-            prog_norm = "BTECH_EE" if "EE" in programme else "BTECH_MME"
+            prog_norm = "BTECH_EE" if "EE" in programme else "BTECH_MM"
             fallback = self.spec.get("fallback_goals", {}).get(prog_norm, "GOAL_EE_CORE_POWER")
             f22 = self.facts.get("F22", {})
             f22_ver = f22.get("verified", "").upper() == "TRUE"
@@ -147,15 +154,15 @@ class CustomPersonaPolicy(PersonaPolicy):
         optional_chosen: Optional[str],
         programme: str = "BTECH_EE"
     ) -> Dict[str, Any]:
-        params = self.rules_by_id.get("R3", {}).get("params", {"deadline_sem_EE": 5, "deadline_sem_MME": 6})
-        deadline = params.get("deadline_sem_EE", 5) if "EE" in programme else params.get("deadline_sem_MME", 6)
+        params = self.rules_by_id.get("R3", {}).get("params", {"deadline_sem_EE": 5, "deadline_sem_MM": 6, "deadline_sem_MME": 6})
+        deadline = params.get("deadline_sem_EE", 5) if "EE" in programme else (params.get("deadline_sem_MM") or params.get("deadline_sem_MME", 6))
         is_undecided = (not optional_chosen) or (str(optional_chosen).lower() in ["undecided", "none", ""])
         triggered = (semester >= deadline) and is_undecided
         if triggered:
-            prog_code = "BTECH_EE" if "EE" in programme else "BTECH_MME"
+            prog_code = "BTECH_EE" if "EE" in programme else "BTECH_MM"
             cat_rows = [r for r in self.optional_catalog if r.get("programme_code") == prog_code]
             rec = "Electrical Engineering" if "EE" in programme else "Mechanical Engineering"
-            warning = "Strong curriculum overlap with B.Tech EE Core" if "EE" in programme else "SME-pending review for MME courses"
+            warning = "Strong curriculum overlap with B.Tech EE Core" if "EE" in programme else "SME-pending review for MM courses"
             return {
                 "triggered": True,
                 "blocked_skills": ["SKILL_UPSC_OPTIONAL"],
@@ -412,25 +419,41 @@ class CustomPersonaPolicy(PersonaPolicy):
     # -------------------------------------------------------------
     # Task 4 Helper: Curriculum Slot Wiring & Heavy/Light Analysis
     # -------------------------------------------------------------
+    @staticmethod
+    def get_track_for_admission_year(admission_year: Union[str, int]) -> str:
+        """Admitted 2025-26 (or 2025) or later = NEP; earlier = 2016-17 (pre-NEP)."""
+        year_str = str(admission_year).strip()[:4]
+        try:
+            start_yr = int(year_str)
+            return "NEP" if start_yr >= 2025 else "2016-17"
+        except ValueError:
+            return "NEP" if "nep" in str(admission_year).lower() else "2016-17"
+
     def get_curriculum_slots(
         self,
         programme: str,
         semester: int,
-        track: Optional[str] = None
+        track: Optional[str] = None,
+        admission_year: Optional[Union[str, int]] = None
     ) -> Dict[str, Any]:
         """
-        Identifies heavy and light slots for a given semester & programme,
-        using track resolution from facts F21 (Sem 1/3: NEP; Sem 5/7: 2016-17).
+        Identifies heavy and light slots for a given semester & programme.
+        Curriculum track is resolved from the student's admission year:
+        admitted 2025-26 or later = NEP; prior = 2016-17 (pre-NEP).
         """
-        prog_norm = "BTECH_EE" if "EE" in programme else "BTECH_MME"
-        if not track:
-            track = "NEP" if semester in {1, 2, 3, 4} else "2016-17"
+        prog_norm = "BTECH_EE" if "EE" in programme else "BTECH_MM"
+        if track:
+            eff_track = track
+        elif admission_year is not None:
+            eff_track = self.get_track_for_admission_year(admission_year)
+        else:
+            eff_track = "NEP" if semester in {1, 2, 3, 4} else "2016-17"
 
         matched = [
             r for r in self.curriculum_slots
             if r.get("programme_code") == prog_norm
             and str(r.get("semester")) == str(semester)
-            and (r.get("track") == track or (track in ["2016-17", "pre-NEP"] and r.get("track") in ["2016-17", "pre-NEP"]))
+            and (r.get("track") == eff_track or (eff_track in ["2016-17", "pre-NEP"] and r.get("track") in ["2016-17", "pre-NEP"]))
         ]
 
         heavy_types = {"common core", "vertical core", "core", "laboratory", "common core lab", "project"}
@@ -452,7 +475,7 @@ class CustomPersonaPolicy(PersonaPolicy):
         return {
             "programme": prog_norm,
             "semester": semester,
-            "track": track,
+            "track": eff_track,
             "total_slots": len(matched),
             "heavy_slots": heavy_slots,
             "light_slots": light_slots,
@@ -464,7 +487,7 @@ class CustomPersonaPolicy(PersonaPolicy):
     # Task 4 Helper: Optional Recommendations from Catalog
     # -------------------------------------------------------------
     def get_optional_recommendations(self, programme: str) -> Dict[str, Any]:
-        prog_norm = "BTECH_EE" if "EE" in programme else "BTECH_MME"
+        prog_norm = "BTECH_EE" if "EE" in programme else "BTECH_MM"
         rows = [r for r in self.optional_catalog if r.get("programme_code") == prog_norm]
         strong = [r for r in rows if r.get("iitbbs_overlap") == "STRONG"]
         partial = [r for r in rows if r.get("iitbbs_overlap") == "PARTIAL"]
@@ -474,7 +497,7 @@ class CustomPersonaPolicy(PersonaPolicy):
             "strong_overlap": strong,
             "partial_overlap": partial,
             "top_choice": strong[0]["optional"] if strong else (partial[0]["optional"] if partial else "Electrical Engineering"),
-            "warning": "None" if strong else "MME courses require SME (subject matter expert) mapping (D09)"
+            "warning": "None" if strong else "MM courses require SME (subject matter expert) mapping (D09)"
         }
 
     # -------------------------------------------------------------

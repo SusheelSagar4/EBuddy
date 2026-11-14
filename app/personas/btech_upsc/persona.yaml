@@ -3,14 +3,15 @@ goal_id: "GOAL_UPSC_CSE"
 description: "B.Tech Electrical (EE) or Metallurgical & Materials (MME) engineering student at IIT Bhubaneswar, any year (Sem 1-8), preparing for UPSC Civil Services (CSE) alongside the degree. First realistic attempt: Sem 8 (current 4th years) or after graduation."
 applicable_programmes:
   - "BTECH_EE"
-  - "BTECH_MME"
+  - "BTECH_MM"
 target_semester_range: [1, 8]
-eligibility_notes: "Open to B.Tech EE/MME students in regular academic standing, any year. Age and attempt rules are read from facts.csv (verified rows only). Students joining in Sem 6-8 are routed by rules R8/R10."
+eligibility_notes: "Open to B.Tech EE/MM students in regular academic standing, any year. Age and attempt rules are read from facts.csv (verified rows only). Students joining in Sem 6-8 are routed by rules R8/R10."
 planner_weights:
   cgpa_protection: 0.7
   skill_acceleration: 0.6
   workload_smoothing: 0.85
 fallback_goals:
   BTECH_EE: "GOAL_EE_CORE_POWER"
-  BTECH_MME: "GOAL_FALLBACK_MME_CORE"
+  BTECH_MM: "GOAL_FALLBACK_MME_CORE"
 status: "draft_for_review"
+

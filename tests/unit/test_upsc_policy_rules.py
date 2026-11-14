@@ -50,8 +50,8 @@ class TestUPSCPolicyRules(unittest.TestCase):
         self.assertTrue(res_sem1["triggered"])
         self.assertEqual(res_sem1["capped_weekly_hours"], 3)
 
-        # MME programme routes to MME fallback
-        res_mme = self.policy.r2_cgpa_guard(student_cgpa=6.3, semester=4, programme="BTECH_MME")
+        # MM programme routes to MM fallback
+        res_mme = self.policy.r2_cgpa_guard(student_cgpa=6.3, semester=4, programme="BTECH_MM")
         self.assertTrue(res_mme["triggered"])
         self.assertEqual(res_mme["fallback_goal"], "GOAL_FALLBACK_MME_CORE")
 
@@ -60,7 +60,7 @@ class TestUPSCPolicyRules(unittest.TestCase):
         self.assertFalse(res_ok["triggered"])
 
     def test_03_r03_optional_gate(self):
-        """Rule R3: Optional subject must be locked in by Sem 5 (EE) or Sem 6 (MME)."""
+        """Rule R3: Optional subject must be locked in by Sem 5 (EE) or Sem 6 (MM)."""
         # Sem 5 EE with no optional chosen -> triggered
         res_ee = self.policy.r3_optional_gate(semester=5, optional_chosen=None, programme="BTECH_EE")
         self.assertTrue(res_ee["triggered"])
@@ -68,8 +68,8 @@ class TestUPSCPolicyRules(unittest.TestCase):
         self.assertEqual(res_ee["forced_milestone"], "upsc_optional_lock_in")
         self.assertEqual(res_ee["recommended_optional"], "Electrical Engineering")
 
-        # Sem 6 MME with undecided optional -> triggered
-        res_mme = self.policy.r3_optional_gate(semester=6, optional_chosen="undecided", programme="BTECH_MME")
+        # Sem 6 MM with undecided optional -> triggered
+        res_mme = self.policy.r3_optional_gate(semester=6, optional_chosen="undecided", programme="BTECH_MM")
         self.assertTrue(res_mme["triggered"])
         self.assertIn("SME-pending", res_mme["warning"])
 
@@ -172,3 +172,4 @@ class TestUPSCPolicyRules(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

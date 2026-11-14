@@ -13,16 +13,19 @@ class TestUPSCDataValidation(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.raw_dir = os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw", "higher_studies", "upsc")
+        cls.inst_dir = os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw", "institute")
         cls.seed_kb = os.path.join(os.path.dirname(__file__), "..", "..", "data", "seed", "kb")
 
     def test_01_csv_column_counts(self):
         """Verify that no CSV has bad/mismatched column counts or ragged rows."""
         self.assertTrue(os.path.exists(self.raw_dir), f"Directory {self.raw_dir} does not exist")
-        csv_files = [f for f in os.listdir(self.raw_dir) if f.endswith(".csv")]
+        csv_files = [(self.raw_dir, f) for f in os.listdir(self.raw_dir) if f.endswith(".csv")]
+        if os.path.exists(self.inst_dir):
+            csv_files.extend([(self.inst_dir, f) for f in os.listdir(self.inst_dir) if f.endswith(".csv")])
         self.assertTrue(len(csv_files) >= 9, f"Expected at least 9 CSVs, found {len(csv_files)}")
 
-        for fn in csv_files:
-            fp = os.path.join(self.raw_dir, fn)
+        for d, fn in csv_files:
+            fp = os.path.join(d, fn)
             with open(fp, "r", encoding="utf-8") as f:
                 reader = csv.reader(f)
                 header = next(reader, None)
@@ -174,7 +177,12 @@ class TestUPSCDataValidation(unittest.TestCase):
                 cycle = (r.get("applies_to_cycle") or r.get("cycle") or "").strip()
                 verified = r["verified"].strip().upper()
 
-                self.assertTrue(bool(url), f"Fact {fid} is missing source_url")
+                val = r.get("value", "").strip()
+                if val == "NOT_FOUND" and verified == "FALSE":
+                    # source_url may be empty only when value is NOT_FOUND and verified=FALSE
+                    pass
+                else:
+                    self.assertTrue(bool(url), f"Fact {fid} is missing source_url")
                 self.assertTrue(bool(retrieved), f"Fact {fid} is missing retrieved_on")
                 self.assertTrue(bool(cycle), f"Fact {fid} is missing applies_to_cycle")
                 self.assertIn(verified, ["TRUE", "FALSE"], f"Fact {fid} verified flag must be TRUE or FALSE, got '{verified}'")

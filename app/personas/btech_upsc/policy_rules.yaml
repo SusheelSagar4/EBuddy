@@ -61,3 +61,4 @@ rules:
     params: {pre_end_sem_days: 14, clash_cap_hours: 10}
     reads: [institute_calendar:spring_end_sem_start, institute_calendar:btp_viva, facts:F11]
     worked_example_2027: "end-sem starts 2027-05-06 -> new topics end 2027-04-22; viva 2027-05-19; Prelims 2027-05-23 (4 days after viva); Spring result 2027-05-25 is 2 days AFTER Prelims"
+

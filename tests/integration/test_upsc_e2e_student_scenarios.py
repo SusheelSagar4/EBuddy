@@ -100,8 +100,8 @@ class TestUPSCE2EStudentScenarios(unittest.TestCase):
         r9 = self.policy.r9_age_eligibility(birth_date=date(2005, 10, 1), target_exam_year=2028)
         self.assertTrue(r9["eligible_for_target_year"])
 
-        # 4. Curriculum slot analysis (NEP track)
-        slots = self.policy.get_curriculum_slots(student.programme_id, student.current_semester)
+        # 4. Curriculum slot analysis (NEP track from admission year 2025-26)
+        slots = self.policy.get_curriculum_slots(student.programme_id, student.current_semester, admission_year="2025-26")
         self.assertEqual(slots["track"], "NEP")
 
         # 5. Planning and Validation
@@ -113,17 +113,17 @@ class TestUPSCE2EStudentScenarios(unittest.TestCase):
 
     def test_02_sem6_mme_student(self):
         """
-        Scenario 2: Sem 6 MME student.
-        - Pre-NEP track.
+        Scenario 2: Sem 6 MM student.
+        - Pre-NEP track (admitted 2024-25).
         - Answer writing foundation milestone.
         - 5-item diagnostic assessment.
-        - Rules: R3 optional gate (with SME review warning for MME), R8 late start.
+        - Rules: R3 optional gate (with SME review warning for MM), R8 late start.
         - Valid plan generated & passed.
         """
         student = StudentProfile(
             student_id="STU_E2E_MME_SEM6",
             name="Ananya Mishra",
-            programme_id="BTECH_MME",
+            programme_id="BTECH_MM",
             current_semester=6,
             cgpa=7.4,
             backlogs=0,
@@ -162,9 +162,11 @@ class TestUPSCE2EStudentScenarios(unittest.TestCase):
         self.assertTrue(r8["triggered"])
         self.assertEqual(r8["recommendation"], "attempt_after_graduation")
 
-        # 4. Optional recommendations
+        # 4. Optional recommendations & curriculum slots (pre-NEP track from admission year 2024-25)
         opt_rec = self.policy.get_optional_recommendations(student.programme_id)
         self.assertIn("SME", opt_rec["warning"])
+        slots = self.policy.get_curriculum_slots(student.programme_id, student.current_semester, admission_year="2024-25")
+        self.assertEqual(slots["track"], "2016-17")
 
         # 5. Planning and Validation
         gaps = self.gap_analyzer.analyze_gaps(self.goal, self.reqs, skill_states)
@@ -239,3 +241,4 @@ class TestUPSCE2EStudentScenarios(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
