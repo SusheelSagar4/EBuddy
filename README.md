@@ -257,12 +257,20 @@ python scripts/check_data.py
 │   ├── 01_events_master.csv              # Unified events catalog (7 fests, 25 hackathons, 30 competitions)
 │   ├── 02_phase_eligibility.csv          # Gating rules & user messages across 7 learner stages
 │   ├── 03_recommendation_rules.csv       # Machine-readable recommendation rules (R01–R11)
-│   └── 04_domain_to_phase_map.csv        # Topic tagging, prerequisite phases & beginner flags
+│   ├── 04_domain_to_phase_map.csv        # Topic tagging, prerequisite phases & beginner flags
+│   ├── 01_sde_roadmap_overview.csv       # 8-phase SDE prep roadmap overview (35 topics)
+│   ├── 02_phase_learning_content.csv     # 105 tiered learning resources (Tiers A, B, C)
+│   ├── 03_topic_checkpoints.csv          # 35 proof-of-learning checkpoints & passing criteria
+│   ├── 04_project_repos.csv              # 35 curated GitHub repos with required skills & phases
+│   └── 05_portfolio_projects.csv         # 8 flagship resume portfolio projects
 ├── AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx # Source learning roadmap Excel
 ├── top7_iit_fests_26-27.xlsx             # Source Top 7 IIT fests & AI/ML hackathons Excel
 ├── ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx # Verified mirror Excel
+├── SDE_Prep_Roadmap_with_Playlists.xlsx  # Source SDE prep roadmap & playlists Excel
+├── Top_SDE_Project_GitHub_Repos.xlsx     # Source top SDE GitHub repos & portfolio path Excel
 ├── build_csvs.py                         # Single-run pipeline for roadmap knowledge base
 ├── build_events_csvs.py                  # Single-run pipeline for events & competitions knowledge base
+├── build_sde_csvs.py                     # Single-run pipeline for SDE knowledge base
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
@@ -339,4 +347,44 @@ An automated pipeline (`build_events_csvs.py`) ingests official event schedules 
 python build_events_csvs.py
 ```
 *The pipeline executes automated validation assertions, verifying row counts, category distribution (7 FEST / 25 HACKATHON / 30 COMPETITION), referential integrity, date range logic, and sheet identity between File A and File B.*
+
+---
+
+## 13. SDE (Software Development Engineer) Knowledge Base Pipeline
+
+As part of the eBuddy expansion for full-stack Software Development Engineer prep, an automated data transformation pipeline (`build_sde_csvs.py`) ingests two canonical Excel files (`SDE_Prep_Roadmap_with_Playlists.xlsx` and `Top_SDE_Project_GitHub_Repos.xlsx`) and generates five clean, relational, BOM-encoded (`utf-8-sig`) CSV datasets in `output/`:
+
+### Datasets Generated (`output/`)
+
+| File | Rows | Schema & Purpose | Key Highlights |
+|---|---|---|---|
+| **`01_sde_roadmap_overview.csv`** | 8 | High-level 8-phase SDE roadmap overview spanning foundational programming to interview preparation. | • `phase_order` (1–8) & `phase_id` (`1_Programming_Foundations` .. `8_Interview_Prep`)<br/>• `phase_name`, `phase_objective`, `learner_outcome`<br/>• `topics_covered` (ordered list of skills per phase)<br/>• `step_count`, `step_range`, `recommended_next_phase` |
+| **`02_phase_learning_content.csv`** | 105 | Exhaustive tiered curriculum content covering all 35 steps across Tiers A, B, and C (35 × 3). | • `step` (1–35), `skill`, `phase_id`<br/>• `tier` (`A`, `B`, `C`), `tier_purpose`, `tier_guidance`<br/>• `playlist_resource_title`, `creator`<br/>• `link_url` (extracted from underlying cell hyperlinks), `link_type`, `link_verified`<br/>• `source_notes`, `auxiliary_url`, `key_concepts_covered` |
+| **`03_topic_checkpoints.csv`** | 35 | Relational proof-of-learning checkpoints for every step of the SDE learning path. | • `step`, `skill`, `phase_id`<br/>• `checkpoint_description` (exact from source)<br/>• `checkpoint_type` (`PROJECT_BUILD`, `PROBLEM_SOLVING`, `CONCEPT_EXPLANATION`, `HANDS_ON_CONFIG`)<br/>• `passing_criteria` & `recommended_proof_artifact` |
+| **`04_project_repos.csv`** | 35 | Curated catalog of high-impact open-source GitHub repositories for hands-on project building. | • `repo_id` (`REPO-01` to `REPO-35`), `repository_name`, `github_link`<br/>• `category`, `what_it_offers`, `example_project_ideas`<br/>• `difficulty`, `best_for`, `stars_reported`, `tech_stack`<br/>• `required_skills`, `earliest_recommended_phase`<br/>• `portfolio_path_priority` (`HIGH` for portfolio path repos, `NORMAL` otherwise) |
+| **`05_portfolio_projects.csv`** | 8 | Structured portfolio project recommendations highlighting recruiter-facing proof of competence. | • `project_id` (`PORT-01` to `PORT-08`), `project_name`<br/>• `why_it_impresses`, `recommended_repos`<br/>• `skills_demonstrated`<br/>• `target_phase` & `recommended_difficulty` |
+
+### Pedagogy & Design Principles
+1. **Curriculum Phase Partitioning**: Structured into 8 sequential phases:
+   - Phase 1: `1_Programming_Foundations` (Steps 1–2: Languages & Git)
+   - Phase 2: `2_Core_CS_Foundations` (Steps 3–8: OS, Networks, DBMS, SQL, OOP, System Architecture)
+   - Phase 3: `3_Data_Structures_Algorithms` (Steps 9–17: Core to Advanced DSA & DP)
+   - Phase 4: `4_Web_Development_Stack` (Steps 18–24: Frontend, Backend, Node, Express, Testing)
+   - Phase 5: `5_Software_Architecture_Design` (Steps 25–27: LLD, Design Patterns, HLD)
+   - Phase 6: `6_DevOps_Cloud_Tools` (Steps 28–32: Linux, Docker, K8s, CI/CD, AWS)
+   - Phase 7: `7_Specialized_Modern_Tech` (Steps 33–34: Realtime Systems, Next.js / Modern Full-Stack)
+   - Phase 8: `8_Interview_Prep` (Step 35: Mock Interviews, Behavioral & Coding Prep)
+2. **Tiered Learning Pedagogy**:
+   - **Tier A (Standard Introductory)**: Primary entry point playlist; recommended first watch.
+   - **Tier B (Conceptual / Deep Dive)**: Alternative explanations and depth for complex concepts.
+   - **Tier C (Hands-On Practice)**: Dedicated practice sets, coding exercises, and problem solving.
+3. **Hyperlink Target Extraction**: Ingests true underlying URLs via OpenPyXL hyperlink targets (`cell.hyperlink.target`), replacing placeholder display text ("Open") with live links. Auxiliary URLs embedded in notes are isolated into `auxiliary_url`.
+4. **Portfolio Path Cross-Referencing**: Resolves repository references in the Portfolio Path to mark flagship repos with `HIGH` priority, guiding learners directly from concept mastery to resume-worthy builds.
+
+### Running the SDE Pipeline
+```bash
+python build_sde_csvs.py
+```
+*The pipeline executes deterministic validation assertions upon execution, verifying 100% hyperlink extraction, 35 unique steps, 3 tiers per step (105 total rows), 8 portfolio path projects, and relational consistency across all output files.*
+
 
