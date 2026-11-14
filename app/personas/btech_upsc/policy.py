@@ -264,8 +264,8 @@ class CustomPersonaPolicy(PersonaPolicy):
         buffer_marks = params.get("buffer_marks", 20)
 
         verified_cutoffs = [
-            float(c["cutoff_marks"]) for c in self.cutoffs
-            if c.get("exam_stage", "").lower() == "prelims"
+            float(c["marks"]) for c in self.cutoffs
+            if "prelims" in (c.get("stage") or c.get("exam_stage") or "").lower()
             and c.get("category", "").lower() == "general"
             and c.get("verified", "").upper() == "TRUE"
         ]
