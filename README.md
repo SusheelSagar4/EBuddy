@@ -259,24 +259,28 @@ The system provides documented simulation hooks to test adaptive behaviors in re
 ## 9. Testing & Quality Assurance
 
 ```bash
-# 1. Run Core-to-Core comprehensive tests (budget, readiness, matching, papers, simulations)
+# 1. Run Core-to-Core comprehensive tests (15 tests: budget, readiness, matching, papers, prompt injection)
 python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_core_to_core.py
 
-# 2. Run DB-free unit tests (offline, instant configuration & schema checks)
+# 2. Run DB-free unit tests (9 tests: offline configuration & schema checks)
 python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_db_free.py
 
-# 3. Run all tests simultaneously in Docker environment
+# 3. Run Evaluation Scorecard over 32 synthetic student profiles
+python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_evaluation_scorecard.py
+
+# 4. Run all tests simultaneously in Docker environment
 docker compose exec app pytest tests -q
 ```
 
 **Current Test Suite Status:**
-- `test_core_to_core.py`: 8 passed, 0 failed, 0 skipped.
+- `test_core_to_core.py`: 15 passed, 0 failed, 0 skipped.
 - `test_db_free.py`: 9 passed, 0 failed, 0 skipped.
+- `test_evaluation_scorecard.py`: 1 passed (32 synthetic profiles evaluated at 100.0% accuracy), 0 failed, 0 skipped.
 - `test_db_dependent.py`: 4 passed, 0 failed, 0 skipped.
-- **Total:** **21 passed, 0 failed, 0 skipped** (100% pass rate).
-
+- **Total:** **29 passed, 0 failed, 0 skipped** (100% pass rate).
 
 ---
+
 
 ## 9. Compliance Checklist
 

@@ -71,8 +71,8 @@ class Planner(IPlanner):
         state_map = {s.skill_id: s.estimated_level for s in states}
         aims_lower = ((aims_text or "") + " " + goal.name + " " + goal.description).lower()
 
-        # EE Mismatch Rule: Wants Power Electronics / Smart Grid, weak in Circuits
-        if any(kw in aims_lower for kw in ["power electronics", "smart grid", "power system", "converter", "ev drive"]):
+        # EE Mismatch Rule: Wants Power Electronics / Smart Grid / Power Transmission, weak in Circuits
+        if any(kw in aims_lower for kw in ["power electronics", "smart grid", "power system", "power transmission", "relay", "converter", "ev drive", "hvdc"]):
             circ_level = state_map.get("SKILL_CIRCUIT_ANALYSIS", 100.0)
             if circ_level < 75.0:
                 return {
@@ -92,7 +92,7 @@ class Planner(IPlanner):
                 }
 
         # MM Mismatch Rule: Wants Advanced Alloys / Materials Processing, weak in Metallurgy/Thermodynamics
-        if any(kw in aims_lower for kw in ["materials", "alloy", "processing", "nanomaterial", "additive"]):
+        if any(kw in aims_lower for kw in ["materials", "alloy", "processing", "nanomaterial", "additive", "steel", "rolling", "extractive", "metallurgy"]):
             phys_level = state_map.get("SKILL_PHYSICAL_METALLURGY", 100.0)
             therm_level = state_map.get("SKILL_THERMODYNAMICS_MAT", 100.0)
             if phys_level < 75.0:
