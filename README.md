@@ -250,6 +250,19 @@ python scripts/check_data.py
 │       ├── higher_studies/               # 14 relational tables for higher studies pathways
 │       ├── student/                      # Student profiles, completed courses, and goals
 │       └── survey/                       # Baseline survey instrument & diagnostic rubrics
+├── output/                               # Generated relational CSV knowledge bases
+│   ├── 01_roadmap.csv                    # 6-phase overview roadmap with objectives & outcomes
+│   ├── 02_phase_resources.csv            # 55 phase-wise curated learning resources
+│   ├── 03_prerequisites.csv             # Relational prerequisite DAG & high school math expansions
+│   ├── 01_events_master.csv              # Unified events catalog (7 fests, 25 hackathons, 30 competitions)
+│   ├── 02_phase_eligibility.csv          # Gating rules & user messages across 7 learner stages
+│   ├── 03_recommendation_rules.csv       # Machine-readable recommendation rules (R01–R11)
+│   └── 04_domain_to_phase_map.csv        # Topic tagging, prerequisite phases & beginner flags
+├── AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx # Source learning roadmap Excel
+├── top7_iit_fests_26-27.xlsx             # Source Top 7 IIT fests & AI/ML hackathons Excel
+├── ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx # Verified mirror Excel
+├── build_csvs.py                         # Single-run pipeline for roadmap knowledge base
+├── build_events_csvs.py                  # Single-run pipeline for events & competitions knowledge base
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
@@ -279,3 +292,51 @@ python scripts/check_data.py
 ├── Makefile                              # Make commands for Linux/macOS
 └── requirements.txt                      # Project Python dependencies
 ```
+
+---
+
+## 11. AI/ML Personalised Learning Roadmap & Knowledge Base Pipeline
+
+As part of the AI/ML Personalised Learning Buddy for Inter IIT Tech Meet 15.0, an automated data transformation pipeline (`build_csvs.py`) ingests the canonical Excel knowledge base (`AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx`) and generates three relational, BOM-encoded (`utf-8-sig`) CSV datasets in `output/`:
+
+### Relational Datasets Generated (`output/`)
+
+| File | Rows | Schema / Description | Key Outputs |
+|---|---|---|---|
+| **`01_roadmap.csv`** | 6 | High-level roadmap showing phase progression across `0_Foundations`, `1_Classical_ML`, `2_Deep_Learning`, `3_Projects`, `4_Specialization`, and `5_Research`. | • `phase_order` (1–6)<br/>• `phase_id` & `phase_name`<br/>• `phase_objective` & `learner_outcome`<br/>• `topics_covered` (ordered domains)<br/>• `total_estimated_hours` (1,624 hrs total)<br/>• `recommended_next_phase` |
+| **`02_phase_resources.csv`** | 55 | Detailed catalog of curated learning resources sorted by phase and curriculum order. | • `resource_id` (AIML-001 to AIML-056)<br/>• `resource_title` & `platform_author`<br/>• `resource_type` & `resource_format_group`<br/>• `learning_style` & `cost_model`<br/>• `estimated_hours` & `key_concepts_and_skills`<br/>• `url_or_access_reference` |
+| **`03_prerequisites.csv`** | Long Format | Relational prerequisite mapping linking every resource to its prerequisites. | • `prerequisite_kind` (`RESOURCE`, `HIGH_SCHOOL_MATH`, `NONE`, `OTHER`)<br/>• `prerequisite_resource_id` & `prerequisite_title`<br/>• `prerequisite_phase_id`<br/>• `prerequisite_detail` (CBSE Class 11–12 chapter mappings) |
+
+### Format Group Normalization
+The pipeline maps source resource types into 11 canonical format groups: `Video`, `Video Series`, `Course`, `Documentation`, `Book`, `Interactive`, `College Course`, `Project/Dataset`, `Reading/Blog/Papers`, `Curated List`, and `Other`.
+
+### CBSE/NCERT High School Math Expansion
+Resources requiring foundational high school mathematics (such as `AIML-004`) are expanded into 16 structured CBSE/NCERT Class 11 and Class 12 chapters in `03_prerequisites.csv`, defining granular diagnostic checks across calculus, linear algebra, vector algebra, coordinate geometry, and probability.
+
+### Running the Pipeline
+```bash
+python build_csvs.py
+```
+*The pipeline executes deterministic validation assertions upon execution, verifying row counts, ID uniqueness, hours summation consistency (1,624 total hours), and relational referential integrity across all three CSV files.*
+
+---
+
+## 12. Events & Competitions Knowledge Base Pipeline
+
+An automated pipeline (`build_events_csvs.py`) ingests official event schedules (`top7_iit_fests_26-27.xlsx` and `ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx`) to generate clean, relational event catalogs and recommendation governance rules in `output/` relative to reference date **2026-11-14**:
+
+### Datasets Generated (`output/`)
+
+| File | Rows | Schema & Purpose | Key Highlights |
+|---|---|---|---|
+| **`01_events_master.csv`** | 62 | Unified master catalog covering 7 Top IIT Tech Fests, 25 Hackathons, and 30 Leaderboard Competitions. | • Unique IDs (`FEST-01..07`, `HACK-001..025`, `COMP-001..030`)<br/>• Standardized mode & location<br/>• Timeline parsing (`start_month`, `end_month`, `expected_month_range`)<br/>• Prior year windows and new edition flags |
+| **`02_phase_eligibility.csv`** | 7 | Stage-wise gating rules defining category unlocks (`fests_unlocked`, `hackathons_unlocked`, `competitions_unlocked`), recommendation quotas, and contextual user nudges. | • `NONE_YET` & `0_Foundations`: Fests only (exposure/inspiration)<br/>• `1_Classical_ML`+: Full unlock (2 fests, 2 hacks, 2 competitions; 6 total) |
+| **`03_recommendation_rules.csv`** | 11 | Machine-readable engine rules (R01–R11) governing eligibility, set sizing, category mix, diversity, timeline filters, and domain matching. | • Enforces minimum phase prerequisites<br/>• Limits max same platform to 2<br/>• Excludes ended events |
+| **`04_domain_to_phase_map.csv`** | 62 | Fine-grained classification linking events to 16 canonical technical domains, unlock phases, beginner-friendly flags, and concise reasoning. | • Standardized closed-vocabulary domain tags<br/>• Earliest phase readiness mapping<br/>• Grounded reasoning per event |
+
+### Running the Events Pipeline
+```bash
+python build_events_csvs.py
+```
+*The pipeline executes automated validation assertions, verifying row counts, category distribution (7 FEST / 25 HACKATHON / 30 COMPETITION), referential integrity, date range logic, and sheet identity between File A and File B.*
+
