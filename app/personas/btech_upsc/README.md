@@ -14,7 +14,7 @@
 
 ## 3. Draft Status of Requirements and Mastery Defaults
 > [!NOTE] Draft Defaults Notice
-> All threshold values, levels, and weights in `requirements.yaml` and `mastery.yaml` are **draft defaults** derived from domain skills (`upsc/skills.csv`), milestone targets (`upsc/milestones.csv`), and `ee_power_core` conventions pending final subject matter expert (SME) validation.
+> All threshold values, levels, and weights in `requirements.yaml` and `mastery.yaml` are **draft defaults** derived from domain skills (`data/raw/higher_studies/upsc/skills.csv`), milestone targets (`data/raw/higher_studies/upsc/milestones.csv`), and `ee_power_core` conventions pending final subject matter expert (SME) validation.
 
 ## 4. Known Gaps and Fallbacks
 - Verified cutoffs use official CSE-2025 data; earlier cycle scores remain unconfirmed.
