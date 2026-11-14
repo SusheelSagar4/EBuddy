@@ -14,11 +14,11 @@ export function renderLearn(container, state, navigate) {
   container.innerHTML = `
     <div class="screen-card">
       <div class="screen-header">
-        <h2>Active Learning & Practice</h2>
-        <p class="subtitle">Curated video lectures, reference materials, and targeted practice exercises.</p>
+        <h2>Daily Learning & Resources (Agent 2)</h2>
+        <p class="subtitle">Curated video lectures, courseware, and practice grounded in IIT Bhubaneswar's verified knowledge base.</p>
       </div>
 
-      <div id="learn-loading" class="loading-state">Loading active modules & exercises...</div>
+      <div id="learn-loading" class="loading-state">Loading today's curated materials from Knowledge Base...</div>
       <div id="learn-content" style="display: none;"></div>
     </div>
   `;
@@ -30,30 +30,37 @@ export function renderLearn(container, state, navigate) {
     const content = document.getElementById('learn-content');
 
     try {
-      const data = await api.getLearn(state.studentId);
+      const todayData = await api.getLearnToday(state.studentId).catch(() => null);
       loading.style.display = 'none';
       content.style.display = 'block';
 
-      const resources = data.resources || [];
-      const exercises = data.exercises || [];
+      const resources = todayData?.resources || [];
 
       content.innerHTML = `
         <div class="two-col-layout">
-          <div class="col-main">
-            <h3>Recommended Open Courseware & Playlists</h3>
-            ${resources.length === 0 ? `<p class="text-muted">No external resources mapped for this skill set yet.</p>` : `
-              <div class="resource-cards-list">
+          <div class="col-main" style="flex: 2;">
+            <h3>Today's Knowledge-Base Learning Modules (Zero Hallucination)</h3>
+            <p style="font-size: 0.9em; color: #666; margin-bottom: 16px;">
+              ${todayData?.disclaimer || 'All links are sourced from official institutional records.'}
+            </p>
+            ${resources.length === 0 ? `<p class="text-muted">No external resources scheduled for today's modules.</p>` : `
+              <div class="resource-cards-list" style="display:flex; flex-direction:column; gap:12px;">
                 ${resources.map(res => `
-                  <div class="resource-card">
-                    <div class="res-top">
-                      <span class="res-title">${res.title}</span>
-                      <span class="badge ${res.coverage_status === 'playlist found' ? 'badge-success' : 'badge-neutral'}">
-                        ${res.coverage_status || 'available'}
+                  <div class="resource-card" style="background:white; border:1px solid #e0e0e0; border-radius:8px; padding:16px;">
+                    <div class="res-top" style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                      <span class="res-title" style="font-size:1.05em; font-weight:bold;">${res.title}</span>
+                      <span class="badge ${res.coverage_status === 'Playlist found' ? 'badge-success' : 'badge-neutral'}">
+                        ${res.coverage_status || 'Verified'}
                       </span>
                     </div>
-                    <p class="res-desc text-muted">${res.platform || 'NPTEL / YouTube'} • Channel: ${res.channel_or_instructor || 'IIT Faculty'}</p>
-                    <div class="res-link">
-                      <a href="${res.url || '#'}" target="_blank" rel="noopener noreferrer">Open Lecture Series ↗</a>
+                    <p class="res-desc text-muted" style="margin: 4px 0 8px 0;">
+                      Provider: <strong>${res.provider || 'NPTEL'}</strong> • Course: <strong>${res.display_code} (${res.course_title})</strong>
+                    </p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                      <a href="${res.url || '#'}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                        Open Lecture Playlist ↗
+                      </a>
+                      <span class="badge badge-info">${res.difficulty || 'Intermediate'}</span>
                     </div>
                   </div>
                 `).join('')}
@@ -61,63 +68,21 @@ export function renderLearn(container, state, navigate) {
             `}
           </div>
 
-          <div class="col-side">
-            <h3>Interactive Practice Exercises</h3>
-            ${exercises.length === 0 ? `<p class="text-muted">All active exercises for current milestone completed!</p>` : `
-              <div class="exercise-cards-list">
-                ${exercises.map(ex => `
-                  <div class="exercise-card" id="ex-card-${ex.exercise_id}">
-                    <div class="ex-header">
-                      <span class="badge badge-info">${ex.skill_id}</span>
-                      <span class="badge badge-neutral">Difficulty ${(ex.difficulty * 10).toFixed(0)}/10</span>
-                    </div>
-                    <p class="ex-prompt"><strong>${ex.prompt}</strong></p>
-                    
-                    <form class="ex-form" data-id="${ex.exercise_id}">
-                      <div class="ex-input-group">
-                        <input type="text" class="input-answer" placeholder="Enter numerical answer or choice..." required />
-                        <button type="submit" class="btn btn-secondary btn-sm">Submit</button>
-                      </div>
-                    </form>
-                    <div class="ex-feedback" id="feedback-${ex.exercise_id}" style="display:none;"></div>
-                  </div>
-                `).join('')}
-              </div>
-            `}
+          <div class="col-side" style="flex: 1; padding-left: 20px; border-left: 1px solid #eee;">
+            <h3>Active Practice & Quizzes</h3>
+            <p class="text-muted" style="font-size:0.9em;">
+              Practice submissions are evaluated by <strong>Agent 3 (Assessment Agent)</strong>. Insufficient scores trigger a remediation proposal.
+            </p>
+            <div style="background:#fcfcfc; border:1px solid #e5e5e5; border-radius:6px; padding:12px; margin-top:10px;">
+              <strong>Skill Focus: Electrical Circuits & Machines</strong>
+              <p style="font-size:0.85em; color:#555; margin:6px 0 10px 0;">Complete today's 3 practice problems to demonstrate mastery.</p>
+              <button class="btn btn-secondary btn-sm" onclick="window.location.hash='#diagnostic'">Take Today's Practice Quiz</button>
+            </div>
           </div>
         </div>
       `;
-
-      // Attach submission handlers
-      document.querySelectorAll('.ex-form').forEach(form => {
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const exId = form.getAttribute('data-id');
-          const answer = form.querySelector('.input-answer').value;
-          const feedbackBox = document.getElementById(`feedback-${exId}`);
-
-          try {
-            const res = await api.submitExercise(state.studentId, {
-              exercise_id: exId,
-              answer: answer
-            });
-
-            feedbackBox.style.display = 'block';
-            feedbackBox.className = `ex-feedback ${res.correct ? 'feedback-success' : 'feedback-error'}`;
-            feedbackBox.innerHTML = `
-              <strong>${res.correct ? '✓ Correct!' : '✕ Needs Review'}</strong>
-              <p>${res.explanation || 'Result registered in student evidence ledger.'}</p>
-              <span class="score-pill">Score: ${(res.score * 100).toFixed(0)}%</span>
-            `;
-          } catch (err) {
-            alert(`Submission error: ${err.message}`);
-          }
-        });
-      });
-
     } catch (err) {
-      loading.innerHTML = `<p class="text-error">Failed to load learning resources: ${err.message}</p>`;
+      loading.innerHTML = `<p class="text-danger">Failed to load learning resources: ${err.message}</p>`;
     }
   }
 }
-

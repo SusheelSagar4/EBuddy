@@ -473,6 +473,34 @@ CREATE TABLE IF NOT EXISTS plan.decision_log (
     logged_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS plan.change_proposal (
+    proposal_id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    proposer_agent VARCHAR(50) NOT NULL, -- agent_2_resource, agent_3_assessment, agent_4_query
+    proposal_type VARCHAR(50) NOT NULL,  -- resource_swap, remediation_insertion, workload_reduction, pace_change, schedule_shift, goal_pivot
+    status VARCHAR(50) NOT NULL DEFAULT 'pending_student_approval', -- pending_student_approval, approved, rejected, committed, validation_failed
+    reasoning TEXT NOT NULL,
+    target_week INT,
+    target_semester INT,
+    proposed_modifications JSONB NOT NULL,
+    impact_summary TEXT NOT NULL,
+    student_feedback TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE IF NOT EXISTS plan.roadmap_version (
+    version_id SERIAL PRIMARY KEY,
+    plan_id VARCHAR(100) NOT NULL,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    version_number INT NOT NULL,
+    commit_reason TEXT NOT NULL,
+    approved_proposal_id VARCHAR(100) REFERENCES plan.change_proposal(proposal_id),
+    plan_snapshot JSONB NOT NULL,
+    diff_from_previous JSONB,
+    committed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- =============================================================================
 -- SCHEMA: ops (Operations, LLM Audit, Reprocessing Queue)
 -- =============================================================================

@@ -123,7 +123,7 @@ class ResourceRepo:
                     title=r["title"],
                     url=r["url"],
                     provider=r["provider"],
-                    media_type=r["media_type"],
+                    media_type=r.get("media_type") or r.get("resource_type", "playlist"),
                     coverage_status=r["coverage_status"],
                     link_verified=r.get("link_verified", "").lower() == "true",
                     status=r.get("status", "verified"),

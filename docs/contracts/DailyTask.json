@@ -1,0 +1,119 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "day_number": {
+      "title": "Day Number",
+      "type": "integer"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "estimated_minutes": {
+      "default": 45,
+      "title": "Estimated Minutes",
+      "type": "integer"
+    },
+    "task_type": {
+      "default": "video_lecture",
+      "enum": [
+        "video_lecture",
+        "reading",
+        "practice_exercise",
+        "quiz",
+        "project",
+        "revision"
+      ],
+      "title": "Task Type",
+      "type": "string"
+    },
+    "skill_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Id"
+    },
+    "course_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Course Id"
+    },
+    "resource_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resource Id"
+    },
+    "resource_title": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resource Title"
+    },
+    "resource_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resource Url"
+    },
+    "exercise_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exercise Id"
+    },
+    "is_completed": {
+      "default": false,
+      "title": "Is Completed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "task_id",
+    "day_number",
+    "title"
+  ],
+  "title": "DailyTask",
+  "type": "object"
+}

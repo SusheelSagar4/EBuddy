@@ -1,0 +1,74 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "version_id": {
+      "title": "Version Id",
+      "type": "string"
+    },
+    "plan_id": {
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "version_number": {
+      "title": "Version Number",
+      "type": "integer"
+    },
+    "commit_reason": {
+      "title": "Commit Reason",
+      "type": "string"
+    },
+    "approved_proposal_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved Proposal Id"
+    },
+    "total_items": {
+      "title": "Total Items",
+      "type": "integer"
+    },
+    "total_credits": {
+      "title": "Total Credits",
+      "type": "number"
+    },
+    "diff_summary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Diff Summary"
+    },
+    "committed_at": {
+      "format": "date-time",
+      "title": "Committed At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "version_id",
+    "plan_id",
+    "student_id",
+    "version_number",
+    "commit_reason",
+    "total_items",
+    "total_credits",
+    "committed_at"
+  ],
+  "title": "RoadmapVersionRecord",
+  "type": "object"
+}
