@@ -97,9 +97,9 @@ class ChatService:
         """
         text_lower = text.lower()
         patterns = [
-            r"ignore\s+(all\s+)?(previous|prior)\s+instructions?",
+            r"(ignore|disregard|forget|bypass)\s+(all\s+)?(previous|prior|system)\s+instructions?",
             r"system\s+prompt",
-            r"disregard\s+(the\s+)?rules?",
+            r"(disregard|ignore|bypass)\s+(the\s+)?rules?",
             r"developer\s+mode",
             r"jailbreak",
             r"override\s+instructions?",
