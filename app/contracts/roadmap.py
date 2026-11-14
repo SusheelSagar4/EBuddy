@@ -34,6 +34,8 @@ class WeeklyRoadmap(BaseContract):
     daily_tasks: List[DailyTask]
     milestone_checkpoint: Optional[str] = None
     total_estimated_hours: float = 0.0
+    weekly_hours_budget: Optional[float] = None
+    deferred_tasks: List[str] = []
 
 class RoadmapVersionRecord(BaseContract):
     version_id: str

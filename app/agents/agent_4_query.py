@@ -119,6 +119,27 @@ class QueryAdaptationAgent:
         # 4. Standard Educational / Planning Router
         intent = self.router.classify_intent(message, context_card)
 
+        # Check if student has interest-vs-evidence conflict in their profile/plan
+        conflict_note = ""
+        has_conflict = False
+        if context_card.current_plan_items:
+            for item in context_card.current_plan_items:
+                reason = item.get("reason", {})
+                if "CONFLICT: Interest vs Evidence" in str(reason.get("why_this", "")):
+                    has_conflict = True
+                    break
+        if not has_conflict and context_card.skill_gaps:
+            for g in context_card.skill_gaps:
+                if g.get("estimated_level", 100) < 40 and g.get("confidence", 0) > 0:
+                    has_conflict = True
+                    break
+
+        if has_conflict:
+            conflict_note = (
+                "\n\n[Notice: Foundational Alignment] Diagnostic evidence indicates foundational gaps in your target area. "
+                "Bridging exercises are scheduled to reinforce fundamentals before advanced topics."
+            )
+
         if intent == Intent.OFF_TOPIC:
             resp_text = (
                 "I am your academic learning buddy for IIT Bhubaneswar. "
@@ -131,6 +152,7 @@ class QueryAdaptationAgent:
                 f"{explanation.short_summary}\n\n"
                 f"**Rationale:** {explanation.detailed_rationale}\n\n"
                 f"*Strict Institutional Notice:* Unconfirmed dates or credit policies are labeled pending official notices."
+                f"{conflict_note}"
             )
         elif intent == Intent.GOAL_CHANGE:
             proposal = ChangeProposal(
@@ -151,9 +173,10 @@ class QueryAdaptationAgent:
                 "Understood! I have created a **Goal Recalibration Proposal**. "
                 "Once approved, Agent 1 will re-plan your elective choices and prerequisite sequences.\n\n"
                 "👉 *Please confirm if you want to apply this target goal update.*"
+                f"{conflict_note}"
             )
         else:
-            resp_text = f"Received your query regarding '{message}'. Let's review how this aligns with {context_card.goal_name}."
+            resp_text = f"Received your query regarding '{message}'. Let's review how this aligns with {context_card.goal_name}.{conflict_note}"
 
         return {
             "inferred_intent": intent.value,

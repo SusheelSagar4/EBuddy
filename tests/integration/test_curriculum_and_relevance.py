@@ -342,10 +342,11 @@ def test_10_elective_with_unmet_prereq_never_recommended():
     assert ranked_satisfied[0]["course_id"] == "CS4L003"
     assert ranked_satisfied[0]["prerequisites_satisfied"] is True
 
-def test_11_unsourced_baseline_rules_emit_warnings_without_hard_blocking():
+def test_11_student_constraints_hard_while_institute_rules_are_warnings():
     """
-    Item 2: Unsourced baseline rules (credit cap, minor eligibility) must produce
-    labelled WARNINGS rather than hard-blocking or silently dropping courses.
+    Item 1: Student-stated constraints (credit cap, headroom, weekly hours, not-together pairs, avoid-course)
+    are HARD and must never be exceeded by default. Only unsourced institute rules (unsourced_baseline)
+    are warnings. Overload courses exceeding student limits go to optional_overload_proposals.
     """
     planner = Planner()
     validator = roadmap_orchestrator.agent_1.validator_engine
@@ -366,8 +367,10 @@ def test_11_unsourced_baseline_rules_emit_warnings_without_hard_blocking():
         source_id="TEST"
     )
 
-    # In Sem 5 EE, core courses + electives + minor reaches 27.0 credits (> 26.0 baseline cap)
-    plan = planner.generate_plan(
+    # -------------------------------------------------------------------------
+    # PART A: Only unsourced baseline rules (constraints=[]) -> labelled WARNINGS, no courses dropped
+    # -------------------------------------------------------------------------
+    plan_baseline = planner.generate_plan(
         student=student,
         goal=goal,
         gaps=[],
@@ -375,23 +378,65 @@ def test_11_unsourced_baseline_rules_emit_warnings_without_hard_blocking():
         preferences=[],
         completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
     )
-
-    # 1. Verify courses were NOT silently dropped
-    course_items = [it for it in plan.items if it.item_type == "course"]
-    assert len(course_items) >= 7
-
-    # 2. Verify labelled warning is attached to reason/compliance
-    warning_items = [it for it in course_items if any("unsourced_baseline" in w for w in it.reason.rule_compliance)]
+    course_items_b = [it for it in plan_baseline.items if it.item_type == "course"]
+    assert len(course_items_b) >= 7, "Under baseline rules alone, courses are not dropped"
+    warning_items = [it for it in course_items_b if any("unsourced_baseline" in w for w in it.reason.rule_compliance)]
     assert len(warning_items) > 0, "Overload item must carry [WARNING: unsourced_baseline] label"
+    report_b = validator.validate_plan(plan_baseline, student, completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"])
+    assert report_b.passed is True, "Unsourced baseline warning must not hard-fail validation"
 
-    # 3. Verify PlanValidator validates without failing the plan
-    report = validator.validate_plan(plan, student, completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"])
-    assert report.passed is True, "Unsourced baseline warning must not hard-fail validation"
-    assert any("[WARNING" in msg for msg in report.messages), "Report messages must include labelled warning"
+    # -------------------------------------------------------------------------
+    # PART B: Student-stated credit cap (HARD) -> Default plan strictly stays within limit
+    # -------------------------------------------------------------------------
+    c_cap = Constraint(
+        constraint_id="C_CAP_24",
+        student_id=student.student_id,
+        constraint_type="credit_cap",
+        parameters={"max_credits": 24.0}
+    )
+    plan_capped = planner.generate_plan(
+        student=student,
+        goal=goal,
+        gaps=[],
+        constraints=[c_cap],
+        preferences=[],
+        completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
+    )
+    # Default plan must not exceed 24.0 credits
+    total_default_credits = sum(planner.course_info.get(it.course_id, {}).get("credits", 4.0) for it in plan_capped.items if it.item_type == "course")
+    assert total_default_credits <= 24.0, f"Default plan exceeded student limit: {total_default_credits} > 24.0"
+
+    # The overload course (minor course) must be in optional_overload_proposals
+    assert len(plan_capped.optional_overload_proposals) > 0, "Overload course must be placed in optional proposals"
+    prop = plan_capped.optional_overload_proposals[0]
+    assert prop["status"] == "pending_student_approval"
+    assert "Exceeds student-stated credit limit" in prop["reason"]
+
+    # -------------------------------------------------------------------------
+    # PART C: Student-stated avoid_course (HARD)
+    # -------------------------------------------------------------------------
+    c_avoid = Constraint(
+        constraint_id="C_AVOID_CS4L003",
+        student_id=student.student_id,
+        constraint_type="avoid_course",
+        parameters={"course_id": "CS4L003"}
+    )
+    plan_avoid = planner.generate_plan(
+        student=student,
+        goal=goal,
+        gaps=[],
+        constraints=[c_avoid],
+        preferences=[],
+        completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
+    )
+    plan_course_ids = [it.course_id for it in plan_avoid.items if it.item_type == "course"]
+    assert "CS4L003" not in plan_course_ids, "Course in avoid_course must never be scheduled in default plan"
+    avoid_props = [p for p in plan_avoid.optional_overload_proposals if p.get("course_id") == "CS4L003"]
+    assert len(avoid_props) > 0, "Avoided course placed in optional proposals needing student approval"
 
 def test_12_agent_4_overload_emits_unsourced_baseline_warning_proposal():
     """
-    Item 2: Agent 4 handles credit overload request by generating a proposal
+    Item 2 & 1: Agent 4 handles credit overload request by generating a proposal
     with [WARNING: unsourced_baseline] rather than hard refusal.
     """
     student_id = "STU_AGENT4_OVERLOAD"

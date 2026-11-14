@@ -47,6 +47,8 @@ class Plan(BaseContract):
     version: int = 1
     items: List[PlanItem]
     validation_report: Optional[ValidationReport] = None
+    conflict_flag: Optional[str] = None
+    optional_overload_proposals: List[Dict[str, Any]] = []
     is_active: bool = True
     created_at: datetime
 

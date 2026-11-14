@@ -73,7 +73,7 @@ class Planner(IPlanner):
                 for r in reader:
                     prog = r["programme_id"].strip().upper()
                     try:
-                        sem = int(r["semester_number"])
+                        sem = int(float(r["semester_number"]))
                     except (ValueError, TypeError):
                         continue
                     self.prog_requirements.setdefault((prog, sem), []).append(r)
@@ -164,6 +164,56 @@ class Planner(IPlanner):
                 completed_set.update(["MA1L001", "MA1L002", "CS1L001"])
             assigned_courses = set(completed_set)
 
+        # Student-stated constraints (HARD bounds)
+        student_credit_cap: Optional[float] = None
+        student_headroom: float = 0.0
+        student_weekly_hours: Optional[float] = None
+        avoid_courses: Set[str] = set()
+        not_together_pairs: List[Set[str]] = []
+
+        for c in (constraints or []):
+            if not getattr(c, "is_active", True):
+                continue
+            ctype = (getattr(c, "constraint_type", "") or "").lower()
+            params = getattr(c, "parameters", {}) or {}
+
+            if ctype in ["credit_cap", "max_credits"]:
+                val = params.get("max_credits") or params.get("credit_cap") or params.get("credits") or params.get("value")
+                if val is not None:
+                    student_credit_cap = float(val)
+            elif ctype == "headroom":
+                val = params.get("headroom") or params.get("credit_headroom") or params.get("value")
+                if val is not None:
+                    student_headroom = float(val)
+            elif ctype in ["weekly_hours", "max_weekly_hours", "study_hours"]:
+                val = params.get("max_hours") or params.get("weekly_hours") or params.get("hours") or params.get("value")
+                if val is not None:
+                    student_weekly_hours = float(val)
+            elif ctype in ["avoid_course", "avoid_courses"]:
+                cid = params.get("course_id") or params.get("course")
+                if cid:
+                    avoid_courses.add(cid.strip())
+                cids = params.get("courses") or params.get("course_ids")
+                if isinstance(cids, list):
+                    for x in cids:
+                        avoid_courses.add(x.strip())
+            elif ctype in ["not_together", "mutually_exclusive"]:
+                pair = params.get("courses") or params.get("course_ids") or params.get("pair")
+                if isinstance(pair, list):
+                    not_together_pairs.append({x.strip() for x in pair})
+
+        effective_student_credit_cap: Optional[float] = None
+        if student_credit_cap is not None:
+            effective_student_credit_cap = student_credit_cap - student_headroom
+        elif student_headroom > 0.0:
+            effective_student_credit_cap = 26.0 - student_headroom
+
+        optional_overload_proposals: List[Dict[str, Any]] = []
+
+        # Detect interest-vs-evidence conflict from gaps
+        conflicted_skills = {g["skill_id"] for g in gaps if g.get("conflict_flag")}
+        plan_conflict_flag = "HIGH_INTEREST_LOW_FOUNDATION: Remedial bridge required" if conflicted_skills else None
+
         current_sem_credits = 0.0
 
         sem_reqs = self.prog_requirements.get((prog_id, current_sem), [])
@@ -198,6 +248,10 @@ class Planner(IPlanner):
                 if rel_score > 0:
                     why_reason += f" Contributes foundational competencies to {goal.name} (Relevance {rel_score}/3: {rel_rationale})."
 
+                c_skills = self.course_skills.get(cid, [])
+                if any(s in conflicted_skills for s in c_skills):
+                    why_reason += " [CONFLICT: Interest vs Evidence] Student has high interest/aspiration, but diagnostic evidence indicates foundational gaps (<40). Scheduled foundational bridge before advanced coursework."
+
                 assigned_courses.add(cid)
                 current_sem_credits += c_meta.get("credits", 4.0)
                 items.append(PlanItem(
@@ -208,7 +262,7 @@ class Planner(IPlanner):
                     estimated_hours=4.0,
                     reason=StructuredReason(
                         intent=f"Branch Core Degree Requirement ({prog_id})",
-                        target_skills=self.course_skills.get(cid, []),
+                        target_skills=c_skills,
                         why_this=why_reason,
                         prerequisite_for=[],
                         rule_compliance=["Mandatory branch curriculum requirement", "Fixed core selection"]
@@ -223,7 +277,7 @@ class Planner(IPlanner):
                     estimated_hours=2.0,
                     reason=StructuredReason(
                         intent=f"Core Course Practice: {cid}",
-                        target_skills=self.course_skills.get(cid, []),
+                        target_skills=c_skills,
                         why_this=f"Active problem solving and concept mastery for core course {cid}.",
                         prerequisite_for=[],
                         rule_compliance=[]
@@ -249,9 +303,37 @@ class Planner(IPlanner):
                         else:
                             candidate_options = [c for g in gaps for c in self.skill_courses.get(g["skill_id"], []) if c not in assigned_courses]
 
+                    # Filter out student-stated avoid_courses and not_together conflicts
+                    allowed_options = []
+                    for c in candidate_options:
+                        if c in avoid_courses:
+                            optional_overload_proposals.append({
+                                "proposal_id": f"PROP_AVOID_{c}_{uuid.uuid4().hex[:6]}",
+                                "course_id": c,
+                                "title": self.course_info.get(c, {}).get("title", c),
+                                "credits": self.course_info.get(c, {}).get("credits", 3.0),
+                                "reason": f"Matches student-stated avoid constraint. Placed in optional proposal requiring student approval.",
+                                "status": "pending_student_approval"
+                            })
+                            continue
+
+                        conflicts = any(c in pair and any(x in assigned_courses for x in (pair - {c})) for pair in not_together_pairs)
+                        if conflicts:
+                            optional_overload_proposals.append({
+                                "proposal_id": f"PROP_NOT_TOGETHER_{c}_{uuid.uuid4().hex[:6]}",
+                                "course_id": c,
+                                "title": self.course_info.get(c, {}).get("title", c),
+                                "credits": self.course_info.get(c, {}).get("credits", 3.0),
+                                "reason": f"Conflicts with student-stated not-together constraint. Placed in optional proposal requiring student approval.",
+                                "status": "pending_student_approval"
+                            })
+                            continue
+
+                        allowed_options.append(c)
+
                     # Deterministic ranking via CourseRelevanceEngine
                     ranked = self.relevance_engine.rank_electives(
-                        candidate_course_ids=candidate_options,
+                        candidate_course_ids=allowed_options,
                         goal_id=goal.goal_id,
                         skill_gaps=gaps,
                         completed_course_ids=list(assigned_courses),
@@ -262,50 +344,63 @@ class Planner(IPlanner):
                         top_pick = ranked[0]
                         elec_cid = top_pick["course_id"]
                         elec_credits = self.course_info.get(elec_cid, {}).get("credits", 3.0)
-                        exceeds_cap = (current_sem_credits + elec_credits > 26.0)
-                        current_sem_credits += elec_credits
-                        assigned_courses.add(elec_cid)
 
-                        why_this = f"Selected for slot {slot_id} based on career relevance to {goal.name} (Score: {top_pick['base_relevance']}/3: {top_pick['rationale']} [Status: {top_pick.get('status', 'draft_for_review')}, Source: {top_pick.get('source_id', 'DESIGN_TEAM')}]) and skill gap alignment."
-                        rule_comp = ["Prerequisites verified satisfied", "Complies with curriculum slot options"]
-                        if exceeds_cap:
-                            why_this += " [WARNING: unsourced_baseline] Total semester credits exceed 26.0 baseline credit cap."
-                            rule_comp.append("[WARNING: unsourced_baseline] Exceeds 26.0 baseline credit cap (RULE_SEM_CREDIT_CAP_REGULAR)")
+                        # Student constraint check (HARD limit)
+                        if effective_student_credit_cap is not None and (current_sem_credits + elec_credits > effective_student_credit_cap):
+                            optional_overload_proposals.append({
+                                "proposal_id": f"PROP_OVERLOAD_{elec_cid}_{uuid.uuid4().hex[:6]}",
+                                "course_id": elec_cid,
+                                "title": self.course_info.get(elec_cid, {}).get("title", elec_cid),
+                                "credits": elec_credits,
+                                "reason": f"Exceeds student-stated credit limit ({effective_student_credit_cap:.1f} credits). Total would be {current_sem_credits + elec_credits:.1f} credits. Placed in optional proposal requiring student approval.",
+                                "status": "pending_student_approval"
+                            })
+                        else:
+                            # Baseline institute limit is a warning, not a hard block
+                            exceeds_cap = (current_sem_credits + elec_credits > 26.0)
+                            current_sem_credits += elec_credits
+                            assigned_courses.add(elec_cid)
 
-                        items.append(PlanItem(
-                            item_id=f"ITEM_ELEC_{elec_cid}_{uuid.uuid4().hex[:6]}",
-                            item_type="course",
-                            course_id=elec_cid,
-                            semester_number=current_sem,
-                            estimated_hours=4.0,
-                            reason=StructuredReason(
-                                intent=f"Recommended Elective ({slot_name})",
-                                target_skills=self.course_skills.get(elec_cid, []),
-                                why_this=why_this,
-                                prerequisite_for=[],
-                                rule_compliance=rule_comp
-                            )
-                        ))
-                        items.append(PlanItem(
-                            item_id=f"ITEM_EX_{elec_cid}_{uuid.uuid4().hex[:6]}",
-                            item_type="exercise",
-                            course_id=elec_cid,
-                            semester_number=current_sem,
-                            estimated_hours=2.0,
-                            reason=StructuredReason(
-                                intent=f"Elective Practice: {elec_cid}",
-                                target_skills=self.course_skills.get(elec_cid, []),
-                                why_this=f"Active problem solving for elective course {elec_cid}.",
-                                prerequisite_for=[],
-                                rule_compliance=[]
-                            )
-                        ))
+                            why_this = f"Selected for slot {slot_id} based on career relevance to {goal.name} (Score: {top_pick['base_relevance']}/3: {top_pick['rationale']} [Status: {top_pick.get('status', 'draft_for_review')}, Source: {top_pick.get('source_id', 'DESIGN_TEAM')}]) and skill gap alignment."
+                            rule_comp = ["Prerequisites verified satisfied", "Complies with curriculum slot options"]
+                            if exceeds_cap:
+                                why_this += " [WARNING: unsourced_baseline] Total semester credits exceed 26.0 baseline credit cap."
+                                rule_comp.append("[WARNING: unsourced_baseline] Exceeds 26.0 baseline credit cap (RULE_SEM_CREDIT_CAP_REGULAR)")
+
+                            items.append(PlanItem(
+                                item_id=f"ITEM_ELEC_{elec_cid}_{uuid.uuid4().hex[:6]}",
+                                item_type="course",
+                                course_id=elec_cid,
+                                semester_number=current_sem,
+                                estimated_hours=4.0,
+                                reason=StructuredReason(
+                                    intent=f"Recommended Elective ({slot_name})",
+                                    target_skills=self.course_skills.get(elec_cid, []),
+                                    why_this=why_this,
+                                    prerequisite_for=[],
+                                    rule_compliance=rule_comp
+                                )
+                            ))
+                            items.append(PlanItem(
+                                item_id=f"ITEM_EX_{elec_cid}_{uuid.uuid4().hex[:6]}",
+                                item_type="exercise",
+                                course_id=elec_cid,
+                                semester_number=current_sem,
+                                estimated_hours=2.0,
+                                reason=StructuredReason(
+                                    intent=f"Elective Practice: {elec_cid}",
+                                    target_skills=self.course_skills.get(elec_cid, []),
+                                    why_this=f"Active problem solving for elective course {elec_cid}.",
+                                    prerequisite_for=[],
+                                    rule_compliance=[]
+                                )
+                            ))
 
             # =========================================================================
             # PHASE C: Minor Track (Optional Recommendation if Eligible)
             # =========================================================================
             # Minor candidates are loaded from data/seed/kb/minor_course.csv (draft_for_review)
-            minor_candidates = [c for c in self.minor_courses.get("MINOR_CSE", []) if c not in assigned_courses]
+            minor_candidates = [c for c in self.minor_courses.get("MINOR_CSE", []) if c not in assigned_courses and c not in avoid_courses]
             if minor_candidates and self.rule_engine.check_minor_eligibility(student):
                 ranked_minor = self.relevance_engine.rank_electives(
                     candidate_course_ids=minor_candidates,
@@ -318,30 +413,52 @@ class Planner(IPlanner):
                     top_minor = ranked_minor[0]
                     m_cid = top_minor["course_id"]
                     m_credits = self.course_info.get(m_cid, {}).get("credits", 3.0)
-                    exceeds_minor_cap = (current_sem_credits + m_credits > 26.0)
-                    current_sem_credits += m_credits
-                    assigned_courses.add(m_cid)
 
-                    m_why = f"Student satisfies minor eligibility (Sem {current_sem} >= 5, CGPA {student.cgpa} >= 8.0). Course {m_cid} selected for CSE/DS Minor to accelerate {goal.name} (Relevance {top_minor['base_relevance']}/3: {top_minor['rationale']} [Status: {top_minor.get('status', 'draft_for_review')}])."
-                    m_comp = ["Satisfies minor eligibility rules [draft_for_review data]"]
-                    if exceeds_minor_cap:
-                        m_why += " [WARNING: unsourced_baseline] Total semester credits exceed 26.0 baseline credit cap."
-                        m_comp.append("[WARNING: unsourced_baseline] Exceeds 26.0 baseline credit cap (RULE_SEM_CREDIT_CAP_REGULAR)")
+                    not_together_conflict = any(m_cid in pair and any(x in assigned_courses for x in (pair - {m_cid})) for pair in not_together_pairs)
 
-                    items.append(PlanItem(
-                        item_id=f"ITEM_MIN_{m_cid}_{uuid.uuid4().hex[:6]}",
-                        item_type="course",
-                        course_id=m_cid,
-                        semester_number=current_sem,
-                        estimated_hours=4.0,
-                        reason=StructuredReason(
-                            intent="Approved Minor Course Track",
-                            target_skills=self.course_skills.get(m_cid, []),
-                            why_this=m_why,
-                            prerequisite_for=[],
-                            rule_compliance=m_comp
-                        )
-                    ))
+                    if not_together_conflict:
+                        optional_overload_proposals.append({
+                            "proposal_id": f"PROP_NOT_TOGETHER_{m_cid}_{uuid.uuid4().hex[:6]}",
+                            "course_id": m_cid,
+                            "title": self.course_info.get(m_cid, {}).get("title", m_cid),
+                            "credits": m_credits,
+                            "reason": f"Conflicts with student-stated not-together constraint. Placed in optional proposal requiring student approval.",
+                            "status": "pending_student_approval"
+                        })
+                    elif effective_student_credit_cap is not None and (current_sem_credits + m_credits > effective_student_credit_cap):
+                        optional_overload_proposals.append({
+                            "proposal_id": f"PROP_OVERLOAD_{m_cid}_{uuid.uuid4().hex[:6]}",
+                            "course_id": m_cid,
+                            "title": self.course_info.get(m_cid, {}).get("title", m_cid),
+                            "credits": m_credits,
+                            "reason": f"Exceeds student-stated credit limit ({effective_student_credit_cap:.1f} credits). Total would be {current_sem_credits + m_credits:.1f} credits. Placed in optional proposal requiring student approval.",
+                            "status": "pending_student_approval"
+                        })
+                    else:
+                        exceeds_minor_cap = (current_sem_credits + m_credits > 26.0)
+                        current_sem_credits += m_credits
+                        assigned_courses.add(m_cid)
+
+                        m_why = f"Student satisfies minor eligibility (Sem {current_sem} >= 5, CGPA {student.cgpa} >= 8.0). Course {m_cid} selected for CSE/DS Minor to accelerate {goal.name} (Relevance {top_minor['base_relevance']}/3: {top_minor['rationale']} [Status: {top_minor.get('status', 'draft_for_review')}])."
+                        m_comp = ["Satisfies minor eligibility rules [draft_for_review data]"]
+                        if exceeds_minor_cap:
+                            m_why += " [WARNING: unsourced_baseline] Total semester credits exceed 26.0 baseline credit cap."
+                            m_comp.append("[WARNING: unsourced_baseline] Exceeds 26.0 baseline credit cap (RULE_SEM_CREDIT_CAP_REGULAR)")
+
+                        items.append(PlanItem(
+                            item_id=f"ITEM_MIN_{m_cid}_{uuid.uuid4().hex[:6]}",
+                            item_type="course",
+                            course_id=m_cid,
+                            semester_number=current_sem,
+                            estimated_hours=4.0,
+                            reason=StructuredReason(
+                                intent="Approved Minor Course Track",
+                                target_skills=self.course_skills.get(m_cid, []),
+                                why_this=m_why,
+                                prerequisite_for=[],
+                                rule_compliance=m_comp
+                            )
+                        ))
 
         else:
             # Fallback for unconfigured programmes: plan from skill gaps
@@ -409,6 +526,8 @@ class Planner(IPlanner):
             goal_id=goal.goal_id,
             version=1,
             items=items,
+            conflict_flag=plan_conflict_flag,
+            optional_overload_proposals=optional_overload_proposals,
             is_active=True,
             created_at=datetime.now(timezone.utc)
         )

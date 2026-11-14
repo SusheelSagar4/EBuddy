@@ -60,11 +60,14 @@ class RoadmapPlannerAgent:
         plan: Plan,
         semester_number: int,
         week_number: int,
-        daily_hours: float = 2.0
+        daily_hours: float = 2.0,
+        weekly_hours_budget: Optional[float] = None
     ) -> WeeklyRoadmap:
         """
         Generates a 7-day weekly study schedule for the given week of the semester,
         grounded in the active courses and curated knowledge-base resources.
+        If weekly_hours_budget is provided, prunes daily tasks to fit within budget
+        and explicitly records deferred tasks.
         """
         semester_courses = [it for it in plan.items if it.item_type == "course" and it.semester_number == semester_number]
         focus_skills = []
@@ -78,8 +81,8 @@ class RoadmapPlannerAgent:
         focus_skills = list(dict.fromkeys(focus_skills))[:3]
         target_course_ids = list(dict.fromkeys(target_course_ids))
 
-        # Generate 7 daily tasks
-        daily_tasks: List[DailyTask] = []
+        # Generate candidate daily tasks
+        candidate_tasks: List[DailyTask] = []
         days_label = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
         # Map available resources from KB for these courses
@@ -139,9 +142,25 @@ class RoadmapPlannerAgent:
                     skill_id=skill_target,
                     course_id=cid
                 )
-            daily_tasks.append(task)
+            candidate_tasks.append(task)
 
-        total_hours = sum(t.estimated_minutes for t in daily_tasks) / 60.0
+        # Budget enforcement
+        kept_tasks: List[DailyTask] = []
+        deferred_tasks: List[str] = []
+        accumulated_minutes = 0
+
+        if weekly_hours_budget is not None and weekly_hours_budget > 0:
+            max_minutes = int(weekly_hours_budget * 60)
+            for t in candidate_tasks:
+                if accumulated_minutes + t.estimated_minutes <= max_minutes:
+                    kept_tasks.append(t)
+                    accumulated_minutes += t.estimated_minutes
+                else:
+                    deferred_tasks.append(f"{t.title} (Deferred: exceeds weekly budget of {weekly_hours_budget:.1f}h)")
+        else:
+            kept_tasks = candidate_tasks
+
+        total_hours = sum(t.estimated_minutes for t in kept_tasks) / 60.0
 
         return WeeklyRoadmap(
             week_number=week_number,
@@ -149,9 +168,11 @@ class RoadmapPlannerAgent:
             weekly_objective=f"Master foundational concepts and active problem solving in {', '.join(target_course_ids[:2])}",
             focus_skills=focus_skills,
             target_courses=target_course_ids,
-            daily_tasks=daily_tasks,
+            daily_tasks=kept_tasks,
             milestone_checkpoint=f"Week {week_number} Mastery Evaluation" if week_number % 4 == 0 else None,
-            total_estimated_hours=round(total_hours, 1)
+            total_estimated_hours=round(total_hours, 1),
+            weekly_hours_budget=weekly_hours_budget,
+            deferred_tasks=deferred_tasks
         )
 
     def commit_approved_proposal(

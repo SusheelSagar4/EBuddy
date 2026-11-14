@@ -171,6 +171,26 @@
       "default": 0.0,
       "title": "Total Estimated Hours",
       "type": "number"
+    },
+    "weekly_hours_budget": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Weekly Hours Budget"
+    },
+    "deferred_tasks": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Deferred Tasks",
+      "type": "array"
     }
   },
   "required": [

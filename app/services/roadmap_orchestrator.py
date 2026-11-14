@@ -52,6 +52,36 @@ class RoadmapOrchestrator:
         self.student_proposals: Dict[str, List[str]] = {} # student_id -> [proposal_id]
         self.version_history: Dict[str, List[RoadmapVersionRecord]] = {} # student_id -> [records]
         self.weekly_roadmaps: Dict[str, WeeklyRoadmap] = {} # student_id -> active weekly roadmap
+        self.memory_summaries: Dict[str, str] = {} # student_id -> rolling conversation summary
+
+    def _load_memory_summary(self, student_id: str) -> Optional[str]:
+        try:
+            import psycopg
+            conn = psycopg.connect("postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy", connect_timeout=1)
+            with conn.cursor() as cur:
+                cur.execute("SELECT summary_text FROM ops.memory_summary WHERE student_id = %s ORDER BY updated_at DESC LIMIT 1;", (student_id,))
+                row = cur.fetchone()
+                if row:
+                    return row[0]
+            conn.close()
+        except Exception:
+            pass
+        return self.memory_summaries.get(student_id)
+
+    def _save_memory_summary(self, student_id: str, summary_text: str):
+        self.memory_summaries[student_id] = summary_text
+        try:
+            import psycopg
+            conn = psycopg.connect("postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy", connect_timeout=1)
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO ops.memory_summary (student_id, summary_text) VALUES (%s, %s);",
+                    (student_id, summary_text)
+                )
+            conn.commit()
+            conn.close()
+        except Exception:
+            pass
 
     def _persist_proposal_to_db(self, proposal: ChangeProposal):
         """Optionally persists change proposal to PostgreSQL plan.change_proposal."""
@@ -178,14 +208,22 @@ class RoadmapOrchestrator:
         }
 
     def get_weekly_roadmap(self, student_id: str, week_number: int = 1) -> WeeklyRoadmap:
-        """Retrieves or generates the weekly roadmap for the student."""
+        """Retrieves or generates the weekly roadmap for the student, enforcing weekly hours budget if set."""
         current_plan = plan_service.get_plan(student_id)
         if not current_plan:
             raise ValueError(f"No active plan found for student {student_id}")
 
         student = onboarding_service.students.get(student_id)
         sem = student.current_semester if student else 1
-        weekly = self.agent_1.generate_weekly_roadmap(current_plan, semester_number=sem, week_number=week_number)
+
+        budget = None
+        for c in onboarding_service.constraints.get(student_id, []):
+            if getattr(c, "is_active", True) and getattr(c, "constraint_type", "") in ["weekly_hours", "max_weekly_hours", "study_hours"]:
+                p = getattr(c, "parameters", {})
+                budget = float(p.get("max_hours") or p.get("weekly_hours") or p.get("hours") or 0.0)
+                break
+
+        weekly = self.agent_1.generate_weekly_roadmap(current_plan, semester_number=sem, week_number=week_number, weekly_hours_budget=budget)
         self.weekly_roadmaps[student_id] = weekly
         return weekly
 
@@ -238,8 +276,8 @@ class RoadmapOrchestrator:
     def chat_turn(self, student_id: str, message: str) -> Dict[str, Any]:
         """
         Invokes Agent 4 for conversational guidance.
-        If a roadmap modification is requested (e.g. workload reduction or schedule change),
-        Agent 4 creates a ChangeProposal awaiting student approval.
+        Loads rolling conversation memory from ops.memory_summary into ContextCard,
+        and saves updated rolling summary for long-term multi-session retention.
         """
         student = onboarding_service.students.get(student_id)
         goal = onboarding_service.goals.get(student_id)
@@ -248,6 +286,8 @@ class RoadmapOrchestrator:
 
         plan_items = [it.model_dump() for it in plan.items] if plan else []
         skill_gaps = [{"skill_id": s.skill_id, "estimated_level": s.estimated_level} for s in states]
+
+        memory = self._load_memory_summary(student_id)
 
         card = ContextCard(
             student_id=student_id,
@@ -258,6 +298,7 @@ class RoadmapOrchestrator:
             goal_name=goal.name if goal else "Electrical Engineering Core",
             skill_gaps=skill_gaps,
             current_plan_items=plan_items,
+            long_term_memory=memory,
             verified_facts=[
                 {"fact": "Programme Curriculum", "value": "B.Tech Curriculum 2016-17", "verified": True},
                 {"fact": "Credit Cap Rule", "value": "Regular Semester Credit Cap: 16-26 credits", "verified": True}
@@ -270,6 +311,14 @@ class RoadmapOrchestrator:
         res = self.agent_4.handle_query(student_id, message, card)
         if "turn_id" not in res:
             res["turn_id"] = f"TURN_{uuid.uuid4().hex[:8]}"
+
+        # Save rolling conversation summary to ops.memory_summary
+        turn_brief = f"Turn: User asked '{message[:40]}' -> Intent: {res.get('inferred_intent', 'general')}. Replied: '{res.get('response', '')[:50]}'."
+        updated_memory = f"{memory} | {turn_brief}" if memory else turn_brief
+        if len(updated_memory) > 400:
+            updated_memory = updated_memory[-400:]
+        self._save_memory_summary(student_id, updated_memory)
+
         raw_prop = res.get("proposal")
         if raw_prop:
             proposal = ChangeProposal.model_validate(raw_prop)

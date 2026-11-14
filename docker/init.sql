@@ -213,6 +213,7 @@ CREATE TABLE IF NOT EXISTS kb.exercise (
     answer_key JSONB,
     rubric TEXT,
     est_minutes INT DEFAULT 15,
+    status VARCHAR(50) DEFAULT 'draft_for_review',
     source_id VARCHAR(100) REFERENCES kb.source(source_id)
 );
 

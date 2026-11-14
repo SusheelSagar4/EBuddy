@@ -23,6 +23,7 @@ class ContextCard(BaseContract):
     current_plan_items: List[Dict[str, Any]]
     verified_facts: List[Dict[str, Any]]
     unverified_advisories: List[Dict[str, Any]]
+    long_term_memory: Optional[str] = None
     disclaimer: str = (
         "Strict Guardrail: The buddy never states dates, cut-offs, fees or credit limits "
         "unless verified in official institutional records; otherwise it states 'not confirmed yet' "

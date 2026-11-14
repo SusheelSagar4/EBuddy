@@ -67,6 +67,18 @@
           "title": "Unverified Advisories",
           "type": "array"
         },
+        "long_term_memory": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Long Term Memory"
+        },
         "disclaimer": {
           "default": "Strict Guardrail: The buddy never states dates, cut-offs, fees or credit limits unless verified in official institutional records; otherwise it states 'not confirmed yet' and directs the student to the official IIT Bhubaneswar administration.",
           "title": "Disclaimer",
