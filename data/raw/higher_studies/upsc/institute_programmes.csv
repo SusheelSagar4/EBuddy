@@ -1,0 +1,3 @@
+programme_code,programme_name,school,years,semesters,code_confirmed_in_app,source_url,retrieved_on,verified
+BTECH_EE,B.Tech in Electrical Engineering,School of Electrical and Computer Sciences,4,8,TRUE,https://www.iitbbs.ac.in/index.php/home/academics/curriculum-b-tech,2026-11-14,TRUE
+BTECH_MME,B.Tech in Metallurgical and Materials Engineering,"School of Minerals, Metallurgical and Materials Engineering",4,8,FALSE,https://www.iitbbs.ac.in/index.php/home/academics/curriculum-b-tech,2026-11-14,TRUE

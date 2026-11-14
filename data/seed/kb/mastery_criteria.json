@@ -37,5 +37,18 @@
     },
     "status": "draft_for_review",
     "source_id": "UNSOURCED_BASELINE"
+  },
+  {
+    "criteria_id": "MASTERY_UPSC_CSE",
+    "goal_id": "GOAL_UPSC_CSE",
+    "skill_id": null,
+    "criteria": {
+      "min_skill_level": 70.0,
+      "required_project_milestones": 2,
+      "required_timed_assessments": 3,
+      "min_diagnostic_score": 65.0
+    },
+    "status": "draft_for_review",
+    "source_id": "DESIGN_TEAM"
   }
 ]

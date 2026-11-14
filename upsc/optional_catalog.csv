@@ -1,0 +1,25 @@
+optional,programme_code,iitbbs_overlap,overlap_basis,syllabus_source,verdict,sme_reviewed,note
+Electrical Engineering,BTECH_EE,STRONG,"Optional is bachelors level (F09); EE core courses cover the subject",https://www.upsc.gov.in/sites/default/files/Notif-CSP-2026-Engl-060226Rev.pdf,"Shortlist; lock in by Sem 5 (rule R3)",FALSE,"Course-to-syllabus-topic mapping not done (D09)"
+Electrical Engineering,BTECH_MME,NONE,"Only EE1L002 (basic electrical) is taken",,Not recommended unless student self-studies,FALSE,
+Mechanical Engineering,BTECH_EE,PARTIAL,Only first-year ME course,,Unknown,FALSE,"Needs SME mapping"
+Mechanical Engineering,BTECH_MME,PARTIAL,"ME1L002 plus materials/manufacturing overlap likely",,Candidate for MME,FALSE,"Needs SME mapping (D09)"
+Civil Engineering,BTECH_MME,PARTIAL,CE1P001 only,,Unknown,FALSE,
+Geology,BTECH_MME,UNKNOWN,"Minerals/earth-science content may overlap",,Candidate for MME,FALSE,"Needs SME mapping (D09)"
+Chemistry,BTECH_MME,PARTIAL,CY1L002 / CY1P001 only,,Candidate,FALSE,
+Physics,BTECH_MME,PARTIAL,PH1L002 / PH1P001 only,,Candidate,FALSE,
+Mathematics,BTECH_EE,PARTIAL,Engineering maths courses,,Candidate,FALSE,
+Mathematics,BTECH_MME,PARTIAL,Engineering maths courses,,Candidate,FALSE,
+Economics,BTECH_EE,PARTIAL,"Breadth list has 7 economics courses (F20)",https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,Humanities-style optional; breadth courses help,FALSE,
+Economics,BTECH_MME,PARTIAL,"Same breadth economics courses (F20)",https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,Humanities-style optional,FALSE,
+Philosophy,BTECH_EE,PARTIAL,"Breadth list has 7 philosophy courses (F20)",https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,Candidate,FALSE,
+Philosophy,BTECH_MME,PARTIAL,Same breadth courses,https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,Candidate,FALSE,
+Psychology,BTECH_EE,PARTIAL,"5 breadth courses (F20)",https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,Candidate,FALSE,
+Psychology,BTECH_MME,PARTIAL,Same breadth courses,https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,Candidate,FALSE,
+Sociology,BTECH_EE,NONE,"No sociology courses at IIT BBS (F20)",,Self-study only,FALSE,
+Sociology,BTECH_MME,NONE,Same,,Self-study only,FALSE,
+Political Science and International Relations,BTECH_EE,NONE,"No political science courses (F20)",,Self-study only,FALSE,
+Political Science and International Relations,BTECH_MME,NONE,Same,,Self-study only,FALSE,
+History,BTECH_EE,NONE,No history courses (F20),,Self-study only,FALSE,
+History,BTECH_MME,NONE,Same,,Self-study only,FALSE,
+Public Administration,BTECH_EE,NONE,No courses,,Self-study only,FALSE,
+Public Administration,BTECH_MME,NONE,No courses,,Self-study only,FALSE,

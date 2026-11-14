@@ -247,3 +247,28 @@ RES_MM_ML4L015_PRIMARY,NPTEL 'Metallurgy and Material Science' channel (browse b
 RES_MM_ML2L006_PRIMARY,NPTEL 'Metallurgy and Material Science' channel (browse by course name):,https://www.youtube.com/channel/UC9sKRSg8Kn5axYdORJUnqFw,NPTEL,channel_search,Not confirmed,false,IITBBS_MME_PLAYLISTS_2026
 RES_MM_ML3L011_PRIMARY,NPTEL 'Metallurgy and Material Science' channel (browse by course name):,https://www.youtube.com/channel/UC9sKRSg8Kn5axYdORJUnqFw,NPTEL,channel_search,Not confirmed,false,IITBBS_MME_PLAYLISTS_2026
 RES_MM_ML3L012_PRIMARY,NPTEL 'Metallurgy and Material Science' channel (browse by course name):,https://www.youtube.com/channel/UC9sKRSg8Kn5axYdORJUnqFw,NPTEL,channel_search,Not confirmed,false,IITBBS_MME_PLAYLISTS_2026
+RS01,UPSC Civil Services Examination Notification (CSE-2026),https://www.upsc.gov.in/sites/default/files/Notif-CSP-2026-Engl-060226Rev.pdf,UPSC,portal,foundation,True,DESIGN_TEAM
+RS02,UPSC cut-off marks page,https://www.upsc.gov.in/examinations/cutoff-marks--,UPSC,portal,foundation,True,DESIGN_TEAM
+RS03,NCERT textbooks (e-books),https://ncert.nic.in/textbook.php,NCERT,portal,foundation,True,DESIGN_TEAM
+RS04,Indian Polity,https://www.upsc.gov.in,M. Laxmikanth (McGraw Hill),book,core,False,DESIGN_TEAM
+RS05,A Brief History of Modern India,https://www.upsc.gov.in,Rajiv Ahir (Spectrum),book,core,False,DESIGN_TEAM
+RS06,Indian Art and Culture,https://www.upsc.gov.in,Nitin Singhania (McGraw Hill),book,core,False,DESIGN_TEAM
+RS07,Indian Economy,https://www.upsc.gov.in,Ramesh Singh (McGraw Hill),book,core,False,DESIGN_TEAM
+RS08,Certificate Physical and Human Geography,https://www.upsc.gov.in,Goh Cheng Leong (Oxford University Press),book,core,False,DESIGN_TEAM
+RS09,Economic Survey and Union Budget documents,https://www.indiabudget.gov.in/,Ministry of Finance,portal,advanced,True,DESIGN_TEAM
+RS10,Press Information Bureau releases,https://pib.gov.in/,Government of India,portal,core,True,DESIGN_TEAM
+RS11,PRS Legislative Research bill and session summaries,https://prsindia.org/,PRS Legislative Research,portal,core,True,DESIGN_TEAM
+RS12,Second ARC Report on Ethics in Governance,https://darpg.gov.in/,Dept. of Administrative Reforms and Public Grievances,portal,advanced,False,DESIGN_TEAM
+RS13,Previous year question papers,https://www.upsc.gov.in/examinations/previous-question-papers,UPSC,portal,core,False,DESIGN_TEAM
+RS14,Electrical Engineering optional syllabus (within notification),https://www.upsc.gov.in/sites/default/files/Notif-CSP-2026-Engl-060226Rev.pdf,UPSC,portal,core,True,DESIGN_TEAM
+RS15,Commercial Prelims test series (choose one),https://www.upsc.gov.in,Vision IAS / Forum IAS / Insights IAS,test_series,advanced,False,DESIGN_TEAM
+RS16,Newspaper (The Hindu or Indian Express),https://www.upsc.gov.in,Publisher,portal,foundation,False,DESIGN_TEAM
+RS17,Environment book/notes,https://www.upsc.gov.in,Shankar IAS Academy,book,core,False,DESIGN_TEAM
+RS18,"Ethics, Integrity and Aptitude textbook",https://www.upsc.gov.in,To be chosen by mentor,book,core,False,DESIGN_TEAM
+RS19,Moral Thinking: An Introduction to Values and Ethics,https://onlinecourses.nptel.ac.in/noc23_hs89/preview,NPTEL / IIT Kanpur (Prof. Vineet Sahu),course,core,True,DESIGN_TEAM
+RS20,Fundamentals of Public Policy and Analysis,https://nptel.ac.in/courses/109107001,NPTEL / IIT Roorkee,course,core,True,DESIGN_TEAM
+RS21,Economics of Public Policy,https://onlinecourses.nptel.ac.in/noc26_ec03/preview,NPTEL / IISER Mohali (Prof. Debdulal Saha),course,advanced,True,DESIGN_TEAM
+RS22,Indian Economy: Some Contemporary Perspectives,https://onlinecourses.nptel.ac.in/noc25_ec04/preview,NPTEL / IIT Kanpur,course,core,True,DESIGN_TEAM
+RS23,"NCERT Mathematics textbooks, Classes 6-10 (CSAT numeracy base)",https://ncert.nic.in/textbook.php,NCERT,book,foundation,True,DESIGN_TEAM
+RS24,UPSC previous Essay papers (essay topic practice),https://www.upsc.gov.in/examinations/previous-question-papers,UPSC,portal,core,False,DESIGN_TEAM
+RS25,Energy Economics and Policy,https://onlinecourses.nptel.ac.in/noc21_hs77/preview,NPTEL / IIT Mandi (Prof. Shyamasree Dasgupta),course,advanced,True,DESIGN_TEAM
