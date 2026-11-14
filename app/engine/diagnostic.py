@@ -105,3 +105,32 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
                 return True
         return False
 
+    def verify_question(self, question: Exercise) -> Dict[str, Any]:
+        """
+        Validates generated or bank question against curriculum and assessment constraints.
+        Fails if skill_id is missing, options are malformed, or answer key doesn't match options.
+        """
+        errors = []
+        if not question.skill_id or not question.skill_id.startswith("SKILL_"):
+            errors.append(f"Invalid skill_id '{question.skill_id}'. Must start with 'SKILL_'.")
+        if not question.question_text or len(question.question_text.strip()) < 15:
+            errors.append("Question prompt is too short (< 15 characters) or empty.")
+        if not question.options or len(question.options) < 2:
+            errors.append("Question must have at least 2 selectable options.")
+        if question.correct_answer:
+            matches_option = any(
+                question.correct_answer.strip().lower() == opt.strip().lower() 
+                or opt.strip().startswith(question.correct_answer[:2]) 
+                for opt in (question.options or [])
+            )
+            if not matches_option:
+                errors.append(f"Correct answer '{question.correct_answer}' does not match any provided option.")
+        else:
+            errors.append("Question is missing correct_answer.")
+
+        return {
+            "is_valid": len(errors) == 0,
+            "errors": errors
+        }
+
+
