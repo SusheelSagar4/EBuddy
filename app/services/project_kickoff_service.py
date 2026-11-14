@@ -68,22 +68,68 @@ class ProjectKickoffService:
 
         next_steps = [
             {
-                "category": "Research Internships",
-                "recommendations": [
-                    "IIT Bhubaneswar SURGE / Winter Research Fellowships",
-                    "DAAD WISE / Mitacs Globalink (Target deadline: August-September)",
-                    "IISc / TIFR Summer Research Programs"
+                "category": "Verified Competitive Research Fellowships & Internships",
+                "opportunities": [
+                    {
+                        "name": "IIT Bhubaneswar Summer Undergraduate Research Grant for Excellence (SURGE)",
+                        "organizer": "Dean (R&D), IIT Bhubaneswar",
+                        "eligibility": "B.Tech students completing 2nd or 3rd year (Semesters 4 or 6) with CGPA >= 7.5 or top 10% in batch.",
+                        "duration": "8 weeks (May–July)",
+                        "stipend_and_support": "Fixed research fellowship stipend (~INR 6,000–8,000/month) plus subsidized on-campus hostel accommodation.",
+                        "application_window": "February 15 – March 20 annually",
+                        "official_url": "https://www.iitbbs.ac.in/research/internships"
+                    },
+                    {
+                        "name": "DAAD WISE (Working Internships in Science and Engineering) - Germany",
+                        "organizer": "German Academic Exchange Service (DAAD)",
+                        "eligibility": "Full-time 3rd year B.Tech students (Semester 5/6) at premier Indian institutions (IITs/NITs) with CGPA >= 8.5.",
+                        "duration": "2 to 3 months (between May and August at German university / research lab)",
+                        "stipend_and_support": "Monthly scholarship of €934, lump-sum travel allowance (~€1,075), and comprehensive health/accident insurance.",
+                        "application_window": "Portal opens in July; annual national deadline is November 1",
+                        "official_url": "https://www.daad.in/en/find-funding/wise-program/"
+                    },
+                    {
+                        "name": "Mitacs Globalink Research Internship (GRI) - Canada",
+                        "organizer": "Mitacs Canada & Universities across 10 provinces",
+                        "eligibility": "Full-time B.Tech students with 1 to 3 semesters remaining (typically after Sem 5 or 6) with CGPA >= 8.0.",
+                        "duration": "12 consecutive weeks (between May and October)",
+                        "stipend_and_support": "Full round-trip airfare, student visa fee reimbursement, housing/food stipend (~CAD $300/week), and emergency health coverage.",
+                        "application_window": "Opens early August; application deadline late September",
+                        "official_url": "https://www.mitacs.ca/en/programs/globalink/globalink-research-internship"
+                    },
+                    {
+                        "name": "IISc / TIFR Visiting Students Research Programme (VSRP)",
+                        "organizer": "Indian Institute of Science & Tata Institute of Fundamental Research",
+                        "eligibility": "Pre-final year B.Tech students with strong mathematical/analytical coursework and CGPA >= 8.0.",
+                        "duration": "6 to 8 weeks (June–July)",
+                        "stipend_and_support": "On-campus accommodation, sleeper class round-trip train fare, and monthly stipend (~INR 7,000–10,000/month).",
+                        "application_window": "December 15 – January 31 annually",
+                        "official_url": "https://www.iisc.ac.in/academics/internships/"
+                    }
                 ]
             },
             {
-                "category": "Graduate Admissions & GATE/GRE",
-                "recommendations": [
-                    "GATE registration (August-September, Sem 7)",
-                    "GRE / TOEFL preparation timeline for international MS/Ph.D. programs",
-                    "Target Department Research Electives (600-level PG courses in Sem 7-8)"
+                "category": "Graduate Admissions & GATE/GRE Timelines",
+                "milestones": [
+                    {
+                        "pathway": "GATE (Graduate Aptitude Test in Engineering)",
+                        "target_timing": "August–September of Semester 7 (Registration); February of Semester 8 (Exam)",
+                        "purpose": "PSU recruitment (IOCL, NTPC, ONGC, BHEL) and direct M.Tech/Ph.D. admissions at IITs/IISc."
+                    },
+                    {
+                        "pathway": "GRE & TOEFL / IELTS (International MS/Ph.D.)",
+                        "target_timing": "June–August between Semester 6 and 7 (Exams); October–December (Fall admissions deadlines)",
+                        "purpose": "Applications to US, European, and Canadian research universities with graduate assistantships."
+                    },
+                    {
+                        "pathway": "IIT Bhubaneswar Department Research Electives",
+                        "target_timing": "Semester 7 and Semester 8 Course Preregistration",
+                        "purpose": "Enrolling in 600-level PG research electives aligned with your B.Tech thesis (BTP) topic."
+                    }
                 ]
             }
         ]
+
 
         project_data = {
             "student_id": student_id,

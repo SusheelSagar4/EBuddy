@@ -206,7 +206,10 @@ def load_all_seeds(conn):
         "kb.resource", "kb.resource_course", "kb.goal",
         "kb.mastery_criteria", "kb.research_area", "kb.faculty",
         "kb.research_project", "kb.consultancy_engagement", "kb.publication",
-        "kb.project_faculty", "kb.project_keyword", "kb.data_issue"
+        "kb.project_faculty", "kb.project_keyword", "kb.data_issue",
+        "kb.academic_calendar", "kb.area_skill", "kb.faculty_area",
+        "kb.paper", "kb.paper_author", "kb.paper_chunk", "kb.paper_skill",
+        "kb.taster_task", "kb.industry_milestone"
     ]
     with conn.cursor() as cur:
         for t in verified_tables:
