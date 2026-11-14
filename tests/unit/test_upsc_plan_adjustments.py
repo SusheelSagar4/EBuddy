@@ -230,5 +230,42 @@ class TestUPSCPlanAdjustments(unittest.TestCase):
         items2 = [(it.item_type, it.resource_id, it.exercise_id, it.reason.target_skills) for it in plan2.items]
         self.assertEqual(items1, items2)
 
+    def test_06_policy_exception_fallback_and_logging(self):
+        """Fix 1: When policy.adjust_plan_items raises, error is logged and plan falls back to unadjusted items."""
+        student = StudentProfile(
+            student_id="STU_ERR_CHK",
+            name="Error Test Student",
+            programme_id="BTECH_EE",
+            current_semester=3,
+            cgpa=8.0,
+            is_synthetic=True
+        )
+        goal, reqs = self._get_upsc_goal_and_reqs()
+        gaps = self.gap_analyzer.analyze_gaps(goal, reqs, [])
+
+        # Mock adjust_plan_items to raise an exception
+        original_adjust = self.upsc_pkg.policy.adjust_plan_items
+        try:
+            def broken_adjust(s, it, gaps=None):
+                raise RuntimeError("Simulated policy crash")
+
+            self.upsc_pkg.policy.adjust_plan_items = broken_adjust
+
+            with self.assertLogs("app.engine.planner", level="ERROR") as log:
+                plan = self.planner.generate_plan(student, goal, gaps, [], [])
+
+            # Plan is still produced with fallback unadjusted items
+            self.assertIsNotNone(plan)
+            self.assertEqual(plan.student_id, student.student_id)
+            self.assertGreater(len(plan.items), 0)
+
+            # Error was logged with persona_id 'btech_upsc'
+            log_output = "\n".join(log.output)
+            self.assertIn("btech_upsc", log_output)
+            self.assertIn("Simulated policy crash", log_output)
+        finally:
+            self.upsc_pkg.policy.adjust_plan_items = original_adjust
+
 if __name__ == "__main__":
     unittest.main()
+
