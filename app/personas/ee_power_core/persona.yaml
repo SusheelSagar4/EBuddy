@@ -1,0 +1,12 @@
+persona_id: "ee_power_core"
+goal_id: "GOAL_EE_CORE_POWER"
+description: "Undergraduate Electrical Engineering student aiming for core power engineering, smart grid automation, renewable energy integration, and utility/PSU careers."
+applicable_programmes:
+  - "BTECH_EE"
+target_semester_range: [3, 8]
+eligibility_notes: "Open to B.Tech EE students in regular academic standing."
+planner_weights:
+  cgpa_protection: 0.6
+  skill_acceleration: 0.85
+  workload_smoothing: 0.7
+status: "draft_for_review"

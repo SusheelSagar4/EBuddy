@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalised Learning Buddy | IIT Bhubaneswar</title>
+  <link rel="stylesheet" href="./src/design/tokens.css">
+  <link rel="stylesheet" href="./src/design/style.css">
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand-header">
+      <div class="brand-title">Ebuddy • IIT BBS</div>
+      <div class="brand-subtitle">Personalised Learning Buddy</div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item"><a href="#onboard"><span>1.</span> Onboarding</a></li>
+      <li class="nav-item"><a href="#diagnostic"><span>2.</span> Diagnostic</a></li>
+      <li class="nav-item"><a href="#plan" class="active"><span>3.</span> Academic Plan</a></li>
+      <li class="nav-item"><a href="#learn"><span>4.</span> Learn & Practise</a></li>
+      <li class="nav-item"><a href="#progress"><span>5.</span> Mastery Matrix</a></li>
+      <li class="nav-item"><a href="#chat"><span>6.</span> Buddy Chat</a></li>
+      <li class="nav-item"><a href="#adapt"><span>7.</span> Adapt Simulator</a></li>
+      <li class="nav-item" style="margin-top: auto;"><a href="#admin"><span>⚙</span> Admin & Stats</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div>Air-Gapped • LiteLLM</div>
+      <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">IIT BBS B.Tech EE & MME</div>
+    </div>
+  </aside>
+
+  <!-- Main Container -->
+  <div class="main-wrapper">
+    <header class="top-nav">
+      <h1 id="screen-title" style="font-size: 1.2rem; font-weight: 700; color: #1e3a8a;">Academic Plan</h1>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span id="active-student-pill" class="badge badge-neutral" style="text-transform: none; font-size: 0.85rem; padding: 6px 12px;">Student: None</span>
+        <a href="#onboard" class="btn btn-outline btn-sm">+ Switch / New</a>
+      </div>
+    </header>
+
+    <main class="content-container">
+      <div id="app-screen"></div>
+    </main>
+  </div>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
+

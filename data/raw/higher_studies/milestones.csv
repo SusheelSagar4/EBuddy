@@ -1,0 +1,17 @@
+id,path_id,name,typical_timing,depends_on
+M1,P1,GATE registration,Aug-Oct of 4th year (per cycle),
+M2,P1,GATE exam,Feb of 4th year,M1
+M3,P1,GATE result,Mar of 4th year,M2
+M4,P1,COAP / CCMT offers and institute applications,Mar-Jul,M3
+M5,P2,MS(R)/PhD applications and interviews,Mar-May of final year,M3
+M6,P4,GRE and TOEFL/IELTS done,By Aug-Oct of 4th year,
+M7,P4,Shortlist and SOP drafts,Jul-Oct of 4th year,
+M8,P4,Letters requested,6 weeks before first deadline,M7
+M9,P4,Applications submitted,Dec-Jan,"M6,M7,M8"
+M10,P5,Email faculty / research match,Aug-Nov of 4th year,
+M11,P6,CAT registration,Aug-Sep,
+M12,P6,CAT exam,Late Nov,M11
+M13,P6,CAT result and shortlists,Jan,M12
+M14,P6,WAT / PI rounds,Feb-Apr,M13
+M15,ALL,Campus placements (clash check),Dec-Jan of 4th year,
+M16,ALL,End-semester exams (clash check),Nov-Dec and Apr-May,

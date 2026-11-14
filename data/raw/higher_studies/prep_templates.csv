@@ -1,0 +1,11 @@
+id,exam_id,speed_months,weekly_hours_min,phases_summary,readiness_rule
+GATE-12,GATE,12,(set),"Maths+GA, core subjects, PYQs by subject, weekly full mocks, revision",Topic tests >= 70%; last 3 full mocks above target score band
+GATE-6,GATE,6,(set),"Maths+GA, core subjects, PYQs by subject, weekly full mocks, revision",Topic tests >= 70%; last 3 full mocks above target score band
+GATE-3,GATE,3,(set),"Maths+GA, core subjects, PYQs by subject, weekly full mocks, revision",Topic tests >= 70%; last 3 full mocks above target score band
+CAT-12,CAT,12,(set),"Basics + reading habit, sectionals + DILR sets, weekly mocks, 2 mocks/week + revision, WAT/PI",Mock percentile trend over last 5 mocks vs target-school range
+CAT-6,CAT,6,(set),"Basics + reading habit, sectionals + DILR sets, weekly mocks, 2 mocks/week + revision, WAT/PI",Mock percentile trend over last 5 mocks vs target-school range
+CAT-3,CAT,3,(set),"Basics + reading habit, sectionals + DILR sets, weekly mocks, 2 mocks/week + revision, WAT/PI",Mock percentile trend over last 5 mocks vs target-school range
+GRE-3,GRE,3,(set),"Diagnostic, Quant review + vocabulary, section practice, official practice tests, essays",Official practice test at or above programme median
+ENG-2,TOEFL/IELTS,2,(set),"Diagnostic, weakest-section drills, timed full tests",Practice band >= strictest target's minimum
+APP-6,Applications abroad,6,(set),"Shortlist, faculty emails, SOP, letters, submit",Checklist done before each deadline
+RES-12,Research profile,12,(set),"Internship applications, project with a professor, paper or report",Strong letters available; output produced

@@ -1,0 +1,15 @@
+- skill_id: "SKILL_CIRCUIT_ANALYSIS"
+  required_level: 80.0
+  importance: 1.0
+- skill_id: "SKILL_ELECTRIC_MACHINES"
+  required_level: 85.0
+  importance: 1.0
+- skill_id: "SKILL_POWER_ELECTRONICS"
+  required_level: 80.0
+  importance: 0.9
+- skill_id: "SKILL_POWER_SYSTEMS"
+  required_level: 85.0
+  importance: 1.0
+- skill_id: "SKILL_RENEWABLE_ENERGY"
+  required_level: 75.0
+  importance: 0.8

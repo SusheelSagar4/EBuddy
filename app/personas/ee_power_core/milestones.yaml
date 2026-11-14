@@ -1,0 +1,6 @@
+- semester_target: 5
+  title: "MATLAB/Simulink Power Converter Design"
+  description: "Simulate a closed-loop DC-DC converter with PWM gate drive."
+- semester_target: 7
+  title: "Smart Grid Load Flow Capstone"
+  description: "Design optimal power flow analysis on IEEE 14-bus test feeder."

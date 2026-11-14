@@ -1,0 +1,61 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "persona_id": {
+      "title": "Persona Id",
+      "type": "string"
+    },
+    "goal_id": {
+      "title": "Goal Id",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "applicable_programmes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Applicable Programmes",
+      "type": "array"
+    },
+    "target_semester_range": {
+      "default": [
+        1,
+        8
+      ],
+      "items": {
+        "type": "integer"
+      },
+      "title": "Target Semester Range",
+      "type": "array"
+    },
+    "eligibility_notes": {
+      "default": "",
+      "title": "Eligibility Notes",
+      "type": "string"
+    },
+    "planner_weights": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "default": {},
+      "title": "Planner Weights",
+      "type": "object"
+    },
+    "status": {
+      "default": "draft_for_review",
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "persona_id",
+    "goal_id",
+    "description",
+    "applicable_programmes"
+  ],
+  "title": "PersonaSpec",
+  "type": "object"
+}

@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "module_id": {
+      "title": "Module Id",
+      "type": "string"
+    },
+    "course_id": {
+      "title": "Course Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "order_no": {
+      "default": 1,
+      "title": "Order No",
+      "type": "integer"
+    },
+    "status": {
+      "default": "verified",
+      "title": "Status",
+      "type": "string"
+    },
+    "source_id": {
+      "default": "PLACEHOLDER",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "verified": {
+      "default": false,
+      "title": "Verified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "module_id",
+    "course_id",
+    "title"
+  ],
+  "title": "Module",
+  "type": "object"
+}

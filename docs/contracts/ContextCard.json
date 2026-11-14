@@ -1,0 +1,87 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "programme_id": {
+      "title": "Programme Id",
+      "type": "string"
+    },
+    "current_semester": {
+      "title": "Current Semester",
+      "type": "integer"
+    },
+    "cgpa": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cgpa"
+    },
+    "goal_id": {
+      "title": "Goal Id",
+      "type": "string"
+    },
+    "goal_name": {
+      "title": "Goal Name",
+      "type": "string"
+    },
+    "skill_gaps": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Skill Gaps",
+      "type": "array"
+    },
+    "current_plan_items": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Current Plan Items",
+      "type": "array"
+    },
+    "verified_facts": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Verified Facts",
+      "type": "array"
+    },
+    "unverified_advisories": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Unverified Advisories",
+      "type": "array"
+    },
+    "disclaimer": {
+      "default": "Strict Guardrail: The buddy never states dates, cut-offs, fees or credit limits unless verified in official institutional records; otherwise it states 'not confirmed yet' and directs the student to the official IIT Bhubaneswar administration.",
+      "title": "Disclaimer",
+      "type": "string"
+    }
+  },
+  "required": [
+    "student_id",
+    "programme_id",
+    "current_semester",
+    "goal_id",
+    "goal_name",
+    "skill_gaps",
+    "current_plan_items",
+    "verified_facts",
+    "unverified_advisories"
+  ],
+  "title": "ContextCard",
+  "type": "object"
+}

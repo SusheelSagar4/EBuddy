@@ -1,0 +1,34 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "preference_id": {
+      "title": "Preference Id",
+      "type": "string"
+    },
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "preference_type": {
+      "title": "Preference Type",
+      "type": "string"
+    },
+    "value": {
+      "title": "Value",
+      "type": "string"
+    },
+    "weight": {
+      "default": 1.0,
+      "title": "Weight",
+      "type": "number"
+    }
+  },
+  "required": [
+    "preference_id",
+    "student_id",
+    "preference_type",
+    "value"
+  ],
+  "title": "Preference",
+  "type": "object"
+}

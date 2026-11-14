@@ -1,0 +1,3 @@
+minor_id,name,offering_department,min_cgpa,min_credits,status,source_id
+MINOR_CSE,Computer Science and Engineering Minor,CS,8.0,18.0,unsourced_baseline,UNSOURCED_BASELINE
+MINOR_DS,Data Science and Artificial Intelligence Minor,CS,8.0,18.0,unsourced_baseline,UNSOURCED_BASELINE

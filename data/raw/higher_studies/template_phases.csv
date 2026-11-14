@@ -1,0 +1,47 @@
+template_id,order,name,share_of_weeks,checkpoint
+GATE-12,1,Engineering maths + General Aptitude,0.15,Topic tests
+GATE-12,2,"Core subjects by weightage, notes",0.4,Topic test per subject
+GATE-12,3,Previous-year papers by subject,0.15,PYQ score per subject
+GATE-12,4,Full-length mocks weekly,0.2,Full mock
+GATE-12,5,Revision and formula sheets,0.1,Final mock
+GATE-6,1,Engineering maths + General Aptitude,0.15,Topic tests
+GATE-6,2,"Core subjects by weightage, notes",0.4,Topic test per subject
+GATE-6,3,Previous-year papers by subject,0.15,PYQ score per subject
+GATE-6,4,Full-length mocks weekly,0.2,Full mock
+GATE-6,5,Revision and formula sheets,0.1,Final mock
+GATE-3,1,Engineering maths + General Aptitude,0.15,Topic tests
+GATE-3,2,"Core subjects by weightage, notes",0.4,Topic test per subject
+GATE-3,3,Previous-year papers by subject,0.15,PYQ score per subject
+GATE-3,4,Full-length mocks weekly,0.2,Full mock
+GATE-3,5,Revision and formula sheets,0.1,Final mock
+CAT-12,1,"QA and VARC basics, daily reading",0.25,Sectional test
+CAT-12,2,Sectionals + DILR set practice,0.25,Sectional tests
+CAT-12,3,Weekly full mocks with analysis,0.25,Full mock
+CAT-12,4,Two mocks a week + revision,0.2,Full mocks
+CAT-12,5,WAT/PI prep (after result),0.05,Mock interview
+CAT-6,1,"QA and VARC basics, daily reading",0.25,Sectional test
+CAT-6,2,Sectionals + DILR set practice,0.25,Sectional tests
+CAT-6,3,Weekly full mocks with analysis,0.25,Full mock
+CAT-6,4,Two mocks a week + revision,0.2,Full mocks
+CAT-6,5,WAT/PI prep (after result),0.05,Mock interview
+CAT-3,1,"QA and VARC basics, daily reading",0.25,Sectional test
+CAT-3,2,Sectionals + DILR set practice,0.25,Sectional tests
+CAT-3,3,Weekly full mocks with analysis,0.25,Full mock
+CAT-3,4,Two mocks a week + revision,0.2,Full mocks
+CAT-3,5,WAT/PI prep (after result),0.05,Mock interview
+GRE-3,1,Diagnostic,0.05,Official practice test
+GRE-3,2,Quant review + vocabulary,0.35,Section quizzes
+GRE-3,3,Section practice,0.3,Timed sections
+GRE-3,4,Official practice tests,0.2,Practice test
+GRE-3,5,Essay practice,0.1,Scored essay
+ENG-2,1,Diagnostic,0.1,Full test
+ENG-2,2,Weakest-section drills,0.6,Section test
+ENG-2,3,Timed full tests,0.3,Full test
+APP-6,1,Shortlist by research match,0.2,Shortlist done
+APP-6,2,Email faculty,0.15,Emails sent
+APP-6,3,SOP drafts,0.3,SOP reviewed
+APP-6,4,Letters requested,0.1,Letters confirmed
+APP-6,5,Submit applications,0.25,Submitted
+RES-12,1,Internship applications,0.25,Applications sent
+RES-12,2,Project with a professor,0.55,Progress report
+RES-12,3,Paper or report,0.2,Draft written

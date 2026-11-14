@@ -1,0 +1,14 @@
+dimension,category,count
+School,School of Basic Sciences,974
+School,School of Electrical Sciences,765
+School,School of Infrastructure,488
+School,School of Mechanical Sciences,250
+School,"School of Earth, Ocean and Climate Sciences",215
+School,"School of Minerals, Metallurgical & Materials Engineering",176
+School,"School of Humanities, Social Sciences & Management",127
+School,Other Institute,5
+Document Type,Journals article,2213
+Document Type,Conference Proceeding,609
+Document Type,Book Chapter,139
+Document Type,Other,28
+Document Type,Book,11

@@ -1,0 +1,27 @@
+id,name,type,country,city,path_ids,official_url,data_from
+IISc,Indian Institute of Science,Research institute,India,Bengaluru,"P1,P2,P3",(add official URL),Seed list from doc section 5
+IITB,IIT Bombay,IIT,India,Mumbai,"P1,P2,P3,P6",(add official URL),Seed list from doc section 5
+IITD,IIT Delhi,IIT,India,New Delhi,"P1,P2,P3,P6",(add official URL),Seed list from doc section 5
+IITM,IIT Madras,IIT,India,Chennai,"P1,P2,P3",(add official URL),Seed list from doc section 5
+IITK,IIT Kanpur,IIT,India,Kanpur,"P1,P2,P3",(add official URL),Seed list from doc section 5
+IITKGP,IIT Kharagpur,IIT,India,Kharagpur,"P1,P2,P3,P6",(add official URL),Seed list from doc section 5
+IITR,IIT Roorkee,IIT,India,Roorkee,"P1,P2,P3",(add official URL),Seed list from doc section 5
+IITG,IIT Guwahati,IIT,India,Guwahati,"P1,P2,P3",(add official URL),Seed list from doc section 5
+IITH,IIT Hyderabad,IIT,India,Hyderabad,"P1,P2,P3",(add official URL),Seed list from doc section 5
+IITBHU,IIT (BHU) Varanasi,IIT,India,Varanasi,"P1,P2,P3",(add official URL),Seed list from doc section 5
+IITBBS,IIT Bhubaneswar,IIT,India,Bhubaneswar,"P1,P2,P3",(add official URL),Seed list from doc section 5
+NITT,NIT Tiruchirappalli,NIT,India,Tiruchirappalli,"P1,P3",(add official URL),Seed list from doc section 5
+NITK,"NIT Karnataka, Surathkal",NIT,India,Surathkal,"P1,P3",(add official URL),Seed list from doc section 5
+NITW,NIT Warangal,NIT,India,Warangal,"P1,P3",(add official URL),Seed list from doc section 5
+NITR,NIT Rourkela,NIT,India,Rourkela,"P1,P3",(add official URL),Seed list from doc section 5
+NITC,NIT Calicut,NIT,India,Kozhikode,"P1,P3",(add official URL),Seed list from doc section 5
+IIMs,IIMs (one row each to add),IIM,India,Various,P6,(add official URL),Seed list from doc section 5
+ISB,Indian School of Business,B-school,India,Hyderabad / Mohali,P6,(add official URL),Seed list from doc section 5
+XLRI,XLRI,B-school,India,Jamshedpur,P6,(add official URL),Seed list from doc section 5
+FMS,"Faculty of Management Studies, Delhi University",B-school,India,New Delhi,P6,(add official URL),Seed list from doc section 5
+JBIMS,Jamnalal Bajaj Institute of Management Studies,B-school,India,Mumbai,P6,(add official URL),Seed list from doc section 5
+SPJIMR,S.P. Jain Institute of Management and Research,B-school,India,Mumbai,P6,(add official URL),Seed list from doc section 5
+MDI,Management Development Institute,B-school,India,Gurugram,P6,(add official URL),Seed list from doc section 5
+NUS,National University of Singapore,University,Singapore,Singapore,"P4,P5",(add official URL),Seed list from doc section 5
+NTU,Nanyang Technological University,University,Singapore,Singapore,"P4,P5",(add official URL),Seed list from doc section 5
+TU9,TU9 German universities (one row each to add),University group,Germany,Various,"P4,P5",(add official URL),Seed list from doc section 5

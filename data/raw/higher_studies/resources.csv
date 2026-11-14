@@ -1,0 +1,8 @@
+id,title,url,provider,type,exam_ids,topic_ids,licence,free
+R1,GATE 2027 official site,https://gate2027.iitm.ac.in/,IIT Madras,Official,GATE,,Official,TRUE
+R2,CAT official site,https://iimcat.ac.in,IIMs,Official,CAT,,Official,TRUE
+R3,GRE General Test structure,https://www.ets.org/gre/test-takers/general-test/prepare/test-structure.html,ETS,Official,GRE,,Official,TRUE
+R4,TOEFL iBT scores,https://www.ets.org/toefl/test-takers/ibt/scores/understand-scores.html,ETS,Official,TOEFL,,Official,TRUE
+R5,GMAT Focus score scale,https://www.mba.com/exams-and-exam-prep/gmat-exam/gmat-focus-evolving-score-scale/amp,GMAC,Official,GMAT,,Official,TRUE
+R6,IELTS Academic test,https://ielts.org/take-a-test/test-types/ielts-academic-test,IELTS,Official,IELTS,,Official,TRUE
+R7,NPTEL courses,https://nptel.ac.in,NPTEL,Open courses,GATE,,Open (check per course),TRUE

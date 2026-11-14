@@ -1,0 +1,66 @@
+# Technical Architecture — Personalised Learning Buddy (IIT Bhubaneswar)
+
+**Phase:** Phase F (Foundation Complete)  
+**Target Institute:** Indian Institute of Technology Bhubaneswar  
+**Programmes:** B.Tech Electrical Engineering (EE) & B.Tech Metallurgical and Materials Engineering (MME)
+
+---
+
+## 1. Architectural Principles
+
+1. **Deterministic Core:** Prerequisite checking, curriculum schedule validation, slot constraints, and mastery evaluation run strictly deterministically in Python without non-deterministic LLM hallucinations.
+2. **Layered Interfaces:** Modules adhere to strict dependency direction:
+   ```
+   FastAPI Web & API Routers (app/api/, web/)
+         ↓
+   Orchestration Services (app/services/)
+         ↓
+   Core Engine (app/engine/) | LLM Gateway (app/llm/) | Repositories (app/kb/)
+         ↓
+   Frozen Contracts & Schemas (app/contracts/)
+   ```
+3. **LiteLLM Gateway Isolation:** Only `app/llm/client.py` imports `litellm`. All other components interact through structured task interfaces (`IntentRouter`, `Explainer`, `Grader`). Tests run against `FakeLLM` with zero outbound network calls.
+4. **Persona Plugin Modularity:** Each persona is an autonomous directory in `app/personas/<id>/` and `data/seed/personas/<id>/`. Adding a persona requires editing zero shared files.
+5. **Strict Provenance & Zero Fabrication:** Knowledge-base rows carry `status` (`verified`, `draft_for_review`, `unsourced_baseline`) and `source_id`. The buddy never asserts regulatory dates, cut-offs, or fees unless verified.
+
+---
+
+## 2. Directory Structure
+
+```
+Ebuddy/
+├── app/
+│   ├── contracts/          # F1: Frozen Pydantic models (version 1.0.0)
+│   ├── kb/                 # F2: Read-only KB repositories
+│   ├── engine/             # F2: Deterministic rule, planning & mastery engines
+│   ├── llm/                # F2: LiteLLM gateway, FakeLLM, task runners & prompts
+│   ├── services/           # F5: Orchestration services (onboard, plan, adapt, chat)
+│   ├── api/                # F5: FastAPI routers (student, simulator, admin)
+│   └── personas/           # F3: Discovered persona plugins (ee_power_core, ...)
+├── web/                    # F6: Zero-CDN responsive frontend shell
+│   ├── src/design/         # Design tokens (tokens.json, tokens.css, style.css)
+│   ├── src/api/            # Typed API client (client.js)
+│   └── src/screens/        # Persona-agnostic screens (onboarding, plan, chat, etc.)
+├── data/
+│   ├── raw/                # Official source files & PDF extraction
+│   └── seed/kb/            # Canonical CSV seeds with provenance metadata
+├── tests/
+│   ├── unit/               # Boundary and unit tests
+│   ├── integration/        # Walking skeleton end-to-end integration tests
+│   ├── conformance/        # F4: 8-check automated persona conformance suite
+│   └── fixtures/           # F8: Isolated TEST_* fixtures for CI
+└── docs/                   # Contracts, decisions (ADRs), evaluation, team tooling
+```
+
+---
+
+## 3. Walking Skeleton Vertical Slice
+
+The Phase F walking skeleton verifies the complete end-to-end flow:
+1. **Assess:** Student onboarding with constraints and adaptive baseline diagnostic.
+2. **Personalise:** Planner resolves prerequisite DAGs recursively to schedule courses for the target goal.
+3. **Learn & Practise:** Curated lecture series + interactive exercises with immediate feedback.
+4. **Demonstrate Mastery:** Distinguishes between completed course credits and verified competency evidence.
+5. **Adapt:** Simulator endpoint triggers performance shock (strong vs weak quiz) and returns a validated `PlanDiff`.
+6. **Chat:** Intent router classifies questions, binds context card, and generates grounded responses.
+
