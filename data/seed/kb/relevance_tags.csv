@@ -1,0 +1,1497 @@
+course_id,goal_id,relevance_score,rationale
+CE1P001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+CE1P001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+CE1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+CE1P001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+CE1P001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+CE1P001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+CE1P001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+CE1P001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+CE1P001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+CE1P001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+CE1P001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+CS1L001,GOAL_EE_CORE_VLSI,0,Unrelated track
+CS1L001,GOAL_EE_CORE_POWER,0,Unrelated track
+CS1L001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+CS1L001,GOAL_CROSS_SDE_DATA,2,Useful technical elective (teaches SKILL_PROGRAMMING_DS)
+CS1L001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+CS1L001,GOAL_TECH_STARTUP,0,Unrelated track
+CS1L001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+CS1L001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+CS1L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+CS1L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+CS1L001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+CS1P001,GOAL_EE_CORE_VLSI,0,Unrelated track
+CS1P001,GOAL_EE_CORE_POWER,0,Unrelated track
+CS1P001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+CS1P001,GOAL_CROSS_SDE_DATA,2,Useful technical elective (teaches SKILL_PROGRAMMING_DS)
+CS1P001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+CS1P001,GOAL_TECH_STARTUP,0,Unrelated track
+CS1P001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+CS1P001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+CS1P001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+CS1P001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+CS1P001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+CS4L003,GOAL_EE_CORE_VLSI,0,Unrelated track
+CS4L003,GOAL_EE_CORE_POWER,0,Unrelated track
+CS4L003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+CS4L003,GOAL_CROSS_SDE_DATA,3,Essential/Useful for software & AI/ML transition
+CS4L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+CS4L003,GOAL_TECH_STARTUP,0,Unrelated track
+CS4L003,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+CS4L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+CS4L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+CS4L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+CS4L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+CS6L001,GOAL_EE_CORE_VLSI,0,Unrelated track
+CS6L001,GOAL_EE_CORE_POWER,0,Unrelated track
+CS6L001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+CS6L001,GOAL_CROSS_SDE_DATA,2,Useful technical elective (teaches SKILL_AI_ML)
+CS6L001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+CS6L001,GOAL_TECH_STARTUP,2,Useful technical elective (teaches SKILL_AI_ML)
+CS6L001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+CS6L001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+CS6L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+CS6L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+CS6L001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+CY1L001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+CY1L001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+CY1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+CY1L001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+CY1L001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+CY1L001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+CY1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+CY1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+CY1L001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+CY1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+CY1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+CY1P001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+CY1P001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+CY1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+CY1P001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+CY1P001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+CY1P001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+CY1P001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+CY1P001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+CY1P001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+CY1P001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+CY1P001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+EC2L001,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_ANALOG_ELECTRONICS)
+EC2L001,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2L001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC2L001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2L001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2L001,GOAL_TECH_STARTUP,0,Unrelated track
+EC2L001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2L001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2L001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC2L002,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC2L002,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2L002,GOAL_EE_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_SIGNALS_SYSTEMS)
+EC2L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2L002,GOAL_TECH_STARTUP,0,Unrelated track
+EC2L002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2L002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2L002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2L002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2L002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC2L005,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_ANALOG_ELECTRONICS)
+EC2L005,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2L005,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC2L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2L005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2L005,GOAL_TECH_STARTUP,0,Unrelated track
+EC2L005,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2L005,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2L005,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2L005,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2L005,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC2L006,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC2L006,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2L006,GOAL_EE_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_EM_FIELDS)
+EC2L006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2L006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2L006,GOAL_TECH_STARTUP,0,Unrelated track
+EC2L006,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2L006,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2L006,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2L006,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2L006,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC2P001,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_ANALOG_ELECTRONICS)
+EC2P001,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2P001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC2P001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2P001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2P001,GOAL_TECH_STARTUP,0,Unrelated track
+EC2P001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2P001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2P001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2P001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2P001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC2P002,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC2P002,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2P002,GOAL_EE_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_SIGNALS_SYSTEMS)
+EC2P002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2P002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2P002,GOAL_TECH_STARTUP,0,Unrelated track
+EC2P002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2P002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2P002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2P002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2P002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC2P006,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC2P006,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2P006,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC2P006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2P006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2P006,GOAL_TECH_STARTUP,0,Unrelated track
+EC2P006,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2P006,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2P006,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2P006,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2P006,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC3L003,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_DIGITAL_LOGIC)
+EC3L003,GOAL_EE_CORE_POWER,0,Unrelated track
+EC3L003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC3L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC3L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC3L003,GOAL_TECH_STARTUP,0,Unrelated track
+EC3L003,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC3L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC3L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC3L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC3L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC3P002,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_DIGITAL_LOGIC)
+EC3P002,GOAL_EE_CORE_POWER,0,Unrelated track
+EC3P002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC3P002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC3P002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC3P002,GOAL_TECH_STARTUP,0,Unrelated track
+EC3P002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC3P002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC3P002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC3P002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC3P002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC4L001,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC4L001,GOAL_EE_CORE_POWER,0,Unrelated track
+EC4L001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC4L001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC4L001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC4L001,GOAL_TECH_STARTUP,0,Unrelated track
+EC4L001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC4L001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC4L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC4L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC4L001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC4L002,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC4L002,GOAL_EE_CORE_POWER,0,Unrelated track
+EC4L002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC4L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC4L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC4L002,GOAL_TECH_STARTUP,0,Unrelated track
+EC4L002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC4L002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC4L002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC4L002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC4L002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC4L003,GOAL_EE_CORE_VLSI,3,Essential core competency for goal (teaches SKILL_VLSI_DESIGN)
+EC4L003,GOAL_EE_CORE_POWER,0,Unrelated track
+EC4L003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC4L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC4L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC4L003,GOAL_TECH_STARTUP,0,Unrelated track
+EC4L003,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC4L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC4L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC4L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC4L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L002,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L002,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L002,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L004,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L004,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L004,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L004,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L004,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L004,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L004,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L004,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L004,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L004,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L005,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_EMBEDDED_SYSTEMS)
+EC6L005,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L005,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L005,GOAL_TECH_STARTUP,2,Useful technical elective (teaches SKILL_EMBEDDED_SYSTEMS)
+EC6L005,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L005,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L005,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L005,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L005,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L012,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L012,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L012,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L012,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L012,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L012,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L012,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L012,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L012,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L012,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L012,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L015,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L015,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L015,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L015,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L015,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L015,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L015,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L015,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L015,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L015,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L015,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L016,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L016,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L016,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L016,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L016,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L016,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L016,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L016,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L016,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L016,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L016,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L017,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L017,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L017,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L017,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L017,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L017,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L017,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L017,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L017,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L017,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L017,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L019,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L019,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L019,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L019,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L019,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L019,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L019,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L019,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L019,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L019,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L019,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L023,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L023,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L023,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L023,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L023,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L023,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L023,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L023,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L023,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L023,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L023,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L024,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L024,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L024,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L024,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L024,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L024,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L024,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L024,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L024,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L024,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L024,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L027,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L027,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L027,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L027,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L027,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L027,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L027,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L027,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L027,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L027,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L027,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L030,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L030,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L030,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L030,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L030,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L030,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L030,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L030,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L030,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L030,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L030,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L031,GOAL_EE_CORE_VLSI,0,Unrelated track
+EC6L031,GOAL_EE_CORE_POWER,0,Unrelated track
+EC6L031,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC6L031,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC6L031,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC6L031,GOAL_TECH_STARTUP,0,Unrelated track
+EC6L031,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC6L031,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC6L031,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC6L031,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC6L031,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE1L001,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE1L001,GOAL_EE_CORE_POWER,2,Useful technical elective (teaches SKILL_ELECTRIC_MACHINES)
+EE1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE1L001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE1L001,GOAL_UPSC_COMPETITIVE,3,Essential core competency for goal (teaches SKILL_ELECTRIC_MACHINES)
+EE1L001,GOAL_TECH_STARTUP,0,Unrelated track
+EE1L001,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE1L001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE1L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE1L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE1L001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE1P001,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE1P001,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE1P001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE1P001,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_CIRCUIT_ANALYSIS)
+EE1P001,GOAL_TECH_STARTUP,0,Unrelated track
+EE1P001,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE1P001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE1P001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE1P001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE1P001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE2L001,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE2L001,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE2L001,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE2L001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE2L001,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_CIRCUIT_ANALYSIS)
+EE2L001,GOAL_TECH_STARTUP,0,Unrelated track
+EE2L001,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE2L001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE2L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE2L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE2L001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE2L002,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_ANALOG_ELECTRONICS)
+EE2L002,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE2L002,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE2L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE2L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE2L002,GOAL_TECH_STARTUP,0,Unrelated track
+EE2L002,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE2L002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE2L002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE2L002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE2L002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE2L003,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE2L003,GOAL_EE_CORE_POWER,2,Useful technical elective (teaches SKILL_ELECTRIC_MACHINES)
+EE2L003,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE2L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE2L003,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_ELECTRIC_MACHINES)
+EE2L003,GOAL_TECH_STARTUP,0,Unrelated track
+EE2L003,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE2L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE2L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE2L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE2L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE2L004,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE2L004,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE2L004,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE2L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE2L004,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE2L004,GOAL_TECH_STARTUP,0,Unrelated track
+EE2L004,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE2L004,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE2L004,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE2L004,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE2L004,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE2P003,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE2P003,GOAL_EE_CORE_POWER,2,Useful technical elective (teaches SKILL_ELECTRIC_MACHINES)
+EE2P003,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE2P003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE2P003,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_ELECTRIC_MACHINES)
+EE2P003,GOAL_TECH_STARTUP,0,Unrelated track
+EE2P003,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE2P003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE2P003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE2P003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE2P003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE2S001,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE2S001,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE2S001,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE2S001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE2S001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE2S001,GOAL_TECH_STARTUP,0,Unrelated track
+EE2S001,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE2S001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE2S001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE2S001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE2S001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L003,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L003,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3L003,GOAL_EE_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_CONTROL_SYSTEMS)
+EE3L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L003,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_CONTROL_SYSTEMS)
+EE3L003,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L003,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L004,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L004,GOAL_EE_CORE_POWER,3,Essential core competency for goal (teaches SKILL_POWER_SYSTEMS)
+EE3L004,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L004,GOAL_UPSC_COMPETITIVE,3,Essential core competency for goal (teaches SKILL_POWER_SYSTEMS)
+EE3L004,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L004,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L004,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L004,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L004,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L004,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L005,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L005,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3L005,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3L005,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L005,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L005,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L005,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L005,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L005,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L006,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L006,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3L006,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3L006,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L006,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L006,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L006,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L006,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L006,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L007,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L007,GOAL_EE_CORE_POWER,2,Useful technical elective (teaches SKILL_ELECTRIC_MACHINES)
+EE3L007,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L007,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L007,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_ELECTRIC_MACHINES)
+EE3L007,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L007,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L007,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L007,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L007,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L007,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L008,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L008,GOAL_EE_CORE_POWER,3,Essential core competency for goal (teaches SKILL_POWER_ELECTRONICS)
+EE3L008,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L008,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L008,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3L008,GOAL_TECH_STARTUP,3,Essential core competency for goal (teaches SKILL_POWER_ELECTRONICS)
+EE3L008,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L008,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L008,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L008,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L008,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L009,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L009,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3L009,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L009,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L009,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3L009,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L009,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L009,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L009,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L009,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L009,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L010,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L010,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3L010,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L010,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L010,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3L010,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L010,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L010,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L010,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L010,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L010,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L011,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L011,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3L011,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L011,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L011,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3L011,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L011,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L011,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L011,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L011,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L011,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3L012,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3L012,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3L012,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3L012,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3L012,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3L012,GOAL_TECH_STARTUP,0,Unrelated track
+EE3L012,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3L012,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3L012,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3L012,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3L012,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3P002,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3P002,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3P002,GOAL_EE_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_CONTROL_SYSTEMS)
+EE3P002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3P002,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_CONTROL_SYSTEMS)
+EE3P002,GOAL_TECH_STARTUP,0,Unrelated track
+EE3P002,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3P002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3P002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3P002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3P002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3P004,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3P004,GOAL_EE_CORE_POWER,3,Essential core competency for goal (teaches SKILL_POWER_SYSTEMS)
+EE3P004,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3P004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3P004,GOAL_UPSC_COMPETITIVE,3,Essential core competency for goal (teaches SKILL_POWER_SYSTEMS)
+EE3P004,GOAL_TECH_STARTUP,0,Unrelated track
+EE3P004,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3P004,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3P004,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3P004,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3P004,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3P005,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3P005,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE3P005,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3P005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3P005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3P005,GOAL_TECH_STARTUP,0,Unrelated track
+EE3P005,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3P005,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3P005,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3P005,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3P005,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE3P006,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE3P006,GOAL_EE_CORE_POWER,3,Essential core competency for goal (teaches SKILL_POWER_ELECTRONICS)
+EE3P006,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE3P006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE3P006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE3P006,GOAL_TECH_STARTUP,3,Essential core competency for goal (teaches SKILL_POWER_ELECTRONICS)
+EE3P006,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE3P006,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE3P006,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE3P006,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE3P006,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4D001,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4D001,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE4D001,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE4D001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4D001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE4D001,GOAL_TECH_STARTUP,0,Unrelated track
+EE4D001,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4D001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4D001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4D001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4D001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4D002,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4D002,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE4D002,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE4D002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4D002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE4D002,GOAL_TECH_STARTUP,0,Unrelated track
+EE4D002,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4D002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4D002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4D002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4D002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4L003,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4L003,GOAL_EE_CORE_POWER,3,Essential core competency for goal (teaches SKILL_POWER_ELECTRONICS)
+EE4L003,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE4L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE4L003,GOAL_TECH_STARTUP,3,Essential core competency for goal (teaches SKILL_POWER_ELECTRONICS)
+EE4L003,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4L004,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4L004,GOAL_EE_CORE_POWER,3,Essential core competency for goal (teaches SKILL_POWER_SYSTEMS)
+EE4L004,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE4L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4L004,GOAL_UPSC_COMPETITIVE,3,Essential core competency for goal (teaches SKILL_POWER_SYSTEMS)
+EE4L004,GOAL_TECH_STARTUP,0,Unrelated track
+EE4L004,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4L004,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4L004,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4L004,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4L004,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4L005,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4L005,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE4L005,GOAL_EE_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_CONTROL_SYSTEMS)
+EE4L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4L005,GOAL_UPSC_COMPETITIVE,2,Useful technical elective (teaches SKILL_CONTROL_SYSTEMS)
+EE4L005,GOAL_TECH_STARTUP,0,Unrelated track
+EE4L005,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4L005,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4L005,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4L005,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4L005,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4L006,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4L006,GOAL_EE_CORE_POWER,2,Useful technical elective (teaches SKILL_RENEWABLE_ENERGY)
+EE4L006,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE4L006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4L006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE4L006,GOAL_TECH_STARTUP,0,Unrelated track
+EE4L006,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4L006,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4L006,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4L006,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4L006,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4P002,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4P002,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE4P002,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE4P002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4P002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE4P002,GOAL_TECH_STARTUP,0,Unrelated track
+EE4P002,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4P002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4P002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4P002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4P002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE4T001,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE4T001,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE4T001,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE4T001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE4T001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE4T001,GOAL_TECH_STARTUP,0,Unrelated track
+EE4T001,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE4T001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE4T001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE4T001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE4T001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L002,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L002,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L002,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L002,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L002,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L004,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L004,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L004,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L004,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L004,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L004,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L004,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L004,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L004,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L004,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L005,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L005,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L005,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L005,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L005,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L005,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L005,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L005,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L005,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L007,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L007,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L007,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L007,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L007,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L007,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L007,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L007,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L007,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L007,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L007,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L009,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L009,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L009,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L009,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L009,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L009,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L009,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L009,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L009,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L009,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L009,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L010,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L010,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L010,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L010,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L010,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L010,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L010,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L010,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L010,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L010,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L010,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L011,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L011,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L011,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L011,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L011,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L011,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L011,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L011,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L011,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L011,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L011,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L014,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L014,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L014,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L014,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L014,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L014,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L014,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L014,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L014,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L014,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L014,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L015,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L015,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L015,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L015,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L015,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L015,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L015,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L015,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L015,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L015,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L015,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L017,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L017,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L017,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L017,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L017,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L017,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L017,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L017,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L017,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L017,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L017,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+EE6L018,GOAL_EE_CORE_VLSI,1,Supporting electrical engineering foundation
+EE6L018,GOAL_EE_CORE_POWER,1,Supporting electrical engineering foundation
+EE6L018,GOAL_EE_RES_HIGHER_STUDIES,1,Supporting electrical engineering foundation
+EE6L018,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EE6L018,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EE6L018,GOAL_TECH_STARTUP,0,Unrelated track
+EE6L018,GOAL_MM_PROCESS_ENGINEER,1,Supporting electrical engineering foundation
+EE6L018,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EE6L018,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EE6L018,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EE6L018,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+HS1L001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+HS1L001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+HS1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+HS1L001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+HS1L001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+HS1L001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+HS1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+HS1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+HS1L001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+HS1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+HS1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+HS1L002,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+HS1L002,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+HS1L002,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+HS1L002,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+HS1L002,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+HS1L002,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+HS1L002,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+HS1L002,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+HS1L002,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+HS1L002,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+HS1L002,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+ID1T001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ID1T001,GOAL_EE_CORE_POWER,0,Unrelated track
+ID1T001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ID1T001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ID1T001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ID1T001,GOAL_TECH_STARTUP,0,Unrelated track
+ID1T001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+ID1T001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+ID1T001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+ID1T001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+ID1T001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+ID1T002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ID1T002,GOAL_EE_CORE_POWER,0,Unrelated track
+ID1T002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ID1T002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ID1T002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ID1T002,GOAL_TECH_STARTUP,0,Unrelated track
+ID1T002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+ID1T002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+ID1T002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+ID1T002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+ID1T002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+ID2L001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ID2L001,GOAL_EE_CORE_POWER,0,Unrelated track
+ID2L001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ID2L001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ID2L001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ID2L001,GOAL_TECH_STARTUP,0,Unrelated track
+ID2L001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+ID2L001,GOAL_MM_ADVANCED_MATERIALS,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ID2L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+ID2L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+ID2L001,GOAL_MM_RES_HIGHER_STUDIES,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ID2L002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ID2L002,GOAL_EE_CORE_POWER,0,Unrelated track
+ID2L002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ID2L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ID2L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ID2L002,GOAL_TECH_STARTUP,0,Unrelated track
+ID2L002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+ID2L002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+ID2L002,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_BIOMATERIALS)
+ID2L002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+ID2L002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+ID2L003,GOAL_EE_CORE_VLSI,0,Unrelated track
+ID2L003,GOAL_EE_CORE_POWER,0,Unrelated track
+ID2L003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ID2L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ID2L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ID2L003,GOAL_TECH_STARTUP,0,Unrelated track
+ID2L003,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MINERAL_PROCESSING)
+ID2L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+ID2L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+ID2L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+ID2L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+MA1L001,GOAL_EE_CORE_VLSI,0,Unrelated track
+MA1L001,GOAL_EE_CORE_POWER,0,Unrelated track
+MA1L001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+MA1L001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+MA1L001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+MA1L001,GOAL_TECH_STARTUP,0,Unrelated track
+MA1L001,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+MA1L001,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+MA1L001,GOAL_MM_BIOMATERIALS,0,Unrelated track
+MA1L001,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+MA1L001,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+MA1L002,GOAL_EE_CORE_VLSI,0,Unrelated track
+MA1L002,GOAL_EE_CORE_POWER,0,Unrelated track
+MA1L002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+MA1L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+MA1L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+MA1L002,GOAL_TECH_STARTUP,0,Unrelated track
+MA1L002,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+MA1L002,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+MA1L002,GOAL_MM_BIOMATERIALS,0,Unrelated track
+MA1L002,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+MA1L002,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+MA2L003,GOAL_EE_CORE_VLSI,0,Unrelated track
+MA2L003,GOAL_EE_CORE_POWER,0,Unrelated track
+MA2L003,GOAL_EE_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_PROBABILITY_STATS)
+MA2L003,GOAL_CROSS_SDE_DATA,2,Useful technical elective (teaches SKILL_PROBABILITY_STATS)
+MA2L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+MA2L003,GOAL_TECH_STARTUP,0,Unrelated track
+MA2L003,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+MA2L003,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+MA2L003,GOAL_MM_BIOMATERIALS,0,Unrelated track
+MA2L003,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+MA2L003,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+ME1L001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+ME1L001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+ME1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+ME1L001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+ME1L001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+ME1L001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+ME1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+ME1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+ME1L001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+ME1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+ME1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+ME1P001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+ME1P001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+ME1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+ME1P001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+ME1P001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+ME1P001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+ME1P001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+ME1P001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+ME1P001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+ME1P001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+ME1P001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+PH1L001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+PH1L001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+PH1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+PH1L001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+PH1L001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+PH1L001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+PH1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+PH1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+PH1L001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+PH1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+PH1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+PH1P001,GOAL_EE_CORE_VLSI,1,Foundational science/mathematics
+PH1P001,GOAL_EE_CORE_POWER,1,Foundational science/mathematics
+PH1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+PH1P001,GOAL_CROSS_SDE_DATA,1,Foundational science/mathematics
+PH1P001,GOAL_UPSC_COMPETITIVE,1,Foundational science/mathematics
+PH1P001,GOAL_TECH_STARTUP,1,Foundational science/mathematics
+PH1P001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science/mathematics
+PH1P001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science/mathematics
+PH1P001,GOAL_MM_BIOMATERIALS,1,Foundational science/mathematics
+PH1P001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science/mathematics
+PH1P001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science/mathematics
+MA2L007,GOAL_EE_CORE_VLSI,0,Unrelated track
+MA2L007,GOAL_EE_CORE_POWER,0,Unrelated track
+MA2L007,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+MA2L007,GOAL_CROSS_SDE_DATA,0,Unrelated track
+MA2L007,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+MA2L007,GOAL_TECH_STARTUP,0,Unrelated track
+MA2L007,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+MA2L007,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+MA2L007,GOAL_MM_BIOMATERIALS,0,Unrelated track
+MA2L007,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+MA2L007,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_SIMULATION_MODELING)
+ML2L002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2L002,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2L002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2L002,GOAL_TECH_STARTUP,0,Unrelated track
+ML2L002,GOAL_MM_PROCESS_ENGINEER,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML2L002,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML2L002,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2L002,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML2L002,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+EC2P005,GOAL_EE_CORE_VLSI,2,Useful technical elective (teaches SKILL_ANALOG_ELECTRONICS)
+EC2P005,GOAL_EE_CORE_POWER,0,Unrelated track
+EC2P005,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+EC2P005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+EC2P005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+EC2P005,GOAL_TECH_STARTUP,0,Unrelated track
+EC2P005,GOAL_MM_PROCESS_ENGINEER,0,Unrelated track
+EC2P005,GOAL_MM_ADVANCED_MATERIALS,0,Unrelated track
+EC2P005,GOAL_MM_BIOMATERIALS,0,Unrelated track
+EC2P005,GOAL_MM_ENERGY_MATERIALS,0,Unrelated track
+EC2P005,GOAL_MM_RES_HIGHER_STUDIES,0,Unrelated track
+ML2P001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2P001,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2P001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2P001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2P001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2P001,GOAL_TECH_STARTUP,0,Unrelated track
+ML2P001,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML2P001,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML2P001,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML2P001,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML2P001,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML2S001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2S001,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2S001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2S001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2S001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2S001,GOAL_TECH_STARTUP,0,Unrelated track
+ML2S001,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML2S001,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML2S001,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2S001,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML2S001,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML2L003,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2L003,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2L003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2L003,GOAL_TECH_STARTUP,0,Unrelated track
+ML2L003,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MATERIALS_PROCESSING)
+ML2L003,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML2L003,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2L003,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML2L003,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML2L004,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2L004,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2L004,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2L004,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2L004,GOAL_TECH_STARTUP,0,Unrelated track
+ML2L004,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_THERMODYNAMICS_MAT)
+ML2L004,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML2L004,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2L004,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML2L004,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML2L005,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2L005,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2L005,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2L005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2L005,GOAL_TECH_STARTUP,0,Unrelated track
+ML2L005,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML2L005,GOAL_MM_ADVANCED_MATERIALS,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML2L005,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2L005,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML2L005,GOAL_MM_RES_HIGHER_STUDIES,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML2P002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2P002,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2P002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2P002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2P002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2P002,GOAL_TECH_STARTUP,0,Unrelated track
+ML2P002,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MATERIALS_PROCESSING)
+ML2P002,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML2P002,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2P002,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML2P002,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML2P003,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2P003,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2P003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2P003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2P003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2P003,GOAL_TECH_STARTUP,0,Unrelated track
+ML2P003,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML2P003,GOAL_MM_ADVANCED_MATERIALS,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML2P003,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2P003,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML2P003,GOAL_MM_RES_HIGHER_STUDIES,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML2P004,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2P004,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2P004,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2P004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2P004,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2P004,GOAL_TECH_STARTUP,0,Unrelated track
+ML2P004,GOAL_MM_PROCESS_ENGINEER,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML2P004,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML2P004,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2P004,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML2P004,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML2L006,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML2L006,GOAL_EE_CORE_POWER,0,Unrelated track
+ML2L006,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML2L006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML2L006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML2L006,GOAL_TECH_STARTUP,0,Unrelated track
+ML2L006,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML2L006,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_COMPOSITES_NANO)
+ML2L006,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML2L006,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML2L006,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L011,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L011,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L011,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L011,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L011,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L011,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L011,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3L011,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_COMPOSITES_NANO)
+ML3L011,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L011,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L011,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L012,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L012,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L012,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L012,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L012,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L012,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L012,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MINERAL_PROCESSING)
+ML3L012,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML3L012,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L012,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L012,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L001,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L001,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L001,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MINERAL_PROCESSING)
+ML3L001,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML3L001,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L001,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L001,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L002,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L002,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L002,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3L002,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML3L002,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_CORROSION_SURFACE)
+ML3L002,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L002,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L003,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L003,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L003,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L003,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3L003,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MECHANICAL_BEHAVIOR)
+ML3L003,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L003,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L003,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L004,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L004,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L004,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L004,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L004,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L004,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3L004,GOAL_MM_ADVANCED_MATERIALS,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML3L004,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L004,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L004,GOAL_MM_RES_HIGHER_STUDIES,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML3L005,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L005,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L005,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L005,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L005,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_THERMODYNAMICS_MAT)
+ML3L005,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML3L005,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L005,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML3L005,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_THERMODYNAMICS_MAT)
+ML3P001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3P001,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3P001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3P001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3P001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3P001,GOAL_TECH_STARTUP,0,Unrelated track
+ML3P001,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3P001,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MECHANICAL_BEHAVIOR)
+ML3P001,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3P001,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3P001,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L006,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L006,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L006,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L006,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L006,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3L006,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3L006,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3L006,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3L006,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3L007,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L007,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L007,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L007,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L007,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L007,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L007,GOAL_MM_PROCESS_ENGINEER,2,Useful technical elective (teaches SKILL_IRON_STEELMAKING)
+ML3L007,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML3L007,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L007,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L007,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L008,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L008,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L008,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L008,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L008,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L008,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L008,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3L008,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MECHANICAL_BEHAVIOR)
+ML3L008,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L008,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L008,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML3L009,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3L009,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3L009,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3L009,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3L009,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3L009,GOAL_TECH_STARTUP,0,Unrelated track
+ML3L009,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3L009,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML3L009,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3L009,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3L009,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_SIMULATION_MODELING)
+ML3P002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3P002,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3P002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3P002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3P002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3P002,GOAL_TECH_STARTUP,0,Unrelated track
+ML3P002,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3P002,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3P002,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3P002,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3P002,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML3P003,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML3P003,GOAL_EE_CORE_POWER,0,Unrelated track
+ML3P003,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML3P003,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML3P003,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML3P003,GOAL_TECH_STARTUP,0,Unrelated track
+ML3P003,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML3P003,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML3P003,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML3P003,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML3P003,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_SIMULATION_MODELING)
+ML4L001_CORE,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L001_CORE,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L001_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L001_CORE,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L001_CORE,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L001_CORE,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L001_CORE,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MATERIALS_PROCESSING)
+ML4L001_CORE,GOAL_MM_ADVANCED_MATERIALS,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML4L001_CORE,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L001_CORE,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L001_CORE,GOAL_MM_RES_HIGHER_STUDIES,3,Essential core competency for goal (teaches SKILL_PHYSICAL_METALLURGY)
+ML4L002_CORE,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L002_CORE,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L002_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L002_CORE,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L002_CORE,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L002_CORE,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L002_CORE,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MATERIALS_PROCESSING)
+ML4L002_CORE,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L002_CORE,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L002_CORE,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_ENERGY_MATERIALS)
+ML4L002_CORE,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L003_CORE,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L003_CORE,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L003_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L003_CORE,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L003_CORE,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L003_CORE,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L003_CORE,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L003_CORE,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_COMPOSITES_NANO)
+ML4L003_CORE,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_CORROSION_SURFACE)
+ML4L003_CORE,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L003_CORE,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4P001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4P001,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4P001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4P001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4P001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4P001,GOAL_TECH_STARTUP,0,Unrelated track
+ML4P001,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4P001,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4P001,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4P001,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4P001,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4P002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4P002,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4P002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4P002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4P002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4P002,GOAL_TECH_STARTUP,0,Unrelated track
+ML4P002,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4P002,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4P002,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4P002,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4P002,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4T001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4T001,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4T001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4T001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4T001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4T001,GOAL_TECH_STARTUP,0,Unrelated track
+ML4T001,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4T001,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4T001,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4T001,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4T001,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4D001,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4D001,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4D001,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4D001,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4D001,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4D001,GOAL_TECH_STARTUP,0,Unrelated track
+ML4D001,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4D001,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4D001,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4D001,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4D001,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L001_ELEC,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L001_ELEC,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L001_ELEC,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L001_ELEC,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L001_ELEC,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L001_ELEC,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L001_ELEC,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L001_ELEC,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L001_ELEC,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L001_ELEC,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L001_ELEC,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L002_ELEC,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L002_ELEC,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L002_ELEC,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L002_ELEC,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L002_ELEC,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L002_ELEC,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L002_ELEC,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L002_ELEC,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L002_ELEC,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L002_ELEC,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L002_ELEC,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L003_ELEC,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L003_ELEC,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L003_ELEC,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L003_ELEC,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L003_ELEC,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L003_ELEC,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L003_ELEC,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L003_ELEC,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L003_ELEC,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L003_ELEC,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L003_ELEC,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L004,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L004,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L004,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L004,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L004,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L004,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L004,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L004,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L004,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L004,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L004,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L005,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L005,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L005,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L005,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L005,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L005,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L005,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L005,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MECHANICAL_BEHAVIOR)
+ML4L005,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L005,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L005,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L006,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L006,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L006,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L006,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L006,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L006,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L006,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L006,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L006,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L006,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_ENERGY_MATERIALS)
+ML4L006,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L007,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L007,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L007,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L007,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L007,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L007,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L007,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L007,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4L007,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4L007,GOAL_MM_ENERGY_MATERIALS,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4L007,GOAL_MM_RES_HIGHER_STUDIES,2,Useful technical elective (teaches SKILL_MATERIALS_CHAR)
+ML4L008,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L008,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L008,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L008,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L008,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L008,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L008,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L008,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L008,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L008,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L008,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L009,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L009,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L009,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L009,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L009,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L009,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L009,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L009,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L009,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L009,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L009,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L010,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L010,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L010,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L010,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L010,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L010,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L010,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L010,GOAL_MM_ADVANCED_MATERIALS,2,Useful technical elective (teaches SKILL_COMPOSITES_NANO)
+ML4L010,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L010,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L010,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L011,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L011,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L011,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L011,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L011,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L011,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L011,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L011,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L011,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_BIOMATERIALS)
+ML4L011,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L011,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L012,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L012,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L012,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L012,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L012,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L012,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L012,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L012,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L012,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L012,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L012,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L013,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L013,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L013,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L013,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L013,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L013,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L013,GOAL_MM_PROCESS_ENGINEER,3,Essential core competency for goal (teaches SKILL_MINERAL_PROCESSING)
+ML4L013,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L013,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L013,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L013,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L014,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L014,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L014,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L014,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L014,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L014,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L014,GOAL_MM_PROCESS_ENGINEER,2,Useful technical elective (teaches SKILL_IRON_STEELMAKING)
+ML4L014,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L014,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4L014,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L014,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4L015,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4L015,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4L015,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4L015,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4L015,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4L015,GOAL_TECH_STARTUP,0,Unrelated track
+ML4L015,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4L015,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4L015,GOAL_MM_BIOMATERIALS,2,Useful technical elective (teaches SKILL_CORROSION_SURFACE)
+ML4L015,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4L015,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation
+ML4D002,GOAL_EE_CORE_VLSI,0,Unrelated track
+ML4D002,GOAL_EE_CORE_POWER,0,Unrelated track
+ML4D002,GOAL_EE_RES_HIGHER_STUDIES,0,Unrelated track
+ML4D002,GOAL_CROSS_SDE_DATA,0,Unrelated track
+ML4D002,GOAL_UPSC_COMPETITIVE,0,Unrelated track
+ML4D002,GOAL_TECH_STARTUP,0,Unrelated track
+ML4D002,GOAL_MM_PROCESS_ENGINEER,1,Supporting materials engineering foundation
+ML4D002,GOAL_MM_ADVANCED_MATERIALS,1,Supporting materials engineering foundation
+ML4D002,GOAL_MM_BIOMATERIALS,1,Supporting materials engineering foundation
+ML4D002,GOAL_MM_ENERGY_MATERIALS,1,Supporting materials engineering foundation
+ML4D002,GOAL_MM_RES_HIGHER_STUDIES,1,Supporting materials engineering foundation

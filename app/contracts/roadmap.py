@@ -46,3 +46,4 @@ class RoadmapVersionRecord(BaseContract):
     total_credits: float
     diff_summary: Optional[str] = None
     committed_at: datetime
+

@@ -51,7 +51,7 @@ class QueryAdaptationAgent:
             }
 
         # 2. Workload / Exam Week Reduction Request -> Propose Schedule Adjustment
-        if any(kw in msg_lower for kw in ["exam", "mid-sem", "midsem", "busy", "reduce workload", "less time", "30 min", "1 hour", "no time"]):
+        if any(kw in msg_lower for kw in ["exam", "mid-sem", "midsem", "busy", "reduce workload", "less time", "30 min", "1 hour", "no time", "hackathon", "competition"]):
             intent = Intent.PLAN_QUERY
             proposal = ChangeProposal(
                 proposal_id=f"PROP_WORKLOAD_{uuid.uuid4().hex[:8]}",
@@ -143,3 +143,4 @@ class QueryAdaptationAgent:
             "proposal": proposal.model_dump() if proposal else None,
             "disclaimer": context_card.disclaimer
         }
+

@@ -39,3 +39,4 @@ class ChangeProposal(BaseContract):
     student_feedback: Optional[str] = None
     created_at: datetime
     resolved_at: Optional[datetime] = None
+

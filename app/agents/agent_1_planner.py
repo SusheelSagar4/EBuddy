@@ -91,8 +91,9 @@ class RoadmapPlannerAgent:
             course_title = course_obj.title if course_obj else cid
             skill_target = focus_skills[(day_idx - 1) % len(focus_skills)] if focus_skills else "CORE_COMPETENCY"
 
-            # Match KB resource if available
-            matching_res = next((r for r in all_resources if cid in r.title or skill_target.lower() in r.title.lower()), None)
+            # Match KB resource if available (primary from resource_course mapping, else search)
+            primary_res = self.resource_repo.get_primary_resource_for_course(cid)
+            matching_res = primary_res or next((r for r in all_resources if cid in r.title or skill_target.lower() in r.title.lower()), None)
 
             if day_idx in [1, 2, 4]:
                 task = DailyTask(

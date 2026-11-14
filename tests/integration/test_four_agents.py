@@ -156,3 +156,4 @@ def test_four_agents_system_and_single_writer_rule():
     assert len(ver_hist_updated["versions"]) == 2
     assert ver_hist_updated["versions"][1]["version_number"] == 2
     assert ver_hist_updated["versions"][1]["approved_proposal_id"] == workload_prop_id
+

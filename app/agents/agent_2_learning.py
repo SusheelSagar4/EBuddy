@@ -16,7 +16,7 @@ class LearningResourceAgent:
     1. Inspects student's current roadmap and active week.
     2. Recommends today's learning resources from the verified knowledge base (NPTEL, SWAYAM, MIT OCW).
     3. ZERO FABRICATION: Never invents URLs or fictitious titles.
-    4. Provides alternatives when student flags difficulty.
+    4. Provides alternatives when student flags difficulty using verified backup courseware.
     5. CANNOT MODIFY ROADMAP DIRECTLY: Emits structured ChangeProposals for student approval.
     """
     def __init__(self, seed_dir: str = "data/seed/kb"):
@@ -36,27 +36,25 @@ class LearningResourceAgent:
         Retrieves today's primary learning materials and practice exercises
         grounded in the active roadmap and knowledge-base resources.
         """
-        all_resources = self.resource_repo.list_all()
-
         # Extract active courses for the student's current semester
         active_courses = [it for it in plan.items if it.item_type == "course"]
         target_course_ids = [it.course_id for it in active_courses if it.course_id]
 
         recommended_resources: List[Dict[str, Any]] = []
 
-        for cid in target_course_ids[:3]: # Focus on primary active courses
+        for cid in target_course_ids:
             course_obj = self.course_repo.get_by_id(cid)
             course_title = course_obj.title if course_obj else cid
             disp_code = course_obj.display_code if course_obj else cid
 
-            # Match verified resources from knowledge base
-            matches = [r for r in all_resources if cid in r.title or (course_obj and course_obj.course_code in r.title)]
-            if not matches:
-                # Fallback to domain keywords in title
-                keywords = course_title.split()
-                matches = [r for r in all_resources if any(k.lower() in r.title.lower() for k in keywords if len(k) > 4)]
+            # 1. Primary lookup via verified resource_course.csv mapping
+            primary_res = self.resource_repo.get_primary_resource_for_course(cid)
 
-            primary_res = matches[0] if matches else None
+            # 2. Fallback to title substring match only if not in resource_course
+            if not primary_res:
+                matches = [r for r in self.resource_repo.list_all() if cid in r.title or (course_obj and course_obj.course_code in r.title)]
+                if matches:
+                    primary_res = matches[0]
 
             if primary_res:
                 recommended_resources.append({
@@ -83,27 +81,16 @@ class LearningResourceAgent:
         self,
         current_resource_id: str,
         reason: str = "too_difficult"
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """
         Finds a beginner-friendly or alternative backup resource from the KB
         when a student encounters difficulty with the primary resource.
+        Returns explicit 'not found' response if no alternative exists (never fabricates URLs).
         """
-        all_resources = self.resource_repo.list_all()
-        current_res = self.resource_repo.get_by_id(current_resource_id)
-        if not current_res:
-            return None
-
-        # Look for alternative resources with lower difficulty or from same provider
-        candidates = [
-            r for r in all_resources
-            if r.resource_id != current_resource_id and (
-                r.provider == current_res.provider or "intro" in r.title.lower() or "basic" in r.title.lower()
-            )
-        ]
-
-        if candidates:
-            alt = candidates[0]
+        alt = self.resource_repo.get_alternative_resource(current_resource_id)
+        if alt:
             return {
+                "found": True,
                 "resource_id": alt.resource_id,
                 "title": alt.title,
                 "provider": alt.provider,
@@ -112,7 +99,14 @@ class LearningResourceAgent:
                 "coverage_status": alt.coverage_status,
                 "note": f"Alternative recommended because primary resource was reported as {reason}."
             }
-        return None
+
+        return {
+            "found": False,
+            "resource_id": None,
+            "title": None,
+            "url": None,
+            "message": "No suitable resource found in the current knowledge base"
+        }
 
     def propose_resource_swap(
         self,

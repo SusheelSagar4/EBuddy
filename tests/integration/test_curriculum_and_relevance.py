@@ -1,0 +1,343 @@
+import pytest
+from app.contracts.student import StudentProfile, Constraint, Preference
+from app.contracts.goal import Goal
+from app.engine.planner import Planner
+from app.engine.relevance import CourseRelevanceEngine
+from app.engine.rules import RuleEngine
+from app.kb.repositories import ResourceRepo, CourseRepo
+from app.services.roadmap_orchestrator import roadmap_orchestrator
+from app.api.student import (
+    onboard, generate_plan, get_plan, get_proposals, decide_proposal, chat,
+    OnboardRequest, ProposalDecisionRequest, ChatRequest
+)
+
+def test_01_major_course_fixed_regardless_of_low_relevance():
+    """
+    CRITICAL RULE:
+    Major/Core courses are determined by branch curriculum and are FIXED.
+    Career relevance scores must NOT determine whether a required major course appears in the roadmap.
+    Example: MME student with AI/ML goal must receive ML2L002 (Thermodynamics) even if relevance is 1.
+    """
+    planner = Planner()
+    relevance_engine = CourseRelevanceEngine()
+
+    student = StudentProfile(
+        student_id="STU_MME_SEM3_TEST",
+        name="Rohan Verma",
+        programme_id="BTECH_MM",
+        current_semester=3,
+        cgpa=8.0,
+        backlogs=0
+    )
+    goal = Goal(
+        goal_id="GOAL_CS_AI_ML",
+        name="Artificial Intelligence & Machine Learning Engineer",
+        category="career",
+        description="Core AI/ML engineering",
+        source_id="TEST_GOAL"
+    )
+
+    # Verify that Thermodynamics has low relevance to AI/ML (score 1/3)
+    rel_score, rel_rationale = relevance_engine.get_relevance("ML2L002", goal.goal_id)
+    assert rel_score == 1
+
+    # Generate plan
+    plan = planner.generate_plan(
+        student=student,
+        goal=goal,
+        gaps=[{"skill_id": "SKILL_DEEP_LEARNING", "gap": 60}],
+        constraints=[],
+        preferences=[]
+    )
+
+    course_items = [it for it in plan.items if it.item_type == "course"]
+    course_ids = [it.course_id for it in course_items]
+
+    # Thermodynamics MUST be included because it is fixed major core for MME Sem 3
+    assert "ML2L002" in course_ids, "Mandatory core course ML2L002 must not be excluded by low career relevance"
+
+    # Verify the structured reason indicates it is a mandatory branch core requirement
+    thermo_item = next(it for it in course_items if it.course_id == "ML2L002")
+    assert "Branch Core Degree Requirement" in thermo_item.reason.intent
+    assert "Mandatory major/core requirement" in thermo_item.reason.why_this
+
+def test_02_elective_selection_ranks_by_relevance_and_gaps():
+    """
+    Elective slots ARE recommendation candidates.
+    The system ranks eligible electives using CourseRelevanceEngine (0-3 scale)
+    plus active skill gap boost.
+    """
+    relevance_engine = CourseRelevanceEngine()
+    rule_engine = RuleEngine()
+
+    # Candidate options for lateral slot in MME: ML2L006, ML3L011, ML3L012
+    candidates = ["ML2L006", "ML3L011", "ML3L012"]
+    goal_id = "GOAL_CS_AI_ML"
+    skill_gaps = [{"skill_id": "SKILL_NANOTECH", "gap": 50}]
+
+    ranked = relevance_engine.rank_electives(
+        candidate_course_ids=candidates,
+        goal_id=goal_id,
+        skill_gaps=skill_gaps,
+        completed_course_ids=[],
+        prereq_map=rule_engine.prereqs
+    )
+
+    assert len(ranked) == 3
+    # Top rank should be first and descending
+    assert ranked[0]["total_rank"] >= ranked[1]["total_rank"] >= ranked[2]["total_rank"]
+    assert all("base_relevance" in r for r in ranked)
+    assert all("rationale" in r for r in ranked)
+
+def test_03_minor_course_eligibility_and_recommendation():
+    """
+    Minor courses are selectable subject to academic eligibility:
+    Sem >= 5, CGPA >= 8.0, 0 backlogs.
+    If eligible and completed CS1L001 (prerequisite), CS4L003 (Machine Learning) is recommended.
+    If ineligible (e.g. CGPA < 8.0 or Sem < 5), minor courses are not recommended.
+    """
+    planner = Planner()
+    goal = Goal(
+        goal_id="GOAL_CROSS_SDE_DATA",
+        name="Software Engineering & Data Science Transition",
+        category="career",
+        description="Software & Data Science",
+        source_id="TEST"
+    )
+
+    # Case A: Eligible student (Sem 5, CGPA 8.5, 0 backlogs, completed CS1L001)
+    eligible_student = StudentProfile(
+        student_id="STU_MINOR_ELIGIBLE",
+        name="Pooja Sharma",
+        programme_id="BTECH_MM",
+        current_semester=5,
+        cgpa=8.5,
+        backlogs=0
+    )
+    plan_eligible = planner.generate_plan(
+        student=eligible_student,
+        goal=goal,
+        gaps=[{"skill_id": "SKILL_ML", "gap": 50}],
+        constraints=[],
+        preferences=[],
+        completed_course_ids=["CS1L001", "MA1L001"]
+    )
+    minor_items = [it for it in plan_eligible.items if "Minor" in it.reason.intent]
+    assert len(minor_items) > 0
+    assert minor_items[0].course_id in ["CS4L003", "CS6L001"]
+    assert "Approved Minor Course Track" in minor_items[0].reason.intent
+
+    # Case B: Ineligible student (CGPA 7.5 < 8.0)
+    ineligible_student = StudentProfile(
+        student_id="STU_MINOR_INELIGIBLE",
+        name="Amit Patel",
+        programme_id="BTECH_MM",
+        current_semester=5,
+        cgpa=7.5,
+        backlogs=0
+    )
+    plan_ineligible = planner.generate_plan(
+        student=ineligible_student,
+        goal=goal,
+        gaps=[{"skill_id": "SKILL_ML", "gap": 50}],
+        constraints=[],
+        preferences=[],
+        completed_course_ids=["CS1L001", "MA1L001"]
+    )
+    ineligible_minors = [it for it in plan_ineligible.items if "Minor" in it.reason.intent]
+    assert len(ineligible_minors) == 0
+
+def test_04_branch_specific_curriculum_isolation():
+    """
+    Branch curriculum must strictly isolate major requirements:
+    An MME student in Sem 3 must receive MME courses and NOT Electrical Engineering major courses.
+    """
+    planner = Planner()
+    mme_student = StudentProfile(
+        student_id="STU_MME_ISOLATION",
+        name="Vikas Kumar",
+        programme_id="BTECH_MM",
+        current_semester=3,
+        cgpa=8.0,
+        backlogs=0
+    )
+    goal = Goal(goal_id="GOAL_EE_CORE_POWER", name="Power Systems", category="career", description="Power", source_id="TEST")
+
+    plan = planner.generate_plan(
+        student=mme_student,
+        goal=goal,
+        gaps=[{"skill_id": "SKILL_CIRCUITS", "gap": 80}],
+        constraints=[],
+        preferences=[]
+    )
+    course_ids = [it.course_id for it in plan.items if it.item_type == "course"]
+
+    # Must contain MME core courses
+    assert "ML2L002" in course_ids
+    assert "ML2L003" in course_ids
+
+    # Must NOT contain Electrical Engineering exclusive core courses
+    assert "EC2L001" not in course_ids
+    assert "EE2S001" not in course_ids
+
+def test_05_resource_retrieval_from_resource_course():
+    """
+    Resources are retrieved relationally:
+    course -> resource_course.csv -> resource.csv
+    Verified primary courseware links must be present and valid.
+    """
+    resource_repo = ResourceRepo()
+    primary = resource_repo.get_primary_resource_for_course("ML2L002")
+
+    assert primary is not None
+    assert primary.resource_id == "RES_MM_ML2L002_PRIMARY"
+    assert "Advanced Metallurgical Thermodynamics" in primary.title
+    assert primary.provider == "NPTEL"
+    assert primary.url.startswith("https://www.youtube.com/playlist")
+
+def test_06_difficult_resource_returns_backup():
+    """
+    When student flags a resource as difficult, Agent 2 retrieves
+    a verified backup resource from the KB.
+    """
+    agent_2 = roadmap_orchestrator.agent_2
+    alt_res = agent_2.find_alternative_resource(
+        current_resource_id="RES_MM_ML2L002_PRIMARY",
+        reason="too_difficult"
+    )
+
+    assert alt_res["found"] is True
+    assert alt_res["resource_id"] == "RES_MM_ML2L002_BACKUP1"
+    assert "MIT" in alt_res["title"]
+    assert alt_res["url"].startswith("http")
+
+def test_07_no_resource_returns_not_found_message():
+    """
+    ZERO FABRICATION GUARANTEE:
+    If no alternative resource exists in KB, Agent 2 returns explicit not found message
+    and NEVER fabricates URLs or fictitious materials.
+    """
+    agent_2 = roadmap_orchestrator.agent_2
+    alt_res = agent_2.find_alternative_resource(
+        current_resource_id="RES_NON_EXISTENT_ID_9999",
+        reason="too_difficult"
+    )
+
+    assert alt_res["found"] is False
+    assert alt_res["resource_id"] is None
+    assert alt_res["url"] is None
+    assert alt_res["message"] == "No suitable resource found in the current knowledge base"
+
+def test_08_agent_isolation_single_writer_guarantee():
+    """
+    SINGLE-WRITER PRINCIPLE:
+    Agent 1 is the ONLY agent that can commit/write a roadmap version.
+    Proposals generated by Agent 2, 3, or 4 never mutate the stored roadmap directly.
+    """
+    student_id = "STU_ISOLATION_TEST_01"
+    onboard(OnboardRequest(
+        student_id=student_id,
+        name="Kavita Sen",
+        programme_id="BTECH_MM",
+        current_semester=3,
+        cgpa=8.1,
+        backlogs=0,
+        goal_id="GOAL_CS_AI_ML",
+        completed_course_ids=["MA1L001", "CS1L001"]
+    ))
+    res_plan = generate_plan(student_id)
+    assert res_plan["version"] == 1
+
+    # Agent 2 proposes a resource swap
+    alt = {"resource_id": "RES_MM_ML2L002_BACKUP1", "title": "MIT 3.020", "url": "https://example.com"}
+    prop = roadmap_orchestrator.agent_2.propose_resource_swap(
+        student_id=student_id,
+        current_resource_id="RES_MM_ML2L002_PRIMARY",
+        replacement_resource=alt,
+        target_week=1,
+        reason="Too advanced"
+    )
+    roadmap_orchestrator.proposals[prop.proposal_id] = prop
+    roadmap_orchestrator.student_proposals.setdefault(student_id, []).append(prop.proposal_id)
+
+    # Verify roadmap version has NOT changed
+    plan_curr = get_plan(student_id)
+    assert plan_curr["version"] == 1
+
+def test_09_proposal_approval_and_rejection_flow():
+    """
+    Proposal decision lifecycle:
+    - Rejection leaves roadmap version intact.
+    - Approval commits the proposal through Agent 1 and creates Version N+1.
+    """
+    student_id = "STU_DECISION_LIFECYCLE"
+    onboard(OnboardRequest(
+        student_id=student_id,
+        name="Tarun Joshi",
+        programme_id="BTECH_EE",
+        current_semester=3,
+        cgpa=8.3,
+        backlogs=0,
+        goal_id="GOAL_EE_CORE_POWER",
+        completed_course_ids=["MA1L001", "CS1L001"]
+    ))
+    generate_plan(student_id)
+
+    # 1. Rejection flow
+    chat_res = chat(
+        student_id=student_id,
+        req=ChatRequest(message="I have a hackathon this week, please adjust my schedule.")
+    )
+    prop_id = chat_res["proposal"]["proposal_id"]
+
+    rej = decide_proposal(student_id, prop_id, ProposalDecisionRequest(approve=False, feedback="Not needed now"))
+    assert rej["status"] == "rejected"
+    assert rej["roadmap_modified"] is False
+    assert get_plan(student_id)["version"] == 1
+
+    # 2. Approval flow
+    chat_res2 = chat(
+        student_id=student_id,
+        req=ChatRequest(message="Exam week, reduce my workload to 30 mins a day")
+    )
+    prop_id2 = chat_res2["proposal"]["proposal_id"]
+
+    appr = decide_proposal(student_id, prop_id2, ProposalDecisionRequest(approve=True, feedback="Approved"))
+    assert appr["status"] == "committed"
+    assert appr["roadmap_modified"] is True
+    assert appr["new_version"] == 2
+    assert get_plan(student_id)["version"] == 2
+
+def test_10_elective_with_unmet_prereq_never_recommended():
+    """
+    Academic Prerequisite Gating:
+    An elective with an unmet prerequisite is NEVER recommended, regardless of its relevance score.
+    CS4L003 requires CS1L001. A student who has NOT completed CS1L001 must not be recommended CS4L003.
+    """
+    relevance_engine = CourseRelevanceEngine()
+    rule_engine = RuleEngine()
+
+    candidates = ["CS4L003"]
+    # Student has completed NO courses (prerequisite CS1L001 is missing)
+    ranked = relevance_engine.rank_electives(
+        candidate_course_ids=candidates,
+        goal_id="GOAL_CS_AI_ML",
+        skill_gaps=[{"skill_id": "SKILL_ML", "gap": 100}],
+        completed_course_ids=[],
+        prereq_map=rule_engine.prereqs
+    )
+
+    # Must be completely excluded from recommendations
+    assert len(ranked) == 0, "Candidate with unmet prerequisite CS1L001 must be strictly excluded"
+
+    # But if prerequisite is satisfied:
+    ranked_satisfied = relevance_engine.rank_electives(
+        candidate_course_ids=candidates,
+        goal_id="GOAL_CS_AI_ML",
+        skill_gaps=[{"skill_id": "SKILL_ML", "gap": 100}],
+        completed_course_ids=["CS1L001"],
+        prereq_map=rule_engine.prereqs
+    )
+    assert len(ranked_satisfied) == 1
+    assert ranked_satisfied[0]["course_id"] == "CS4L003"
+    assert ranked_satisfied[0]["prerequisites_satisfied"] is True
