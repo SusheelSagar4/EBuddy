@@ -430,7 +430,7 @@ class CustomPersonaPolicy(PersonaPolicy):
             r for r in self.curriculum_slots
             if r.get("programme_code") == prog_norm
             and str(r.get("semester")) == str(semester)
-            and r.get("track") == track
+            and (r.get("track") == track or (track in ["2016-17", "pre-NEP"] and r.get("track") in ["2016-17", "pre-NEP"]))
         ]
 
         heavy_types = {"common core", "vertical core", "core", "laboratory", "common core lab", "project"}
@@ -474,7 +474,7 @@ class CustomPersonaPolicy(PersonaPolicy):
             "strong_overlap": strong,
             "partial_overlap": partial,
             "top_choice": strong[0]["optional"] if strong else (partial[0]["optional"] if partial else "Electrical Engineering"),
-            "warning": "None" if strong else "MME courses require subject matter expert mapping (D09)"
+            "warning": "None" if strong else "MME courses require SME (subject matter expert) mapping (D09)"
         }
 
     # -------------------------------------------------------------
