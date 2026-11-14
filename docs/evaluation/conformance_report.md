@@ -1,6 +1,6 @@
 # Persona Conformance Report (F4)
 
-**Execution Date:** 2026-11-14 18:23:31 UTC
+**Execution Date:** 2026-11-14 18:59:45 UTC
 **Runner:** `FakeLLM` deterministic test runner (Zero outbound network calls)
 **Test Suite Result:** PASSED (8 tests run)
 
@@ -8,7 +8,7 @@
 
 | Persona ID | Goal ID | Applicable Programmes | 1. Plan Produced & Valid | 2. Catalog & Prerequisites | 3. No Duplicate Mastery | 4. Gaps Covered | 5. Active Practice | 6. Quiz Adaptation | 7. Determinism | 8. Unachievable Request | Overall Status |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `btech_upsc` | `GOAL_UPSC_CSE` | BTECH_EE, BTECH_MME | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
+| `btech_upsc` | `GOAL_UPSC_CSE` | BTECH_EE, BTECH_MM | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
 | `ee_power_core` | `GOAL_EE_CORE_POWER` | BTECH_EE | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **GREEN** |
 
 ## Audit Summary

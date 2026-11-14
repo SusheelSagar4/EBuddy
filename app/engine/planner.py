@@ -156,6 +156,17 @@ class Planner(IPlanner):
             )
         ))
 
+        # 3. Opt-in persona policy adjustment hook
+        try:
+            from app.personas.registry import persona_registry
+            for pkg in persona_registry.list_all():
+                if pkg.spec and pkg.spec.goal_id == goal.goal_id:
+                    if getattr(pkg.policy, "enable_plan_adjustment", False):
+                        items = pkg.policy.adjust_plan_items(student, items, gaps=gaps)
+                    break
+        except Exception:
+            pass
+
         plan = Plan(
             plan_id=f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
             student_id=student.student_id,

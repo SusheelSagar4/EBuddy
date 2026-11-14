@@ -4,15 +4,16 @@ import yaml
 from datetime import datetime, date, timedelta
 from typing import Dict, Any, List, Optional, Union
 from app.contracts.student import StudentProfile
-from app.contracts.plan import PlanItem
+from app.contracts.plan import PlanItem, StructuredReason
 from app.personas.policy import PersonaPolicy
 
 class CustomPersonaPolicy(PersonaPolicy):
     """
-    Deterministic persona policy for btech_upsc (B.Tech EE & MME at IIT Bhubaneswar).
+    Deterministic persona policy for btech_upsc (B.Tech EE & MM at IIT Bhubaneswar).
     Implements rules R1-R10 dynamically reading from policy_rules.yaml, facts.csv,
     cutoffs.csv, institute_calendar.csv, institute_curriculum_slots.csv, and optional_catalog.csv.
     """
+    enable_plan_adjustment: bool = True
     def __init__(self, spec: Dict[str, Any]):
         super().__init__(spec)
         self.spec = spec
@@ -29,6 +30,8 @@ class CustomPersonaPolicy(PersonaPolicy):
         self.calendar: List[Dict[str, str]] = []
         self.curriculum_slots: List[Dict[str, str]] = []
         self.optional_catalog: List[Dict[str, str]] = []
+        self.resources: List[Dict[str, str]] = []
+        self.requirements: List[Dict[str, Any]] = []
         self._load_policy_data()
 
     def _load_policy_data(self):
@@ -79,6 +82,19 @@ class CustomPersonaPolicy(PersonaPolicy):
             with open(opt_path, "r", encoding="utf-8") as f:
                 reader = csv.DictReader(f)
                 self.optional_catalog = [r for r in reader if any(r.values())]
+
+        # 7. Load resources.csv
+        res_path = os.path.join(self.raw_data_dir, "resources.csv")
+        if os.path.exists(res_path):
+            with open(res_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                self.resources = [r for r in reader if any(r.values())]
+
+        # 8. Load requirements.yaml
+        req_path = os.path.join(self.base_dir, "requirements.yaml")
+        if os.path.exists(req_path):
+            with open(req_path, "r", encoding="utf-8") as f:
+                self.requirements = yaml.safe_load(f) or []
 
     # -------------------------------------------------------------
     # Rule R1: Workload Overload
@@ -503,14 +519,109 @@ class CustomPersonaPolicy(PersonaPolicy):
     # -------------------------------------------------------------
     # Base PersonaPolicy Hooks
     # -------------------------------------------------------------
-    def adjust_plan_items(self, student: StudentProfile, items: List[PlanItem]) -> List[PlanItem]:
-        """Hook to filter or annotate plan items specifically for btech_upsc."""
+    def adjust_plan_items(
+        self,
+        student: StudentProfile,
+        items: List[PlanItem],
+        gaps: Optional[List[Dict[str, Any]]] = None
+    ) -> List[PlanItem]:
+        """
+        Hook to filter, annotate, or augment plan items specifically for btech_upsc:
+        - For every UPSC goal skill with a gap and no candidate course for the student's programme,
+          adds one resource item and one exercise item targeting that skill.
+        - Includes SKILL_UPSC_OPTIONAL for BTECH_MM (since EE2L001 is EE-only).
+        - Resource items use only resources with verified=TRUE. If none exists, uses exercise item only
+          and attaches 'not confirmed yet' to unverified references.
+        - Items and resources are picked deterministically (sorted by ID).
+        """
+        adjusted_items = list(items)
+
+        # 1. Annotate existing courses with CGPA protection notes if CGPA < 6.5
         if (student.cgpa or 7.0) < 6.5:
-            # Annotate courses with CGPA protection notes
-            for it in items:
+            for it in adjusted_items:
                 if it.item_type == "course":
                     it.reason.rule_compliance.append("R2: CGPA stabilization priority")
-        return items
+
+        # 2. Determine skills with a gap
+        if gaps:
+            gap_skills = {g["skill_id"] for g in gaps if g.get("gap", 0) > 0}
+        else:
+            gap_skills = {r["skill_id"] for r in self.requirements if float(r.get("required_level", 0)) > 0}
+
+        # 3. Determine skills covered by candidate courses for student's programme
+        prog = (student.programme_id or "BTECH_EE").upper()
+        course_skills = set()
+        if "EE" in prog:
+            course_skills.add("SKILL_UPSC_OPTIONAL")
+            course_skills.add("SKILL_UPSC_GS3_STI_ENV_SECURITY")
+        else:
+            # BTECH_MM: Only ID2L003 (GS3_STI_ENV_SECURITY). EE2L001 is EE-only.
+            course_skills.add("SKILL_UPSC_GS3_STI_ENV_SECURITY")
+
+        for it in adjusted_items:
+            if it.item_type == "course":
+                course_skills.update(it.reason.target_skills)
+
+        # 4. Target skills that have a gap and NO candidate course
+        uncovered_gap_skills = sorted(list(gap_skills - course_skills))
+        sem = student.current_semester or 5
+
+        for sid in uncovered_gap_skills:
+            # Candidate resources deterministically sorted by resource_id
+            all_res = sorted(
+                [r for r in self.resources if r.get("target_skill") == sid],
+                key=lambda x: x.get("resource_id", "")
+            )
+            verified_res = [r for r in all_res if r.get("verified", "").strip().upper() == "TRUE"]
+            unverified_res = [r for r in all_res if r.get("verified", "").strip().upper() != "TRUE"]
+
+            # Add verified resource item if available
+            if verified_res:
+                top_res = verified_res[0]
+                rid = top_res["resource_id"]
+                title = top_res.get("title", rid)
+                adjusted_items.append(PlanItem(
+                    item_id=f"ITEM_RS_{student.student_id}_{rid}",
+                    item_type="resource",
+                    resource_id=rid,
+                    semester_number=sem,
+                    estimated_hours=3.0,
+                    reason=StructuredReason(
+                        intent=f"Self-study foundation for {sid}",
+                        target_skills=[sid],
+                        why_this=f"Verified study resource ({title}) addressing priority gap in {sid}.",
+                        prerequisite_for=[],
+                        rule_compliance=["Verified official study resource"]
+                    )
+                ))
+
+            # Add exercise item (with 'not confirmed yet' note if no verified resource exists)
+            if not verified_res:
+                if unverified_res:
+                    unv_titles = ", ".join([r.get("title", "") for r in unverified_res])
+                    unv_note = f" Note: Reference material ({unv_titles}) is not confirmed yet pending mentor review."
+                else:
+                    unv_note = " Note: Standard reference materials are not confirmed yet."
+                why_exercise = f"Targeted problem solving, answer writing, and testcraft to close gap in {sid}.{unv_note}"
+            else:
+                why_exercise = f"Targeted problem solving, answer writing, and testcraft to demonstrate proficiency in {sid}."
+
+            adjusted_items.append(PlanItem(
+                item_id=f"ITEM_EX_{student.student_id}_{sid}",
+                item_type="exercise",
+                exercise_id=f"EX_{sid}",
+                semester_number=sem,
+                estimated_hours=2.0,
+                reason=StructuredReason(
+                    intent=f"Active practice for {sid}",
+                    target_skills=[sid],
+                    why_this=why_exercise,
+                    prerequisite_for=[],
+                    rule_compliance=[]
+                )
+            ))
+
+        return adjusted_items
 
     def get_advisories(self, student: StudentProfile) -> List[str]:
         notes = []

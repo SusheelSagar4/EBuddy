@@ -20,5 +20,6 @@
 - Verified cutoffs use official CSE-2025 data; earlier cycle scores remain unconfirmed.
 - Degree proof submission timing is subject to CSE-2027 notification verification.
 - Placement CGPA cutoff in `facts.csv` (F22) is not confirmed (`verified: FALSE`), outputting 'not confirmed yet'.
+- **Upstream Data Issue (`ISSUE_MME_CURR_03`):** Duplicate course codes `ML4L001`–`ML4L003` exist in the upstream IIT Bhubaneswar curriculum tables (where Sem VII core courses share identical codes with three Metallurgical electives). In accordance with data governance policies, this is cataloged in `data/seed/kb/data_issue.csv` and left as-is as an upstream institutional data issue pending department clarification.
 
 
