@@ -8,6 +8,7 @@ from app.api.health import router as health_router
 from app.api.student import router as student_router
 from app.api.simulator import router as simulator_router
 from app.api.admin import router as admin_router
+from app.recommender.api import router as recommender_router
 
 app = FastAPI(
     title="Adobe Personalised Learning Buddy",
@@ -22,6 +23,7 @@ app.include_router(health_router, prefix="", tags=["System"])
 app.include_router(student_router)
 app.include_router(simulator_router)
 app.include_router(admin_router)
+app.include_router(recommender_router)
 
 # Ensure static directory exists
 static_dir = os.path.join(os.path.dirname(__file__), "static")
