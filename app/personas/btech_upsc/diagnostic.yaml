@@ -1,0 +1,7 @@
+blueprint:
+  target_skills:
+    - "SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR"
+    - "SKILL_UPSC_CSAT"
+    - "SKILL_UPSC_GS3_ECONOMY"
+  item_counts: 5
+  difficulty_range: [30.0, 70.0]

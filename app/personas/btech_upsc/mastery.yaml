@@ -1,0 +1,7 @@
+criteria_id: "MASTERY_UPSC_CSE"
+goal_id: "GOAL_UPSC_CSE"
+criteria:
+  min_skill_level: 70.0
+  required_project_milestones: 2
+  required_timed_assessments: 3
+  min_diagnostic_score: 65.0
