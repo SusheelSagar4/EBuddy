@@ -94,3 +94,4 @@ with open(rel_path, 'w', newline='', encoding='utf-8') as f:
     w.writerows(rel_rows)
 
 print(f"Regenerated relevance_tags.csv: {len(rel_rows)} rows (derived deterministically from course_skill & goal_skill_requirement).")
+
