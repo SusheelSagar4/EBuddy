@@ -49,6 +49,9 @@ class Plan(BaseContract):
     version: int = 1
     items: List[PlanItem]
     validation_report: Optional[ValidationReport] = None
+    plan_diff: Optional[PlanDiff] = None
+    what_changed_and_why: Optional[str] = None
+    mismatch_warning: Optional[Dict[str, Any]] = None
     is_active: bool = True
     created_at: datetime
 

@@ -238,7 +238,26 @@ def get_plan(student_id: str):
         except Exception as e:
             raise HTTPException(status_code=404, detail=f"Plan not found and could not be generated: {e}")
     validation = plan.validation_report.model_dump() if plan.validation_report else {"passed": True, "checks": []}
-    return {"plan": plan.model_dump(), "validation": validation}
+    return {
+        "plan": plan.model_dump(),
+        "version": plan.version,
+        "plan_diff": plan.plan_diff.model_dump() if plan.plan_diff else None,
+        "what_changed_and_why": plan.what_changed_and_why,
+        "mismatch_warning": plan.mismatch_warning,
+        "validation": validation
+    }
+
+@router.get("/{student_id}/mismatch")
+def get_interest_evidence_mismatch(student_id: str):
+    plan = plan_service.get_plan(student_id)
+    if not plan:
+        plan_service.create_or_update_plan(student_id)
+        plan = plan_service.get_plan(student_id)
+    return {
+        "student_id": student_id,
+        "mismatch_warning": plan.mismatch_warning if plan else None
+    }
+
 
 @router.get("/{student_id}/learn")
 def get_learn_resources(student_id: str, skill_id: Optional[str] = None):
