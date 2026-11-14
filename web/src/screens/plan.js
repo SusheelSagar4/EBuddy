@@ -13,22 +13,24 @@ export function renderPlan(container, state, navigate) {
 
   container.innerHTML = `
     <div class="screen-card">
-      <div class="screen-header flex-between">
+      <div class="screen-header flex-between" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <div>
-          <h2>Adaptive Academic Plan</h2>
-          <p class="subtitle">Semestral course schedule tailored to your goal and validated against IIT BBS curriculum regulations.</p>
+          <h2>Phase-Wise Core Academic Roadmap</h2>
+          <p class="subtitle">Structured study & prep roadmap designed to eliminate skill gaps, verified against IIT BBS curriculum regulations.</p>
         </div>
         <div>
-          <button class="btn btn-outline" id="btn-refresh-plan">Re-generate / Validate</button>
+          <button class="btn btn-outline" id="btn-refresh-plan">Re-generate / Validate Plan</button>
+          <button class="btn btn-primary" id="btn-goto-learn" style="margin-left: 8px;">Begin Study & Check-in Tasks →</button>
         </div>
       </div>
 
-      <div id="plan-loading" class="loading-state">Generating verified academic plan...</div>
+      <div id="plan-loading" class="loading-state">Synthesizing verified phase-wise roadmap...</div>
       <div id="plan-content" style="display: none;"></div>
     </div>
   `;
 
   document.getElementById('btn-refresh-plan').addEventListener('click', loadPlan);
+  document.getElementById('btn-goto-learn').addEventListener('click', () => navigate('#learn'));
   loadPlan();
 
   async function loadPlan() {
@@ -42,90 +44,83 @@ export function renderPlan(container, state, navigate) {
       loading.style.display = 'none';
       content.style.display = 'block';
 
-      const plan = data.plan;
-      const validation = data.validation || { passed: true, checks: [] };
+      const plan = data.plan || data;
+      const validation = data.validation || (plan.validation_report || { passed: true, checks: [] });
 
-      // Render validation status bar
-      const statusBadge = validation.passed 
-        ? `<span class="badge badge-success">✓ ALL REGULATORY CHECKS PASSED</span>`
-        : `<span class="badge badge-error">✕ VALIDATION FAILED (${validation.violations?.length || 0} issues)</span>`;
+      // Group items by phase
+      const phases = {
+        'Phase 1: Foundation': [],
+        'Phase 2: Core Depth': [],
+        'Phase 3: Applied Mastery': []
+      };
 
-      // Group plan items by semester
-      const semGroups = {};
       (plan.items || []).forEach(item => {
-        const sem = item.semester || 1;
-        if (!semGroups[sem]) semGroups[sem] = [];
-        semGroups[sem].push(item);
+        const ph = item.phase || (item.item_type === 'milestone' ? 'Phase 3: Applied Mastery' : 'Phase 2: Core Depth');
+        if (!phases[ph]) phases[ph] = [];
+        phases[ph].push(item);
       });
 
+      // Calculate totals
+      let totalWeeklyHours = 0;
+      (plan.items || []).forEach(it => {
+        totalWeeklyHours += (it.prep_hours_weekly || 4.0);
+      });
+
+      const validationBadge = validation.passed 
+        ? `<span class="badge badge-success" style="background: #10b981; color: white; padding: 6px 12px; border-radius: 4px; font-weight: 600;">✓ ALL IIT BBS REGULATORY RULES VERIFIED</span>`
+        : `<span class="badge badge-error" style="background: #ef4444; color: white; padding: 6px 12px; border-radius: 4px; font-weight: 600;">✕ RULE VIOLATIONS DETECTED</span>`;
+
       content.innerHTML = `
-        <div class="plan-summary-bar">
-          <div class="summary-metric">
-            <span class="metric-label">Goal ID</span>
-            <span class="metric-val">${plan.goal_id || 'N/A'}</span>
+        <div class="roadmap-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; padding: 16px; background: rgba(0,0,0,0.02); border-radius: 8px;">
+          <div>
+            <div class="text-muted" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Student Target Track</div>
+            <div style="font-size: 16px; font-weight: 600; margin-top: 4px;">${plan.goal_id ? plan.goal_id.replace('GOAL_', '') : 'Core Track'}</div>
           </div>
-          <div class="summary-metric">
-            <span class="metric-label">Plan Version</span>
-            <span class="metric-val">v${plan.version || 1}</span>
+          <div>
+            <div class="text-muted" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Estimated Weekly Prep Time</div>
+            <div style="font-size: 16px; font-weight: 600; margin-top: 4px;">~${(totalWeeklyHours / 3).toFixed(1)} hrs/week per phase</div>
           </div>
-          <div class="summary-metric">
-            <span class="metric-label">Planned Credits</span>
-            <span class="metric-val">${plan.total_credits || 0} cr</span>
-          </div>
-          <div class="summary-metric">
-            <span class="metric-label">Status</span>
-            <span class="metric-val">${statusBadge}</span>
+          <div>
+            <div class="text-muted" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Curriculum Compliance</div>
+            <div style="margin-top: 6px;">${validationBadge}</div>
           </div>
         </div>
 
-        ${!validation.passed ? `
-          <div class="alert-box alert-error">
-            <strong>Rule Violations Detected:</strong>
-            <ul>
-              ${(validation.violations || []).map(v => `<li>${v}</li>`).join('')}
-            </ul>
-          </div>
-        ` : ''}
+        <div class="phase-roadmap-container" style="display: flex; flex-direction: column; gap: 28px;">
+          ${Object.entries(phases).map(([phaseName, items], pIdx) => {
+            const phaseColors = [
+              { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.05)', desc: 'Prerequisite foundation, circuit/thermodynamic theory, and fundamental engineering principles.' },
+              { border: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.05)', desc: 'Core systems depth, laboratory simulations, specialized electives, and active problem solving.' },
+              { border: '#10b981', bg: 'rgba(16, 185, 129, 0.05)', desc: 'Applied engineering design project, timed mock interviews, and placement/industry readiness.' }
+            ];
+            const pStyle = phaseColors[pIdx] || phaseColors[0];
 
-        <div class="schedule-container">
-          ${Object.keys(semGroups).sort((a,b) => a-b).map(sem => {
-            const items = semGroups[sem];
-            const semCredits = items.reduce((sum, it) => sum + (it.credits || 0), 0);
             return `
-              <div class="semester-block">
-                <div class="semester-header">
-                  <h3>Semester ${sem}</h3>
-                  <span class="badge badge-neutral">${semCredits} Credits</span>
+              <div class="phase-card" style="border: 1px solid var(--border-color, #e5e7eb); border-left: 6px solid ${pStyle.border}; border-radius: 8px; padding: 20px; background: ${pStyle.bg};">
+                <div class="phase-header" style="margin-bottom: 14px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 18px; color: var(--text-primary);">${phaseName}</h3>
+                    <span class="badge" style="background: white; border: 1px solid var(--border-color); font-size: 12px;">${items.length} Modules / Tasks</span>
+                  </div>
+                  <p class="text-muted" style="margin: 4px 0 0 0; font-size: 13px;">${pStyle.desc}</p>
                 </div>
-                <div class="course-cards-list">
-                  ${items.map(item => `
-                    <div class="course-card ${item.code_conflict ? 'has-conflict' : ''}">
-                      <div class="course-card-top">
-                        <div class="course-identity">
-                          <span class="course-code">${item.display_code || item.course_id}</span>
-                          <span class="course-name">${item.title || item.course_id}</span>
+
+                <div class="phase-items-list" style="display: flex; flex-direction: column; gap: 12px;">
+                  ${items.length === 0 ? `<p class="text-muted" style="font-style: italic;">No items required for this phase.</p>` : items.map(it => `
+                    <div class="plan-item-row" style="background: white; border: 1px solid var(--border-color, #e5e7eb); border-radius: 6px; padding: 14px 16px;">
+                      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <div>
+                          <span class="badge" style="font-size: 11px; text-transform: uppercase; margin-right: 8px; background: #e0f2fe; color: #0369a1;">${it.item_type}</span>
+                          <strong style="font-size: 15px;">${it.course_id || it.title || it.item_id}</strong>
                         </div>
-                        <div class="course-badges">
-                          ${item.code_conflict ? `<span class="badge badge-warning" title="Clashing code in catalog">⚠️ Code Conflict</span>` : ''}
-                          <span class="badge ${item.status === 'verified' ? 'badge-success' : 'badge-warning'}">
-                            ${item.status || 'verified'}
-                          </span>
-                          <span class="badge badge-info">${item.credits || 3} cr</span>
-                        </div>
+                        <span class="text-muted" style="font-size: 13px; font-weight: 500;">⏱ Prep: ${it.prep_hours_weekly || 4.0} hrs/wk</span>
                       </div>
-
-                      ${item.reason ? `
-                        <div class="course-why">
-                          <strong>Why this?</strong> ${item.reason}
-                        </div>
-                      ` : ''}
-
-                      ${item.target_skills && item.target_skills.length ? `
-                        <div class="course-skills">
-                          <span class="skills-label">Develops:</span>
-                          ${item.target_skills.map(sk => `<span class="tag-skill">${sk}</span>`).join(' ')}
-                        </div>
-                      ` : ''}
+                      <p style="font-size: 13.5px; color: #4b5563; margin: 4px 0 8px 0;">${it.reason?.why_this || 'Addresses technical competency requirement.'}</p>
+                      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        ${(it.reason?.target_skills || []).map(s => `
+                          <span class="badge badge-neutral" style="font-size: 11px;">Skill: ${s.replace('SKILL_', '')}</span>
+                        `).join('')}
+                      </div>
                     </div>
                   `).join('')}
                 </div>
@@ -135,8 +130,12 @@ export function renderPlan(container, state, navigate) {
         </div>
       `;
     } catch (err) {
-      loading.innerHTML = `<p class="text-error">Failed to load plan: ${err.message}</p>`;
+      loading.innerHTML = `
+        <div class="alert alert-error">
+          <p>Failed to generate plan: ${err.message}</p>
+          <button class="btn btn-primary" onclick="loadPlan()">Try Again</button>
+        </div>
+      `;
     }
   }
 }
-

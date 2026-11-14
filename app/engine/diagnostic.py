@@ -1,11 +1,50 @@
+import os
+import csv
+import json
 from typing import List, Dict, Any, Optional
 from app.contracts.kb import Exercise
 from app.engine.interfaces import IAdaptiveDiagnostic
 
 class AdaptiveDiagnostic(IAdaptiveDiagnostic):
-    def __init__(self, item_bank: Optional[List[Exercise]] = None, max_items: int = 5):
-        self.item_bank = item_bank or []
+    def __init__(self, item_bank: Optional[List[Exercise]] = None, max_items: int = 5, seed_dir: str = "data/seed/kb"):
         self.max_items = max_items
+        self.item_bank = item_bank if item_bank is not None else self._load_exercises(seed_dir)
+
+    def _load_exercises(self, seed_dir: str) -> List[Exercise]:
+        ex_file = os.path.join(seed_dir, "exercise.csv")
+        bank = []
+        if os.path.exists(ex_file):
+            with open(ex_file, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for r in reader:
+                    opts = []
+                    if r.get("options"):
+                        try:
+                            opts = json.loads(r["options"])
+                        except Exception:
+                            opts = [opt.strip() for opt in r["options"].split(",")]
+                    ans_key = r.get("answer_key", "")
+                    corr = ""
+                    if ans_key:
+                        try:
+                            corr_obj = json.loads(ans_key)
+                            corr = corr_obj.get("correct", "")
+                        except Exception:
+                            corr = ans_key
+                    bank.append(Exercise(
+                        exercise_id=r["exercise_id"],
+                        skill_id=r["skill_id"],
+                        title=f"Diagnostic on {r['skill_id']}",
+                        question_text=r.get("prompt", ""),
+                        exercise_type="mcq",
+                        options=opts,
+                        correct_answer=corr,
+                        difficulty_0_100=float(r.get("difficulty", 3)) * 20.0,
+                        status="verified",
+                        source_id=r.get("source_id", "IITBBS_FACULTY"),
+                        verified=True
+                    ))
+        return bank
 
     def select_next_item(
         self,

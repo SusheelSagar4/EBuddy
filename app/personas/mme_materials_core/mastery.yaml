@@ -1,0 +1,6 @@
+criteria:
+  min_skill_level: 75.0
+  required_project_milestones: 1
+  required_timed_assessments: 2
+  pass_threshold_ratio: 0.75
+  evaluation_philosophy: "demonstrated_proficiency_over_attendance"

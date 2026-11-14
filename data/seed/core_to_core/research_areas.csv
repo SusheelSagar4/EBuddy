@@ -1,0 +1,17 @@
+area_id,name,department,description,parent_area_id
+AREA_EE_POWER_SYS,Smart Grid & Power System Stability,EE,"Dynamic security assessment, renewable grid integration, wide-area monitoring, phasor measurement units.",
+AREA_EE_POWER_ELEC,Power Electronic Converters & EV Drives,EE,"High-frequency DC-DC converters, multilevel inverters, wide bandgap GaN/SiC devices, electric vehicle powertrains.",
+AREA_EE_RENEWABLES,Microgrids & Clean Energy Systems,EE,"Solar PV MPPT controllers, wind generation systems, battery energy storage management, islanded microgrid stability.",AREA_EE_POWER_SYS
+AREA_EE_CONTROL,Nonlinear & Adaptive Control Systems,EE,"Sliding mode control, robust state estimation, networked control systems, aerospace and robotic feedback systems.",
+AREA_EE_VLSI,CMOS Analog/Digital VLSI & Edge AI Hardware,EE,"Sub-micron low-power CMOS circuit design, neuromorphic computing accelerators, FPGA-based DSP architectures.",
+AREA_EE_HIGH_VOLTAGE,High Voltage Engineering & Dielectrics,EE,"Gas-insulated switchgear, dielectric breakdown modeling, impulse test techniques, lightning surge arresters.",AREA_EE_POWER_SYS
+AREA_EE_SIGNAL_PROC,Biomedical & Multirate Signal Processing,EE,"Cardiovascular signal analysis, compressive sensing, adaptive filtering, acoustic and speech enhancement.",
+AREA_MM_PHYSICAL_MET,Physical Metallurgy & Phase Transformations,MM,"Kinetics of martensitic and bainitic transformations in advanced high-strength steels, precipitation kinetics.",
+AREA_MM_ALLOY_DESIGN,High-Entropy & Aerospace Structural Alloys,MM,"Compositionally complex alloys, refractory metals, light alloy design (Al-Li, Ti-alloys) for extreme environments.",AREA_MM_PHYSICAL_MET
+AREA_MM_THERMO_EXTR,High-Temperature Process Metallurgy & Thermodynamics,MM,"Slag-metal equilibria, hydrogen direct reduced iron (H2-DRI), computational thermodynamics (CALPHAD).",
+AREA_MM_MECHANICAL,"Fracture Mechanics, Creep & Fatigue",MM,"Dislocation dynamics, fatigue crack growth, high-temperature creep damage mechanisms, instrumented indentation.",
+AREA_MM_CORROSION,Electrochemical Corrosion & Surface Engineering,MM,"Pitting and crevice corrosion, electrochemical impedance spectroscopy (EIS), thermal spray coatings, passivity.",
+AREA_MM_SOLIDIFICATION,Solidification Kinetics & Advanced Casting,MM,"Dendritic microsegregation, continuous casting defect modeling, mold-metal interfacial heat transfer.",AREA_MM_PHYSICAL_MET
+AREA_MM_COMPUTATIONAL,Computational Materials Modeling & Phase-Field,MM,"Phase-field simulations of grain growth, molecular dynamics of interfacial fracture, density functional theory.",
+AREA_MM_ENERGY_MAT,Electrochemical Energy Storage Materials,MM,"Solid-state battery electrolytes, high-capacity conversion anodes, hydrogen storage intermetallics.",AREA_MM_ALLOY_DESIGN
+AREA_MM_MINERAL_PROC,Mineral Beneficiation & Sustainable Extraction,MM,"Froth flotation, bio-leaching of lean ores, tailings valorization, industrial waste recovery.",AREA_MM_THERMO_EXTR

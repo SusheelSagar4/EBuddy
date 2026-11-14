@@ -18,6 +18,8 @@ class PlanItem(BaseContract):
     semester_number: Optional[int] = None
     scheduled_week: Optional[int] = None
     estimated_hours: float = 0.0
+    phase: Optional[str] = None # 'Phase 1: Foundation', 'Phase 2: Core Depth', 'Phase 3: Applied Mastery'
+    prep_hours_weekly: Optional[float] = None
     reason: StructuredReason
 
 class ValidationCheck(BaseContract):

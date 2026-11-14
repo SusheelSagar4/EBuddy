@@ -188,26 +188,93 @@ A background listener consumes these events, re-evaluates impacted student skill
 
 ---
 
-## 8. Testing & Quality Assurance
+---
+
+## 8. Core to Core Engineering Roadmap & Research Track
+
+The **Core to Core** feature serves students who want to grow inside their own core engineering branch (**Electrical Engineering** or **Metallurgical and Materials Engineering**). It follows the Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
+
+Students can pursue one of two specialized pathways:
+1. **Core Research Route:** Preparation for undergraduate research mentorship under IIT Bhubaneswar faculty, literature review, taster tasks, paper insights, and international/national research internships (SURGE, DAAD, Mitacs).
+2. **Core Industry / PSU Route:** Structured preparation for GATE qualification, core industrial simulation and design tool mastery (MATLAB/Simulink, PSCAD, ANSYS, Thermo-Calc), project clubs (SAE BAJA, Formula Student), and PSU recruitment benchmarks.
+
+```mermaid
+flowchart TD
+    Assess["1. Diagnostic Assessment<br/>(Objective Technical Exercises)"] --> Baseline["2. BKT Skill State Baseline<br/>(Tested Mastery Levels)"]
+    Baseline --> PhasePlan["3. Phase-wise Plan<br/>(Foundation → Core Depth → Applied Mastery)"]
+    PhasePlan --> Weekly["4. Weekly Guidance & Free-Hours Budget<br/>(CGPA Protection Active, Never Timetable)"]
+    Weekly --> Checkin["5. Topic Check-ins & Reflections<br/>(Remediation or Acceleration)"]
+    Checkin --> Gate{"6. Readiness Gate<br/>(Tested >= 75%, 2 Tasters >= 60%, 1 Paper >= 60%)"}
+    Gate -- "Goal: Core Research" --> Faculty["7. Faculty Matching & Grounded Assist<br/>(44 Verified IIT BBS Faculty)"]
+    Faculty --> Paper["8. Paper Insights & Guided Reader<br/>(120 Verified Papers, Open-Access Compliant)"]
+    Paper --> Kickoff["9. Project Kickoff & Research Logs<br/>(4 Milestone Phases)"]
+    Gate -- "Goal: Core Industry" --> Industry["7-9. Core Industry Milestones<br/>(GATE Phases, Simulation Tools, PSUs)"]
+```
+
+### A. Non-Negotiable Rules & Hard Constraints
+- **Zero Rigid Timetables:** The buddy **NEVER** generates day-by-day or hour-by-hour timetables. It outputs weekly focus goals, an hours budget, suggested activities, and study approaches. The student decides when to execute.
+- **Never Contact on Student's Behalf:** Draft emails, CV bullets, and interview questions are generated for the student to review, personalize, and send themselves. The buddy never communicates with faculty.
+- **Air-Gapped LiteLLM Gateway:** All LLM completions and embeddings route through LiteLLM reading `LLM_MODEL`, `LLM_API_KEY`, `LLM_API_BASE`, and `EMBEDDING_MODEL` from environment variables. Local cost map is locked (`True`) and telemetry is disabled (`False`). Tested model: `openai/gpt-4o-mini`.
+- **Zero Hallucination Grounding:** Every claim about a professor or paper is strictly grounded in rows stored in `data/seed/core_to_core/`. Unknown fields are rendered as `"not available"`.
+- **Data Ethics & Open Access Compliance:** Full text chunks are provided only for open-access publications (`open_access = True`). Non-open-access publications strictly display public metadata, abstracts, and DOI links.
+- **Data Quality & No SAMPLE- Mix:** All 44 faculty and 120 publications are verified IIT Bhubaneswar institutional records. Seed files contain zero unverified rows, and mixing `SAMPLE-` rows with verified data is strictly prohibited.
+- **CGPA Protection Guarantee:** Core-course academic support always takes precedence over extra research or skill work during midsem/endsem exam weeks (calendar factor 0.4 / 0.2) or whenever course proficiency falls below 75%.
+
+### B. LLM vs. Deterministic Split
+
+| Component | Deterministic Core (Python / SQL) | LiteLLM Model (`gpt-4o-mini` @ Temp 0.0) |
+|---|---|---|
+| **Free-Hours Budget** | Computes contact hours $\sum(L+T+P)$ and calendar factor adjustments. | Writes weekly study advice grounded in retrieved courses. |
+| **Prerequisites & Rules** | Validates course eligibility, credit caps, and DAG sequencing. | Explains reason for prerequisite gating in human language. |
+| **Skill Mastery (BKT)** | Updates estimated level and confidence from objective scores. | Grades free-form open answers against verified rubrics. |
+| **Readiness Gate** | Evaluates 75% tested mastery, 2 tasters >= 60%, 1 paper >= 60%. | Formulates interview discussion questions for faculty group. |
+| **Faculty Matching** | Computes deterministic formula: $0.4 w_1 + 0.3 w_2 + 0.15 w_3 + 0.15 w_4$. | Summarizes research synergies and drafts personalized inquiry email. |
+| **Paper Reader** | Retrieves chunk IDs, page citations, and open-access flags. | Explains difficult technical terms and provides section glossaries. |
+| **Pacing & Adaptation** | Enforces 10-day follow-up logic and midsem budget reduction. | Synthesizes weekly reflection into encouraging feedback. |
+
+### C. Core to Core Data Storage Map (`data/seed/core_to_core/`)
+
+| Table Name | Seed File Path | Verified Rows | Description & Key Schema Fields |
+|---|---|---|---|
+| `kb.academic_calendar` | `data/seed/core_to_core/academic_calendar.csv` | 16 | 16 semester weeks, week_type (teaching/midsem/endsem), calendar_factor (1.0, 0.4, 0.2). |
+| `kb.research_area` | `data/seed/core_to_core/research_areas.csv` | 16 | Core research sub-domains across Electrical and Metallurgy/Materials engineering. |
+| `kb.area_skill` | `data/seed/core_to_core/area_skills.csv` | 23 | Mapping between research areas and required prerequisite skill levels. |
+| `kb.faculty` | `data/seed/core_to_core/faculty.csv` | 44 | 44 verified IIT BBS faculty (27 EE, 17 MM) with designation, lab, profile URL, UG mentorship. |
+| `kb.faculty_area` | `data/seed/core_to_core/faculty_areas.csv` | 88 | Area affiliations and domain weights for all verified faculty. |
+| `kb.paper` | `data/seed/core_to_core/papers.csv` | 120 | 120 verified library papers (41 Open Access, 79 abstract-only per copyright ethics). |
+| `kb.paper_author` | `data/seed/core_to_core/paper_authors.csv` | 120 | Author and faculty affiliations for library papers. |
+| `kb.paper_chunk` | `data/seed/core_to_core/paper_chunks.csv` | 120 | Text chunks indexed by page number and chunk index for verified guided reading. |
+| `kb.paper_skill` | `data/seed/core_to_core/paper_skills.csv` | 120 | Competency skills exercised by each research publication. |
+| `kb.taster_task` | `data/seed/core_to_core/taster_tasks.csv` | 8 | Research exploratory tasks (abstract synthesis, problem solving, short write-ups) with rubrics. |
+| `kb.industry_milestone` | `data/seed/core_to_core/industry_milestones.csv` | 12 | Core industry pathway: GATE syllabus phases, simulation tools (MATLAB, ANSYS), clubs, PSUs. |
+
+### D. Simulation Endpoints (`/api/sim`)
+The system provides documented simulation hooks to test adaptive behaviors in real-time:
+- **Scenario A (`POST /api/sim/{student_id}/scenario/midsem-stress`):** Simulates low quiz performance during midsem exam week. The buddy dynamically triggers CGPA protection, shrinks weekly hours by calendar factor 0.4, and shifts 70-80% of study budget to core-course recovery.
+- **Scenario B (`POST /api/sim/{student_id}/scenario/professor-no-reply`):** Simulates approaching a faculty member with 11 days elapsed without reply. The buddy automatically recommends a polite follow-up template and offers the next top-ranked faculty match.
+- **Scenario C (`POST /api/sim/{student_id}/scenario/goal-pivot`):** Simulates switching between Core Research and Core Industry routes, instantly updating roadmaps without losing verified skill mastery states.
+
+---
+
+## 9. Testing & Quality Assurance
 
 ```bash
-# 1. Run DB-free unit tests (offline, instant configuration & schema checks)
-python -m pytest tests/test_db_free.py -q
+# 1. Run Core-to-Core comprehensive tests (budget, readiness, matching, papers, simulations)
+python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_core_to_core.py
 
-# 2. Run DB-dependent integration tests (verifies Postgres connection, FK constraints, triggers)
-python -m pytest tests/test_db_dependent.py -q
+# 2. Run DB-free unit tests (offline, instant configuration & schema checks)
+python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_db_free.py
 
-# 3. Run all tests simultaneously
-python -m pytest tests -q
-
-# 4. Generate curriculum integrity & DAG sequence report
-python scripts/check_data.py
+# 3. Run all tests simultaneously in Docker environment
+docker compose exec app pytest tests -q
 ```
 
 **Current Test Suite Status:**
+- `test_core_to_core.py`: 8 passed, 0 failed, 0 skipped.
 - `test_db_free.py`: 9 passed, 0 failed, 0 skipped.
 - `test_db_dependent.py`: 4 passed, 0 failed, 0 skipped.
-- **Total:** **13 passed, 0 failed, 0 skipped** (100% pass rate).
+- **Total:** **21 passed, 0 failed, 0 skipped** (100% pass rate).
+
 
 ---
 

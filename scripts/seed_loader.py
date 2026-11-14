@@ -156,6 +156,17 @@ def load_all_seeds(conn):
         (load_csv, os.path.join(seed_kb, "keyword_skill.csv"), "kb.keyword_skill"),
         (load_csv, os.path.join(seed_kb, "data_issue.csv"), "kb.data_issue"),
 
+        # Core to Core feature tables (Section 5 & 6)
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "academic_calendar.csv"), "kb.academic_calendar"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "area_skills.csv"), "kb.area_skill"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "faculty_areas.csv"), "kb.faculty_area"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "papers.csv"), "kb.paper"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "paper_authors.csv"), "kb.paper_author"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "paper_chunks.csv"), "kb.paper_chunk"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "paper_skills.csv"), "kb.paper_skill"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "taster_tasks.csv"), "kb.taster_task"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "industry_milestones.csv"), "kb.industry_milestone"),
+
         # Student data
         (load_csv, os.path.join(seed_student, "student.csv"), "student.student"),
         (load_csv, os.path.join(seed_student, "completed_course.csv"), "student.completed_course"),

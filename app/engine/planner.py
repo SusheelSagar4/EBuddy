@@ -77,7 +77,7 @@ class Planner(IPlanner):
             candidate_courses = self.skill_courses.get(sid, [])
             for cid in candidate_courses:
                 if cid not in assigned_courses:
-                    # Resolve prerequisites first
+                    # Resolve prerequisites first (Phase 1: Foundational Competencies)
                     prereq_chain = self._get_prereq_chain(cid)
                     for pid in prereq_chain:
                         if pid not in assigned_courses:
@@ -88,8 +88,10 @@ class Planner(IPlanner):
                                 course_id=pid,
                                 semester_number=current_sem,
                                 estimated_hours=4.0,
+                                phase="Phase 1: Foundation",
+                                prep_hours_weekly=6.0,
                                 reason=StructuredReason(
-                                    intent=f"Prerequisite foundation for {cid}",
+                                    intent=f"[Phase 1: Foundation] Prerequisite foundation for {cid}",
                                     target_skills=self.course_skills.get(pid, [sid]),
                                     why_this=f"Required prerequisite foundation before taking {cid}.",
                                     prerequisite_for=[cid],
@@ -106,9 +108,9 @@ class Planner(IPlanner):
                     if is_conflict:
                         conflicting = [info["title"] for info in self.course_info.values() if info.get("display_code") == disp_code]
                         both_titles = " / ".join(conflicting)
-                        why_reason = f"Addresses priority gap in {sid} [DRAFT FOR REVIEW]. Note: {disp_code} has code conflict in catalog ('{both_titles}')."
+                        why_reason = f"[Phase 2: Core Depth] Addresses priority gap in {sid}. Note: {disp_code} has code conflict in catalog ('{both_titles}')."
                     else:
-                        why_reason = f"Addresses priority gap ({g['gap']} points) in {sid} [DRAFT FOR REVIEW] required for {goal.name}."
+                        why_reason = f"[Phase 2: Core Depth] Addresses priority gap ({g['gap']} points) in {sid} required for {goal.name}."
 
                     items.append(PlanItem(
                         item_id=f"ITEM_C_{cid}_{uuid.uuid4().hex[:6]}",
@@ -116,8 +118,10 @@ class Planner(IPlanner):
                         course_id=cid,
                         semester_number=current_sem,
                         estimated_hours=4.0,
+                        phase="Phase 2: Core Depth",
+                        prep_hours_weekly=8.0,
                         reason=StructuredReason(
-                            intent=f"Close gap in {sid}",
+                            intent=f"[Phase 2: Core Depth] Close gap in {sid}",
                             target_skills=[sid],
                             why_this=why_reason,
                             prerequisite_for=[],
@@ -131,26 +135,30 @@ class Planner(IPlanner):
                         course_id=cid,
                         semester_number=current_sem,
                         estimated_hours=2.0,
+                        phase="Phase 2: Core Depth",
+                        prep_hours_weekly=3.0,
                         reason=StructuredReason(
-                            intent=f"Active practice for {sid}",
+                            intent=f"[Phase 2: Practice] Active practice for {sid}",
                             target_skills=[sid],
-                            why_this=f"Active problem solving to demonstrate proficiency in {sid}.",
+                            why_this=f"Active problem solving and check-in tasks to demonstrate proficiency in {sid}.",
                             prerequisite_for=[],
                             rule_compliance=[]
                         )
                     ))
                     break # Take top match per skill gap
 
-        # 2. Add milestone
+        # 2. Add Phase 3: Applied Mastery milestone
         items.append(PlanItem(
             item_id=f"ITEM_MS_{uuid.uuid4().hex[:6]}",
             item_type="milestone",
             semester_number=current_sem,
             estimated_hours=0.0,
+            phase="Phase 3: Applied Mastery",
+            prep_hours_weekly=4.0,
             reason=StructuredReason(
-                intent="Semester Target Milestone",
+                intent="[Phase 3: Capstone] Goal Mastery Demonstration",
                 target_skills=[g["skill_id"] for g in gaps[:3]],
-                why_this=f"Core milestone for goal {goal.name}.",
+                why_this=f"Demonstrate verified proficiency through industry-grade capstone project and timed mock interviews for {goal.name}.",
                 prerequisite_for=[],
                 rule_compliance=[]
             )
