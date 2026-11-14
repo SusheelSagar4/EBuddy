@@ -1,8 +1,10 @@
 ﻿highest_completed_phase_id,highest_completed_phase_order,fests_unlocked,hackathons_unlocked,competitions_unlocked,max_fests_per_recommendation,max_hackathons_per_recommendation,max_competitions_per_recommendation,message_to_user
-NONE_YET,0,TRUE,FALSE,FALSE,3,0,0,Explore top tech fests for inspiration; hackathons and competitions will unlock after you finish Phase 1 (Classical ML).
-0_Foundations,1,TRUE,FALSE,FALSE,3,0,0,Great progress on foundations; continue to Phase 1 (Classical ML) to unlock hands-on hackathons and competitive challenges!
-1_Classical_ML,2,TRUE,TRUE,TRUE,2,2,2,Congratulations on completing Classical ML! Hackathons and machine learning competitions are now fully unlocked.
-2_Deep_Learning,3,TRUE,TRUE,TRUE,2,2,2,"Deep learning unlocked! You are now well-prepared for computer vision, audio, and neural network challenges."
-3_Projects,4,TRUE,TRUE,TRUE,2,2,2,"With project benchmarks complete, test your skills in production buildathons and competitive Kaggle/Zindi circuits."
-4_Specialization,5,TRUE,TRUE,TRUE,2,2,2,"Specialization mastered! You can tackle advanced Generative AI, agentic LLM, and reinforcement learning hackathons."
-5_Research,6,TRUE,TRUE,TRUE,2,2,2,Full research capability unlocked! Compete in top-tier conference benchmark tracks and frontier AI challenges.
+NONE_YET,0,TRUE,FALSE,FALSE,2,0,0,Explore tech fests for inspiration and community; hackathons and technical competitions unlock once you complete Phase 1 (Programming & Dev Basics).
+P1_Programming_and_Dev_Basics,1,TRUE,TRUE,TRUE,2,2,2,Great start! Hackathons and entry-level competitions are now unlocked alongside tech fests; algorithmic competitions unlock after Phase 2 (DSA Foundations).
+P2_DSA_Foundations,2,TRUE,TRUE,TRUE,2,2,2,"DSA foundations complete! Full access to competitive programming, hackathons, and tech fests is now active."
+P3_DSA_Core_Techniques,3,TRUE,TRUE,TRUE,2,2,2,"With core algorithmic techniques mastered, you are well-prepared for competitive programming contests and multi-round hackathons."
+P4_Trees_and_Graphs,4,TRUE,TRUE,TRUE,2,2,2,Tree and graph proficiency unlocks competitive programming rounds and complex engineering challenges across all platforms.
+P5_Dynamic_Programming_and_Practice,5,TRUE,TRUE,TRUE,2,2,2,Advanced DSA and dynamic programming skills give you a competitive edge in national-level coding contests and high-stakes hackathons.
+P6_CS_Core_Subjects,6,TRUE,TRUE,TRUE,2,2,2,"Core CS knowledge in OS, DBMS, and networks prepares you for systems hackathons, hiring challenges, and technical rounds."
+P7_System_Design_and_Backend,7,TRUE,TRUE,TRUE,2,2,2,Full-stack and system design expertise positions you to lead teams in flagship buildathons and enterprise hiring hackathons.
+P8_Interview_Readiness,8,TRUE,TRUE,TRUE,2,2,2,You are fully interview-ready; target hiring hackathons and premier competitive programming contests offering direct PPI routes.

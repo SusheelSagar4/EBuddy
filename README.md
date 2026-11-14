@@ -254,23 +254,28 @@ python scripts/check_data.py
 │   ├── 01_roadmap.csv                    # 6-phase overview roadmap with objectives & outcomes
 │   ├── 02_phase_resources.csv            # 55 phase-wise curated learning resources
 │   ├── 03_prerequisites.csv             # Relational prerequisite DAG & high school math expansions
-│   ├── 01_events_master.csv              # Unified events catalog (7 fests, 25 hackathons, 30 competitions)
-│   ├── 02_phase_eligibility.csv          # Gating rules & user messages across 7 learner stages
-│   ├── 03_recommendation_rules.csv       # Machine-readable recommendation rules (R01–R11)
+│   ├── 01_events_master.csv              # Unified events catalog (FEST, HACKATHON, COMPETITION)
+│   ├── 02_phase_eligibility.csv          # Gating rules & user messages across learner stages
+│   ├── 03_recommendation_rules.csv       # Machine-readable recommendation engine rules (R01–R14)
 │   ├── 04_domain_to_phase_map.csv        # Topic tagging, prerequisite phases & beginner flags
 │   ├── 01_sde_roadmap_overview.csv       # 8-phase SDE prep roadmap overview (35 topics)
 │   ├── 02_phase_learning_content.csv     # 105 tiered learning resources (Tiers A, B, C)
 │   ├── 03_topic_checkpoints.csv          # 35 proof-of-learning checkpoints & passing criteria
 │   ├── 04_project_repos.csv              # 35 curated GitHub repos with required skills & phases
-│   └── 05_portfolio_projects.csv         # 8 flagship resume portfolio projects
+│   ├── 05_portfolio_projects.csv         # 8 flagship resume portfolio projects
+│   ├── 01_sde_events_master.csv          # 41 curated SDE fests, hackathons & competitions
+│   ├── 02_sde_phase_eligibility.csv      # SDE stage-wise eligibility & unlock quotas (9 stages)
+│   └── 03_sde_recommendation_rules.csv   # Engine rules governing SDE event recommendations (R01–R14)
 ├── AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx # Source learning roadmap Excel
 ├── top7_iit_fests_26-27.xlsx             # Source Top 7 IIT fests & AI/ML hackathons Excel
 ├── ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx # Verified mirror Excel
 ├── SDE_Prep_Roadmap_with_Playlists.xlsx  # Source SDE prep roadmap & playlists Excel
 ├── Top_SDE_Project_GitHub_Repos.xlsx     # Source top SDE GitHub repos & portfolio path Excel
+├── SDE_Competitions_Hackathons_2026-27.xlsx # Source SDE hackathons, fests & competitions Excel
 ├── build_csvs.py                         # Single-run pipeline for roadmap knowledge base
 ├── build_events_csvs.py                  # Single-run pipeline for events & competitions knowledge base
 ├── build_sde_csvs.py                     # Single-run pipeline for SDE knowledge base
+├── build_sde_events_csvs.py              # Single-run pipeline for SDE events & competitions knowledge base
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
@@ -386,5 +391,26 @@ As part of the eBuddy expansion for full-stack Software Development Engineer pre
 python build_sde_csvs.py
 ```
 *The pipeline executes deterministic validation assertions upon execution, verifying 100% hyperlink extraction, 35 unique steps, 3 tiers per step (105 total rows), 8 portfolio path projects, and relational consistency across all output files.*
+
+---
+
+## 14. SDE Events, Hackathons & Competitions Knowledge Base Pipeline
+
+An automated data engineering pipeline (`build_sde_events_csvs.py`) ingests official event schedules (`SDE_Competitions_Hackathons_2026-27.xlsx`) to build an SDE events and recommendation knowledge base in `output/` relative to reference date **2026-11-15**:
+
+### Datasets Generated (`output/`)
+
+| File | Rows | Schema & Purpose | Key Highlights |
+|---|---|---|---|
+| **`01_events_master.csv`**<br/>*(alias: `01_sde_events_master.csv`)* | 41 | Complete catalog of SDE tech fests, hackathons, and programming competitions. | • Unique IDs: `FEST-01..02`, `HACK-01..26`, `COMP-01..13`<br/>• Category mapping (2 FEST, 26 HACKATHON, 13 COMPETITION)<br/>• Timeline parsing (`start_month`, `end_month`, `expected_month_range`, `timeline_type`)<br/>• Registration status vs 2026-11-15 (`CLOSED`, `CLOSING_SOON`, `OPEN_OR_UNKNOWN`)<br/>• Date confidence (`HIGH`, `MEDIUM`, `LOW`) and wording (`CONFIRMED`, `EXPECTED`)<br/>• Closed-list focus areas (12 technical domains)<br/>• Hiring pathway tracking (`can_get_hired`: YES, POSSIBLE, EXPOSURE_ONLY, NO)<br/>• Minimum roadmap phase gating |
+| **`02_phase_eligibility.csv`**<br/>*(alias: `02_sde_phase_eligibility.csv`)* | 9 | Stage-wise gating rules defining category unlocks (`fests_unlocked`, `hackathons_unlocked`, `competitions_unlocked`), quota caps, and contextual user nudges. | • `NONE_YET`: Fests unlocked (2 fests max; inspiration); hackathons and competitions locked<br/>• `P1_Programming_and_Dev_Basics`+: Full unlock (2 fests, 2 hackathons, 2 competitions; 6 total) |
+| **`03_recommendation_rules.csv`**<br/>*(alias: `03_sde_recommendation_rules.csv`)* | 14 | Machine-readable engine rules (R01–R14) governing eligibility, set sizing, category mix, diversity, timeline filters, and hiring preferences. | • Minimum phase prerequisites (R01, R02, R03)<br/>• Balanced set composition (R04, R05)<br/>• Lifecycle & registration filtering (R06, R07)<br/>• Ranking heuristics for upcoming events, hiring paths, and confidence (R08, R09, R10)<br/>• Eligibility enforcement and mandatory display metadata (R11, R12, R13)<br/>• Diversity quota capping same organizer at 2 (R14) |
+
+### Running the SDE Events Pipeline
+```bash
+python build_sde_events_csvs.py
+```
+*The pipeline executes automated validation assertions, verifying row counts (41 events, 9 stages, 14 rules), category distribution (2 FEST / 26 HACKATHON / 13 COMPETITION), period partition (27 Nov–Mar / 14 Apr–Nov), ISO month format compliance, and exact cell preservation against raw source data.*
+
 
 
