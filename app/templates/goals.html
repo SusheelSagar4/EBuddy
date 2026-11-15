@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Goal Selection{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Select Target Career / Specialization Goal</h1>
+  <p>Choose an institutional specialization aligned with your branch and interests. Includes cross-branch pathways.</p>
+</div>
+
+<div id="goals-container">
+  <div style="color: var(--text-muted); padding: 20px 0;">Loading available curriculum goals...</div>
+</div>
+
+<div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+  <a href="/" class="btn btn-secondary">Back to Profile</a>
+  <button id="btn-build-roadmap" class="btn btn-primary">🚀 Build My Roadmap</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    EBuddy.initGoals();
+  });
+</script>
+{% endblock %}

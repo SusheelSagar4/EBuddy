@@ -16,21 +16,24 @@ flowchart LR
 
 ## 1. Quick Start
 
-### Prerequisites
-- Docker & Docker Compose (or Python 3.12+ with PostgreSQL 16)
-- Model API key (OpenAI, Gemini, Azure, or local Ollama)
+### Run it in 3 commands
 
-### Single-Command Start (Docker)
 ```bash
-# 1. Clone repository & configure environment
+# 1. Copy environment template
 cp .env.example .env
 
-# 2. Add your LLM provider API key to .env (OpenAI, Gemini, Ollama, etc.)
-# nano .env  --> set LLM_API_KEY=your_key_here
+# 2. Set your LLM provider key in .env (or leave as placeholder to run in deterministic mode)
+# Edit .env: set LLM_API_KEY=your_api_key_here
 
-# 3. Bring up the complete system (linux/amd64, no GPU, < 1.5 GB footprint)
-docker compose up --build -d
+# 3. Start the complete stack (PostgreSQL, Adminer, FastAPI Web UI)
+docker compose up --build
 ```
+
+On first boot, the application automatically verifies connectivity, seeds the database if empty, and exposes:
+- **Learning Buddy Web UI:** [http://localhost:8000](http://localhost:8000)
+- **OpenAPI Schema & Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Adminer DB Viewer:** [http://localhost:8080](http://localhost:8080)
+
 
 ### Windows Host Automation (`scripts\dev.ps1`)
 On Windows environments without `make`, use the built-in PowerShell control script:

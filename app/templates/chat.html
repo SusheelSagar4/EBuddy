@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Tutor Chat — Academic Buddy{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Tutor Chat & Advisory</h1>
+  <p>Ask questions regarding curriculum pathways, exam workload adjustments, or course prerequisites. Grounded in verified institutional records.</p>
+</div>
+
+<div class="chat-window">
+  <div class="chat-messages" id="chat-messages">
+    <!-- Messages appended dynamically -->
+  </div>
+
+  <div style="padding: 8px 16px; background: #ffffff; border-top: 1px solid var(--border-light); display: flex; gap: 8px; flex-wrap: wrap;">
+    <span style="font-size: 0.8rem; color: var(--text-muted); align-self: center;">Suggested:</span>
+    <button class="btn btn-secondary btn-sm quick-prompt-btn" data-prompt="Why is EE3L004 recommended on my roadmap?">Explain Course Recommendation</button>
+    <button class="btn btn-secondary btn-sm quick-prompt-btn" data-prompt="I have mid-sem exams this week, please reduce my study workload.">Mid-Sem Workload Reduction</button>
+    <button class="btn btn-secondary btn-sm quick-prompt-btn" data-prompt="Can I overload to 30 credits this semester?">Credit Overload Query</button>
+  </div>
+
+  <div class="chat-input-bar">
+    <input type="text" id="chat-input" placeholder="Type an academic or curriculum question..." aria-label="Chat input">
+    <button id="btn-chat-send" class="btn btn-primary">Send Query</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    EBuddy.initChat();
+  });
+</script>
+{% endblock %}
