@@ -69,79 +69,143 @@ class RoadmapPlannerAgent:
         If weekly_hours_budget is provided, prunes daily tasks to fit within budget
         and explicitly records deferred tasks.
         """
-        semester_courses = [it for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"] and it.semester_number == semester_number]
+        # Non-negotiable Rule: Daily tasks must NEVER include REQUIRED_COURSE or enrolled ELECTIVE_PICK
+        # lecture items. Daily tasks must consist solely of practice, exercises, revision, and prep
+        # items tied directly to the goal skills.
+        prep_items = [
+            it for it in plan.items 
+            if it.item_type not in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"] 
+            and it.semester_number == semester_number
+        ]
+        
+        # Focus skills from prep items and goal requirements
         focus_skills = []
-        target_course_ids = []
-        for c in semester_courses:
-            if c.course_id:
-                target_course_ids.append(c.course_id)
-                focus_skills.extend(c.reason.target_skills)
+        for it in prep_items:
+            if getattr(it, "reason", None) and getattr(it.reason, "target_skills", None):
+                focus_skills.extend(it.reason.target_skills)
+            elif getattr(it, "target_skills", None):
+                focus_skills.extend(it.target_skills)
 
-        # Unique skills (up to 3 for focus)
-        focus_skills = list(dict.fromkeys(focus_skills))[:3]
-        target_course_ids = list(dict.fromkeys(target_course_ids))
+        if not focus_skills:
+            focus_skills = ["SKILL_CIRCUIT_ANALYSIS", "SKILL_POWER_ELECTRONICS"] if "EE" in (getattr(plan, "programme_id", "") or "") else ["SKILL_THERMODYNAMICS", "SKILL_PHYSICAL_METALLURGY"]
+        target_course_ids = [it.course_id for it in prep_items if getattr(it, "course_id", None)]
+        focus_skills = list(dict.fromkeys(focus_skills))
 
-        # Generate candidate daily tasks
+        is_mba = "MBA" in (getattr(plan, "goal_id", "") or "").upper() or "CAT" in (getattr(plan, "goal_name", "") or "").upper()
+        
         candidate_tasks: List[DailyTask] = []
         days_label = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-        # Map available resources from KB for these courses
-        all_resources = self.resource_repo.list_all()
-
         for day_idx in range(1, 8):
-            cid = target_course_ids[(day_idx - 1) % len(target_course_ids)] if target_course_ids else "CORE_STUDY"
-            course_obj = self.course_repo.get_by_id(cid)
-            course_title = course_obj.title if course_obj else cid
-            skill_target = focus_skills[(day_idx - 1) % len(focus_skills)] if focus_skills else "CORE_COMPETENCY"
-
-            # Match KB resource if available (primary from resource_course mapping, else search)
-            primary_res = self.resource_repo.get_primary_resource_for_course(cid)
-            matching_res = primary_res or next((r for r in all_resources if cid in r.title or skill_target.lower() in r.title.lower()), None)
-
-            if day_idx in [1, 2, 4]:
-                task = DailyTask(
-                    task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
-                    day_number=day_idx,
-                    title=f"{days_label[day_idx-1]}: Lecture & Theory — {course_title}",
-                    estimated_minutes=int(daily_hours * 60 * 0.6),
-                    task_type="video_lecture",
-                    skill_id=skill_target,
-                    course_id=cid,
-                    resource_id=matching_res.resource_id if matching_res else None,
-                    resource_title=matching_res.title if matching_res else f"Curated Lecture Module: {course_title}",
-                    resource_url=matching_res.url if matching_res else None
-                )
-            elif day_idx in [3, 5]:
-                task = DailyTask(
-                    task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
-                    day_number=day_idx,
-                    title=f"{days_label[day_idx-1]}: Practice Problems & Derivations — {course_title}",
-                    estimated_minutes=int(daily_hours * 60 * 0.5),
-                    task_type="practice_exercise",
-                    skill_id=skill_target,
-                    course_id=cid,
-                    exercise_id=f"EX_{skill_target}_{week_number}_{day_idx}"
-                )
-            elif day_idx == 6:
-                task = DailyTask(
-                    task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
-                    day_number=day_idx,
-                    title=f"{days_label[day_idx-1]}: Weekly Checkpoint Quiz & Review",
-                    estimated_minutes=int(daily_hours * 60 * 0.4),
-                    task_type="quiz",
-                    skill_id=skill_target,
-                    course_id=cid
-                )
-            else: # Sunday
-                task = DailyTask(
-                    task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
-                    day_number=day_idx,
-                    title=f"{days_label[day_idx-1]}: Rest / Buffer / Project Catch-up",
-                    estimated_minutes=int(daily_hours * 60 * 0.3),
-                    task_type="revision",
-                    skill_id=skill_target,
-                    course_id=cid
-                )
+            skill_target = focus_skills[(day_idx - 1) % len(focus_skills)] if focus_skills else "GOAL_PREPARATION"
+            
+            if is_mba:
+                if day_idx == 1:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Quantitative Aptitude — Arithmetic & Algebra Speed Drills",
+                        estimated_minutes=int(daily_hours * 60 * 0.6),
+                        task_type="practice_exercise",
+                        skill_id="SKILL_MBA_QUANT_APTITUDE",
+                        exercise_id=f"EX_MBA_QA_W{week_number}_{day_idx}"
+                    )
+                elif day_idx == 2:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Verbal Ability — Editorial Reading & Critical Reasoning Passages",
+                        estimated_minutes=int(daily_hours * 60 * 0.5),
+                        task_type="reading",
+                        skill_id="SKILL_MBA_VERBAL_ABILITY",
+                        resource_id="MBA-L1"
+                    )
+                elif day_idx == 3:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: DILR Practice — Matrix Logic & Tabular Caselet Sets",
+                        estimated_minutes=int(daily_hours * 60 * 0.5),
+                        task_type="practice_exercise",
+                        skill_id="SKILL_MBA_DATA_INTERPRETATION",
+                        exercise_id=f"EX_MBA_DILR_W{week_number}_{day_idx}"
+                    )
+                elif day_idx == 4:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Sectional Mock Drill — 40-Minute Timed Sectional Simulation",
+                        estimated_minutes=int(daily_hours * 60 * 0.6),
+                        task_type="practice_exercise",
+                        skill_id="SKILL_MBA_QUANT_APTITUDE",
+                        exercise_id=f"EX_MBA_SECTIONAL_W{week_number}_{day_idx}"
+                    )
+                elif day_idx == 5:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Profile & Business Awareness — Case Analysis & CV Action",
+                        estimated_minutes=int(daily_hours * 60 * 0.4),
+                        task_type="revision",
+                        skill_id="SKILL_MBA_BUSINESS_AWARENESS"
+                    )
+                elif day_idx == 6:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Weekly Checkpoint Quiz & Proctored Diagnostic Review",
+                        estimated_minutes=int(daily_hours * 60 * 0.4),
+                        task_type="quiz",
+                        skill_id="SKILL_MBA_QUANT_APTITUDE"
+                    )
+                else:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Rest / Buffer / Error Log Catch-up",
+                        estimated_minutes=int(daily_hours * 60 * 0.3),
+                        task_type="revision",
+                        skill_id="SKILL_MBA_QUANT_APTITUDE"
+                    )
+            else:
+                # Engineering & Career Domain Practice (Never a major lecture)
+                if day_idx in [1, 2, 4]:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Active Practice & Problem Set — {skill_target}",
+                        estimated_minutes=int(daily_hours * 60 * 0.6),
+                        task_type="practice_exercise",
+                        skill_id=skill_target,
+                        exercise_id=f"EX_{skill_target}_{week_number}_{day_idx}"
+                    )
+                elif day_idx in [3, 5]:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Concept Review & Derivation Drill — {skill_target}",
+                        estimated_minutes=int(daily_hours * 60 * 0.5),
+                        task_type="revision",
+                        skill_id=skill_target
+                    )
+                elif day_idx == 6:
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Weekly Mastery Gate & Checkpoint Quiz",
+                        estimated_minutes=int(daily_hours * 60 * 0.4),
+                        task_type="quiz",
+                        skill_id=skill_target
+                    )
+                else: # Sunday
+                    task = DailyTask(
+                        task_id=f"TASK_W{week_number}_D{day_idx}_{uuid.uuid4().hex[:6]}",
+                        day_number=day_idx,
+                        title=f"{days_label[day_idx-1]}: Rest / Buffer / Project Implementation",
+                        estimated_minutes=int(daily_hours * 60 * 0.3),
+                        task_type="revision",
+                        skill_id=skill_target
+                    )
             candidate_tasks.append(task)
 
         # Budget enforcement
@@ -162,10 +226,16 @@ class RoadmapPlannerAgent:
 
         total_hours = sum(t.estimated_minutes for t in kept_tasks) / 60.0
 
+        weekly_obj = (
+            "Target CAT preparation drills across QA, VARC, and DILR with weekly mastery checkpoint"
+            if is_mba else
+            f"Master goal-targeted competencies in {', '.join(focus_skills[:2])}"
+        )
+
         return WeeklyRoadmap(
             week_number=week_number,
             semester_number=semester_number,
-            weekly_objective=f"Master foundational concepts and active problem solving in {', '.join(target_course_ids[:2])}",
+            weekly_objective=weekly_obj,
             focus_skills=focus_skills,
             target_courses=target_course_ids,
             daily_tasks=kept_tasks,

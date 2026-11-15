@@ -1,6 +1,6 @@
 # Core to M.Tech Evaluation Scorecard
 
-*Evaluated on 2026-11-15 23:07:38 across 32 synthetic student profiles (16 EE, 16 MM).*
+*Evaluated on 2026-11-15 23:20:42 across 32 synthetic student profiles (16 EE, 16 MM).*
 
 ## 1. Summary Metrics
 

@@ -15,6 +15,7 @@ from app.engine.interfaces import IPlanner
 from app.engine.rules import RuleEngine
 from app.engine.relevance import CourseRelevanceEngine
 from app.kb.repositories import ResourceRepo
+from app.engine.mba_date_parser import parse_mba_date_field, project_future_exam_milestone
 
 logger = logging.getLogger(__name__)
 
@@ -866,6 +867,156 @@ class Planner(IPlanner):
             items.append(upsc_ms)
             recommended_items_list.append(upsc_ms)
 
+        # MBA Domain Preparation Roadmap & CAT Milestones
+        if goal.goal_id == "GOAL_CORE_TO_MBA":
+            sem_diff = max(0, 7 - current_sem)
+            target_year = 2026 + (sem_diff // 2)
+            if target_year == 2026 and current_sem < 7:
+                target_year = 2027
+
+            if target_year == 2026:
+                cat_date_info = parse_mba_date_field("2026-11-29")
+            else:
+                cat_date_info = project_future_exam_milestone("MBA-EX-CAT", target_year=target_year)
+
+            # 1. CAT Preparation Launch Checkpoint
+            mba_launch_ms = PlanItem(
+                item_id=f"ITEM_MBA_LAUNCH_{uuid.uuid4().hex[:6]}",
+                item_type="CHECKPOINT",
+                semester_number=current_sem,
+                estimated_hours=2.0,
+                hours_per_week=2.0,
+                phase=p1_label,
+                prep_hours_weekly=2.0,
+                status_badge="CHECKPOINT",
+                cited_kb_codes=["MBA-MS01", "MBA-RT1"],
+                skill_gap_reason="Diagnostic ability assessment and syllabus orientation launch",
+                reason=StructuredReason(
+                    intent="CAT Preparation Baseline Diagnostic",
+                    target_skills=["SKILL_MBA_QUANT_APTITUDE", "SKILL_MBA_VERBAL_ABILITY"],
+                    why_this="Establishes sectional ability baseline across QA, VARC, and DILR to personalize weekly practice drills.",
+                    prerequisite_for=[],
+                    rule_compliance=["MBA pathway milestone"]
+                )
+            )
+            items.append(mba_launch_ms)
+            recommended_items_list.append(mba_launch_ms)
+
+            # 2. QA Active Problem Set
+            mba_qa_item = PlanItem(
+                item_id=f"ITEM_MBA_QA_{uuid.uuid4().hex[:6]}",
+                item_type="EXERCISE_SET",
+                semester_number=current_sem,
+                estimated_hours=4.0,
+                hours_per_week=4.0,
+                phase=p2_label,
+                prep_hours_weekly=4.0,
+                status_badge="RECOMMENDED",
+                cited_kb_codes=["MBA-TP01", "MBA-TP02", "MBA-Q001", "MBA-Q002"],
+                skill_gap_reason="Closes gap in Quantitative Aptitude arithmetic, algebra, and timed speed accuracy.",
+                reason=StructuredReason(
+                    intent="CAT Quantitative Aptitude Speed & Accuracy Drills",
+                    target_skills=["SKILL_MBA_QUANT_APTITUDE"],
+                    why_this="Comprehensive practice drills covering percentages, ratio, algebra equations, and modern maths for CAT sectional cutoff.",
+                    prerequisite_for=[],
+                    rule_compliance=["Verified syllabus practice item"]
+                )
+            )
+            items.append(mba_qa_item)
+            recommended_items_list.append(mba_qa_item)
+
+            # 3. VARC Reading Habit & Passages
+            mba_varc_item = PlanItem(
+                item_id=f"ITEM_MBA_VARC_{uuid.uuid4().hex[:6]}",
+                item_type="RESOURCE",
+                semester_number=current_sem,
+                estimated_hours=3.0,
+                hours_per_week=3.0,
+                phase=p2_label,
+                prep_hours_weekly=3.0,
+                status_badge="RECOMMENDED",
+                cited_kb_codes=["MBA-TP08", "MBA-TP09", "MBA-L1"],
+                skill_gap_reason="Builds critical reading stamina and vocabulary for complex CAT reading comprehension passages.",
+                reason=StructuredReason(
+                    intent="Daily Long-Form Editorial & RC Passage Analysis",
+                    target_skills=["SKILL_MBA_VERBAL_ABILITY"],
+                    why_this="Curated high-density reading materials (Aeon essays, Project Syndicate, The Hindu editorials) targeting verbal fluency and summary questions.",
+                    prerequisite_for=[],
+                    rule_compliance=["Core to MBA learning method"]
+                )
+            )
+            items.append(mba_varc_item)
+            recommended_items_list.append(mba_varc_item)
+
+            # 4. DILR Caselet Problem Sets
+            mba_dilr_item = PlanItem(
+                item_id=f"ITEM_MBA_DILR_{uuid.uuid4().hex[:6]}",
+                item_type="EXERCISE_SET",
+                semester_number=current_sem,
+                estimated_hours=3.0,
+                hours_per_week=3.0,
+                phase=p2_label,
+                prep_hours_weekly=3.0,
+                status_badge="RECOMMENDED",
+                cited_kb_codes=["MBA-TP06", "MBA-TP07", "MBA-Q027", "MBA-Q028"],
+                skill_gap_reason="Develops structured problem deconstruction for 4-question DILR arrangement and table sets.",
+                reason=StructuredReason(
+                    intent="DILR Logic & Data Interpretation Caselet Practice",
+                    target_skills=["SKILL_MBA_DATA_INTERPRETATION"],
+                    why_this="Systematic practice on games and tournaments, matrix logic, Venn diagrams, and data caselets under strict 40-minute constraints.",
+                    prerequisite_for=[],
+                    rule_compliance=["Verified syllabus practice item"]
+                )
+            )
+            items.append(mba_dilr_item)
+            recommended_items_list.append(mba_dilr_item)
+
+            # 5. Profile Building Action
+            mba_prof_item = PlanItem(
+                item_id=f"ITEM_MBA_PROFILE_{uuid.uuid4().hex[:6]}",
+                item_type="PROJECT",
+                semester_number=current_sem,
+                estimated_hours=2.0,
+                hours_per_week=2.0,
+                phase=p3_label,
+                prep_hours_weekly=2.0,
+                status_badge="RECOMMENDED",
+                cited_kb_codes=["MBA-MS12", "MBA-PROFILE-ACTION"],
+                skill_gap_reason="Pre-MBA profile enrichment across leadership, projects, and internship credentials.",
+                reason=StructuredReason(
+                    intent="CV & Profile Enhancement for B-School Admissions",
+                    target_skills=["SKILL_MBA_BUSINESS_AWARENESS"],
+                    why_this="Structured profile milestones (industrial internship, departmental club leadership, open source/research project) to maximize composite score in IIM interviews.",
+                    prerequisite_for=[],
+                    rule_compliance=["Core to MBA profile framework"]
+                )
+            )
+            items.append(mba_prof_item)
+            recommended_items_list.append(mba_prof_item)
+
+            # 6. CAT Examination Milestone Checkpoint
+            mba_cat_exam_item = PlanItem(
+                item_id=f"ITEM_MBA_CAT_EXAM_{uuid.uuid4().hex[:6]}",
+                item_type="CHECKPOINT",
+                semester_number=min(7, max(current_sem, 7)),
+                estimated_hours=3.0,
+                hours_per_week=3.0,
+                phase=p3_label,
+                prep_hours_weekly=3.0,
+                status_badge="CHECKPOINT" if not cat_date_info.is_projected else "PROJECTED_INDICATIVE",
+                cited_kb_codes=["MBA-EX-CAT", "MBA-MS04"],
+                skill_gap_reason=f"Target Examination Gate: CAT ({cat_date_info.display_label})",
+                reason=StructuredReason(
+                    intent="Common Admission Test (CAT) Proctored Administration",
+                    target_skills=["SKILL_MBA_QUANT_APTITUDE", "SKILL_MBA_VERBAL_ABILITY", "SKILL_MBA_DATA_INTERPRETATION"],
+                    why_this=f"Official national entrance examination for admissions into Indian Institutes of Management. Dates: {cat_date_info.display_label}.",
+                    prerequisite_for=[],
+                    rule_compliance=["Official verified examination cycle"]
+                )
+            )
+            items.append(mba_cat_exam_item)
+            recommended_items_list.append(mba_cat_exam_item)
+
         # Milestone Checkpoint
         cp_ms = PlanItem(
             item_id=f"ITEM_MS_{uuid.uuid4().hex[:6]}",
@@ -972,29 +1123,40 @@ class Planner(IPlanner):
             if sem > current_sem:
                 for r in self.prog_requirements.get((prog_id, sem), []):
                     c = r.get("course_id", "").strip()
-                    if c:
-                        c_meta = self.course_info.get(c, {})
-                        c_title = c_meta.get("title", c)
-                        c_credits = float(c_meta.get("credits", 4.0))
-                        rel_score, rel_rationale = self.relevance_engine.get_relevance(c, goal.goal_id)
-                        sem_req_items.append(PlanItem(
-                            item_id=f"ITEM_CORE_S{sem}_{c}_{uuid.uuid4().hex[:4]}",
-                            item_type="REQUIRED_COURSE",
-                            course_id=c,
-                            semester_number=sem,
-                            estimated_hours=c_credits * hours_per_credit,
-                            hours_per_week=c_credits * hours_per_credit,
-                            status_badge="LOCKED",
-                            cited_kb_codes=[c],
-                            goal_emphasis=f"Target Mastery: Foundational for {goal.name} (Relevance {rel_score}/3)." if rel_score > 0 else None,
-                            reason=StructuredReason(
-                                intent=f"Mandatory Degree Core Requirement (Semester {sem})",
-                                target_skills=self.course_skills.get(c, []),
-                                why_this=f"Fixed core requirement for {prog_id} Semester {sem} ({c_title}). Locked commitment.",
-                                prerequisite_for=[],
-                                rule_compliance=["Mandatory branch curriculum requirement"]
-                            )
-                        ))
+                    slot_type = (r.get("slot_type", "") or "").strip().lower()
+                    course_type = (r.get("course_type", "") or "").strip().lower()
+                    is_choosable_type = (
+                        slot_type in ["elective", "lateral", "breadth", "minor"] or
+                        course_type in ["elective", "vertical elective", "lateral", "breadth", "minor"]
+                    )
+                    if not c or is_choosable_type:
+                        continue
+                    if not active_policy.classify_requirement(c, r.get("slot_id"), student, default_is_required=True):
+                        continue
+
+                    c_meta = self.course_info.get(c, {})
+                    c_title = c_meta.get("title", c)
+                    c_credits = float(c_meta.get("credits", 4.0))
+                    rel_score, rel_rationale = self.relevance_engine.get_relevance(c, goal.goal_id)
+                    future_it = PlanItem(
+                        item_id=f"ITEM_CORE_S{sem}_{c}_{uuid.uuid4().hex[:4]}",
+                        item_type="REQUIRED_COURSE",
+                        course_id=c,
+                        semester_number=sem,
+                        estimated_hours=c_credits * hours_per_credit,
+                        hours_per_week=c_credits * hours_per_credit,
+                        status_badge="LOCKED",
+                        cited_kb_codes=[c],
+                        goal_emphasis=f"Target Mastery: Foundational for {goal.name} (Relevance {rel_score}/3)." if rel_score > 0 else None,
+                        reason=StructuredReason(
+                            intent=f"Mandatory Degree Core Requirement (Semester {sem})",
+                            target_skills=self.course_skills.get(c, []),
+                            why_this=f"Fixed core requirement for {prog_id} Semester {sem} ({c_title}). Locked commitment.",
+                            prerequisite_for=[],
+                            rule_compliance=["Mandatory branch curriculum requirement"]
+                        )
+                    )
+                    sem_req_items.append(future_it)
 
             # 4 Monthly themes
             monthly_themes = [

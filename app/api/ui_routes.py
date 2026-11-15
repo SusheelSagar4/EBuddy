@@ -78,24 +78,34 @@ def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]
         cid = it.get("course_id")
         course = course_repo.get_by_id(cid) if cid else None
         
+        ex_id = it.get("exercise_id")
+        res_id = it.get("resource_id")
+        cited = it.get("cited_kb_codes") or []
+
         status = "draft_for_review"
         credits = 0.0
-        title = "Self-Directed Activity"
         
+        # Determine title
         if course:
             status = getattr(course, "status", "verified")
             credits = float(getattr(course, "credits", 0.0))
             title = course.title
             total_credits += credits
+        elif it.get("title"):
+            title = it.get("title")
+        elif it.get("reason") and isinstance(it.get("reason"), dict) and it["reason"].get("intent"):
+            title = it["reason"]["intent"]
+        else:
+            title = it.get("skill_gap_reason") or "Self-Directed Activity"
 
-        ex_id = it.get("exercise_id")
-        res_id = it.get("resource_id")
+        # Determine kb_code
+        kb_code = cid or ex_id or res_id or (cited[0] if cited else None) or "N/A"
 
         enriched = dict(it)
         enriched["title"] = title
         enriched["credits"] = credits
         enriched["status"] = status
-        enriched["kb_code"] = cid or ex_id or res_id or "N/A"
+        enriched["kb_code"] = kb_code
         enriched_items.append(enriched)
 
     # Group by semester
@@ -103,6 +113,51 @@ def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]
     for it in enriched_items:
         s = it.get("semester_number", 1)
         semesters.setdefault(s, []).append(it)
+
+    # Format multi-semester horizon if semester_blocks present
+    sem_blocks = plan_dict.get("semester_blocks") or []
+    if sem_blocks:
+        formatted_semesters = []
+        overall_credits = 0.0
+        for sb in sem_blocks:
+            s_num = sb.get("semester_number")
+            s_items = [it for it in enriched_items if it.get("semester_number") == s_num]
+            existing_cids = {it.get("course_id") for it in s_items if it.get("course_id")}
+            for block_item in (sb.get("required_courses", []) + sb.get("elective_picks", [])):
+                cid = block_item.get("course_id")
+                if cid and cid not in existing_cids:
+                    course = course_repo.get_by_id(cid)
+                    cr = float(getattr(course, "credits", 4.0)) if course else 4.0
+                    en_it = dict(block_item)
+                    en_it["title"] = course.title if course else (block_item.get("title") or (block_item.get("reason", {}).get("intent") if isinstance(block_item.get("reason"), dict) else None) or "Course")
+                    en_it["credits"] = cr
+                    en_it["status"] = getattr(course, "status", "verified") if course else "draft_for_review"
+                    en_it["kb_code"] = cid
+                    s_items.append(en_it)
+                    existing_cids.add(cid)
+            
+            s_credits = sum(i.get("credits", 0.0) for i in s_items) or float(sb.get("total_credits", 0.0))
+            formatted_semesters.append({
+                "semester_number": s_num,
+                "semester_name": sb.get("semester_name"),
+                "semester_credits": s_credits,
+                "start_date": sb.get("start_date"),
+                "end_date": sb.get("end_date"),
+                "is_indicative": sb.get("is_indicative", False),
+                "items": s_items
+            })
+            overall_credits += s_credits
+        semesters_out = formatted_semesters
+        total_credits = overall_credits
+    else:
+        semesters_out = [
+            {
+                "semester_number": s_num,
+                "semester_credits": sum(i["credits"] for i in s_items),
+                "items": s_items
+            }
+            for s_num, s_items in sorted(semesters.items())
+        ]
 
     # Warnings from validator
     val_report = plan_dict.get("validation_report") or {}
@@ -127,14 +182,7 @@ def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]
         "total_credits": total_credits,
         "warnings": warnings,
         "unachievable_explanations": val_report.get("unachievable_requests", []),
-        "semesters": [
-            {
-                "semester_number": s_num,
-                "semester_credits": sum(i["credits"] for i in s_items),
-                "items": s_items
-            }
-            for s_num, s_items in sorted(semesters.items())
-        ],
+        "semesters": semesters_out,
         "items": enriched_items,
         "pending_proposals": [p.model_dump() for p in pending]
     }
@@ -279,6 +327,15 @@ def get_current_roadmap(student_id: str, goal_id: Optional[str] = Query(None)):
         goal_id = canonicalize_goal_id(goal_id)
 
     plan = plan_service.get_plan(student_id, goal_id)
+    if not plan and goal_id:
+        try:
+            onboarding_service.ensure_student_onboarded(student_id, goal_id)
+            res = roadmap_orchestrator.create_initial_roadmap(student_id, goal_id)
+            plan_dict = res.get("plan", {})
+            return _decorate_plan(plan_dict, student_id)
+        except Exception as e:
+            logger.error(f"Error auto-generating roadmap for requested goal {goal_id}: {e}")
+
     if not plan:
         student = onboarding_service.students.get(student_id)
         if not student:

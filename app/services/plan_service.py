@@ -182,8 +182,7 @@ class PlanService:
     def get_plan(self, student_id: str, goal_id: Optional[str] = None) -> Optional[Plan]:
         if goal_id:
             k = f"{student_id}::{goal_id}"
-            if k in self.plans:
-                return self.plans[k]
+            return self.plans.get(k)
         active_k = self._cache_key(student_id, goal_id)
         if active_k in self.plans:
             return self.plans[active_k]
