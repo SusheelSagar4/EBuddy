@@ -172,3 +172,117 @@ def trigger_reprocessing(student_id: str, req: ReprocessRequest):
         "plan_update": new_plan_info,
         "timestamp": datetime.now().isoformat()
     }
+
+# =============================================================
+# Core to MBA Admin Endpoints (§11 & §14)
+# =============================================================
+
+from app.kb.core_to_mba_repo import core_to_mba_repo
+from app.contracts.core_to_mba import MBAProgramme, MBAAdmissionStat, MBAPracticeItem
+
+class MBAProgrammeUpdateRequest(BaseModel):
+    application_deadline: Optional[str] = None
+    fees: Optional[str] = None
+    verified: Optional[bool] = None
+    verified_by: Optional[str] = None
+
+class MBAAdmissionStatUpdateRequest(BaseModel):
+    cutoff_value: Optional[float] = None
+    verified: Optional[bool] = None
+    verified_by: Optional[str] = None
+
+class MBAPracticeItemUpdateRequest(BaseModel):
+    difficulty: Optional[int] = None
+    reviewed: Optional[bool] = None
+    reviewed_by: Optional[str] = None
+
+@router.get("/mba/programmes")
+def list_mba_programmes(verified_only: bool = False):
+    """
+    Admin View: Lists all MBA programmes with verification status.
+    """
+    progs = list(core_to_mba_repo.programmes.values())
+    if verified_only:
+        progs = [p for p in progs if p.verified]
+    return {"count": len(progs), "programmes": [p.model_dump() for p in progs]}
+
+@router.patch("/mba/programmes/{programme_id}")
+def update_mba_programme(programme_id: str, req: MBAProgrammeUpdateRequest):
+    """
+    Admin Edit: Updates MBA programme deadline, fees, or verification status.
+    Triggers re-processing signal.
+    """
+    prog = core_to_mba_repo.programmes.get(programme_id)
+    if not prog:
+        raise HTTPException(status_code=404, detail="MBA Programme not found.")
+    
+    d = prog.model_dump()
+    if req.application_deadline is not None:
+        d["application_deadline"] = req.application_deadline
+    if req.fees is not None:
+        d["fees"] = req.fees
+    if req.verified is not None:
+        if req.verified and not req.verified_by and not d.get("verified_by"):
+            raise HTTPException(status_code=400, detail="Data Integrity Rule: verified=TRUE requires verified_by with a valid reviewer name.")
+        d["verified"] = req.verified
+    if req.verified_by is not None:
+        d["verified_by"] = req.verified_by
+
+    core_to_mba_repo.programmes[programme_id] = MBAProgramme(**d)
+    return {
+        "status": "success",
+        "action": "updated_and_reprocessed",
+        "programme": core_to_mba_repo.programmes[programme_id].model_dump()
+    }
+
+@router.get("/mba/admission_stats")
+def list_mba_admission_stats():
+    """
+    Admin View: Lists all admission stats and cutoffs.
+    """
+    stats = core_to_mba_repo.admission_stats
+    return {"count": len(stats), "admission_stats": [s.model_dump() for s in stats]}
+
+@router.patch("/mba/admission_stats/{programme_id}/{category}")
+def update_mba_admission_stat(programme_id: str, category: str, req: MBAAdmissionStatUpdateRequest):
+    """
+    Admin Edit: Updates cut-off value or verification.
+    """
+    target = None
+    target_idx = -1
+    for i, s in enumerate(core_to_mba_repo.admission_stats):
+        if s.programme_id == programme_id and s.category.upper() == category.upper():
+            target = s
+            target_idx = i
+            break
+    
+    if not target:
+        raise HTTPException(status_code=404, detail="Admission stat record not found.")
+
+    d = target.model_dump()
+    if req.cutoff_value is not None:
+        d["cutoff_value"] = req.cutoff_value
+    if req.verified is not None:
+        if req.verified and not req.verified_by and not d.get("verified_by"):
+            raise HTTPException(status_code=400, detail="Data Integrity Rule: verified=TRUE requires verified_by with a valid reviewer name.")
+        d["verified"] = req.verified
+    if req.verified_by is not None:
+        d["verified_by"] = req.verified_by
+
+    core_to_mba_repo.admission_stats[target_idx] = MBAAdmissionStat(**d)
+    return {
+        "status": "success",
+        "action": "cutoff_updated",
+        "admission_stat": core_to_mba_repo.admission_stats[target_idx].model_dump()
+    }
+
+@router.get("/mba/practice_items")
+def list_mba_practice_items(reviewed_only: bool = False):
+    """
+    Admin View: Lists diagnostic practice items.
+    """
+    items = list(core_to_mba_repo.practice_items.values())
+    if reviewed_only:
+        items = [it for it in items if it.reviewed]
+    return {"count": len(items), "practice_items": [it.model_dump() for it in items]}
+

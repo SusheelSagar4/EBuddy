@@ -221,3 +221,158 @@ def simulate_goal_pivot(student_id: str, req: GoalPivotSimulationRequest):
             "new_goal": new_goal.model_dump(),
             "weekly_focus": weekly.model_dump()
         }
+
+# =============================================================
+# Core to MBA Simulator Scenarios (§11 & §14)
+# =============================================================
+
+from app.engine.mba_mocks_shortlist import mba_mocks_shortlist_engine
+from app.engine.mba_planner import mba_planner_engine
+from app.engine.mba_conflict_tracker import mba_conflict_tracker_engine
+from app.engine.mba_replan import mba_replan_engine
+
+class StrongVsWeakMockSimulationRequest(BaseModel):
+    mock_1_percentile: float = 99.2
+    mock_2_percentile: float = 82.0
+
+class VerbalGapSimulationRequest(BaseModel):
+    qa_score: float = 92.0
+    varc_score: float = 48.0
+    dilr_score: float = 70.0
+
+@router.post("/{student_id}/scenario/strong-vs-weak-mock")
+def simulate_strong_vs_weak_mock(student_id: str, req: StrongVsWeakMockSimulationRequest):
+    """
+    Core to MBA Scenario 1: Strong vs Weak Mock Calibration.
+    Simulates student taking 2 full-length mocks:
+    - Mock 1: 99.2%ile (High)
+    - Mock 2: 82.0%ile (Lower)
+    Calculates empirical score band (enforcing >= 2 mock rule) and dynamic Reach/Target/Safe tiering.
+    """
+    # 1. State before mock 2 (only 1 mock -> uncalibrated)
+    mba_mocks_shortlist_engine.mock_store[student_id] = []
+    mba_mocks_shortlist_engine.record_mock(
+        student_id=student_id,
+        exam_id="MBA-EX-CAT",
+        mock_name="AIMCAT 2026 Full Mock 1",
+        raw_score=110.0,
+        percentile=req.mock_1_percentile,
+        date_taken="2026-10-01"
+    )
+    band_1 = mba_mocks_shortlist_engine.calculate_score_band(student_id)
+
+    # 2. State after mock 2 (>= 2 mocks -> calibrated band)
+    mba_mocks_shortlist_engine.record_mock(
+        student_id=student_id,
+        exam_id="MBA-EX-CAT",
+        mock_name="CL Prime Full Mock 2",
+        raw_score=72.0,
+        percentile=req.mock_2_percentile,
+        date_taken="2026-10-15"
+    )
+    band_2 = mba_mocks_shortlist_engine.calculate_score_band(student_id)
+    shortlist_2 = mba_mocks_shortlist_engine.generate_shortlist(student_id, category="GEN")
+
+    return {
+        "scenario": "Strong vs Weak Mock Calibration",
+        "student_id": student_id,
+        "single_mock_status": band_1,
+        "two_mocks_calibrated_band": band_2,
+        "updated_shortlist": shortlist_2
+    }
+
+@router.post("/{student_id}/scenario/verbal-gap")
+def simulate_verbal_gap(student_id: str, req: VerbalGapSimulationRequest):
+    """
+    Core to MBA Scenario 2: Verbal-Gap Protocol Activation.
+    Simulates engineer with strong math/quant intuition (92%) but low verbal ability (48%).
+    The planner activates verbal-gap protocol: allocates 45% of hours to daily reading & RC,
+    while treating quant as a confidence-builder rather than over-practising.
+    """
+    plan = mba_planner_engine.generate_plan(
+        student_id=student_id,
+        branch="EE",
+        current_cgpa=8.2,
+        backlogs=0,
+        free_hours_per_week=14.0,
+        total_weeks=16,
+        verbal_gap=True
+    )
+    sample_week = plan["weekly_schedule"][2] # Week 3 (non-exam)
+    return {
+        "scenario": "Verbal-Gap Protocol Activation",
+        "student_id": student_id,
+        "diagnostic_scores": {"QA": req.qa_score, "VARC": req.varc_score, "DILR": req.dilr_score},
+        "verbal_gap_active": plan["verbal_gap_protocol"],
+        "sample_week_hours_budget": sample_week["hours_budget"],
+        "sample_week_focus_goals": sample_week["focus_goals"],
+        "recommended_learning_methods": sample_week["recommended_methods"]
+    }
+
+@router.post("/{student_id}/scenario/placement-clash")
+def simulate_placement_clash(student_id: str):
+    """
+    Core to MBA Scenario 3: Semester 7 End-Sem & Placement Clash with CAT.
+    Simulates academic clash during late November exam weeks (Weeks 14-16).
+    Activates CGPA protection, limits MBA prep to <= 2 hrs/week, and surfaces academic alerts.
+    """
+    clashes = mba_conflict_tracker_engine.get_known_academic_clashes(semester=7)
+    plan = mba_planner_engine.generate_plan(
+        student_id=student_id,
+        branch="EE",
+        current_cgpa=7.8,
+        backlogs=0,
+        free_hours_per_week=14.0,
+        total_weeks=16
+    )
+    exam_week = plan["weekly_schedule"][13] # Week 14 (end-sem)
+    return {
+        "scenario": "Semester End-Sem & Placement Clash Mitigation",
+        "student_id": student_id,
+        "identified_academic_clashes": clashes,
+        "end_sem_week_budget": exam_week["hours_budget"],
+        "end_sem_alert": exam_week["alert"],
+        "end_sem_focus_goals": exam_week["focus_goals"]
+    }
+
+@router.post("/{student_id}/scenario/results-below-target")
+def simulate_results_below_target(student_id: str, percentile: float = 78.5):
+    """
+    Core to MBA Scenario 4: Results Below Target Alternatives.
+    Simulates official exam result falling below top IIM cutoffs (e.g. 78.5%ile).
+    The system delivers non-judgmental alternatives: work-ex route, specialized B-schools, or lateral pivot.
+    """
+    eval_result = mba_replan_engine.evaluate_result(
+        student_id=student_id,
+        exam_id="MBA-EX-CAT",
+        actual_percentile=percentile,
+        category="GEN"
+    )
+    return {
+        "scenario": "Results Below Target Strategic Analysis",
+        "student_id": student_id,
+        "actual_percentile": percentile,
+        "status": eval_result["status"],
+        "recommendation": eval_result["recommendation"],
+        "strategic_actions": eval_result["recommended_actions"],
+        "matching_programmes": eval_result["matching_programmes"]
+    }
+
+@router.post("/{student_id}/scenario/switch-back-to-core")
+def simulate_switch_back_to_core(student_id: str, target_route: str = "core_industry"):
+    """
+    Core to MBA Scenario 5: Lateral Pivot Back to Core Engineering.
+    Simulates student deciding to pivot back to Core Industry / PSU or Core Research.
+    Guarantees 100% evidence preservation and outputs version diff ('what changed and why').
+    """
+    replan_result = mba_replan_engine.switch_back_to_core(
+        student_id=student_id,
+        target_route=target_route,
+        current_plan_version=1,
+        reason="Student decided to prioritize core engineering campus placements."
+    )
+    return {
+        "scenario": "Lateral Switch-Back to Core Engineering",
+        "student_id": student_id,
+        "pivot_result": replan_result
+    }
