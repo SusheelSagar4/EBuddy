@@ -1,0 +1,7 @@
+id,institution_id,programme_name,degree,duration_months,exams_accepted,work_ex_policy,selection_process,application_deadline,fees,official_url,source_url,source_type,retrieved_on,verified,verified_by
+MBA-PG-IIMA,MBA-IN-IIMA,MBA (also referred to as PGP),MBA,24,MBA-EX-CAT,Fresher eligible,CAT + AWT + PI,2026-09-22,,https://www.iima.ac.in,https://www.iima.ac.in,official,2026-11-15,FALSE,
+MBA-PG-IIMC,MBA-IN-IIMC,MBA,MBA,24,MBA-EX-CAT,Fresher eligible,CAT + WAT + PI,2026-09-22,,https://www.iimcal.ac.in,https://www.iimcal.ac.in,official,2026-11-15,FALSE,
+MBA-PG-ISB,MBA-IN-ISB,Post Graduate Programme in Management (PGP),PGP,12,MBA-EX-GMAT,Minimum 24 months work experience,GMAT + Essays + PI,2026-12-01,,https://www.isb.edu,https://www.isb.edu,official,2026-11-15,FALSE,
+MBA-PG-FMS,MBA-IN-FMS,Full-time MBA,MBA,24,MBA-EX-CAT,Fresher eligible,CAT + Extempore + PI,2026-12-15,,https://fms.edu,https://fms.edu,official,2026-11-15,FALSE,
+MBA-PG-XLRI,MBA-IN-XLRI,PGDM (Business Management),PGDM,24,MBA-EX-XAT,Fresher eligible,XAT + GD/PI,2026-12-06,,https://www.xlri.ac.in,https://www.xlri.ac.in,official,2026-11-15,FALSE,
+MBA-PG-DMSIITD,MBA-IN-DMSIITD,MBA,MBA,24,MBA-EX-CAT,Fresher eligible (Engineering degree preferred),CAT + PI,2027-01-31,,https://dms.iitd.ac.in,https://dms.iitd.ac.in,official,2026-11-15,FALSE,

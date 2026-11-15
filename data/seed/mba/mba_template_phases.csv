@@ -1,0 +1,26 @@
+template_id,order,name,share_of_weeks,sections,checkpoint
+MBA-T-CAT12,1,"Foundations: QA basics, reading habit, LR basics",0.25,QA;VARC;DILR,Topic tests of at least 60%
+MBA-T-CAT12,2,"Building: sectional tests, DILR set practice, RC volume",0.25,QA;VARC;DILR,Sectional tests of at least 60%
+MBA-T-CAT12,3,Mocks: full-length mocks with analysis,0.35,QA;VARC;DILR,Mock percentile trend over the last 5 mocks
+MBA-T-CAT12,4,Revision and exam strategy,0.15,QA;VARC;DILR,Final 2 mocks within target band
+MBA-T-CAT6,1,"Foundations: QA basics, reading habit, LR basics",0.25,QA;VARC;DILR,Topic tests of at least 60%
+MBA-T-CAT6,2,"Building: sectional tests, DILR set practice, RC volume",0.25,QA;VARC;DILR,Sectional tests of at least 60%
+MBA-T-CAT6,3,Mocks: full-length mocks with analysis,0.35,QA;VARC;DILR,Mock percentile trend over the last 5 mocks
+MBA-T-CAT6,4,Revision and exam strategy,0.15,QA;VARC;DILR,Final 2 mocks within target band
+MBA-T-CAT3,1,"Foundations: QA basics, reading habit, LR basics",0.25,QA;VARC;DILR,Topic tests of at least 60%
+MBA-T-CAT3,2,"Building: sectional tests, DILR set practice, RC volume",0.25,QA;VARC;DILR,Sectional tests of at least 60%
+MBA-T-CAT3,3,Mocks: full-length mocks with analysis,0.35,QA;VARC;DILR,Mock percentile trend over the last 5 mocks
+MBA-T-CAT3,4,Revision and exam strategy,0.15,QA;VARC;DILR,Final 2 mocks within target band
+MBA-T-XAT1,1,Decision making cases,0.4,Decision Making,Case set accuracy
+MBA-T-XAT1,2,GK static and current affairs reading,0.2,General Knowledge,GK quiz
+MBA-T-XAT1,3,XAT-pattern mocks,0.4,All,Mock score
+MBA-T-SNAP1,1,Speed drills,0.5,All,Timed drill accuracy
+MBA-T-SNAP1,2,SNAP-pattern mocks,0.5,All,Mock score
+MBA-T-GMAT3,1,Diagnostic,0.05,All,Official practice test
+MBA-T-GMAT3,2,Quant and Verbal review,0.35,Quantitative Reasoning;Verbal Reasoning,Section quizzes
+MBA-T-GMAT3,3,Data Insights practice,0.3,Data Insights,Section quizzes
+MBA-T-GMAT3,4,Official practice tests and review,0.3,All,Practice test score
+MBA-T-PI2,1,"Profile story: why MBA, why now, goals",0.25,PI,Story reviewed
+MBA-T-PI2,2,Academic and branch fundamentals revision,0.25,PI,Mock technical questions
+MBA-T-PI2,3,Written ability test practice,0.2,WAT,Essay rubric score
+MBA-T-PI2,4,Mock interviews with feedback,0.3,PI,Rubric score

@@ -1,0 +1,8 @@
+id,branch,action,criterion_improved,effort_hours,timing,course_code,reviewed,reviewed_by
+ACT-01,any,Lead a technical team submodule or society project budget,Leadership,4,Semester 5-6,,TRUE,Prof. R. Sengupta
+ACT-02,any,Complete a core internship framed with quantified business and cost outcomes,Internships,8,Summer Break,,TRUE,Prof. R. Sengupta
+ACT-03,any,Participate in national collegiate business case competition or product hackathon,Projects,6,Semester 6-7,,TRUE,Prof. R. Sengupta
+ACT-04,any,Enrol in institute open elective in Engineering Economics or Cost Management,Academics,3,Semester 5-7,HS3L001,TRUE,Prof. R. Sengupta
+ACT-05,EE,Build an automated energy monitoring or tariff optimization capstone project,Projects,6,Semester 6-8,,TRUE,Prof. S. R. Samantaray
+ACT-06,MM,Conduct a manufacturing scrap reduction or quality audit case study,Projects,6,Semester 6-8,,TRUE,Prof. P. Bhargava
+ACT-07,any,Volunteer as student coordinator for institute placement or corporate relations cell,Leadership,5,Semester 5-7,,TRUE,Prof. R. Sengupta
