@@ -240,16 +240,8 @@ class VerbalGapSimulationRequest(BaseModel):
     varc_score: float = 48.0
     dilr_score: float = 70.0
 
-@router.post("/{student_id}/scenario/strong-vs-weak-mock")
-def simulate_strong_vs_weak_mock(student_id: str, req: StrongVsWeakMockSimulationRequest):
-    """
-    Core to MBA Scenario 1: Strong vs Weak Mock Calibration.
-    Simulates student taking 2 full-length mocks:
-    - Mock 1: 99.2%ile (High)
-    - Mock 2: 82.0%ile (Lower)
-    Calculates empirical score band (enforcing >= 2 mock rule) and dynamic Reach/Target/Safe tiering.
-    """
-    # 1. State before mock 2 (only 1 mock -> uncalibrated)
+@router.post("/{student_id}/scenario/mba/strong-vs-weak-mock")
+def simulate_mba_strong_vs_weak_mock(student_id: str, req: StrongVsWeakMockSimulationRequest = StrongVsWeakMockSimulationRequest()):
     mba_mocks_shortlist_engine.mock_store[student_id] = []
     mba_mocks_shortlist_engine.record_mock(
         student_id=student_id,
@@ -261,7 +253,6 @@ def simulate_strong_vs_weak_mock(student_id: str, req: StrongVsWeakMockSimulatio
     )
     band_1 = mba_mocks_shortlist_engine.calculate_score_band(student_id)
 
-    # 2. State after mock 2 (>= 2 mocks -> calibrated band)
     mba_mocks_shortlist_engine.record_mock(
         student_id=student_id,
         exam_id="MBA-EX-CAT",
@@ -282,13 +273,8 @@ def simulate_strong_vs_weak_mock(student_id: str, req: StrongVsWeakMockSimulatio
     }
 
 @router.post("/{student_id}/scenario/verbal-gap")
-def simulate_verbal_gap(student_id: str, req: VerbalGapSimulationRequest):
-    """
-    Core to MBA Scenario 2: Verbal-Gap Protocol Activation.
-    Simulates engineer with strong math/quant intuition (92%) but low verbal ability (48%).
-    The planner activates verbal-gap protocol: allocates 45% of hours to daily reading & RC,
-    while treating quant as a confidence-builder rather than over-practising.
-    """
+@router.post("/{student_id}/scenario/mba/verbal-gap")
+def simulate_verbal_gap(student_id: str, req: VerbalGapSimulationRequest = VerbalGapSimulationRequest()):
     plan = mba_planner_engine.generate_plan(
         student_id=student_id,
         branch="EE",
@@ -298,7 +284,7 @@ def simulate_verbal_gap(student_id: str, req: VerbalGapSimulationRequest):
         total_weeks=16,
         verbal_gap=True
     )
-    sample_week = plan["weekly_schedule"][2] # Week 3 (non-exam)
+    sample_week = plan["weekly_schedule"][2]
     return {
         "scenario": "Verbal-Gap Protocol Activation",
         "student_id": student_id,
@@ -309,13 +295,8 @@ def simulate_verbal_gap(student_id: str, req: VerbalGapSimulationRequest):
         "recommended_learning_methods": sample_week["recommended_methods"]
     }
 
-@router.post("/{student_id}/scenario/placement-clash")
-def simulate_placement_clash(student_id: str):
-    """
-    Core to MBA Scenario 3: Semester 7 End-Sem & Placement Clash with CAT.
-    Simulates academic clash during late November exam weeks (Weeks 14-16).
-    Activates CGPA protection, limits MBA prep to <= 2 hrs/week, and surfaces academic alerts.
-    """
+@router.post("/{student_id}/scenario/mba/placement-clash")
+def simulate_mba_placement_clash(student_id: str):
     clashes = mba_conflict_tracker_engine.get_known_academic_clashes(semester=7)
     plan = mba_planner_engine.generate_plan(
         student_id=student_id,
@@ -325,7 +306,7 @@ def simulate_placement_clash(student_id: str):
         free_hours_per_week=14.0,
         total_weeks=16
     )
-    exam_week = plan["weekly_schedule"][13] # Week 14 (end-sem)
+    exam_week = plan["weekly_schedule"][13]
     return {
         "scenario": "Semester End-Sem & Placement Clash Mitigation",
         "student_id": student_id,
@@ -336,12 +317,8 @@ def simulate_placement_clash(student_id: str):
     }
 
 @router.post("/{student_id}/scenario/results-below-target")
+@router.post("/{student_id}/scenario/mba/results-below-target")
 def simulate_results_below_target(student_id: str, percentile: float = 78.5):
-    """
-    Core to MBA Scenario 4: Results Below Target Alternatives.
-    Simulates official exam result falling below top IIM cutoffs (e.g. 78.5%ile).
-    The system delivers non-judgmental alternatives: work-ex route, specialized B-schools, or lateral pivot.
-    """
     eval_result = mba_replan_engine.evaluate_result(
         student_id=student_id,
         exam_id="MBA-EX-CAT",
@@ -359,12 +336,8 @@ def simulate_results_below_target(student_id: str, percentile: float = 78.5):
     }
 
 @router.post("/{student_id}/scenario/switch-back-to-core")
+@router.post("/{student_id}/scenario/mba/switch-back-to-core")
 def simulate_switch_back_to_core(student_id: str, target_route: str = "core_industry"):
-    """
-    Core to MBA Scenario 5: Lateral Pivot Back to Core Engineering.
-    Simulates student deciding to pivot back to Core Industry / PSU or Core Research.
-    Guarantees 100% evidence preservation and outputs version diff ('what changed and why').
-    """
     replan_result = mba_replan_engine.switch_back_to_core(
         student_id=student_id,
         target_route=target_route,
@@ -376,3 +349,183 @@ def simulate_switch_back_to_core(student_id: str, target_route: str = "core_indu
         "student_id": student_id,
         "pivot_result": replan_result
     }
+
+# =============================================================================
+# Core to M.Tech Simulation Endpoints (§10)
+# =============================================================================
+
+@router.post("/{student_id}/scenario/mtech/strong-vs-weak-mock")
+def simulate_mtech_strong_vs_weak_mock(student_id: str):
+    from app.engine.gate_readiness_shortlist import gate_readiness_shortlist_engine
+    from app.engine.gate_planner import gate_planner_engine
+
+    student = onboarding_service.students.get(student_id)
+    dept = student.programme_id if student else "BTECH_EE"
+    paper_code = "EE" if "EE" in dept else "MT"
+    cgpa = student.cgpa if student else 7.5
+    backlogs = student.backlogs if student else 0
+
+    mocks_strong = [760.0, 800.0, 830.0]
+    band_strong = gate_readiness_shortlist_engine.compute_predicted_score_band(mocks_strong)
+    shortlist_strong = gate_readiness_shortlist_engine.compute_shortlist_and_tiers(
+        student_branch=dept,
+        student_cgpa=cgpa,
+        backlogs=backlogs,
+        paper_code=paper_code,
+        score_band=band_strong,
+        allow_unverified_demo=True
+    )
+    guidance_strong = gate_planner_engine.generate_weekly_guidance(
+        student_id=student_id,
+        week_num=10,
+        paper_code=paper_code,
+        cgpa=cgpa,
+        backlogs=backlogs,
+        hours_available=16.0,
+        current_course_codes=["EE2L001"] if "EE" in dept else ["ML2L001"],
+        topic_masteries={"SAMPLE-TOPIC-EE-CIRCUITS": 0.85, "SAMPLE-TOPIC-EE-POWER": 0.80},
+        weeks_remaining=8
+    )
+
+    mocks_weak = [510.0, 530.0, 520.0]
+    band_weak = gate_readiness_shortlist_engine.compute_predicted_score_band(mocks_weak)
+    shortlist_weak = gate_readiness_shortlist_engine.compute_shortlist_and_tiers(
+        student_branch=dept,
+        student_cgpa=cgpa,
+        backlogs=backlogs,
+        paper_code=paper_code,
+        score_band=band_weak,
+        allow_unverified_demo=True
+    )
+    guidance_weak = gate_planner_engine.generate_weekly_guidance(
+        student_id=student_id,
+        week_num=10,
+        paper_code=paper_code,
+        cgpa=cgpa,
+        backlogs=backlogs,
+        hours_available=16.0,
+        current_course_codes=["EE2L001"] if "EE" in dept else ["ML2L001"],
+        topic_masteries={"SAMPLE-TOPIC-EE-CIRCUITS": 0.45, "SAMPLE-TOPIC-EE-POWER": 0.40},
+        weeks_remaining=8
+    )
+
+    return {
+        "scenario": "Strong vs Weak Mock Comparison (Same Student Profile)",
+        "student_id": student_id,
+        "branch": dept,
+        "paper_code": paper_code,
+        "plan_strong": {
+            "mock_series": mocks_strong,
+            "predicted_score_band": band_strong.model_dump() if band_strong else None,
+            "shortlist_summary": {
+                "reach_count": len(shortlist_strong.reach),
+                "target_count": len(shortlist_strong.target),
+                "safe_count": len(shortlist_strong.safe),
+                "top_recommendations": shortlist_strong.balanced_recommendation[:3]
+            },
+            "weekly_focus": guidance_strong["weekly_focus_items"]
+        },
+        "plan_weak": {
+            "mock_series": mocks_weak,
+            "predicted_score_band": band_weak.model_dump() if band_weak else None,
+            "shortlist_summary": {
+                "reach_count": len(shortlist_weak.reach),
+                "target_count": len(shortlist_weak.target),
+                "safe_count": len(shortlist_weak.safe),
+                "top_recommendations": shortlist_weak.balanced_recommendation[:3]
+            },
+            "weekly_focus": guidance_weak["weekly_focus_items"]
+        }
+    }
+
+@router.post("/{student_id}/scenario/mtech/placement-clash")
+def simulate_mtech_placement_clash(student_id: str):
+    from app.engine.gate_conflicts_and_tracker import gate_conflicts_and_tracker_engine
+    conflicts = gate_conflicts_and_tracker_engine.detect_conflicts(
+        current_week=7,
+        placement_active=True,
+        placement_window_weeks=(6, 10)
+    )
+    return {
+        "scenario": "Campus Placement vs. GATE Prep Peak Clash",
+        "student_id": student_id,
+        "current_week": 7,
+        "clashes_detected": len(conflicts),
+        "alerts": [c.model_dump() for c in conflicts]
+    }
+
+@router.post("/{student_id}/scenario/result-below-target")
+@router.post("/{student_id}/scenario/mtech/result-below-target")
+def simulate_result_below_target(student_id: str, actual_score: float = 490.0):
+    from app.engine.gate_interview_and_replan import gate_interview_and_replan_engine
+    student = onboarding_service.students.get(student_id)
+    dept = student.programme_id if student else "BTECH_EE"
+    paper = "EE" if "EE" in dept else "MT"
+    cgpa = student.cgpa if student else 7.2
+    backlogs = student.backlogs if student else 0
+
+    replan = gate_interview_and_replan_engine.replan_post_result(
+        student_id=student_id,
+        actual_score=actual_score,
+        actual_rank=2850,
+        paper_code=paper,
+        category="GEN",
+        branch=dept,
+        cgpa=cgpa,
+        backlogs=backlogs
+    )
+    return {
+        "scenario": "Official GATE Result Below Initial Target Programmes",
+        "result_data": replan
+    }
+
+@router.post("/{student_id}/scenario/route-switch-psu")
+@router.post("/{student_id}/scenario/mtech/route-switch-psu")
+def simulate_route_switch_psu(student_id: str):
+    from app.engine.gate_interview_and_replan import gate_interview_and_replan_engine
+    states = diagnostic_service.skill_states.get(student_id, [])
+    ev_count = len(states) if states else 8
+
+    switch_data = gate_interview_and_replan_engine.switch_route(
+        student_id=student_id,
+        from_route="ROUTE_MTECH_INDIA",
+        to_route="ROUTE_PSU_GATE",
+        current_evidence_count=ev_count
+    )
+    return {
+        "scenario": "Route Transition: M.Tech Higher Studies -> PSU Recruitment",
+        "transition": switch_data
+    }
+
+# Dynamic Dispatch for Shared Scenario Endpoints
+@router.post("/{student_id}/scenario/strong-vs-weak-mock")
+def simulate_strong_vs_weak_mock(
+    student_id: str,
+    track: Optional[str] = None,
+    req: Optional[StrongVsWeakMockSimulationRequest] = None
+):
+    if track == "mba" or (req is not None and (req.mock_1_percentile != 99.2 or req.mock_2_percentile != 82.0)):
+        return simulate_mba_strong_vs_weak_mock(student_id, req or StrongVsWeakMockSimulationRequest())
+    if track == "mtech":
+        return simulate_mtech_strong_vs_weak_mock(student_id)
+    student = onboarding_service.students.get(student_id)
+    from app.services.plan_service import plan_service
+    active_plan = plan_service.get_plan(student_id)
+    goal_id = active_plan.goal_id if active_plan else ""
+    if "MBA" in goal_id or "MANAGEMENT" in goal_id:
+        return simulate_mba_strong_vs_weak_mock(student_id, req or StrongVsWeakMockSimulationRequest())
+    return simulate_mtech_strong_vs_weak_mock(student_id)
+
+@router.post("/{student_id}/scenario/placement-clash")
+def simulate_placement_clash(student_id: str, track: Optional[str] = None):
+    if track == "mba":
+        return simulate_mba_placement_clash(student_id)
+    if track == "mtech":
+        return simulate_mtech_placement_clash(student_id)
+    student = onboarding_service.students.get(student_id)
+    from app.services.plan_service import plan_service
+    active_plan = plan_service.get_plan(student_id)
+    goal_id = active_plan.goal_id if active_plan else ""
+    if "MBA" in goal_id or "MANAGEMENT" in goal_id:
+        return simulate_mba_placement_clash(student_id)
+    return simulate_mtech_placement_clash(student_id)

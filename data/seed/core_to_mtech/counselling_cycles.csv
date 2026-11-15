@@ -1,0 +1,3 @@
+id,portal,cycle,round_dates,source_url,source_type,retrieved_on,verified,verified_by
+SAMPLE-COUNSEL-COAP-2027,COAP,2027,"Round 1: 2027-05-12, Round 2: 2027-05-19, Round 3: 2027-05-26, Round 4: 2027-06-02, Round 5: 2027-06-09",https://coap.iitm.ac.in/,official,2026-11-14,FALSE,
+SAMPLE-COUNSEL-CCMT-2027,CCMT,2027,"Round 1: 2027-06-15, Round 2: 2027-06-25, Round 3: 2027-07-05, Special Round: 2027-07-18",https://ccmt.admissions.nic.in/,official,2026-11-14,FALSE,

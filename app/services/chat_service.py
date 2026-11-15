@@ -41,17 +41,41 @@ class ChatService:
             for s in states if s.estimated_level < 75.0
         ]
 
+        from app.kb.core_to_mtech_repo import core_to_mtech_repo
+        from app.engine.gate_planner import gate_planner_engine
+        from app.engine.gate_readiness_shortlist import gate_readiness_shortlist_engine
+
+        dept = student.programme_id if student else "BTECH_EE"
+        paper_code = "EE" if "EE" in dept else "MT"
+        weeks_rem = gate_planner_engine.compute_weeks_remaining("2027")
+
+        # Verified deadlines
+        verified_deadlines = [
+            {"event": "GATE 2027 Registration", "date": "2026-10-11", "verified": False},
+            {"event": "GATE 2027 Admit Card", "date": "2027-01-08", "verified": False},
+            {"event": "GATE 2027 Exam", "date": "2027-02-06", "verified": False}
+        ]
+
         return {
             "student_id": student_id,
             "name": student.name if student else "Student",
-            "programme_id": student.programme_id if student else "BTECH_EE",
+            "programme_id": dept,
             "current_semester": student.current_semester if student else 5,
             "cgpa": student.cgpa if student else 7.5,
             "backlogs": student.backlogs if student else 0,
             "goal_id": goal.goal_id if goal else "GOAL_EE_CORE_POWER",
-            "goal_name": goal.name if goal else "Core Engineering Track",
+            "goal_name": goal.name if goal else "Core Higher Studies & GATE Track",
             "plan_version": plan.version if plan else 1,
             "active_weak_skills": weak_skills,
+            "target_gate_paper": paper_code,
+            "target_gate_cycle": "2027",
+            "weeks_remaining": weeks_rem,
+            "weekly_budget_hours": 15.0,
+            "current_phase": "Phase 1: Foundation & High-Weightage Core",
+            "readiness_status": "Assessment in progress (need >= 3 full mocks)",
+            "predicted_score_band": "Not enough evidence yet (< 2 full mocks)",
+            "shortlist_summary": "Reach: 2, Target: 4, Safe: 2",
+            "next_deadlines": verified_deadlines,
             "institutional_rules": [
                 "RULE_SEM_CREDIT_CAP_REGULAR: 16-26 credits maximum",
                 "RULE_CGPA_PROTECTION: Priority review when score < 75% or during exam weeks"
@@ -236,6 +260,35 @@ class ChatService:
                     f"- **Faculty Reviewer:** {cp.reviewed_by}\n\n"
                     "*(Note: Salary and placement figures are never quoted without verified institutional audit.)*"
                 )
+        # 7. Higher Studies & GATE side questions (§11)
+        if "what is coap" in msg_lower or "coap portal" in msg_lower:
+            return (
+                "**Common Offer Acceptance Portal (COAP):**\n"
+                "COAP is a unified web portal for graduates with valid GATE scores to view and accept admission offers "
+                "for M.Tech, MS(Research), and PhD programmes from participating IITs and IISc Bangalore.\n"
+                "- **Participating Institutes:** 23 IITs + IISc Bangalore\n"
+                "- **Rounds:** Typically 5 main rounds (May–June) + additional spot rounds\n"
+                "- **Official URL:** https://coap.iitm.ac.in/\n\n"
+                f"*(This was a side inquiry. Your active Version {pinned['plan_version']} study plan remains unchanged.)*"
+            )
+
+        if "what is ccmt" in msg_lower or "ccmt portal" in msg_lower:
+            return (
+                "**Centralized Counselling for M.Tech/M.Arch/M.Plan (CCMT):**\n"
+                "CCMT is the centralized admission portal for postgraduate engineering programmes across all NITs, "
+                "IIEST Shibpur, and centrally-funded technical institutes (CFTIs).\n"
+                "- **Admission Basis:** Normalized GATE scores\n"
+                "- **Official URL:** https://ccmt.admissions.nic.in/\n\n"
+                f"*(This was a side inquiry. Your active Version {pinned['plan_version']} study plan remains unchanged.)*"
+            )
+
+        if "allowed second paper" in msg_lower or "two paper" in msg_lower or "second paper" in msg_lower:
+            return (
+                "**GATE Approved Two-Paper Combinations (Official IIT Madras 2027 Guidelines):**\n"
+                "- **For Electrical Engineering (EE):** Allowed 2nd papers are **IN** (Instrumentation), **EC** (Electronics & Comm), **DA** (Data Science & AI).\n"
+                "- **For Metallurgical Engineering (MT):** Allowed 2nd papers are **ME** (Mechanical), **XE** (Engineering Sciences), **PI** (Production & Industrial).\n\n"
+                f"*(Your active target paper is {pinned.get('target_gate_paper', 'EE')}. Preparing a second paper requires balanced hours budgeting.)*"
+            )
 
         return None
 

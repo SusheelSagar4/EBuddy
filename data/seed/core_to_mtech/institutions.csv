@@ -1,0 +1,13 @@
+id,name,type,city,official_url,source_url,source_type,retrieved_on,cycle,verified,verified_by
+SAMPLE-INST-IISc,SAMPLE-Indian Institute of Science Bangalore,IISc,Bengaluru,https://iisc.ac.in,https://iisc.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITB,SAMPLE-IIT Bombay,IIT,Mumbai,https://www.iitb.ac.in,https://www.iitb.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITD,SAMPLE-IIT Delhi,IIT,New Delhi,https://home.iitd.ac.in,https://home.iitd.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITM,SAMPLE-IIT Madras,IIT,Chennai,https://www.iitm.ac.in,https://www.iitm.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITK,SAMPLE-IIT Kanpur,IIT,Kanpur,https://www.iitk.ac.in,https://www.iitk.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITKGP,SAMPLE-IIT Kharagpur,IIT,Kharagpur,https://www.iitkgp.ac.in,https://www.iitkgp.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITR,SAMPLE-IIT Roorkee,IIT,Roorkee,https://www.iitr.ac.in,https://www.iitr.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITG,SAMPLE-IIT Guwahati,IIT,Guwahati,https://www.iitg.ac.in,https://www.iitg.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-IITBBS,SAMPLE-IIT Bhubaneswar,IIT,Bhubaneswar,https://www.iitbbs.ac.in,https://www.iitbbs.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-NITT,SAMPLE-NIT Tiruchirappalli,NIT,Tiruchirappalli,https://www.nitt.edu,https://www.nitt.edu,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-NITK,SAMPLE-NIT Surathkal,NIT,Surathkal,https://www.nitk.ac.in,https://www.nitk.ac.in,official,2026-11-14,2027,FALSE,
+SAMPLE-INST-VNIT,SAMPLE-VNIT Nagpur,NIT,Nagpur,https://vnit.ac.in,https://vnit.ac.in,official,2026-11-14,2027,FALSE,

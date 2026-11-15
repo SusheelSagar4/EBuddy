@@ -1,5 +1,8 @@
 import os
-import yaml
+try:
+    import yaml
+except ImportError:
+    yaml = None
 import importlib.util
 from typing import Dict, Any, List, Optional
 from app.contracts.persona import PersonaSpec
@@ -17,6 +20,8 @@ class PersonaPackage:
         self._load()
 
     def _load(self):
+        if yaml is None:
+            return
         # 1. persona.yaml
         pyaml = os.path.join(self.folder_path, "persona.yaml")
         if os.path.exists(pyaml):

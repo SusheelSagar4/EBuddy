@@ -4,11 +4,14 @@ from app.contracts.student import EvidenceItem, SkillState
 from app.engine.interfaces import ISkillStateUpdater
 
 SOURCE_WEIGHTS = {
-    'course_grade': 1.5,
-    'quiz': 1.2,
-    'diagnostic': 1.0,
-    'exercise': 0.8,
-    'self_declaration': 0.3
+    'official_gate': 1.0,
+    'full_mock': 0.9,
+    'topic_test': 0.8,
+    'course_grade': 0.7,
+    'quiz': 0.7,
+    'diagnostic': 0.7,
+    'exercise': 0.6,
+    'self_declaration': 0.2
 }
 
 class SkillStateUpdater(ISkillStateUpdater):
@@ -25,9 +28,10 @@ class SkillStateUpdater(ISkillStateUpdater):
         for skill_id, items in grouped.items():
             total_weight = 0.0
             weighted_score_sum = 0.0
+            only_self_declared = all(it.source_type == 'self_declaration' for it in items)
 
             for it in items:
-                base_w = SOURCE_WEIGHTS.get(it.source_type, 1.0) * it.reliability
+                base_w = SOURCE_WEIGHTS.get(it.source_type, 0.6) * it.reliability
                 # More attempts slightly penalizes raw score or adjusts confidence
                 attempt_factor = 1.0 / (1.0 + 0.1 * max(0, it.attempts - 1))
                 w = base_w * attempt_factor
@@ -36,8 +40,13 @@ class SkillStateUpdater(ISkillStateUpdater):
 
             if total_weight > 0:
                 est_level = min(100.0, max(0.0, weighted_score_sum / total_weight))
-                # Confidence scales asymptotically with total weight
-                confidence = min(0.99, total_weight / (total_weight + 2.0))
+                # Hard rule (§8.2): Self-declaration alone never reaches mastery
+                if only_self_declared:
+                    est_level = min(40.0, est_level)
+                    confidence = 0.20
+                else:
+                    # Confidence scales asymptotically with total weight
+                    confidence = min(0.99, total_weight / (total_weight + 2.0))
             else:
                 est_level = 0.0
                 confidence = 0.1

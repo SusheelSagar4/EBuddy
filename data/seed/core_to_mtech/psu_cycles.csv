@@ -1,0 +1,8 @@
+id,psu_id,cycle,gate_year_used,application_window,disciplines,past_cutoff,source_url,source_type,retrieved_on,verified,verified_by
+SAMPLE-PCYCLE-01,SAMPLE-PSU-PGCIL,2026,2026,2026-01-15 to 2026-02-28,EE,740.0,https://careers.psu.gov.in/recruitment,official,2026-11-14,FALSE,
+SAMPLE-PCYCLE-02,SAMPLE-PSU-NTPC,2026,2026,2026-02-10 to 2026-03-15,EE,725.0,https://careers.psu.gov.in/recruitment,official,2026-11-14,FALSE,
+SAMPLE-PCYCLE-03,SAMPLE-PSU-SAIL,2026,2026,2026-03-01 to 2026-04-10,MT,580.0,https://careers.psu.gov.in/recruitment,official,2026-11-14,FALSE,
+SAMPLE-PCYCLE-04,SAMPLE-PSU-NALCO,2026,2026,2026-03-15 to 2026-04-25,MT,550.0,https://careers.psu.gov.in/recruitment,official,2026-11-14,FALSE,
+SAMPLE-PCYCLE-05,SAMPLE-PSU-BARC,2026,2026,2025-12-30 to 2026-02-15,"EE,MT",780.0,https://careers.psu.gov.in/recruitment,official,2026-11-14,FALSE,
+SAMPLE-PCYCLE-06,SAMPLE-PSU-IOCL,2026,2026,2026-02-15 to 2026-03-31,"EE,MT",710.0,https://careers.psu.gov.in/recruitment,official,2026-11-14,FALSE,
+SAMPLE-PCYCLE-07,SAMPLE-PSU-DRDO,2026,2026,2026-04-01 to 2026-05-15,"EE,MT",750.0,https://careers.psu.gov.in/recruitment,official,2026-11-14,FALSE,
