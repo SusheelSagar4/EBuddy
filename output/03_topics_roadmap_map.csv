@@ -1,0 +1,16 @@
+﻿topic_id,topic_canonical,raw_topics_included,roadmap_step_ids,roadmap_step_names,roadmap_phase_ids,latest_phase_id,mapping_strength,mapping_notes,prerequisite_topics,count_raw_easy,count_raw_medium,count_raw_hard,count_raw_total,count_unique_problems,count_calibrated_easy,count_calibrated_medium,count_calibrated_hard,count_ambiguous_difficulty,min_problems_for_quiz,quiz_readiness_status
+T01,Arrays & Hashing,Arrays & Hashing,4|6,Arrays|Hashing,P2_DSA_Foundations,P2_DSA_Foundations,FULL,,None,61,88,69,218,200,54,76,63,7,15,READY
+T02,Strings,Strings,5,Strings,P2_DSA_Foundations,P2_DSA_Foundations,FULL,,Arrays & Hashing,54,63,63,180,169,52,51,48,18,15,READY
+T03,Two Pointers & Sliding Window,Two Pointers & Sliding Window,9|10,Two pointers|Sliding window,P3_DSA_Core_Techniques,P3_DSA_Core_Techniques,FULL,,Arrays & Hashing|Strings,14,37,17,68,60,11,29,9,11,15,READY
+T04,Binary Search & Sorting,Binary Search & Sorting,7|8,Sorting|Binary search,P2_DSA_Foundations,P2_DSA_Foundations,FULL,,Arrays & Hashing,12,40,31,83,58,8,16,6,28,15,READY
+T05,Linked List,Linked List,11,Linked lists,P3_DSA_Core_Techniques,P3_DSA_Core_Techniques,FULL,,Arrays & Hashing,11,13,10,34,27,9,6,5,7,15,LIMITED
+T06,Stack & Queue,Stack & Queue,12|13,Stack|Queue & deque,P3_DSA_Core_Techniques,P3_DSA_Core_Techniques,FULL,,Arrays & Hashing|Linked List,8,28,29,65,46,6,9,11,20,15,LIMITED
+T07,Trees & BST,Trees & BST,18|19,Binary trees|BST,P4_Trees_and_Graphs,P4_Trees_and_Graphs,FULL,,Stack & Queue|Backtracking,29,48,26,103,92,28,37,14,13,15,READY
+T08,Heap & Priority Queue,Heap & Priority Queue,20,Heaps,P4_Trees_and_Graphs,P4_Trees_and_Graphs,FULL,,Binary Search & Sorting|Trees & BST,3,23,20,46,25,1,3,2,19,15,INSUFFICIENT
+T09,Dynamic Programming,Dynamic Programming,25|26,DP fundamentals|DP 2D/grids/strings,P5_Dynamic_Programming_and_Practice,P5_Dynamic_Programming_and_Practice,FULL,,Backtracking,14,90,102,206,149,11,34,55,49,15,READY
+T10,Graphs,Graphs,22|23|24,Graphs basics & traversal|Graphs shortest paths & MST|Union-Find,P4_Trees_and_Graphs,P4_Trees_and_Graphs,FULL,,Stack & Queue|Trees & BST,4,58,76,138,101,2,22,42,35,15,READY
+T11,Greedy & Intervals,Greedy & Intervals,17,Greedy,P3_DSA_Core_Techniques,P3_DSA_Core_Techniques,FULL,,Arrays & Hashing|Binary Search & Sorting,6,48,59,113,75,4,8,17,46,15,LIMITED
+T12,Backtracking,Backtracking,14|15,Recursion|Backtracking,P3_DSA_Core_Techniques,P3_DSA_Core_Techniques,FULL,,Recursion,3,42,25,70,43,0,17,4,22,15,READY
+T13,Trie,Trie,21,Tries,P4_Trees_and_Graphs,P4_Trees_and_Graphs,FULL,,Strings|Trees & BST,1,14,10,25,15,1,4,2,8,15,INSUFFICIENT
+T14,Matrix,Matrix,4,Arrays,P2_DSA_Foundations,P2_DSA_Foundations,PARTIAL,Matrix problems are covered under Step 4 (Arrays) in Phase 2,Arrays & Hashing,4,17,0,21,18,2,13,0,3,15,LIMITED
+T15,Math & Bit Manipulation,Bit Manipulation|Math|Math & Bit Manipulation,16,Bit manipulation,P3_DSA_Core_Techniques,P3_DSA_Core_Techniques,PARTIAL,Covers bit manipulation from Step 16 and mathematical problem solving across foundational phases,Arrays & Hashing,35,75,39,149,115,29,39,13,34,15,READY

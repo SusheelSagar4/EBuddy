@@ -1,0 +1,7 @@
+﻿highest_completed_phase_id,highest_completed_phase_order,hackathons_unlocked,competitions_unlocked,max_hackathons_per_recommendation,max_competitions_per_recommendation,total_recommended_set_size,message_to_user
+NONE_YET,0,FALSE,FALSE,0,0,0,"Build your data foundations in spreadsheets, descriptive statistics, and SQL basics; data analytics hackathons and competitions will unlock after completing Phase 1 (DA-PH1 Foundations)."
+DA-PH1,1,TRUE,TRUE,2,2,4,"Foundations complete! You can now participate in beginner-friendly spreadsheet challenges, data wrangling contests, and campus tech fest analytics tracks."
+DA-PH2,2,TRUE,TRUE,3,3,6,"Core SQL and Python mastered! Target multi-table relational querying challenges, pandas wrangling hackathons, and corporate analytics qualifiers."
+DA-PH3,3,TRUE,TRUE,3,3,6,"Cleaning, EDA and visualization skills unlocked! Compete in national datathons, exploratory data analysis sprints, and statistical visualization contests."
+DA-PH4,4,TRUE,TRUE,3,3,6,"BI modeling and advanced SQL unlocked! Ready for corporate decision science challenges, interactive KPI dashboard competitions, and A/B testing hackathons."
+DA-PH5,5,TRUE,TRUE,3,3,6,"Full portfolio and storytelling readiness unlocked! Target flagship corporate hiring challenges, national hackathon grand finales, and executive analytics presentations."
