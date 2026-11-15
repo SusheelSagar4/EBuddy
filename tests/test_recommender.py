@@ -478,3 +478,79 @@ def test_api_recommend_endpoint_validation_errors():
 
     with pytest.raises((ValidationError, HTTPException)):
         RecommendRequest(branch="EE", semester=9, cgpa=8.0)
+
+
+def test_other_eligible_partition_and_neutral_heading():
+    """Verify only score >= MIN_RELEVANCE go into recommendations, rest into other_eligible with neutral heading."""
+    # 1. EE Sem 5: no courses match software engineering role
+    student_5 = {
+        "branch": "EE",
+        "semester": 5,
+        "cgpa": 7.8,
+        "goal": "Software engineering role",
+    }
+    res_5 = recommend(student_5, query="what course should I take this semester")
+    assert len(res_5["recommendations"]) == 0
+    assert len(res_5["other_eligible"]) > 0
+    for r in res_5["other_eligible"]:
+        assert r["score"] < MIN_RELEVANCE
+
+    ans_5, _, _ = explain(res_5, student_5)
+    # Checks requirement: When intent.source is profile_goal, say "your goal (<goal text>)"
+    assert "your goal (Software engineering role)" in ans_5
+    assert "Other eligible electives, not matched to your goal:" in ans_5
+    # Checks requirement: Drop the filler phrase and never describe zero-score as recommended
+    assert "eligible elective matching semester slot criteria" not in ans_5
+    assert "Here are your recommended courses:" not in ans_5
+
+    # 2. EE Sem 7: CS4L003 & CS6L001 match; EC courses do not
+    student_7 = {
+        "branch": "EE",
+        "semester": 7,
+        "cgpa": 8.0,
+        "goal": "Software engineering role",
+    }
+    res_7 = recommend(student_7, query="what course should I take this semester")
+    rec_cids = [r["course_id"] for r in res_7["recommendations"]]
+    other_cids = [r["course_id"] for r in res_7["other_eligible"]]
+
+    assert "CS4L003" in rec_cids
+    assert "CS6L001" in rec_cids
+    assert "EC4L001" in other_cids
+    assert "EC4L002" in other_cids
+
+    for r in res_7["recommendations"]:
+        assert r["score"] >= MIN_RELEVANCE
+    for r in res_7["other_eligible"]:
+        assert r["score"] < MIN_RELEVANCE
+
+    ans_7, _, _ = explain(res_7, student_7)
+    assert "Here are your recommended courses:" in ans_7
+    assert "Other eligible electives, not matched to your goal:" in ans_7
+    assert "eligible elective matching semester slot criteria" not in ans_7
+
+
+def test_resource_punctuation_formatting_clean():
+    """Verify primary resource string formatting cleans stray punctuation like '):.'."""
+    student_mme = {
+        "branch": "MME",
+        "semester": 6,
+        "cgpa": 7.5,
+        "goal": "Materials research",
+    }
+    res = recommend(student_mme, query="what course should I take this semester")
+    ans, _, _ = explain(res, student_mme)
+
+    assert "):." not in ans
+    assert ":." not in ans
+    # Check that MME channel resource ends cleanly
+    assert "channel (browse by course name)." in ans
+
+
+def test_unstemmed_original_words_in_matched_terms():
+    """Verify user-facing matched_terms display original words rather than stems."""
+    scored = score_courses(["CS4L003"], ["artifici", "intelligence"])
+    matched = scored["CS4L003"]["matched_terms"]
+    assert "artifici" not in matched
+    assert "artificial" in matched
+

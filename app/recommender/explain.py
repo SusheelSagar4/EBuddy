@@ -17,6 +17,17 @@ logger = logging.getLogger("ebuddy.recommender.explain")
 COURSE_CODE_PATTERN = re.compile(r"\b([A-Z]{2}\d[A-Z]\d{3})\b")
 
 
+def format_resource_string(primary_res: Optional[Dict[str, str]]) -> str:
+    """Format primary resource title and provider without duplicate names or stray punctuation."""
+    if not primary_res or not primary_res.get("title"):
+        return ""
+    r_title = primary_res["title"].strip().rstrip(" :;,.")
+    r_prov = str(primary_res.get("provider", "NPTEL")).strip()
+    if r_prov and r_prov.lower() not in r_title.lower():
+        return f" Resource: {r_title} ({r_prov})."
+    return f" Resource: {r_title}."
+
+
 def build_deterministic_explanation(result: Dict[str, Any]) -> str:
     """Build a reliable, deterministic explanation template from recommendation results."""
     budget = result.get("credit_budget", {})
@@ -30,10 +41,22 @@ def build_deterministic_explanation(result: Dict[str, Any]) -> str:
     slot_status = budget.get("slot_credit_status", "none")
 
     recs = result.get("recommendations", [])
+    other_eligible = result.get("other_eligible", [])
     no_direct = result.get("no_direct_match", False)
     weak_match = result.get("weak_match", False)
     rejected = result.get("rejected", [])
     future_options = result.get("future_options", [])
+
+    intent = result.get("intent", {})
+    intent_source = intent.get("source", "query")
+    intent_text = str(intent.get("text", "") or "").strip()
+
+    if intent_source == "profile_goal":
+        target_desc = f"your goal ({intent_text})" if intent_text else "your goal"
+        other_heading = "Other eligible electives, not matched to your goal:"
+    else:
+        target_desc = "your query"
+        other_heading = "Other eligible electives, not matched to your query:"
 
     lines: List[str] = []
 
@@ -61,8 +84,8 @@ def build_deterministic_explanation(result: Dict[str, Any]) -> str:
             f"needed for {open_slots} open slots. You may need Faculty Advisor approval for a credit overload."
         )
 
-    # 2. Recommendations list
-    if not recs:
+    # 2. Recommendations list and other eligible
+    if not recs and not other_eligible:
         lines.append("No elective courses could be recommended for your profile this semester.")
         if rejected:
             reasons_sample = [f"- **{r['course_id']}**: {r['reason']}" for r in rejected[:5]]
@@ -72,45 +95,46 @@ def build_deterministic_explanation(result: Dict[str, Any]) -> str:
         )
         return "\n\n".join(lines)
 
-    if no_direct:
-        lines.append("Note: No direct matches were found for your query. Here are the eligible elective courses for this semester:")
-    elif weak_match:
-        lines.append(
-            "Note: No slot courses strongly match your focus area (relevance scores below 0.20), "
-            "but here are the available electives for this semester:"
-        )
-    else:
+    if recs:
         lines.append("Here are your recommended courses:")
+        for r in recs:
+            cid = r["course_id"]
+            code = r["course_code"]
+            title = r["title"]
+            cr = r["credits"]
+            matched_skills = r.get("matched_skills", [])
+            matched_terms = r.get("matched_terms", [])
+            res_str = format_resource_string(r.get("primary_resource"))
 
-    for r in recs:
-        cid = r["course_id"]
-        code = r["course_code"]
-        title = r["title"]
-        cr = r["credits"]
-        matched_skills = r.get("matched_skills", [])
-        matched_terms = r.get("matched_terms", [])
-        primary_res = r.get("primary_resource")
-
-        if matched_skills:
-            reason_str = f"teaches {', '.join(matched_skills)}"
-        elif matched_terms:
-            reason_str = f"covers topics in {', '.join(matched_terms)}"
-        else:
-            reason_str = "eligible elective matching semester slot criteria"
-
-        res_str = ""
-        if primary_res and primary_res.get("title"):
-            r_title = primary_res["title"].strip()
-            r_prov = str(primary_res.get("provider", "NPTEL")).strip()
-            # Clean duplicate provider e.g. "(NPTEL) (NPTEL)"
-            if r_prov.lower() in r_title.lower():
-                res_str = f" Resource: {r_title}."
+            if matched_skills:
+                reason_str = f"teaches {', '.join(matched_skills)}"
+            elif matched_terms:
+                reason_str = f"covers topics in {', '.join(matched_terms)}"
             else:
-                res_str = f" Resource: {r_title} ({r_prov})."
+                reason_str = "recommended elective"
 
-        # Avoid duplicating course code
-        disp_code = f"{cid}" if code == cid else f"{cid} ({code})"
-        lines.append(f"- **{disp_code}**: {title} ({cr:.1f} cr) – {reason_str}.{res_str}")
+            disp_code = f"{cid}" if code == cid else f"{cid} ({code})"
+            lines.append(f"- **{disp_code}**: {title} ({cr:.1f} cr) – {reason_str}.{res_str}")
+    else:
+        # No courses met MIN_RELEVANCE
+        if no_direct:
+            lines.append(f"Note: No direct matches were found for {target_desc}.")
+        elif weak_match:
+            lines.append(
+                f"Note: No slot courses strongly match {target_desc} (relevance scores below 0.20)."
+            )
+
+    # 2b. Other eligible electives (neutral listing for courses not matching goal)
+    if other_eligible:
+        lines.append(other_heading)
+        for r in other_eligible:
+            cid = r["course_id"]
+            code = r["course_code"]
+            title = r["title"]
+            cr = r["credits"]
+            res_str = format_resource_string(r.get("primary_resource"))
+            disp_code = f"{cid}" if code == cid else f"{cid} ({code})"
+            lines.append(f"- **{disp_code}**: {title} ({cr:.1f} cr).{res_str}")
 
     # 3. Future options from later semesters
     if future_options:
@@ -126,7 +150,7 @@ def build_deterministic_explanation(result: Dict[str, Any]) -> str:
             f_disp = f_cid if f_code == f_cid else f"{f_cid} ({f_code})"
             lines.append(f"- **{f_disp}**: {f_title} [Sem {f_sem}, {f_cr:.1f} cr]{pr_note}")
 
-    if no_direct:
+    if not recs or no_direct:
         lines.append("What specific topics or elective areas would you prefer to focus on?")
 
     return "\n\n".join(lines)
@@ -149,6 +173,20 @@ def explain(
     # 2. Extract allowed course codes for the hallucination guard
     allowed_identifiers: Set[str] = set()
     for r in result.get("recommendations", []):
+        cid = r.get("course_id", "")
+        code = r.get("course_code", "")
+        if cid:
+            allowed_identifiers.add(cid)
+            m = COURSE_CODE_PATTERN.search(cid)
+            if m:
+                allowed_identifiers.add(m.group(1))
+        if code:
+            allowed_identifiers.add(code)
+            m = COURSE_CODE_PATTERN.search(code)
+            if m:
+                allowed_identifiers.add(m.group(1))
+
+    for r in result.get("other_eligible", []):
         cid = r.get("course_id", "")
         code = r.get("course_code", "")
         if cid:
@@ -199,6 +237,7 @@ def explain(
         "intent": result.get("intent", {}),
         "credit_budget": budget_slim,
         "recommendations": result.get("recommendations", []),
+        "other_eligible": result.get("other_eligible", []),
         "future_options": result.get("future_options", []),
         "rejected": result.get("rejected", [])[:8],
         "no_direct_match": result.get("no_direct_match", False),
@@ -208,13 +247,15 @@ def explain(
     system_prompt = (
         "You are EBuddy's academic advisor for IIT Bhubaneswar students.\n"
         "STRICT RULES:\n"
-        "1. Recommend ONLY courses present in the recommendations shortlist and cite each exact course_id.\n"
-        "2. Provide a 1-2 sentence reason for each course using matched_skills and matched_terms.\n"
-        "3. State the credit math once: the limit, core credits, open slots, and remaining headroom.\n"
-        "4. If no_direct_match or weak_match is true, clearly state that no courses strongly matched and ask what they want to focus on.\n"
-        "5. Mention any relevant upcoming electives from future_options.\n"
-        "6. If the recommendations list is empty, explain using the rejected reasons and suggest what could change.\n"
-        "7. NEVER invent or mention any course codes, credits, or prerequisites not present in the payload."
+        "1. Recommend ONLY courses present in recommendations and cite each exact course_id.\n"
+        "2. Provide a 1-2 sentence reason for each recommended course using matched_skills and matched_terms.\n"
+        "3. Never describe courses in other_eligible as recommended or matched to the student's goal; present them neutrally under 'Other eligible electives, not matched to your goal'.\n"
+        "4. When intent.source is profile_goal, refer to 'your goal (<goal text>)' instead of 'your query'.\n"
+        "5. State the credit math once: the limit, core credits, open slots, and remaining headroom.\n"
+        "6. If no_direct_match or weak_match is true, clearly state that no courses strongly matched the student's goal and ask what they want to focus on.\n"
+        "7. Mention any relevant upcoming electives from future_options.\n"
+        "8. If recommendations is empty, explain neutrally using other_eligible and suggest what could change.\n"
+        "9. NEVER invent or mention any course codes, credits, or prerequisites not present in the payload."
     )
 
     messages = [

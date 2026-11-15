@@ -230,11 +230,13 @@ def recommend(student: Dict[str, Any], query: Optional[str] = None, top_k: int =
     # Stable sort: score descending, tie-break by course_id ascending
     survivor_items.sort(key=lambda x: (-x["score"], x["course_id"]))
 
-    recommendations = survivor_items[:top_k]
+    rec_candidates = [x for x in survivor_items if x["score"] >= MIN_RELEVANCE]
+    recommendations = rec_candidates[:top_k]
+    other_eligible = [x for x in survivor_items if x not in recommendations]
 
-    best_score = recommendations[0]["score"] if recommendations else 0.0
-    no_direct_match = len(recommendations) == 0 or all(r["score"] == 0.0 for r in recommendations)
-    weak_match = len(recommendations) == 0 or best_score < MIN_RELEVANCE
+    best_score = survivor_items[0]["score"] if survivor_items else 0.0
+    no_direct_match = len(survivor_items) == 0 or all(r["score"] == 0.0 for r in survivor_items)
+    weak_match = len(survivor_items) == 0 or best_score < MIN_RELEVANCE
 
     # 7. Future options from later semesters' slots
     future_slot_candidates: List[Tuple[str, int]] = []
@@ -306,6 +308,7 @@ def recommend(student: Dict[str, Any], query: Optional[str] = None, top_k: int =
         "no_direct_match": no_direct_match,
         "weak_match": weak_match,
         "recommendations": recommendations,
+        "other_eligible": other_eligible,
         "rejected": rejected,
         "future_options": future_options,
     }

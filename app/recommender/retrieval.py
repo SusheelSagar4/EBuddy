@@ -77,6 +77,41 @@ GOAL_EXPANSION: Dict[str, List[str]] = {
 }
 
 
+# Pre-seed canonical unstemmed words for technical/academic terms
+STEM_TO_ORIGINAL: Dict[str, str] = {
+    "artifici": "artificial",
+    "compu": "computing",
+    "programm": "programming",
+    "structur": "structures",
+    "develop": "development",
+    "solidific": "solidification",
+    "simul": "simulation",
+    "crystallographi": "crystallography",
+    "metallurgi": "metallurgy",
+    "thermodynam": "thermodynamics",
+    "communic": "communication",
+    "microelectron": "microelectronics",
+    "semiconductor": "semiconductors",
+    "intellig": "intelligence",
+    "electr": "electrical",
+    "machin": "machines",
+    "process": "processing",
+    "digit": "digital",
+    "circu": "circuits",
+    "optim": "optimization",
+    "dynam": "dynamics",
+}
+
+# Pre-populate STEM_TO_ORIGINAL from GOAL_EXPANSION
+for _cat, _phrases in GOAL_EXPANSION.items():
+    for _phrase in _phrases:
+        for _w in re.findall(r"[a-zA-Z0-9]+", _phrase.lower()):
+            if _w not in STOPWORDS and len(_w) > 1:
+                _st = _w[:-len("ing")] if _w.endswith("ing") and len(_w) > 5 else _w
+                if _st not in STEM_TO_ORIGINAL or len(_w) > len(STEM_TO_ORIGINAL[_st]):
+                    STEM_TO_ORIGINAL[_st] = _w
+
+
 def light_stem(word: str) -> str:
     """Apply rule-based suffix stemming to normalize words without heavy libraries."""
     w = word.lower()
@@ -89,6 +124,11 @@ def light_stem(word: str) -> str:
     return w
 
 
+def unstem(token: str) -> str:
+    """Return the original canonical unstemmed word for a token if known."""
+    return STEM_TO_ORIGINAL.get(token, token)
+
+
 def tokenize(text: str) -> List[str]:
     """Tokenize text into lowercase, stripped, stemmed tokens, filtering out stopwords."""
     if not text or not isinstance(text, str):
@@ -98,7 +138,10 @@ def tokenize(text: str) -> List[str]:
     tokens: List[str] = []
     for w in words:
         if w not in STOPWORDS and len(w) > 1:
-            tokens.append(light_stem(w))
+            st = light_stem(w)
+            tokens.append(st)
+            if st not in STEM_TO_ORIGINAL or len(w) > len(STEM_TO_ORIGINAL[st]):
+                STEM_TO_ORIGINAL[st] = w
     return tokens
 
 
@@ -223,7 +266,7 @@ def score_courses(
         results[cid] = {
             "score": final_score,
             "matched_skills": sorted(set(course_matched_skills)),
-            "matched_terms": sorted(course_matched_terms),
+            "matched_terms": sorted(set(unstem(t) for t in course_matched_terms)),
         }
 
     return results
