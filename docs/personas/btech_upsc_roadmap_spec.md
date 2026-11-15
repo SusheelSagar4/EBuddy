@@ -1,6 +1,6 @@
 # B.Tech UPSC CSE Preparation Roadmap Specification (`btech_upsc`)
 
-This document is the complete, implementation-ready product and full-stack UX specification for integrating the `btech_upsc` persona (`GOAL_UPSC_CSE`) into the `EBuddy` deterministic academic planning engine at IIT Bhubaneswar. It defines the recommendation rules, multi-semester timeline divisions, curriculum slot wiring, resource allocation, and frontend screen bindings for B.Tech Electrical Engineering (`BTECH_EE`) and B.Tech Metallurgical & Materials Engineering (`BTECH_MME`) students across Semesters 1 through 8.
+This document is the complete, implementation-ready product and full-stack UX specification for integrating the `btech_upsc` persona (`GOAL_UPSC_CSE`) into the `EBuddy` deterministic academic planning engine at IIT Bhubaneswar. It defines the recommendation rules, multi-semester timeline divisions, curriculum slot wiring, resource allocation, and frontend screen bindings for B.Tech Electrical Engineering (`BTECH_EE`) and B.Tech Metallurgical & Materials Engineering (`BTECH_MM`) students across Semesters 1 through 8.
 
 ---
 
@@ -20,7 +20,7 @@ EBuddy personalizes the UPSC CSE preparation roadmap through a deterministic, ai
                                                 |
                                                 v
 +-----------------------------------------------------------------------------------------------+
-|                                5-ITEM BASELINE DIAGNOSTIC QUIZ                                 |
+|                           5-ITEM BASELINE FIXED-BLUEPRINT DIAGNOSTIC                          |
 |  - SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR (Items P01-P15, difficulty: [30.0, 70.0])              |
 |  - SKILL_UPSC_CSAT (Items C01-C15, difficulty: [30.0, 70.0])                                   |
 |  - SKILL_UPSC_GS3_ECONOMY (Items E01-E15, difficulty: [30.0, 70.0])                           |
@@ -39,7 +39,7 @@ EBuddy personalizes the UPSC CSE preparation roadmap through a deterministic, ai
 |                            DETERMINISTIC POLICY EVALUATOR (policy.py: R1-R10)                 |
 |  - R1: Workload Overload (Pause Optional & Static, +1 wk shift, preserve 45m CA + 2 ans/day) |
 |  - R2: CGPA Guard (Cap 6h/wk or 3h/wk in Sem1-2; block Summer & Mock phases; show Fallback)   |
-|  - R3: Optional Gate (Force lock-in by Sem 5 for EE / Sem 6 for MME; block optional skills)   |
+|  - R3: Optional Gate (Force lock-in by Sem 5 for EE / Sem 6 for MM; block optional skills)    |
 |  - R4: Baseline Gate (Force NCERT baseline if < 80% completion in Sem >= 3)                   |
 |  - R5: CSAT Remediation (+4h/wk CSAT block, cap answers to 2/wk if CSAT < 80 within 16 wks)  |
 |  - R6: Placement Interplay (Sem 7 floor 6h/wk; post-offer: 20h/wk; unplaced: defer attempt)   |
@@ -52,7 +52,8 @@ EBuddy personalizes the UPSC CSE preparation roadmap through a deterministic, ai
                                                 v
 +-----------------------------------------------------------------------------------------------+
 |                             SYNTHESIZED ROADMAP JSON (Plan.json)                              |
-|  - Validated PlanItems: Milestones, Resources, Curriculum Slot Overlaps, Rule Banners         |
+|  - Validated PlanItems: Milestones, Resources, Curriculum Slot Overlaps                       |
+|  - Policy Check Feedback & Alerts mapped in validation_report.checks and validation_report    |
 +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -76,10 +77,10 @@ EBuddy personalizes the UPSC CSE preparation roadmap through a deterministic, ai
      * Backlog guard: Count of active backlogs $> 0$.
    - When triggered, UPSC weekly study time is capped at **6.0 hours/week** (reduced to **3.0 hours/week** in Semesters 1–2).
    - Milestone progression into `upsc_summer_intensive_y3` and `upsc_prelims_mock_phase` is blocked until academic standing recovers.
-   - The UI surfaces the departmental fallback card: `GOAL_EE_CORE_POWER` for Electrical Engineering or `persona_mme_core_stub` for Metallurgical Engineering.
+   - The UI surfaces the departmental fallback card: `GOAL_EE_CORE_POWER` for Electrical Engineering or `persona_mme_core_stub` for Metallurgical Engineering (`BTECH_MM`).
 
 4. **Diagnostic Benchmarking (`diagnostic.yaml` & `diagnostic_items.csv`):**
-   - The student completes a 5-question baseline assessment sampled across:
+   - The student completes a fixed-blueprint 5-question baseline assessment sampled across:
      * `SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR` (Items P01–P15)
      * `SKILL_UPSC_CSAT` (Items C01–C15)
      * `SKILL_UPSC_GS3_ECONOMY` (Items E01–E15)
@@ -98,7 +99,7 @@ EBuddy personalizes the UPSC CSE preparation roadmap through a deterministic, ai
 |---|---|---|---|
 | **R1** | `workload_overload` | `sem in {6, 7}` AND (`placement_season_active` OR `btp_deadline_within_21d` OR `end_sem_within_14d` OR `weekly_hours < 10`) | Pauses `SKILL_UPSC_OPTIONAL` tasks and new static chapters. Preserves 45 min/day current affairs streak and 2 answers/day (1 answer/day if hours $< 6$). Shifts milestone deadlines by +1 week without marking milestones failed. |
 | **R2** | `cgpa_guard` | `cgpa < 6.50` OR `cgpa_drop_last_sem >= 0.30` OR `active_backlog > 0` | Caps weekly UPSC hours to 6 hrs/wk (3 hrs/wk in Sem 1–2). Blocks `upsc_summer_intensive_y3` and `upsc_prelims_mock_phase`. Displays departmental fallback banner (`GOAL_EE_CORE_POWER` or `persona_mme_core_stub`). Displays `"Not confirmed yet"` for placement cutoff status per Fact `F22`. |
-| **R3** | `optional_gate` | `sem >= 5` (EE) or `sem >= 6` (MME) AND `optional == undecided` | Blocks all `SKILL_UPSC_OPTIONAL` roadmap tasks. Forces milestone `upsc_optional_lock_in`. EE UI displays Electrical Engineering as the primary recommendation (bachelor's level per Fact `F09`). MME UI displays candidate optionals with mandatory `"SME-pending review"` warning (`sme_reviewed=FALSE`). |
+| **R3** | `optional_gate` | `sem >= 5` (EE) or `sem >= 6` (MM) AND `optional == undecided` | Blocks all `SKILL_UPSC_OPTIONAL` roadmap tasks. Forces milestone `upsc_optional_lock_in`. EE UI displays Electrical Engineering as the primary recommendation (bachelor's level per Fact `F09`). `BTECH_MM` UI displays candidate optionals with mandatory `"SME-pending review"` warning (`sme_reviewed=FALSE`). |
 | **R4** | `baseline_gate` | `sem >= 3` AND `ncert_completion < 0.80` (80%) | Blocks `upsc_static_pass1` and all subsequent static reading milestones. Forces milestone `upsc_ncert_baseline`. |
 | **R5** | `csat_remediation` | `csat_avg_last3 < 80` (out of 200) AND `weeks_to_prelims <= 16` | Automatically schedules a mandatory 4 hrs/wk CSAT numerical reasoning block (`RS23`). Reduces Mains answer writing quota to 2 answers per week. Target CSAT benchmark set to 90/200 (Fact `F05`). |
 | **R6** | `placement_interplay` | `sem == 7` AND `placement_registered == true` | During active placement season: Enforces floor of 6 hrs/wk (45 min daily CA + 1 answer/day). Post-placement outcome: If offer secured AND CGPA $\ge 6.50$, Sem 8 target set to 20 hrs/wk and final-year attempt permitted; if unplaced, Sem 8 target set to 25 hrs/wk and engine recommends deferring first attempt to after graduation. |
@@ -129,7 +130,7 @@ EBuddy structures the B.Tech UPSC journey into 4 sequential Phases that synchron
 | Phase Name | Template Phase Share (%) | Target Semesters | Included Milestones (`milestone_slug`) | Target Skills | Entry Gate / Unlock Condition | Concrete Verification Metric | Active Policy Guardrails |
 |---|---|---|---|---|---|---|---|
 | **Phase 1: Orientation, Newspaper Habit & NCERT Foundation** | **UPSC-24:** 15%<br>*(Phase 1: 15%)* | Sem 1–3 | `upsc_orientation_habit`<br>`upsc_ncert_baseline` | `SKILL_UPSC_CURRENT_AFFAIRS`<br>`SKILL_UPSC_GS1_HISTORY_CULTURE`<br>`SKILL_UPSC_GS1_GEOGRAPHY_SOCIETY`<br>`SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR`<br>`SKILL_UPSC_GS3_ECONOMY` | Onboarding profile complete; Age $\ge 21$ projection verified (`R9`) | 60-day newspaper streak at 30+ min/day (max 3 missed days); 1-page syllabus map; 10-year Prelims topic sheet; $\ge 90\%$ NCERT chapters read with 1-page summary notes (`F17`) | `R2` (Cap 3h/wk in Sem 1-2)<br>`R4` (NCERT $\ge 80\%$ required by Sem 3)<br>`R9` (Min age 21 check) |
-| **Phase 2: Core Static Pass 1, Current Affairs System & Optional Lock-In** | **UPSC-24:** 40%<br>*(Phase 2: 25% + Phase 3: 15%)*<br>**UPSC-12:** 40%<br>*(Phase 1: 30% + Phase 2: 10%)* | Sem 4–5 | `upsc_static_pass1`<br>`upsc_optional_lock_in`<br>`upsc_current_affairs_system` | `SKILL_UPSC_GS1_HISTORY_CULTURE`<br>`SKILL_UPSC_GS1_GEOGRAPHY_SOCIETY`<br>`SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR`<br>`SKILL_UPSC_GS3_ECONOMY`<br>`SKILL_UPSC_GS3_STI_ENV_SECURITY`<br>`SKILL_UPSC_OPTIONAL`<br>`SKILL_UPSC_CURRENT_AFFAIRS` | Phase 1 verified; NCERT completion $\ge 80\%$ (`R4`); CGPA $\ge 6.50$ (`R2`) | 6 core books read once (Polity, Modern History, Art & Culture, Economy, Geography, Environment); $\ge 20$ PYQs per subject at $\ge 60\%$ accuracy; 90-day CA streak at 45+ min/day; $\ge 3$ monthly compilations mapped; 1 optional logged with $\ge 3$ PYQ papers analyzed | `R1` (Workload monitor)<br>`R2` (CGPA $\ge 6.50$ floor)<br>`R3` (Optional locked by Sem 5 EE / Sem 6 MME)<br>`R4` (Baseline gate) |
+| **Phase 2: Core Static Pass 1, Current Affairs System & Optional Lock-In** | **UPSC-24:** 40%<br>*(Phase 2: 25% + Phase 3: 15%)*<br>**UPSC-12:** 40%<br>*(Phase 1: 30% + Phase 2: 10%)* | Sem 4–5 | `upsc_static_pass1`<br>`upsc_optional_lock_in`<br>`upsc_current_affairs_system` | `SKILL_UPSC_GS1_HISTORY_CULTURE`<br>`SKILL_UPSC_GS1_GEOGRAPHY_SOCIETY`<br>`SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR`<br>`SKILL_UPSC_GS3_ECONOMY`<br>`SKILL_UPSC_GS3_STI_ENV_SECURITY`<br>`SKILL_UPSC_OPTIONAL`<br>`SKILL_UPSC_CURRENT_AFFAIRS` | Phase 1 verified; NCERT completion $\ge 80\%$ (`R4`); CGPA $\ge 6.50$ (`R2`) | 6 core books read once (Polity, Modern History, Art & Culture, Economy, Geography, Environment); $\ge 20$ PYQs per subject at $\ge 60\%$ accuracy; 90-day CA streak at 45+ min/day; $\ge 3$ monthly compilations mapped; 1 optional logged with $\ge 3$ PYQ papers analyzed | `R1` (Workload monitor)<br>`R2` (CGPA $\ge 6.50$ floor)<br>`R3` (Optional locked by Sem 5 EE / Sem 6 MM)<br>`R4` (Baseline gate) |
 | **Phase 3: Answer Writing, Ethics/Essay & Summer Intensive** | **UPSC-24:** 20%<br>*(Phase 4: 20%)*<br>**UPSC-12:** 10%<br>*(Phase 4: 10%)* | Sem 6 + Summer | `upsc_answer_writing_foundation`<br>`upsc_summer_intensive_y3` | `SKILL_UPSC_ANSWER_WRITING`<br>`SKILL_UPSC_GS4_ETHICS_CASES`<br>`SKILL_UPSC_ESSAY`<br>`SKILL_UPSC_CSAT`<br>`SKILL_UPSC_OPTIONAL`<br>`SKILL_UPSC_PRELIMS_TESTCRAFT` | Static Pass 1 complete; Optional Subject locked in (`R3`); CGPA $\ge 6.50$ (`R2`) | 30 timed answers ($\ge 5$ per GS paper) rated $\ge 3/5$ on rubric; 5 ethics cases; 2 essays; Summer: $\ge 200$ logged hours ($\ge 120$ hrs if on industrial training); 10 timed CSAT papers averaging $\ge 90/200$; Optional Paper 1 first pass | `R1` (Sem 6 overload pause)<br>`R2` (Blocks summer intensive if CGPA $< 6.5$)<br>`R5` (CSAT check) |
 | **Phase 4: Revision Pass 2, Prelims Mock Sprint & Attempt Decision** | **UPSC-24:** 25%<br>*(Phase 5: 10% + Phase 6: 15%)*<br>**UPSC-12:** 50%<br>*(Phase 3: 25% + Phase 5: 25%)*<br>**UPSC-6:** 100%<br>*(Phase 1: 40% + Phase 2: 20% + Phase 3: 30% + Phase 4: 10%)* | Sem 7–8 | `upsc_revision_pass2_sectionals`<br>`upsc_prelims_mock_phase`<br>*(Conditional:)*<br>`upsc_compressed_static_sprint` | `SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR`<br>`SKILL_UPSC_GS3_ECONOMY`<br>`SKILL_UPSC_CURRENT_AFFAIRS`<br>`SKILL_UPSC_ANSWER_WRITING`<br>`SKILL_UPSC_PRELIMS_TESTCRAFT`<br>`SKILL_UPSC_CSAT` | Summer Intensive complete (or Sprint qualified via `R8`); CGPA $\ge 6.50$ (`R2`) | Pass 2 of core static subjects; 20 sectional tests at $\ge 60\%$; 25 full-length GS-I mocks & 10 CSAT mocks logged with error analysis; GS mock average $\ge \text{cutoff} + \text{buffer}$; CSAT average $\ge 90/200$; Late starters: 12-week sprint at $\ge 15$ hrs/wk | `R1` (Sem 7 overload pause)<br>`R5` (CSAT remediation if $< 80$)<br>`R6` (Placement interplay)<br>`R7` (Attempt decision)<br>`R8` (Late-start deferral)<br>`R10` (Sem 8 exam clash freeze) |
 
@@ -156,7 +157,7 @@ Resource recommendations are keyed to the student's mastery level ($\theta$) acr
 - **Competent ($40.0 \le \theta < 70.0$):** Sourced from `core` tier materials. Assigns standard core reference texts (`RS04`–`RS08`, `RS17`), daily official news wires (`RS10`, `RS11`), and university NPTEL courses (`RS19`, `RS20`, `RS22`).
 - **Proficient / Advanced ($\theta \ge 70.0$):** Sourced from `advanced` tier materials. Assigns official policy documents (`RS09`), administrative reform reports (`RS12`), specialized energy and economic policy courses (`RS21`, `RS25`), and timed test series simulations (`RS02`, `RS15`).
 
-### 3.2 Optional Subject Selection: `BTECH_EE` vs `BTECH_MME`
+### 3.2 Optional Subject Selection: `BTECH_EE` vs `BTECH_MM`
 
 The engine evaluates optional subjects using `data/raw/higher_studies/upsc/optional_catalog.csv` and institutional curriculum slots (`data/raw/institute/institute_curriculum_slots.csv`):
 
@@ -170,7 +171,7 @@ The engine evaluates optional subjects using `data/raw/higher_studies/upsc/optio
 |                                    | - Supported by Breadth Economics electives (Fact F20).       |
 +------------------------------------+-------------------------------------------------------------+
 | B.Tech Metallurgical & Materials   | NO METALLURGY OPTIONAL IN UPSC CSE (Fact F08)               |
-|                                    | Candidates must choose non-metallurgical optionals:         |
+| Engineering (BTECH_MM)             | Candidates must choose non-metallurgical optionals:         |
 |                                    | - Mechanical Engineering: Partial overlap (ME1L002/P001)    |
 |                                    | - Geology: Earth-science overlap (SME Review Pending)       |
 |                                    | - Chemistry / Physics / Maths: Partial 1st-year overlap     |
@@ -188,7 +189,7 @@ The engine evaluates optional subjects using `data/raw/higher_studies/upsc/optio
    - **Breadth Support:** 7 Economics breadth electives provide humanities foundations (`facts.csv:F20`).
    - **Policy Directive:** Locked in by Semester 5 under Rule `R3`.
 
-2. **B.Tech Metallurgical & Materials Engineering (`BTECH_MME` / `BTECH_MM`):**
+2. **B.Tech Metallurgical & Materials Engineering (`BTECH_MM`):**
    - **Verdict:** `NONE` for departmental subject; `PARTIAL` / `UNKNOWN` for candidate alternatives.
    - **Curriculum Constraint:** UPSC CSE does **not** offer Metallurgical Engineering as an optional subject (`facts.csv:F08`).
    - **Candidate Options:**
@@ -196,7 +197,7 @@ The engine evaluates optional subjects using `data/raw/higher_studies/upsc/optio
      * *Geology:* Potential overlap with mineralogy and earth science; requires SME mapping (`data_requests.md:D09`).
      * *Chemistry / Physics / Mathematics:* Partial coverage from common first-year foundational coursework.
      * *Humanities Options (Economics, Philosophy, Psychology):* Supported by institute breadth courses (`facts.csv:F20`).
-   - **Policy Directive:** Locked in by Semester 6 under Rule `R3`. All MME candidate options carry `sme_reviewed=FALSE` and must display the `"SME-pending review"` warning.
+   - **Policy Directive:** Locked in by Semester 6 under Rule `R3`. All `BTECH_MM` candidate options carry `sme_reviewed=FALSE` and must display the `"SME-pending review"` warning.
 
 ### 3.3 Complete Phase-to-Resource Mapping Table (`resources.csv`)
 
@@ -228,7 +229,7 @@ In strict accordance with Anti-Hallucination Rule 2, any resource with `verified
 | **Phase 4** | `SKILL_UPSC_GS3_ECONOMY` | `RS09`: Economic Survey & Union Budget Documents | Ministry of Finance | portal | **TRUE** | `Verified` |
 | **Phase 4** | `SKILL_UPSC_PRELIMS_TESTCRAFT` | `RS13`: Previous Year Question Papers | UPSC | portal | **FALSE** | `Not confirmed yet — confirm edition with mentor` |
 | **Phase 4** | `SKILL_UPSC_PRELIMS_TESTCRAFT` | `RS15`: Commercial Prelims Test Series | Vision / Forum / Insights | test_series | **FALSE** | `Not confirmed yet — confirm edition with mentor` |
-| **Phase 4** | `SKILL_UPSC_ECONOMY` | `RS21`: Economics of Public Policy | NPTEL / IISER Mohali | course | **TRUE** | `Verified` |
+| **Phase 4** | `SKILL_UPSC_GS3_ECONOMY` | `RS21`: Economics of Public Policy | NPTEL / IISER Mohali | course | **TRUE** | `Verified` |
 
 ---
 
@@ -244,7 +245,7 @@ In strict accordance with Anti-Hallucination Rule 2, any resource with `verified
    - **Weekly Hours Slider:** Allocates 6 to 25 hours/week. If CGPA $< 6.50$, slider is locked to max 6 hours/week by Rule `R2`.
 
 2. **Diagnostic Quiz View (`web/src/screens/diagnostic.js`):**
-   - Renders a 5-item adaptive assessment sampled from `diagnostic_items.csv` covering Polity, CSAT, and Economy.
+   - Renders a fixed-blueprint 5-item baseline diagnostic assessment (sampled across Polity, CSAT, and Economy per `diagnostic.yaml` with item difficulties in `[30.0, 70.0]`, rather than item-by-item CAT adaptation).
    - Question cards render item stems, 4 radio options (`A`, `B`, `C`, `D`), and metadata badges:
      * Badge 1: Item ID (`P04`)
      * Badge 2: Skill (`GS2_POLITY_GOVERNANCE_IR`)
@@ -264,7 +265,7 @@ In strict accordance with Anti-Hallucination Rule 2, any resource with `verified
 
 3. **Optional Subject Comparison Card (`R3`):**
    - For `BTECH_EE`: Highlights `Electrical Engineering` with a bright green `STRONG OVERLAP` badge and list of 12 overlapping core courses.
-   - For `BTECH_MME`: Highlights candidate optionals (Mechanical, Geology, Economics) with an amber `SME REVIEW PENDING` warning badge.
+   - For `BTECH_MM`: Highlights candidate optionals (Mechanical, Geology, Economics) with an amber `SME REVIEW PENDING` warning badge.
 
 4. **Sem 8 Viva / Prelims Countdown Banner (`R10`):**
    - When active in Semester 8, renders a persistent countdown timer:
@@ -290,14 +291,17 @@ In strict accordance with Anti-Hallucination Rule 2, any resource with `verified
 
 1. **Simulator & Policy Diff View (`web/src/screens/adapt.js`):**
    - Allows students to simulate academic shocks (e.g. end-sem exam clash, CGPA drop below 6.50, placement registration) and inspect deterministic plan adjustments.
-   - Renders visual alert banners corresponding to triggered rules:
-     * `ALERT_R1_WORKLOAD`: *"Sem 6/7 workload overload detected. Pausing optional tasks; shifting timeline +1 week."*
-     * `ALERT_R2_CGPA_GUARD`: *"CGPA dropped below 6.50 floor. Capping UPSC prep at 6 hrs/week. Review departmental fallback."*
-     * `ALERT_R6_PLACEMENT`: *"Placement season active. Preserving 6 hrs/wk floor until placement outcome."*
-     * `ALERT_R7_ATTEMPT_DECISION`: *"Attempt Decision: Cut-off baseline not confirmed yet. Deferral recommended."*
-     * `ALERT_R8_LATE_START`: *"Late start detected (< 50% static pass 1). Default track: Attempt after graduation."*
-     * `ALERT_R9_AGE_GUARD`: *"Under-21 on 1 August. Earliest eligible exam cycle: 2028."*
-     * `ALERT_R10_EXAM_CLASH`: *"Sem 8 Exam Clash: New syllabus study freezes on 2027-04-22. Capping hours to 10 hrs/wk."*
+   - Renders an **Adaptation Diff Report** comparing plan versions (`v${old_version} -> v${new_version}`):
+     * *Engine Rationale (`diff-explanation`):* Dynamic message explaining why the plan adapted based on rules `R1`–`R10`.
+     * *Added / Remedial Items (`diff-col added-col`):* Lists newly scheduled remedial items (e.g. CSAT numeracy blocks under `R5` or `upsc_compressed_static_sprint` under `R8`).
+     * *Removed / Accelerated Items (`diff-col removed-col`):* Lists paused tasks (e.g. `SKILL_UPSC_OPTIONAL` paused under `R1` or blocked mock phase under `R2`).
+   - General status alerts render with standard semantic alert styling (`alert-warning`, `alert-danger`):
+     * Workload pause alerts under Rule `R1`.
+     * Academic standing cap alerts under Rule `R2` (with departmental fallback navigation).
+     * Placement season floor preservation under Rule `R6`.
+     * Attempt deferral notices under Rule `R7` and Rule `R8`.
+     * Minimum age eligibility notices under Rule `R9`.
+     * Semester 8 exam-clash study freeze notices under Rule `R10`.
 
 2. **Goal Mastery & Evidence Ledger (`web/src/screens/progress.js`):**
    - Visualizes demonstrated competency across the 12 UPSC skills (`skills.csv`).
@@ -309,7 +313,11 @@ In strict accordance with Anti-Hallucination Rule 2, any resource with `verified
 
 ### 5.1 Sample `Plan.json` Response Object
 
-The following JSON payload represents an active, personalized roadmap for a Semester 5 `BTECH_EE` student (`student_id: 24EE01042`) on the `btech_upsc` track. It strictly adheres to `docs/contracts/Plan.json` and `docs/contracts/PlanItem.json` (`additionalProperties: false`, valid enums, complete `StructuredReason` objects, and schema-compliant `ValidationReport`):
+The following JSON payload represents an active, personalized roadmap for a Semester 5 `BTECH_EE` student (`student_id: 24EE01042`) on the `btech_upsc` track. Per `Section 1.2`, a Semester 5 student maps to template `UPSC-12` (minimum 15 hrs/week).
+
+The payload includes items for all active Semester 5 milestones (`upsc_optional_lock_in`, `upsc_current_affairs_system`, and `upsc_static_pass1`), linked syllabus resources, and core course dual-alignment.
+
+> **Banner & Prompt Contract Note:** Because `docs/contracts/Plan.json` defines `additionalProperties: false` with no dedicated `banners` or `prompts` array, policy rule evaluations and warnings are carried inside `validation_report.checks` (e.g. `CGPA_Guard_R2`, `Optional_Gate_R3`, `Age_Eligibility_R9`) and item-level `reason.rule_compliance`. Top-level visual alert banners and optional-subject prompts are rendered dynamically by the UI shell (illustrated in Wireframe 1).
 
 ```json
 {
@@ -326,7 +334,7 @@ The following JSON payload represents an active, personalized roadmap for a Seme
       "resource_id": null,
       "semester_number": 5,
       "scheduled_week": 1,
-      "estimated_hours": 10.0,
+      "estimated_hours": 4.0,
       "reason": {
         "intent": "Lock in UPSC Optional Subject",
         "target_skills": [
@@ -340,6 +348,54 @@ The following JSON payload represents an active, personalized roadmap for a Seme
           "R3:optional_gate",
           "F08:optional_list",
           "F09:optional_level"
+        ]
+      }
+    },
+    {
+      "item_id": "ITEM_MS_05",
+      "item_type": "milestone",
+      "course_id": null,
+      "exercise_id": null,
+      "resource_id": null,
+      "semester_number": 5,
+      "scheduled_week": 1,
+      "estimated_hours": 5.25,
+      "reason": {
+        "intent": "Current affairs 90-day synthesis habit",
+        "target_skills": [
+          "SKILL_UPSC_CURRENT_AFFAIRS"
+        ],
+        "why_this": "Operationalize daily 45-minute national news habit mapped to GS syllabus topics.",
+        "prerequisite_for": [
+          "upsc_revision_pass2_sectionals"
+        ],
+        "rule_compliance": [
+          "RS10:verified_true"
+        ]
+      }
+    },
+    {
+      "item_id": "ITEM_MS_03",
+      "item_type": "milestone",
+      "course_id": null,
+      "exercise_id": null,
+      "resource_id": null,
+      "semester_number": 5,
+      "scheduled_week": 1,
+      "estimated_hours": 5.75,
+      "reason": {
+        "intent": "Core static textbook first pass",
+        "target_skills": [
+          "SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR",
+          "SKILL_UPSC_GS3_ECONOMY"
+        ],
+        "why_this": "Complete foundational coverage of Polity and Economy core texts with PYQ practice.",
+        "prerequisite_for": [
+          "upsc_answer_writing_foundation"
+        ],
+        "rule_compliance": [
+          "R4:baseline_gate",
+          "F05:prelims_pattern"
         ]
       }
     },
@@ -385,7 +441,6 @@ The following JSON payload represents an active, personalized roadmap for a Seme
           "upsc_current_affairs_system"
         ],
         "rule_compliance": [
-          "R1:workload_overload",
           "RS10:verified_true"
         ]
       }
@@ -422,7 +477,7 @@ The following JSON payload represents an active, personalized roadmap for a Seme
         "check_name": "CGPA_Guard_R2",
         "passed": true,
         "severity": "info",
-        "message": "Student CGPA 7.82 exceeds hard floor 6.50 and soft floor 7.00. Standard 12 hrs/wk allocated."
+        "message": "Student CGPA 7.82 exceeds hard floor 6.50 and soft floor 7.00. Standard 15.0 hrs/wk allocated per UPSC-12 template."
       },
       {
         "check_name": "Optional_Gate_R3",
@@ -438,7 +493,7 @@ The following JSON payload represents an active, personalized roadmap for a Seme
       }
     ],
     "messages": [
-      "Plan successfully validated against deterministic policy rules R1-R10 and curriculum slots."
+      "Plan successfully validated against deterministic policy rules R1-R10 and curriculum slots for UPSC-12 template (15 hrs/wk)."
     ]
   },
   "conflict_flag": null,
@@ -458,7 +513,7 @@ The following JSON payload represents an active, personalized roadmap for a Seme
 +==================================================================================================+
 |  ACTIVE TRACK: UPSC Civil Services Examination (GOAL_UPSC_CSE)                                   |
 |  BRANCH: B.Tech Electrical Engineering (EE) | CURRENT SEMESTER: 5 | CGPA: 7.82                   |
-|  TEMPLATE: UPSC-24 (24 Months, Speed: 12 hrs/wk) | TARGET EXAM CYCLE: CSE-2027                   |
+|  TEMPLATE: UPSC-12 (12 Months, Speed: 15 hrs/wk min) | TARGET EXAM CYCLE: CSE-2027               |
 +--------------------------------------------------------------------------------------------------+
 |  [!] PERSISTENT NOTICE: Degree-proof timing not confirmed yet until official CSE-2027 notice    |
 +--------------------------------------------------------------------------------------------------+
@@ -467,7 +522,7 @@ The following JSON payload represents an active, personalized roadmap for a Seme
 
   +----------------------------------------------------------------------------------------------+
   | PHASE 1: Orientation, Newspaper Habit & NCERT Foundation (Sem 1-3)            [100% COMPLETE] |
-  | Progress: [==============================================================================] 15% |
+  | Progress: [==============================================================================] 100% (15% template share achieved) |
   | [x] upsc_orientation_habit: 60-day newspaper streak verified.                                |
   | [x] upsc_ncert_baseline: 90% NCERT chapters completed with 1-page notes.                      |
   +----------------------------------------------------------------------------------------------+
@@ -475,19 +530,18 @@ The following JSON payload represents an active, personalized roadmap for a Seme
   +----------------------------------------------------------------------------------------------+
   | PHASE 2: Core Static Pass 1, CA System & Optional Lock-In (Sem 4-5)              [IN PROGRESS] |
   | Progress: [======================================>.......................................] 22% |
-  | Target Share: 40% | Allocated Hours: 12.0 hrs/wk | B.Tech Workload: HEAVY LAB (EE3P004/005)   |
+  | Target Share: 40% | Allocated Hours: 15.0 hrs/wk | B.Tech Workload: HEAVY LAB (EE3P004/005)   |
   |                                                                                              |
-  | [>] CURRENT MILESTONE: upsc_optional_lock_in (Rule R3 Mandatory Lock-In)                     |
-  |     +--------------------------------------------------------------------------------------+ |
-  |     | OPTIONAL SUBJECT COMPARISON & CURRICULUM OVERLAP:                                    | |
-  |     | Recommended: Electrical Engineering [STRONG OVERLAP - 12 B.Tech Core Courses]        | |
-  |     | Overlapping Core Courses: EE2L001 (Networks), EE3L004 (Power Elec), EE3L007 (Grid)   | |
-  |     | Status: [Confirm Electrical Engineering as Optional]  [Explore Breadth Economics]    | |
-  |     +--------------------------------------------------------------------------------------+ |
-  |                                                                                              |
-  | [*] UPCOMING MILESTONES:                                                                     |
-  |     - upsc_static_pass1: 4 of 6 core texts completed (Polity, Modern History, Economy, Geog) |
-  |     - upsc_current_affairs_system: 90-day streak in progress (Day 42/90)                     |
+  | [>] CURRENT MILESTONES (Active in Sem 5):                                                    |
+  |     1. upsc_optional_lock_in (Rule R3 Mandatory Lock-In):                                    |
+  |        +-----------------------------------------------------------------------------------+ |
+  |        | OPTIONAL SUBJECT PROMPT & CURRICULUM OVERLAP:                                     | |
+  |        | Recommended: Electrical Engineering [STRONG OVERLAP - 12 B.Tech Core Courses]     | |
+  |        | Overlapping Core Courses: EE2L001 (Networks), EE3L004 (Power Elec), EE3L007 (Grid)| |
+  |        | Status: [Confirm Electrical Engineering as Optional]  [Explore Breadth Economics] | |
+  |        +-----------------------------------------------------------------------------------+ |
+  |     2. upsc_current_affairs_system: 90-day streak in progress (Day 42/90)                    |
+  |     3. upsc_static_pass1: 4 of 6 core texts completed (Polity, Modern History, Economy, Geog)|
   +----------------------------------------------------------------------------------------------+
 
   +----------------------------------------------------------------------------------------------+
@@ -517,11 +571,12 @@ The following JSON payload represents an active, personalized roadmap for a Seme
   | Target Skill: SKILL_UPSC_OPTIONAL           |  | [Log Today's 45-min Reading Session]        |
   | [VERIFIED SOURCE]                           |  +---------------------------------------------+
   | Link: https://www.upsc.gov.in/...pdf        |  | [TASK 2] Daily Mains Answer Writing         |
-  +---------------------------------------------+  | Question: "Discuss the role of renewable    |
-  | [RS04] Indian Polity (6th Edition)          |  | grid integration in energy security (GS3)." |
-  | Provider: M. Laxmikanth (McGraw Hill)       |  | Word Limit: 150 words | Time: 10 minutes    |
-  | Type: Core Book                             |  | [Submit Answer for Peer/Mentor Rubric]      |
-  | Target Skill: SKILL_UPSC_GS2_POLITY         |  +---------------------------------------------+
+  +---------------------------------------------+  | Question (example): "Discuss the role of    |
+  | [RS04] Indian Polity                        |  | renewable grid integration in energy        |
+  | Provider: M. Laxmikanth (McGraw Hill)       |  | security (GS3)."                            |
+  | Type: Core Book                             |  | Word Limit: 150 words | Time: 10 minutes    |
+  | Target Skill:                               |  | [Submit Answer for Peer/Mentor Rubric]      |
+  | SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR         |  +---------------------------------------------+
   | [!] NOT CONFIRMED YET - CONFIRM EDITION     |  | [TASK 3] CSAT Baseline Numeracy Sprint      |
   | Note: Edition & syllabus mapping pending.   |  | Resource: RS23 NCERT Mathematics Class 10   |
   +---------------------------------------------+  | Topic: Ratios, Speed-Distance, Averages     |
@@ -537,6 +592,8 @@ The following JSON payload represents an active, personalized roadmap for a Seme
 - `ux_design.md` named in the task prompt does not exist in the repository; mapped cleanly to `docs/UI.md` and `web/src/screens/*.js`.
 - `cutoffs.csv` contains only one cycle with `verified=TRUE` (CSE-2025 General Prelims GS-I: 92.66 / 200); CSE-2024 (87.98) and CSE-2023 (75.41) are marked `verified=FALSE`, which deterministically causes Rule `R7` to output `"Not confirmed yet"` for the cutoff baseline due to requiring at least 2 verified cycles.
 - Degree-proof timing (`D05` / Fact `F10`) is unconfirmed (`verified=FALSE`); the engine and UI strictly display `"Degree-proof timing not confirmed yet until official CSE-2027 notification"` per policy rules.
-- Metallurgy is not an optional subject in UPSC CSE (`facts.csv:F08`); candidate optionals for MME students in `optional_catalog.csv` (Mechanical Engineering, Geology, Chemistry, Physics) are all flagged `sme_reviewed=FALSE` pending curriculum-to-syllabus mapping (`data_requests.md:D09`).
+- Metallurgy is not an optional subject in UPSC CSE (`facts.csv:F08`); candidate optionals for `BTECH_MM` students in `optional_catalog.csv` (Mechanical Engineering, Geology, Chemistry, Physics) are all flagged `sme_reviewed=FALSE` pending curriculum-to-syllabus mapping (`data_requests.md:D09`).
 - Diagnostic test item bank (`diagnostic_items.csv`) contains 45 draft questions across Polity, CSAT, and Economy, all flagged `verified=FALSE` pending subject-matter expert review.
 - Curriculum track assignment (`facts.csv:F21`): The rule assuming Semesters 1 and 3 follow the NEP curriculum while Semesters 5 and 7 follow the 2016–17 pre-NEP curriculum is unconfirmed (`verified=FALSE`, `data_requests.md:D04`).
+- `milestones.csv` contains 10 milestone rows in total (9 regular milestones `upsc_orientation_habit` through `upsc_prelims_mock_phase` plus 1 conditional sprint `upsc_compressed_static_sprint`), whereas the prompt described 10 milestones plus the sprint.
+- `docs/contracts/Plan.json` has `additionalProperties: false` and defines no dedicated `banners` or `alert_banners` field; rule validation messages and warnings are carried in `validation_report.checks` and `validation_report.messages`, and visual banner elements are rendered dynamically by the frontend UI shell as illustrated in the wireframes.
