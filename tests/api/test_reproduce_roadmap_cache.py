@@ -114,3 +114,80 @@ def test_differentiation_same_goal_different_students():
     print(f"Student Sem 5 Semesters: {semesters_5}")
     assert len(semesters_3) > len(semesters_5), "Sem 3 student should have more remaining semesters than Sem 5 student"
     assert d_sem3["total_credits"] > d_sem5["total_credits"], "Sem 3 student should have higher remaining credits"
+
+def test_intent_router_endpoint_and_confirmation():
+    """
+    Acceptance B: Intent Router API test for free text mapping:
+    - Free text query 'I want to do an MBA and crack CAT' -> canonical GOAL_CORE_TO_MBA
+    - Free text query 'crack upsc civil services' -> canonical GOAL_UPSC_CSE
+    - Confirmation sentence with 2-3 alternatives
+    """
+    res1 = client.post("/api/goals/route", json={
+        "student_id": "CONF_STU_EE_POWER_01",
+        "goal_text": "I want to do an MBA and crack CAT"
+    })
+    assert res1.status_code == 200
+    data1 = res1.json()
+    assert data1["goal_id"] == "GOAL_CORE_TO_MBA"
+    assert "MBA" in data1["confirmation_sentence"]
+    assert len(data1["alternatives"]) >= 2
+
+    # Confirmation endpoint persists active goal and returns decorated roadmap
+    conf_res = client.post("/api/goals/confirm", json={
+        "student_id": "CONF_STU_EE_POWER_01",
+        "goal_id": "GOAL_CORE_TO_MBA"
+    })
+    assert conf_res.status_code == 200
+    conf_data = conf_res.json()
+    assert conf_data["goal_id"] == "GOAL_CORE_TO_MBA"
+    assert conf_data["confirmed_goal_id"] == "GOAL_CORE_TO_MBA"
+
+def test_weekly_schedule_endpoint_zero_core_lectures():
+    """
+    Acceptance D: GET /api/roadmap/{student_id}/weekly returns daily tasks with ZERO REQUIRED_COURSE items.
+    """
+    res = client.get("/api/roadmap/CONF_STU_EE_POWER_01/weekly?week_number=1&goal_id=GOAL_CORE_TO_MBA")
+    assert res.status_code == 200
+    data = res.json()
+    daily_tasks = data.get("daily_tasks", [])
+    assert len(daily_tasks) == 7
+    for dt in daily_tasks:
+        assert "Lecture & Theory" not in dt["title"]
+        assert dt["task_type"] != "video_lecture"
+
+def test_student_and_goal_matrix_switching():
+    """
+    Acceptance F: Matrix switching test:
+    - EE sem 3 -> EE sem 5 -> MME sem 5
+    - Power -> MBA -> Startup
+    Verify distinct roadmaps for every switch.
+    """
+    plan_service.plans.clear()
+
+    # 1. EE Sem 3 with Core Power
+    res_ee3 = client.post("/api/roadmap/generate", json={
+        "student_id": "CONF_STU_EE_POWER_03",
+        "goal_id": "GOAL_EE_CORE_POWER"
+    })
+    assert res_ee3.status_code == 200
+    p_ee3 = res_ee3.json()
+
+    # 2. EE Sem 5 with MBA
+    res_ee5_mba = client.post("/api/roadmap/generate", json={
+        "student_id": "CONF_STU_EE_POWER_01",
+        "goal_id": "GOAL_CORE_TO_MBA"
+    })
+    assert res_ee5_mba.status_code == 200
+    p_ee5_mba = res_ee5_mba.json()
+
+    # 3. MME Sem 5 with Startup
+    res_mme5_startup = client.post("/api/roadmap/generate", json={
+        "student_id": "CONF_STU_MME_PROCESS_01",
+        "goal_id": "GOAL_STARTUP_FOUNDER"
+    })
+    assert res_mme5_startup.status_code == 200
+    p_mme5_startup = res_mme5_startup.json()
+
+    # Assert plan IDs are mutually distinct
+    plan_ids = {p_ee3["plan_id"], p_ee5_mba["plan_id"], p_mme5_startup["plan_id"]}
+    assert len(plan_ids) == 3, f"Expected 3 distinct plan IDs, got {plan_ids}"

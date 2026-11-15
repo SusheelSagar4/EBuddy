@@ -498,3 +498,137 @@ tr:hover td {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
+
+/* -----------------------------------------------------------------------------
+   Gantt Timeline Chart & Roadmap v2 Styles
+   ----------------------------------------------------------------------------- */
+.gantt-wrapper {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.gantt-header-row {
+  display: grid;
+  grid-template-columns: 220px repeat(var(--gantt-cols, 6), minmax(200px, 1fr));
+  background: #f8fafc;
+  border-bottom: 2px solid var(--border-light);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.gantt-header-cell {
+  padding: 12px 14px;
+  border-right: 1px solid var(--border-light);
+  text-align: center;
+}
+
+.gantt-header-cell:first-child {
+  text-align: left;
+}
+
+.gantt-lane-row {
+  display: grid;
+  grid-template-columns: 220px repeat(var(--gantt-cols, 6), minmax(200px, 1fr));
+  border-bottom: 1px solid var(--border-light);
+  min-height: 80px;
+}
+
+.gantt-lane-row:last-child {
+  border-bottom: none;
+}
+
+.gantt-lane-label {
+  padding: 14px 16px;
+  background: #fafbfc;
+  border-right: 2px solid var(--border-light);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.gantt-lane-cell {
+  padding: 8px;
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+}
+
+.gantt-bar {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.gantt-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.gantt-bar.bar-academics {
+  background: #f1f5f9;
+  border-left-color: #334155;
+  color: #1e293b;
+}
+
+.gantt-bar.bar-goal-prep {
+  background: #eff6ff;
+  border-left-color: #2563eb;
+  color: #1e40af;
+}
+
+.gantt-bar.bar-practice {
+  background: #f0fdf4;
+  border-left-color: #16a34a;
+  color: #166534;
+}
+
+.gantt-bar.bar-milestones {
+  background: #fffbeb;
+  border-left-color: #d97706;
+  color: #92400e;
+}
+
+.badge-locked {
+  background: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.badge-projected {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px dashed #f59e0b;
+}
+
+.badge-checkpoint {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #facc15;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.btn-outline:hover {
+  background: #f1f5f9;
+}

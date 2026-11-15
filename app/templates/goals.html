@@ -5,7 +5,29 @@
 {% block content %}
 <div class="page-header">
   <h1>Select Target Career / Specialization Goal</h1>
-  <p>Choose an institutional specialization aligned with your branch and interests. Includes cross-branch pathways.</p>
+  <p>Choose an institutional specialization aligned with your branch and interests, or enter your own custom career aspiration below.</p>
+</div>
+
+<!-- Intelligent Goal Intake Section -->
+<div class="card" style="margin-bottom: 28px; padding: 24px; background: #ffffff; border: 2px solid var(--color-accent); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+    <span style="font-size: 1.4rem;">🎯</span>
+    <h2 style="font-size: 1.25rem; color: var(--color-primary); margin: 0;">Intelligent Goal Intake</h2>
+  </div>
+  <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 16px;">
+    State your aspiration in plain language (e.g., <em>"I want to do an MBA and crack CAT"</em>, <em>"crack UPSC civil services"</em>, <em>"core electrical power engineer"</em>, or <em>"found a deep-tech startup"</em>):
+  </p>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <input type="text" id="goal-intake-input" placeholder="e.g. I want to transition to MBA and appear for CAT exam" style="flex: 1; min-width: 280px; padding: 12px 16px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-md); font-size: 1rem;">
+    <button id="btn-route-goal" class="btn btn-primary" type="button" style="padding: 12px 24px; font-weight: 600;">Route My Goal</button>
+  </div>
+  
+  <!-- Interactive Confirmation Box -->
+  <div id="goal-route-feedback" style="margin-top: 16px; display: none;"></div>
+</div>
+
+<div class="page-header" style="margin-bottom: 16px;">
+  <h2 style="font-size: 1.15rem; color: var(--text-secondary);">Or Select From Curated Branch & Cross-Branch Pathways:</h2>
 </div>
 
 <div id="goals-container">

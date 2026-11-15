@@ -4,7 +4,7 @@
    ============================================================================== */
 
 const EBuddy = {
-  // Active student management
+  // Active student & goal management
   getActiveStudentId() {
     return localStorage.getItem("ebuddy_active_student_id") || "CONF_STU_EE_POWER_01";
   },
@@ -12,6 +12,163 @@ const EBuddy = {
   setActiveStudentId(studentId) {
     localStorage.setItem("ebuddy_active_student_id", studentId);
     window.location.reload();
+  },
+
+  getActiveGoalId(studentId) {
+    return localStorage.getItem("ebuddy_active_goal_" + studentId) || "";
+  },
+
+  setActiveGoalId(studentId, goalId) {
+    if (goalId) {
+      localStorage.setItem("ebuddy_active_goal_" + studentId, goalId);
+    }
+  },
+
+  switchRoadmapTab(tab) {
+    const tabs = ['gantt', 'academics', 'today', 'list'];
+    tabs.forEach(t => {
+      const content = document.getElementById(`tab-content-${t}`);
+      const btn = document.getElementById(`tab-btn-${t}`);
+      if (content) content.style.display = (t === tab) ? 'block' : 'none';
+      if (btn) {
+        btn.className = (t === tab) ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
+      }
+    });
+  },
+
+  showItemModal(item) {
+    const modal = document.getElementById("item-modal");
+    const titleEl = document.getElementById("modal-title");
+    const catEl = document.getElementById("modal-category");
+    const bodyEl = document.getElementById("modal-body");
+    if (!modal || !bodyEl) return;
+
+    catEl.textContent = `${item.item_type || 'COURSE'} • Semester ${item.semester_number || 1}`;
+    titleEl.textContent = item.title || item.kb_code;
+
+    const badges = [];
+    if (item.status_badge) badges.push(`<span class="badge badge-info">${item.status_badge}</span>`);
+    if (item.status) badges.push(`<span class="badge badge-${item.status === 'verified' ? 'verified' : 'draft'}">${item.status}</span>`);
+    if (item.is_indicative) badges.push(`<span class="badge badge-warning">Indicative (Assumed)</span>`);
+
+    bodyEl.innerHTML = `
+      <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center;">
+        <span class="badge badge-code">${item.kb_code}</span>
+        ${badges.join(" ")}
+        <span style="font-weight: 700; color: var(--text-secondary); margin-left: auto;">
+          ${item.hours_per_week ? `${item.hours_per_week} hrs/wk` : ''} ${item.credits ? `• ${item.credits} Credits` : ''}
+        </span>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Skill Gap Reason</div>
+        <p style="font-size: 0.95rem; color: var(--text-primary); margin-top: 2px;">
+          ${item.skill_gap_reason || item.reason?.why_this || 'Mandatory degree curriculum requirement'}
+        </p>
+      </div>
+
+      ${item.goal_emphasis ? `
+        <div style="margin-bottom: 14px; background: #eff6ff; border-left: 3px solid #2563eb; padding: 10px 14px; border-radius: var(--radius-sm);">
+          <div style="font-size: 0.8rem; font-weight: 700; color: #1e40af;">GOAL EMPHASIS NOTE</div>
+          <div style="font-size: 0.9rem; color: #1e3a8a; margin-top: 2px;">${item.goal_emphasis}</div>
+        </div>
+      ` : ''}
+
+      <div style="margin-bottom: 14px;">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Rationale & Alignment</div>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 2px;">
+          ${item.reason?.why_this || item.reason?.intent || 'Official curriculum allocation'}
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-light); font-size: 0.85rem;">
+        <div>
+          <span style="color: var(--text-muted);">Cited KB Codes:</span>
+          <div>${(item.cited_kb_codes && item.cited_kb_codes.length) ? item.cited_kb_codes.map(c => `<code>${c}</code>`).join(", ") : `<code>${item.kb_code}</code>`}</div>
+        </div>
+        <div>
+          <span style="color: var(--text-muted);">Rule Compliance:</span>
+          <div>${(item.reason?.rule_compliance && item.reason.rule_compliance.length) ? item.reason.rule_compliance.join("; ") : 'Academic curriculum verified'}</div>
+        </div>
+      </div>
+    `;
+
+    modal.style.display = "flex";
+  },
+
+  setupGoalIntake(inputId, btnId, feedbackId, onConfirmed) {
+    const input = document.getElementById(inputId);
+    const btn = document.getElementById(btnId);
+    const feedback = document.getElementById(feedbackId);
+    if (!input || !btn || !feedback) return;
+
+    btn.onclick = async () => {
+      const text = input.value.trim();
+      if (!text) return alert("Please enter your target goal or aspiration.");
+      const studentId = this.getActiveStudentId();
+
+      btn.disabled = true;
+      btn.textContent = "Routing...";
+      feedback.style.display = "block";
+      feedback.innerHTML = `<div style="color: var(--text-muted);">Analyzing goal intent via Intent Router...</div>`;
+
+      try {
+        const res = await fetch("/api/goals/route", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: studentId, goal_text: text })
+        });
+        const rData = await res.json();
+
+        const confGoal = rData.goal_id || rData.canonical_goal_id || rData.primary_goal_id;
+        const confSentence = rData.confirmation_sentence || `I understood your goal as ${confGoal}. Is that right?`;
+        const alts = (rData.alternatives || []).map(a => a.goal_id || a) || rData.alternative_goal_ids || [];
+
+        feedback.innerHTML = `
+          <div class="alert alert-info" style="border: 2px solid var(--color-accent); padding: 14px 16px;">
+            <div style="font-size: 1.05rem; font-weight: 600; color: var(--color-primary); margin-bottom: 10px;">
+              💬 "${confSentence}"
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <button id="btn-confirm-routed-goal-${btnId}" class="btn btn-sm btn-primary" style="font-weight: 700;">
+                ✓ Yes, Confirm & Build Roadmap (${confGoal})
+              </button>
+            </div>
+            ${alts.length ? `
+              <div style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">
+                Or choose an alternative route:
+                <div style="display: inline-flex; gap: 6px; margin-left: 6px; flex-wrap: wrap;">
+                  ${alts.map(a => `<button type="button" class="btn btn-sm btn-outline alt-choice-btn" data-goal="${a}" style="padding: 2px 8px; font-size: 0.8rem;">${a}</button>`).join(" ")}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        const confirmBtn = document.getElementById(`btn-confirm-routed-goal-${btnId}`);
+        if (confirmBtn) {
+          confirmBtn.onclick = async () => {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = "Generating Roadmap...";
+            await onConfirmed(confGoal);
+          };
+        }
+
+        feedback.querySelectorAll(".alt-choice-btn").forEach(b => {
+          b.onclick = async (e) => {
+            const altGoal = e.target.getAttribute("data-goal");
+            b.disabled = true;
+            await onConfirmed(altGoal);
+          };
+        });
+
+      } catch (e) {
+        feedback.innerHTML = `<div class="alert alert-danger">Routing error: ${e.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = (btnId === "btn-route-goal") ? "Route My Goal" : "Switch Goal";
+      }
+    };
   },
 
   async initNavbar() {
@@ -107,6 +264,22 @@ const EBuddy = {
     const container = document.getElementById("goals-container");
     if (!container) return;
 
+    // Intelligent Goal Intake Setup
+    this.setupGoalIntake("goal-intake-input", "btn-route-goal", "goal-route-feedback", async (goalId) => {
+      try {
+        const buildRes = await fetch("/api/goals/confirm", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: studentId, goal_id: goalId })
+        });
+        if (!buildRes.ok) throw new Error("Failed to confirm goal");
+        this.setActiveGoalId(studentId, goalId);
+        window.location.href = "/roadmap";
+      } catch (e) {
+        alert("Error setting goal: " + e.message);
+      }
+    });
+
     try {
       const sRes = await fetch(`/api/students/${studentId}`);
       const student = await sRes.json();
@@ -114,11 +287,14 @@ const EBuddy = {
 
       const gRes = await fetch(`/api/goals?programme_id=${prog}`);
       const gData = await gRes.json();
+      const activeGoal = this.getActiveGoalId(studentId) || (student.goal_id || "");
 
-      container.innerHTML = (gData.goals || []).map((g, idx) => `
-        <div class="card" style="margin-bottom: 16px; border: 2px solid ${idx === 0 ? 'var(--color-accent)' : 'var(--border-light)'};">
+      container.innerHTML = (gData.goals || []).map((g, idx) => {
+        const isChecked = activeGoal ? (g.goal_id === activeGoal) : (idx === 0);
+        return `
+        <div class="card" style="margin-bottom: 16px; border: 2px solid ${isChecked ? 'var(--color-accent)' : 'var(--border-light)'};">
           <label style="display: flex; gap: 16px; cursor: pointer; align-items: flex-start;">
-            <input type="radio" name="selected_goal" value="${g.goal_id}" ${idx === 0 ? 'checked' : ''} style="margin-top: 6px; width: 18px; height: 18px;">
+            <input type="radio" name="selected_goal" value="${g.goal_id}" ${isChecked ? 'checked' : ''} style="margin-top: 6px; width: 18px; height: 18px;">
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
                 <span class="badge badge-code">${g.goal_id}</span>
@@ -133,7 +309,8 @@ const EBuddy = {
             </div>
           </label>
         </div>
-      `).join("");
+      `;
+      }).join("");
 
       const btn = document.getElementById("btn-build-roadmap");
       if (btn) {
@@ -146,17 +323,18 @@ const EBuddy = {
           btn.textContent = "Building Roadmap with Agent 1...";
 
           try {
-            const buildRes = await fetch("/api/roadmap/generate", {
+            const buildRes = await fetch("/api/goals/confirm", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ student_id: studentId, goal_id: goalId })
             });
             if (!buildRes.ok) throw new Error("Failed to generate plan");
+            this.setActiveGoalId(studentId, goalId);
             window.location.href = "/roadmap";
           } catch (e) {
             alert("Error building roadmap: " + e.message);
             btn.disabled = false;
-            btn.textContent = "Build my roadmap";
+            btn.textContent = "🚀 Build My Roadmap";
           }
         };
       }
@@ -170,24 +348,67 @@ const EBuddy = {
   // ---------------------------------------------------------------------------
   async initRoadmap() {
     const studentId = this.getActiveStudentId();
+    const activeGoalId = this.getActiveGoalId(studentId);
+
+    const ganttContainer = document.getElementById("gantt-chart-container");
+    const academicsContainer = document.getElementById("locked-academics-container");
+    const todayContainer = document.getElementById("today-tasks-container");
     const container = document.getElementById("roadmap-container");
     const warningsEl = document.getElementById("roadmap-warnings");
     const proposalsEl = document.getElementById("roadmap-proposals");
-    if (!container) return;
+    const activeCtxEl = document.getElementById("active-context-display");
+
+    // Quick Goal Switcher setup
+    this.setupGoalIntake("roadmap-quick-goal", "btn-quick-route-goal", "roadmap-quick-feedback", async (goalId) => {
+      try {
+        const buildRes = await fetch("/api/goals/confirm", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: studentId, goal_id: goalId })
+        });
+        if (!buildRes.ok) throw new Error("Failed to switch goal");
+        this.setActiveGoalId(studentId, goalId);
+        window.location.reload();
+      } catch (e) {
+        alert("Error switching goal: " + e.message);
+      }
+    });
 
     try {
-      const res = await fetch(`/api/roadmap/${studentId}`);
+      // 1. Fetch Student Profile
+      const sRes = await fetch(`/api/students/${studentId}`);
+      const student = await sRes.json();
+
+      // 2. Fetch Roadmap
+      const url = `/api/roadmap/${studentId}${activeGoalId ? '?goal_id=' + activeGoalId : ''}`;
+      const res = await fetch(url);
       if (!res.ok) {
-        container.innerHTML = `
-          <div class="card" style="text-align: center; padding: 40px;">
-            <h3>No Roadmap Generated Yet</h3>
-            <p style="color: var(--text-muted); margin: 12px 0;">Build your personalized curriculum roadmap by selecting your target goal.</p>
-            <a href="/goals" class="btn btn-primary">Select Goal & Build Roadmap</a>
-          </div>
-        `;
+        if (ganttContainer) {
+          ganttContainer.innerHTML = `
+            <div class="card" style="text-align: center; padding: 40px;">
+              <h3>No Roadmap Generated Yet</h3>
+              <p style="color: var(--text-muted); margin: 12px 0;">Build your personalized curriculum roadmap by selecting your target goal.</p>
+              <a href="/goals" class="btn btn-primary">Select Goal & Build Roadmap</a>
+            </div>
+          `;
+        }
         return;
       }
       const data = await res.json();
+      if (data.goal_id) {
+        this.setActiveGoalId(studentId, data.goal_id);
+      }
+
+      // Active Context Display
+      if (activeCtxEl) {
+        activeCtxEl.innerHTML = `
+          <span>${student.name || studentId}</span>
+          <span class="badge badge-info" style="margin-left: 6px;">${student.programme_id || ''} Sem ${student.current_semester || ''}</span>
+          <span style="color: var(--text-muted); margin: 0 8px;">•</span>
+          <span>Target Goal: <strong>${data.goal_name || data.goal_id || 'None'}</strong></span>
+          <span class="badge badge-code" style="margin-left: 6px;">${data.goal_id || 'NO_GOAL'}</span>
+        `;
+      }
 
       // Warnings
       if (warningsEl) {
@@ -233,45 +454,272 @@ const EBuddy = {
         }
       }
 
-      // Semesters
-      container.innerHTML = (data.semesters || []).map(sem => `
-        <div class="card" style="margin-bottom: 24px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 12px; margin-bottom: 16px;">
-            <h3 style="font-size: 1.2rem; color: var(--color-primary);">Semester ${sem.semester_number}</h3>
-            <span class="badge badge-info" style="font-size: 0.85rem;">
-              Credits: ${sem.semester_credits}
-            </span>
-          </div>
+      // Flatten items from all semesters for Gantt and Academics
+      const allSemesters = data.semesters || [];
+      const allItems = [];
+      allSemesters.forEach(s => {
+        (s.items || []).forEach(it => {
+          allItems.push({ ...it, semester_number: it.semester_number || s.semester_number });
+        });
+      });
 
-          <div style="display: flex; flex-direction: column; gap: 12px;">
-            ${sem.items.map(it => `
-              <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 14px; background: #fafafa;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
-                  <div>
-                    <span class="badge badge-code" style="font-size: 0.85rem;">${it.kb_code}</span>
-                    <span class="badge badge-${it.status === 'verified' ? 'verified' : 'draft'}">${it.status}</span>
-                    <strong style="font-size: 1.05rem; margin-left: 8px; color: var(--text-primary);">${it.title}</strong>
-                  </div>
-                  <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">${it.credits} Credits</span>
+      // -----------------------------------------------------------------------
+      // TAB 1: RENDER GANTT CHART
+      // -----------------------------------------------------------------------
+      if (ganttContainer) {
+        const numCols = Math.max(1, allSemesters.length);
+        const swimlanes = [
+          {
+            id: "academics",
+            label: "Academics (Degree Core)",
+            desc: "Locked Curriculum Commitments",
+            filter: it => it.item_type === "REQUIRED_COURSE" || it.status_badge === "LOCKED" || it.item_type === "course",
+            barClass: "bar-academics"
+          },
+          {
+            id: "goal_prep",
+            label: "Goal Prep & Electives",
+            desc: "Career & Domain Specialization",
+            filter: it => ["ELECTIVE_PICK", "RESOURCE", "PROJECT", "RESEARCH_TASTER"].includes(it.item_type) && it.status_badge !== "LOCKED",
+            barClass: "bar-goal-prep"
+          },
+          {
+            id: "practice",
+            label: "Practice & Exercises",
+            desc: "Skill Gaps & Problem Drills",
+            filter: it => ["EXERCISE_SET", "exercise"].includes(it.item_type),
+            barClass: "bar-practice"
+          },
+          {
+            id: "milestones",
+            label: "Milestones & Exam Gates",
+            desc: "Assessments & Entrance Dates",
+            filter: it => ["CHECKPOINT", "BUFFER_EXAM_WEEK", "milestone"].includes(it.item_type) || ["CHECKPOINT", "PROJECTED_INDICATIVE"].includes(it.status_badge),
+            barClass: "bar-milestones"
+          }
+        ];
+
+        let ganttHtml = `
+          <div class="gantt-wrapper" style="--gantt-cols: ${numCols};">
+            <!-- Header Row: Semesters -->
+            <div class="gantt-header-row">
+              <div class="gantt-header-cell">Swimlanes / Horizon</div>
+              ${allSemesters.map(s => `
+                <div class="gantt-header-cell">
+                  <div>Semester ${s.semester_number}</div>
+                  <div style="font-size: 0.75rem; font-weight: normal; color: var(--text-muted);">${s.semester_name || ''}</div>
                 </div>
+              `).join("")}
+            </div>
+        `;
 
-                <div style="margin-top: 8px; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;">
-                  <strong>Why this course:</strong> ${it.reason?.why_this || it.reason?.intent || 'Curriculum Requirement'}
-                </div>
-
-                ${it.reason?.target_skills?.length ? `
-                  <div style="margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);">
-                    Skills: ${it.reason.target_skills.map(s => `<code>${s}</code>`).join(", ")}
-                  </div>
-                ` : ''}
+        // Render each swimlane
+        swimlanes.forEach(lane => {
+          ganttHtml += `
+            <div class="gantt-lane-row">
+              <div class="gantt-lane-label">
+                <div>${lane.label}</div>
+                <div style="font-size: 0.75rem; font-weight: normal; color: var(--text-muted);">${lane.desc}</div>
               </div>
-            `).join("")}
+              ${allSemesters.map(s => {
+                const laneItems = (s.items || []).filter(lane.filter);
+                return `
+                  <div class="gantt-lane-cell">
+                    ${laneItems.length ? laneItems.map(it => {
+                      const badgeClass = it.status_badge === 'LOCKED' ? 'badge-locked' :
+                                         it.status_badge === 'PROJECTED_INDICATIVE' ? 'badge-projected' :
+                                         it.status_badge === 'CHECKPOINT' ? 'badge-checkpoint' : 'badge-code';
+                      return `
+                        <div class="gantt-bar ${lane.barClass}" data-item-id="${it.item_id}" title="Click to view complete syllabus and prerequisite evidence">
+                          <div style="display: flex; justify-content: space-between; align-items: center; gap: 4px;">
+                            <span class="badge ${badgeClass}" style="font-size: 0.7rem; padding: 2px 6px;">${it.kb_code}</span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">${it.hours_per_week || it.estimated_hours || 4}h/w</span>
+                          </div>
+                          <div style="font-size: 0.8rem; font-weight: 600; line-height: 1.2; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${it.title}
+                          </div>
+                        </div>
+                      `;
+                    }).join("") : `<span style="color: #cbd5e1; font-size: 0.75rem; text-align: center;">—</span>`}
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          `;
+        });
+
+        ganttHtml += `</div>`;
+        ganttContainer.innerHTML = ganttHtml;
+
+        // Attach click listener for modal
+        ganttContainer.querySelectorAll(".gantt-bar").forEach(el => {
+          el.onclick = () => {
+            const iid = el.getAttribute("data-item-id");
+            const it = allItems.find(x => x.item_id === iid);
+            if (it) EBuddy.showItemModal(it);
+          };
+        });
+      }
+
+      // -----------------------------------------------------------------------
+      // TAB 2: LOCKED ACADEMICS CONTEXT
+      // -----------------------------------------------------------------------
+      if (academicsContainer) {
+        const lockedCourses = allItems.filter(it => it.item_type === "REQUIRED_COURSE" || it.status_badge === "LOCKED");
+        academicsContainer.innerHTML = `
+          <div class="card" style="margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); padding-bottom: 12px;">
+              <span style="font-size: 1.4rem;">🔒</span>
+              <div>
+                <h3 style="color: var(--color-primary); font-size: 1.15rem; margin: 0;">Institutional Curriculum: Mandatory Degree Requirements</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 2px;">
+                  These mandatory degree core courses represent locked institutional commitments. They are displayed for transparent workload accounting and are <strong>never</strong> presented as elective recommendations.
+                </p>
+              </div>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Semester</th>
+                  <th>Course Code</th>
+                  <th>Course Title</th>
+                  <th>Credits</th>
+                  <th>Est. Weekly Study</th>
+                  <th>Status</th>
+                  <th>Goal Emphasis / Mastery Focus</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${lockedCourses.map(c => `
+                  <tr>
+                    <td><strong>Sem ${c.semester_number}</strong></td>
+                    <td><code>${c.kb_code}</code></td>
+                    <td><strong>${c.title}</strong></td>
+                    <td>${c.credits || 4.0}</td>
+                    <td>${c.hours_per_week || 4.0} hrs/wk</td>
+                    <td><span class="badge badge-locked">LOCKED CORE</span></td>
+                    <td style="font-size: 0.85rem; color: var(--text-secondary);">
+                      ${c.goal_emphasis || (c.reason?.intent || 'Mandatory Degree Core Requirement')}
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
           </div>
-        </div>
-      `).join("");
+        `;
+      }
+
+      // -----------------------------------------------------------------------
+      // TAB 3: WEEK 1 DAILY TASKS ("TODAY" VIEW)
+      // -----------------------------------------------------------------------
+      if (todayContainer) {
+        try {
+          const wRes = await fetch(`/api/roadmap/${studentId}/weekly?week_number=1${data.goal_id ? '&goal_id=' + data.goal_id : ''}`);
+          if (wRes.ok) {
+            const wData = await wRes.json();
+            const daily = wData.daily_tasks || [];
+
+            todayContainer.innerHTML = `
+              <div class="card" style="margin-bottom: 24px;">
+                <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 18px;">
+                  <div style="font-weight: 700; color: #166534; font-size: 0.95rem;">
+                    ✓ Zero REQUIRED_COURSE lecture tasks in Daily Plan
+                  </div>
+                  <div style="font-size: 0.85rem; color: #15803d; margin-top: 2px;">
+                    Mandatory academic coursework remains as locked background context. All daily actionable tasks focus strictly on active goal preparation, practice problem sets, critical reading, and exam simulations.
+                  </div>
+                </div>
+
+                <h3 style="color: var(--color-primary); font-size: 1.15rem; margin-bottom: 14px;">
+                  Week 1 Structured Daily Schedule (${data.goal_name || data.goal_id})
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  ${daily.map(d => {
+                    const typeBadge = d.task_type === 'practice_exercise' ? 'badge-verified' :
+                                      d.task_type === 'reading' ? 'badge-info' :
+                                      d.task_type === 'quiz' ? 'badge-draft' : 'badge-code';
+                    return `
+                      <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 14px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                          <div style="font-weight: 700; font-size: 0.9rem; color: var(--color-primary); min-width: 65px;">
+                            Day ${d.day_number}
+                          </div>
+                          <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                              <span class="badge ${typeBadge}">${d.task_type}</span>
+                              <strong style="font-size: 0.95rem; color: var(--text-primary);">${d.title}</strong>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                              Focus Skill: <code>${d.skill_id || 'General Competency'}</code> ${d.exercise_id ? `| Exercise: <code>${d.exercise_id}</code>` : ''}
+                            </div>
+                          </div>
+                        </div>
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">
+                          ${d.estimated_minutes} mins
+                        </div>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+              </div>
+            `;
+          }
+        } catch (we) {
+          todayContainer.innerHTML = `<div class="alert alert-warning">Could not load weekly schedule: ${we.message}</div>`;
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // TAB 4: FULL SEMESTER CARD LIST
+      // -----------------------------------------------------------------------
+      if (container) {
+        container.innerHTML = allSemesters.map(sem => `
+          <div class="card" style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 12px; margin-bottom: 16px;">
+              <div>
+                <h3 style="font-size: 1.2rem; color: var(--color-primary);">Semester ${sem.semester_number}</h3>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">${sem.semester_name || ''}</span>
+              </div>
+              <span class="badge badge-info" style="font-size: 0.85rem;">
+                Credits: ${sem.semester_credits}
+              </span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              ${sem.items.map(it => `
+                <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 14px; background: #fafafa; cursor: pointer;" onclick='EBuddy.showItemModal(${JSON.stringify(it).replace(/'/g, "&#39;")})'>
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <span class="badge badge-code" style="font-size: 0.85rem;">${it.kb_code}</span>
+                      <span class="badge badge-${it.status === 'verified' ? 'verified' : 'draft'}">${it.status}</span>
+                      <span class="badge badge-info">${it.item_type}</span>
+                      <strong style="font-size: 1.05rem; margin-left: 8px; color: var(--text-primary);">${it.title}</strong>
+                    </div>
+                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">${it.credits} Credits</span>
+                  </div>
+
+                  <div style="margin-top: 8px; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;">
+                    <strong>Why this item:</strong> ${it.skill_gap_reason || it.reason?.why_this || it.reason?.intent || 'Curriculum Requirement'}
+                  </div>
+
+                  ${it.reason?.target_skills?.length ? `
+                    <div style="margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);">
+                      Skills: ${it.reason.target_skills.map(s => `<code>${s}</code>`).join(", ")}
+                    </div>
+                  ` : ''}
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `).join("");
+      }
 
     } catch (err) {
-      container.innerHTML = `<div class="alert alert-danger">Error loading roadmap: ${err.message}</div>`;
+      if (ganttContainer) {
+        ganttContainer.innerHTML = `<div class="alert alert-danger">Error loading roadmap: ${err.message}</div>`;
+      }
     }
   },
 

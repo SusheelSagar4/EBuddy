@@ -5,17 +5,75 @@
 {% block content %}
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
   <div>
-    <h1>Academic Curriculum Roadmap</h1>
-    <p>Deterministic semester-by-semester plan produced and committed exclusively by Agent 1 (Roadmap Planner).</p>
+    <h1>Academic Curriculum & Goal Roadmap</h1>
+    <p>Deterministic multi-semester timeline plan produced and committed exclusively by Agent 1 (Roadmap Planner).</p>
   </div>
-  <div id="roadmap-version-badge" style="display: flex; align-items: center;"></div>
+  <div id="roadmap-version-badge" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"></div>
+</div>
+
+<!-- Active Context Bar & Quick Goal Switcher -->
+<div class="card" style="margin-bottom: 20px; background: #f8fafc; border-left: 4px solid var(--color-accent); padding: 16px 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <span style="font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em; color: var(--text-muted); text-transform: uppercase;">Active Profile & Goal:</span>
+      <div id="active-context-display" style="font-size: 1.1rem; font-weight: 700; color: var(--color-primary); margin-top: 2px;">
+        Loading active profile...
+      </div>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <input type="text" id="roadmap-quick-goal" placeholder="Switch goal (e.g. MBA, Core Power, UPSC)..." style="padding: 8px 12px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); font-size: 0.9rem; width: 260px;">
+      <button id="btn-quick-route-goal" class="btn btn-sm btn-secondary" style="font-weight: 600;">Switch Goal</button>
+      <a href="/goals" class="btn btn-sm btn-outline">All Goals</a>
+    </div>
+  </div>
+  <div id="roadmap-quick-feedback" style="margin-top: 12px; display: none;"></div>
 </div>
 
 <div id="roadmap-proposals"></div>
 <div id="roadmap-warnings"></div>
 
-<div id="roadmap-container">
-  <div style="color: var(--text-muted); padding: 40px 0; text-align: center;">Loading academic roadmap...</div>
+<!-- View Switcher Tabs -->
+<div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid var(--border-light); padding-bottom: 8px; flex-wrap: wrap;">
+  <button id="tab-btn-gantt" class="btn btn-sm btn-primary" onclick="EBuddy.switchRoadmapTab('gantt')">📊 Timeline Gantt View</button>
+  <button id="tab-btn-academics" class="btn btn-sm btn-secondary" onclick="EBuddy.switchRoadmapTab('academics')">🔒 Academics (Locked Context)</button>
+  <button id="tab-btn-today" class="btn btn-sm btn-secondary" onclick="EBuddy.switchRoadmapTab('today')">📅 Week 1 Daily Tasks</button>
+  <button id="tab-btn-list" class="btn btn-sm btn-secondary" onclick="EBuddy.switchRoadmapTab('list')">📋 Full Semester List</button>
+</div>
+
+<!-- Tab 1: Gantt Chart -->
+<div id="tab-content-gantt">
+  <div id="gantt-chart-container">
+    <div style="color: var(--text-muted); padding: 40px 0; text-align: center;">Loading interactive Gantt timeline...</div>
+  </div>
+</div>
+
+<!-- Tab 2: Locked Academics -->
+<div id="tab-content-academics" style="display: none;">
+  <div id="locked-academics-container"></div>
+</div>
+
+<!-- Tab 3: Daily Tasks -->
+<div id="tab-content-today" style="display: none;">
+  <div id="today-tasks-container"></div>
+</div>
+
+<!-- Tab 4: Full Semester Card List -->
+<div id="tab-content-list" style="display: none;">
+  <div id="roadmap-container"></div>
+</div>
+
+<!-- Interactive Modal for Item Details -->
+<div id="item-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px);">
+  <div class="card" style="max-width: 650px; width: 92%; max-height: 85vh; overflow-y: auto; position: relative; padding: 24px; box-shadow: var(--shadow-md);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 12px;">
+      <div>
+        <div id="modal-category" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"></div>
+        <h3 id="modal-title" style="color: var(--color-primary); font-size: 1.25rem; margin-top: 4px;"></h3>
+      </div>
+      <button onclick="document.getElementById('item-modal').style.display='none'" style="border: none; background: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
 </div>
 {% endblock %}
 

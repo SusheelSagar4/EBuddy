@@ -365,6 +365,18 @@ def get_current_roadmap(student_id: str, goal_id: Optional[str] = Query(None)):
 
     return _decorate_plan(plan.model_dump(), student_id)
 
+@router.get("/roadmap/{student_id}/weekly")
+def get_weekly_schedule(student_id: str, week_number: int = 1, goal_id: Optional[str] = Query(None)):
+    """Returns the weekly schedule and daily tasks for the student and goal."""
+    if not goal_id:
+        from app.services.onboarding_service import get_student_db_goal
+        goal_id = get_student_db_goal(student_id)
+    if goal_id:
+        goal_id = canonicalize_goal_id(goal_id)
+
+    weekly = roadmap_orchestrator.get_weekly_roadmap(student_id, week_number=week_number, goal_id=goal_id)
+    return weekly.model_dump()
+
 # -----------------------------------------------------------------------------
 # 4. Diagnostic Quiz Endpoints (Page 4)
 # -----------------------------------------------------------------------------
