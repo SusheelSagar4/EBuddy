@@ -449,7 +449,7 @@ EE2S001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft
 EE2S001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE2S001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE2S001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
-EE2S001,GOAL_UPSC_COMPETITIVE,3,Essential competency match for SKILL_RESEARCH_WRITING (overlap strength 0.56),draft_for_review,AI_DRAFT
+EE2S001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
 EE3L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE3L003,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
 EE3L003,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
@@ -475,7 +475,7 @@ EE3L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_fo
 EE3L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE3L005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
 EE3L005,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
-EE3L005,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L005,GOAL_EE_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_CONTROL_SYSTEMS (overlap strength 0.58),draft_for_review,AI_DRAFT
 EE3L005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE3L005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE3L005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
@@ -614,7 +614,7 @@ EE4D001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft
 EE4D001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE4D001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE4D001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
-EE4D001,GOAL_UPSC_COMPETITIVE,3,Essential competency match for SKILL_RESEARCH_WRITING (overlap strength 0.64),draft_for_review,AI_DRAFT
+EE4D001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
 EE4D002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE4D002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
 EE4D002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
@@ -625,7 +625,7 @@ EE4D002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft
 EE4D002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE4D002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE4D002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
-EE4D002,GOAL_UPSC_COMPETITIVE,3,Essential competency match for SKILL_RESEARCH_WRITING (overlap strength 0.68),draft_for_review,AI_DRAFT
+EE4D002,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
 EE4L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 EE4L003,GOAL_EE_CORE_POWER,3,Essential competency match for SKILL_POWER_ELECTRONICS (overlap strength 0.65),draft_for_review,AI_DRAFT
 EE4L003,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
@@ -1065,7 +1065,7 @@ ML2S001,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering
 ML2S001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML2S001,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML2S001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
-ML2S001,GOAL_UPSC_COMPETITIVE,3,Essential competency match for SKILL_RESEARCH_WRITING (overlap strength 0.56),draft_for_review,AI_DRAFT
+ML2S001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
 ML3L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML3L001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML3L001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
@@ -1230,7 +1230,7 @@ ML4D001,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering
 ML4D001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4D001,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4D001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
-ML4D001,GOAL_UPSC_COMPETITIVE,3,Essential competency match for SKILL_RESEARCH_WRITING (overlap strength 0.64),draft_for_review,AI_DRAFT
+ML4D001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
 ML4D002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4D002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4D002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
@@ -1241,7 +1241,7 @@ ML4D002,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering
 ML4D002,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4D002,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4D002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
-ML4D002,GOAL_UPSC_COMPETITIVE,3,Essential competency match for SKILL_RESEARCH_WRITING (overlap strength 0.68),draft_for_review,AI_DRAFT
+ML4D002,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
 ML4L001_CORE,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L001_CORE,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L001_CORE,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
@@ -1271,7 +1271,7 @@ ML4L002_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department cours
 ML4L002_CORE,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L002_CORE,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L002_CORE,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_ENERGY_MATERIALS (overlap strength 0.64),draft_for_review,AI_DRAFT
-ML4L002_CORE,GOAL_MM_PROCESS_ENGINEER,3,Essential competency match for SKILL_MATERIALS_PROCESSING (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L002_CORE,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L002_CORE,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L002_CORE,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
@@ -1290,7 +1290,7 @@ ML4L003_CORE,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft
 ML4L003_CORE,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L003_CORE,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L003_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
-ML4L003_CORE,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_COMPOSITES_NANO (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_COMPOSITES_NANO (overlap strength 0.51),draft_for_review,AI_DRAFT
 ML4L003_CORE,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L003_CORE,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L003_CORE,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
@@ -1434,9 +1434,9 @@ ML4L015,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_r
 ML4L015,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L015,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L015,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
-ML4L015,GOAL_MM_BIOMATERIALS,3,Essential competency match for SKILL_CORROSION_SURFACE (overlap strength 0.58),draft_for_review,AI_DRAFT
+ML4L015,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L015,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
-ML4L015,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L015,GOAL_MM_PROCESS_ENGINEER,2,Useful elective supporting SKILL_MINERAL_PROCESSING (overlap strength 0.48),draft_for_review,AI_DRAFT
 ML4L015,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
 ML4L015,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
 ML4L015,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT

@@ -12,7 +12,7 @@ class Explainer:
             f"Disclaimer: {card.disclaimer}\n"
             f"Return JSON with 'short_summary', 'detailed_rationale', and 'citations'."
         )
-        res = llm_client.generate(prompt, schema={"type": "object"})
+        res = llm_client.generate(prompt, schema={"type": "object"}, purpose="explainer")
         return Explanation(
             subject=item_description,
             audience="student",

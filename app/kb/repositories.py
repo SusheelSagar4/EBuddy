@@ -145,6 +145,17 @@ class ResourceRepo:
                     self._course_resources.setdefault(cid, {})[role] = rid
                     self._resource_to_course[rid] = cid
 
+        # 3. Load resource_skill mappings
+        self._skill_resources: Dict[str, List[str]] = {}
+        rs_path = os.path.join(self.seed_dir, "resource_skill.csv")
+        if os.path.exists(rs_path):
+            with open(rs_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for r in reader:
+                    sid = r["skill_id"].strip()
+                    rid = r["resource_id"].strip()
+                    self._skill_resources.setdefault(sid, []).append(rid)
+
     def get_by_id(self, resource_id: str) -> Optional[Resource]:
         return self._resources.get(resource_id)
 
@@ -156,6 +167,11 @@ class ResourceRepo:
         c_map = self._course_resources.get(course_id, {})
         rid = c_map.get("primary")
         return self._resources.get(rid) if rid else None
+
+    def get_resources_for_skill(self, skill_id: str) -> List[Resource]:
+        """Returns verified open resources mapping to a specific skill."""
+        rids = self._skill_resources.get(skill_id, [])
+        return [self._resources[rid] for rid in rids if rid in self._resources]
 
     def get_backup_resources_for_course(self, course_id: str) -> List[Resource]:
         """Returns secondary / backup resources for a course."""

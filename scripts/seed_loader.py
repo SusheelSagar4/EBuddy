@@ -71,7 +71,7 @@ def load_csv(conn, file_path: str, table_name: str) -> int:
 
         placeholders = ", ".join(["%s"] * len(headers))
         cols = ", ".join(headers)
-        query = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders}) ON CONFLICT DO NOTHING;"
+        query = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders});"
 
         # Field index lookups for table-specific data fixes
         header_map = {h: i for i, h in enumerate(headers)}
@@ -80,7 +80,7 @@ def load_csv(conn, file_path: str, table_name: str) -> int:
             # Clean empty strings to None and apply normalization
             cleaned_rows = []
             for r in rows:
-                row_vals = [None if val == "" else val for val in r]
+                row_vals = [None if (val == "" or str(val).lower() == "nan") else val for val in r]
 
                 # Normalizations for programme_requirement
                 if table_name == "kb.programme_requirement":
@@ -125,7 +125,7 @@ def load_json(conn, file_path: str, table_name: str, cols: List[str]) -> int:
 
     placeholders = ", ".join(["%s"] * len(cols))
     col_str = ", ".join(cols)
-    query = f"INSERT INTO {table_name} ({col_str}) VALUES ({placeholders}) ON CONFLICT DO NOTHING;"
+    query = f"INSERT INTO {table_name} ({col_str}) VALUES ({placeholders});"
 
     rows = []
     for item in items:

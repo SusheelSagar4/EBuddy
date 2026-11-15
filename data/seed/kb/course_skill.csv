@@ -22,7 +22,7 @@ EE3P006,SKILL_POWER_SYSTEMS,75.0,0.8,inferred_from_course_title,draft_for_review
 EE3P002,SKILL_CONTROL_SYSTEMS,75.0,0.8,inferred_from_course_title,draft_for_review,AI_DRAFT
 EC3P002,SKILL_DSP,70.0,0.8,inferred_from_course_title,draft_for_review,AI_DRAFT
 EE3L004,SKILL_POWER_ELECTRONICS,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
-EE3L005,SKILL_INSTRUMENTATION,80.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+EE3L005,SKILL_CONTROL_SYSTEMS,80.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 EE3P004,SKILL_POWER_ELECTRONICS,80.0,0.8,inferred_from_course_title,draft_for_review,AI_DRAFT
 EE3P005,SKILL_INSTRUMENTATION,75.0,0.8,inferred_from_course_title,draft_for_review,AI_DRAFT
 EE4L003,SKILL_POWER_ELECTRONICS,90.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
@@ -68,8 +68,6 @@ ML4L002_CORE,SKILL_ENERGY_MATERIALS,75.0,0.8,inferred_from_course_title,draft_fo
 ML4L003_CORE,SKILL_COMPOSITES_NANO,80.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 ML4P001,SKILL_MATERIALS_CHAR,85.0,0.8,inferred_from_course_title,draft_for_review,AI_DRAFT
 ML4L001_CORE,SKILL_MATERIALS_PROCESSING,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
-ML4L002_CORE,SKILL_MATERIALS_PROCESSING,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
-ML4L003_CORE,SKILL_COMPOSITES_NANO,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 ML4L004,SKILL_POWDER_METALLURGY,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 ML4L005,SKILL_MECHANICAL_BEHAVIOR,80.0,0.8,inferred_from_course_title,draft_for_review,AI_DRAFT
 ML4L006,SKILL_ENERGY_MATERIALS,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
@@ -78,7 +76,7 @@ ML4L010,SKILL_COMPOSITES_NANO,85.0,1.0,inferred_from_course_title,draft_for_revi
 ML4L011,SKILL_BIOMATERIALS,90.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 ML4L013,SKILL_MINERAL_PROCESSING,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 ML4L014,SKILL_IRON_STEELMAKING,80.0,0.9,inferred_from_course_title,draft_for_review,AI_DRAFT
-ML4L015,SKILL_CORROSION_SURFACE,80.0,0.9,inferred_from_course_title,draft_for_review,AI_DRAFT
+ML4L015,SKILL_MINERAL_PROCESSING,80.0,0.9,inferred_from_course_title,draft_for_review,AI_DRAFT
 MA1L001,SKILL_ENGINEERING_MATH,60.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 MA1L002,SKILL_ENGINEERING_MATH,65.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
 MA2L007,SKILL_ENGINEERING_MATH,70.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT

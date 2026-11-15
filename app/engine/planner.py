@@ -540,6 +540,44 @@ class Planner(IPlanner):
                         ))
                         break
 
+        # Open Courseware Resource Coverage for skills with no course coverage (e.g., Databases & OS)
+        for g in gaps:
+            sid = g.get("skill_id")
+            courses_for_sid = self.skill_courses.get(sid, [])
+            if not courses_for_sid or not any(c in assigned_courses for c in courses_for_sid):
+                skill_res = self.resource_repo.get_resources_for_skill(sid)
+                for r_obj in skill_res:
+                    items.append(PlanItem(
+                        item_id=f"ITEM_RES_{r_obj.resource_id}_{uuid.uuid4().hex[:6]}",
+                        item_type="resource",
+                        resource_id=r_obj.resource_id,
+                        semester_number=current_sem,
+                        estimated_hours=3.0,
+                        reason=StructuredReason(
+                            intent=f"Open Courseware Resource: {sid}",
+                            target_skills=[sid],
+                            why_this=f"Addresses competency requirement in {sid} using verified open courseware ({r_obj.title}, Provider: {r_obj.provider}) as no departmental course exists in the institute curriculum.",
+                            prerequisite_for=[],
+                            rule_compliance=["Self-paced open resource study"]
+                        )
+                    ))
+
+        # UPSC Domain Roadmap & Disclaimers
+        if goal.goal_id == "GOAL_UPSC_COMPETITIVE":
+            items.append(PlanItem(
+                item_id=f"ITEM_MS_UPSC_GS_{uuid.uuid4().hex[:6]}",
+                item_type="milestone",
+                semester_number=current_sem,
+                estimated_hours=8.0,
+                reason=StructuredReason(
+                    intent="UPSC General Studies Preparation",
+                    target_skills=["SKILL_RESEARCH_WRITING", "SKILL_ENGINEERING_MATH"],
+                    why_this="The institutional course catalogue contains zero General Studies (GS) coverage (History, Polity, Economy, Geography, Ethics). UPSC Civil Services preparation must be pursued via structured roadmap milestones and open educational resources alongside degree requirements.",
+                    prerequisite_for=[],
+                    rule_compliance=["Non-curricular competitive exam preparation"]
+                )
+            ))
+
         # Milestone Checkpoint
         items.append(PlanItem(
             item_id=f"ITEM_MS_{uuid.uuid4().hex[:6]}",

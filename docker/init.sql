@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS kb.course (
     syllabus_text TEXT,
     learning_objectives TEXT,
     in_semester_table BOOLEAN DEFAULT TRUE,
+    status VARCHAR(50) DEFAULT 'verified',
     source_id VARCHAR(100) REFERENCES kb.source(source_id),
     is_placeholder BOOLEAN DEFAULT FALSE
 );
@@ -216,7 +217,7 @@ CREATE TABLE IF NOT EXISTS kb.exercise (
     status VARCHAR(50) DEFAULT 'draft_for_review',
     source_id VARCHAR(100) REFERENCES kb.source(source_id),
     licence VARCHAR(100) DEFAULT 'CC-BY-4.0',
-    source_url TEXT DEFAULT 'https://ebuddy.internal/exercises/original_synthetic'
+    source_url TEXT DEFAULT 'data/seed/kb/exercise.csv'
 );
 
 CREATE TABLE IF NOT EXISTS kb.goal (

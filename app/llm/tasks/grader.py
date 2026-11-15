@@ -34,7 +34,7 @@ class Grader:
             f"Student Answer: {student_answer}\n"
             f"Return JSON with 'score' (0-100), 'is_correct' (bool), and 'feedback'."
         )
-        res = llm_client.generate(prompt, schema={"type": "object"})
+        res = llm_client.generate(prompt, schema={"type": "object"}, purpose="grader")
         return {
             "score": float(res.get("score", 70.0)),
             "is_correct": bool(res.get("is_correct", True)),

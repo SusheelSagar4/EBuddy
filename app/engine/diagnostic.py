@@ -178,18 +178,17 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
         if n < 3:
             return current_ability, round(min(0.80, 0.30 + n * 0.15), 2)
 
-        # Compute ability estimates for previous steps to measure convergence over last 2 items
+        # Compute spread (range) across the last 3 running theta ability estimates
         theta_n = current_ability
         theta_n_minus_1 = self.compute_running_ability(previous_answers[:-1])
         theta_n_minus_2 = self.compute_running_ability(previous_answers[:-2])
 
-        delta_1 = abs(theta_n - theta_n_minus_1)
-        delta_2 = abs(theta_n_minus_1 - theta_n_minus_2)
-        max_recent_delta = max(delta_1, delta_2)
+        last_3 = [theta_n, theta_n_minus_1, theta_n_minus_2]
+        spread = max(last_3) - min(last_3)
 
-        # Confidence is derived from stability/convergence of the ability estimate
-        # When max_recent_delta <= 3.5, confidence >= 0.86 (converged)
-        confidence = max(0.20, min(0.95, 1.0 - (max_recent_delta / 25.0)))
+        # Confidence is derived strictly from the spread of the last 3 theta values
+        # spread <= 4.0 yields confidence >= 0.84 (converged); higher spread reduces confidence
+        confidence = max(0.20, min(0.95, 1.0 - (spread / 25.0)))
 
         return current_ability, round(confidence, 2)
 
@@ -249,16 +248,14 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
         if n >= self.max_items:
             return True
 
-        # Stop when ability estimate changes less than threshold (3.5) over the last 2 items
+        # Stop rule: stop when n >= 5 and the range (spread) of the last 3 theta values <= 4.0
         theta_n = self.compute_running_ability(previous_answers)
         theta_n_minus_1 = self.compute_running_ability(previous_answers[:-1])
         theta_n_minus_2 = self.compute_running_ability(previous_answers[:-2])
 
-        delta_1 = abs(theta_n - theta_n_minus_1)
-        delta_2 = abs(theta_n_minus_1 - theta_n_minus_2)
-        max_delta = max(delta_1, delta_2)
+        last_3 = [theta_n, theta_n_minus_1, theta_n_minus_2]
+        spread = max(last_3) - min(last_3)
 
-        convergence_threshold = 3.5
-        return max_delta <= convergence_threshold
+        return spread <= 4.0
 
 

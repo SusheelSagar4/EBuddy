@@ -244,41 +244,65 @@ def test_exercise_option_shuffling_and_bias_elimination():
 
 def test_diagnostic_convergence_consistent_vs_alternating():
     """
-    Item 4: Diagnostic convergence rule.
-    A student with alternating answers continues to 8 items,
-    and a consistent student stops at 5-6 items.
+    Item 5: Diagnostic convergence stop rule.
+    Stop when n >= 5 and the range of the last 3 theta values <= 4, or n >= 8.
+    Confidence must derive from that spread.
+    Tests:
+      (a) mid-ability alternating student
+      (b) consistently strong
+      (c) consistently weak
+      (d) mixed-then-consistent
+    Prints the theta trajectory for each.
     """
     from app.engine.diagnostic import AdaptiveDiagnostic
 
     diag = AdaptiveDiagnostic(item_bank=[], min_items=5, max_items=8, confidence_threshold=0.85)
 
-    # 1. Consistent student (all correct)
-    consistent_answers = []
-    while not diag.is_complete(consistent_answers) and len(consistent_answers) < 8:
-        item = diag.select_next_item(["SKILL_CIRCUIT_ANALYSIS"], consistent_answers)
-        consistent_answers.append({
-            "exercise_id": item.exercise_id,
-            "is_correct": True,
-            "difficulty": item.difficulty_0_100
-        })
+    def run_trajectory(answers_stream):
+        answers = []
+        thetas = []
+        for is_corr in answers_stream:
+            item = diag.select_next_item(["SKILL_CIRCUIT_ANALYSIS"], answers)
+            answers.append({
+                "exercise_id": item.exercise_id,
+                "is_correct": is_corr,
+                "difficulty": item.difficulty_0_100
+            })
+            thetas.append(diag.compute_running_ability(answers))
+            if diag.is_complete(answers):
+                break
+        ability, conf = diag.estimate_ability_and_confidence(answers)
+        return answers, thetas, ability, conf
 
-    # Consistent student converges and stops at 5 or 6 items
-    assert 5 <= len(consistent_answers) <= 6
-    assert diag.is_complete(consistent_answers)
+    # (a) Mid-ability alternating student: [True, False, True, False, True, False, True, False]
+    ans_a, thetas_a, ab_a, conf_a = run_trajectory([i % 2 == 0 for i in range(10)])
+    print(f"\n[Case A - Alternating] Stopped at n={len(ans_a)} | Trajectory: {thetas_a} | Ability={ab_a} | Confidence={conf_a}")
+    assert len(ans_a) == 8
+    assert diag.is_complete(ans_a)
+    assert conf_a < 0.75  # Spread was large throughout
 
-    # 2. Alternating student (Correct, Incorrect, Correct, Incorrect...)
-    alternating_answers = []
-    while not diag.is_complete(alternating_answers) and len(alternating_answers) < 8:
-        item = diag.select_next_item(["SKILL_CIRCUIT_ANALYSIS"], alternating_answers)
-        is_corr = (len(alternating_answers) % 2 == 0)
-        alternating_answers.append({
-            "exercise_id": item.exercise_id,
-            "is_correct": is_corr,
-            "difficulty": item.difficulty_0_100
-        })
+    # (b) Consistently strong student: [True, True, True, True, True]
+    ans_b, thetas_b, ab_b, conf_b = run_trajectory([True] * 8)
+    print(f"[Case B - Consistently Strong] Stopped at n={len(ans_b)} | Trajectory: {thetas_b} | Ability={ab_b} | Confidence={conf_b}")
+    assert len(ans_b) == 5
+    assert thetas_b[-1] == 95.0
+    assert max(thetas_b[-3:]) - min(thetas_b[-3:]) <= 4.0
+    assert conf_b >= 0.90
 
-    # Alternating student fails convergence and continues all the way to max 8 items
-    assert len(alternating_answers) == 8
-    assert diag.is_complete(alternating_answers)
+    # (c) Consistently weak student: [False, False, False, False, False]
+    ans_c, thetas_c, ab_c, conf_c = run_trajectory([False] * 8)
+    print(f"[Case C - Consistently Weak] Stopped at n={len(ans_c)} | Trajectory: {thetas_c} | Ability={ab_c} | Confidence={conf_c}")
+    assert len(ans_c) == 5
+    assert thetas_c[-1] == 10.0
+    assert max(thetas_c[-3:]) - min(thetas_c[-3:]) <= 4.0
+    assert conf_c >= 0.90
+
+    # (d) Mixed-then-consistent student: [False, True, True, True, True, True, True, True]
+    ans_d, thetas_d, ab_d, conf_d = run_trajectory([False] + [True] * 7)
+    print(f"[Case D - Mixed-then-Consistent] Stopped at n={len(ans_d)} | Trajectory: {thetas_d} | Ability={ab_d} | Confidence={conf_d}")
+    assert len(ans_d) == 8
+    assert thetas_d[-1] == 95.0
+    assert max(thetas_d[-3:]) - min(thetas_d[-3:]) <= 4.0
+    assert conf_d >= 0.90
 
 

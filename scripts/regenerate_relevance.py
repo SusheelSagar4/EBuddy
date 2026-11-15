@@ -54,8 +54,13 @@ for cid in sorted(courses.keys()):
 
         matches_str = ", ".join(matching)
 
+        is_seminar_or_project = cid in ['EE2S001', 'ML2S001', 'EE4D001', 'EE4D002', 'ML4D001', 'ML4D002'] or 'project' in c_info.get('title', '').lower() or 'seminar' in c_info.get('title', '').lower()
+
         if strength > 0:
-            if strength >= 0.50 or any(g_sk.get(s, (0, 0))[1] >= 0.95 for s in matching):
+            if gid == "GOAL_UPSC_COMPETITIVE" and is_seminar_or_project:
+                score = 1
+                rationale = "Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources"
+            elif strength >= 0.50 or any(g_sk.get(s, (0, 0))[1] >= 0.95 for s in matching):
                 score = 3
                 rationale = f"Essential competency match for {matches_str} (overlap strength {strength:.2f})"
             elif strength >= 0.15:

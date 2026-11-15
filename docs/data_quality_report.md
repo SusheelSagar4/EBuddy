@@ -20,10 +20,10 @@
 - **Plannable Course Credits (> 0):** PASSED (100% valid)
 
 ## 4. Learning Resources & Playlists Coverage
-- **Total Stored Resources:** 248
+- **Total Stored Resources:** 252
 - **Verified Links:** 0 (0% - Defaults to False per data hygiene)
-- **Official NPTEL / MIT OCW:** 228 (91.9%)
-- **Full Playlist Coverage:** 89 (35.9%)
+- **Official NPTEL / MIT OCW:** 231 (91.7%)
+- **Full Playlist Coverage:** 89 (35.3%)
 
 ## 5. Research Projects & Faculty Directory
 - **Faculty Isolation Rule:** PASSED (0 group terms in persons)
@@ -38,10 +38,10 @@
 ## 7. Status & Placeholder Audit Across All Tables
 - **Flagged Placeholders (is_placeholder = true):** 0
 - **Unsourced Baselines (rules/credits/minors):** 7
-- **Draft for Review (skills/goals):** 1695
+- **Draft for Review (skills/goals):** 1743
   - `academic_rule`: {'unsourced_baseline': 4}
-  - `course_skill`: {'draft_for_review': 91}
-  - `exercise`: {'draft_for_review': 10}
+  - `course_skill`: {'draft_for_review': 89}
+  - `exercise`: {'draft_for_review': 60}
   - `goal`: {'draft_for_review': 11}
   - `goal_skill_requirement`: {'draft_for_review': 43}
   - `mastery_criteria`: {'draft_for_review': 3}
