@@ -1,0 +1,13 @@
+skill_slug,skill_name,category,prerequisites,mastery_description,fact_dependencies
+SKILL_UPSC_GS1_HISTORY_CULTURE,GS1 History and Art & Culture,GS foundation,,Prelims PYQ history/culture sets at 70%+; can write a short answer with chronology and two examples,F05
+SKILL_UPSC_GS1_GEOGRAPHY_SOCIETY,GS1 Geography and Indian Society,GS foundation,,Uses maps/diagrams in answers; 70%+ on geography PYQ sets; society answers carry data points,F05
+SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR,GS2 Polity Governance and International Relations,GS foundation,,75%+ on polity PYQ sets; links Articles to current cases; IR answers state India's position,F05
+SKILL_UPSC_GS3_ECONOMY,GS3 Indian Economy,GS foundation,,Explains Budget/Economic Survey themes in own words; 70%+ on economy PYQ sets; two data points per answer,F05
+SKILL_UPSC_GS3_STI_ENV_SECURITY,GS3 Science & Tech Environment Internal Security Disaster Mgmt,GS foundation,,70%+ on environment and S&T PYQs; uses branch depth (power sector for EE; minerals/materials for MME) to differentiate answers,F05
+SKILL_UPSC_GS4_ETHICS_CASES,GS4 Ethics Integrity Aptitude and Case Studies,GS foundation,SKILL_UPSC_ANSWER_WRITING,"Solves a case study (stakeholders, options, decision, justification) in about 15 minutes; defines 20 core terms with examples",F06
+SKILL_UPSC_CURRENT_AFFAIRS,Current Affairs Synthesis,Daily system,,45+ min/day habit; monthly notes mapped to syllabus; links any news item to a static topic,
+SKILL_UPSC_CSAT,CSAT Aptitude (GS Paper II),Prelims qualifier,,Timed papers at 90+/200 consistently (qualifying mark 33%); comprehension accuracy 85%+,F05
+SKILL_UPSC_OPTIONAL,Optional Subject Depth,Mains,SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR,Both papers covered once; 10+ evaluated answers at rubric average 3/5 or higher,F08;F09
+SKILL_UPSC_ANSWER_WRITING,Answer Writing Speed and Structure,Mains,SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR,Finishes timed answers within the limits printed on UPSC papers; intro-body-conclusion with one example or data point; rubric average 3.5/5 or higher,F06
+SKILL_UPSC_ESSAY,Essay Writing,Mains,SKILL_UPSC_ANSWER_WRITING,Writes a full essay in 60-70 minutes with a thesis and multi-dimensional body; 5 essays reviewed,F06
+SKILL_UPSC_PRELIMS_TESTCRAFT,Prelims Test-Taking and Error Analysis,Prelims,SKILL_UPSC_GS2_POLITY_GOVERNANCE_IR;SKILL_UPSC_GS3_ECONOMY,Elimination strategy tuned from 15+ mocks; error log maintained; negative-marking loss under 12% of attempted marks (wrong answers lose one-third of marks),F05

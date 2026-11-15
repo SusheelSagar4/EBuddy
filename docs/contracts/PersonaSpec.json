@@ -44,6 +44,14 @@
       "title": "Planner Weights",
       "type": "object"
     },
+    "fallback_goals": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Fallback Goals",
+      "type": "object"
+    },
     "status": {
       "default": "draft_for_review",
       "title": "Status",

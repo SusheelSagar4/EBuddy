@@ -1,6 +1,7 @@
 import os
 import csv
 import uuid
+import logging
 from typing import List, Dict, Any, Optional, Set, Tuple
 from datetime import datetime, timezone
 from app.contracts.student import StudentProfile, Constraint, Preference, SkillState
@@ -10,6 +11,8 @@ from app.engine.interfaces import IPlanner
 from app.engine.rules import RuleEngine
 from app.engine.relevance import CourseRelevanceEngine
 from app.kb.repositories import ResourceRepo
+
+logger = logging.getLogger(__name__)
 
 class Planner(IPlanner):
     """
@@ -618,7 +621,7 @@ class Planner(IPlanner):
             elif minor_candidates and not self.rule_engine.check_minor_eligibility(student):
                 optional_overload_proposals.append({
                     "proposal_id": f"PROP_MINOR_INELIGIBLE_{uuid.uuid4().hex[:6]}",
-                    "reason": f"Student CGPA ({student.cgpa:.2f}) is below the required 8.00 cutoff or has active backlogs ({student.backlogs}). Ineligible for Minor in Computer Science per academic regulations.",
+                    "reason": f"Student CGPA ({f'{student.cgpa:.2f}' if student.cgpa is not None else 'not provided'}) is below the required 8.00 cutoff or has active backlogs ({student.backlogs}). Ineligible for Minor in Computer Science per academic regulations.",
                     "status": "ineligible_explanation"
                 })
 
@@ -725,6 +728,25 @@ class Planner(IPlanner):
                 rule_compliance=[]
             )
         ))
+
+        # 3. Opt-in persona policy adjustment hook
+        current_persona_id = None
+        try:
+            from app.personas.registry import persona_registry
+            for pkg in persona_registry.list_all():
+                if pkg.spec and pkg.spec.goal_id == goal.goal_id:
+                    current_persona_id = pkg.spec.persona_id
+                    if getattr(pkg.policy, "enable_plan_adjustment", False):
+                        items = pkg.policy.adjust_plan_items(student, items, gaps=gaps)
+                    break
+        except Exception as e:
+            logger.error(
+                "Error adjusting plan items for persona '%s': %s",
+                current_persona_id or goal.goal_id,
+                e,
+                exc_info=True
+            )
+            # Fall back to unadjusted items
 
         plan = Plan(
             plan_id=f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
