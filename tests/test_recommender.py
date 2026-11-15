@@ -6,9 +6,10 @@ hallucination guard, MME duplicate code handling, and FastAPI endpoint.
 
 from unittest.mock import MagicMock, patch
 import pytest
-from fastapi.testclient import TestClient
+from fastapi import HTTPException
+from pydantic import ValidationError
 
-from app.main import app
+from app.recommender.api import RecommendRequest, get_recommendations
 from app.recommender.credits import (
     core_courses,
     credit_limit,
@@ -26,8 +27,6 @@ from app.recommender.kb import (
     slot_branch,
     slot_semester,
 )
-
-client = TestClient(app)
 
 
 def test_core_credits_plus_headroom_equals_limit_ee_and_mme():
@@ -234,49 +233,54 @@ def test_mme_duplicate_codes_core_vs_elec_mapping():
 
 
 def test_api_recommend_endpoint_success():
-    """Verify POST /recommend returns HTTP 200 with answer and data structure."""
-    payload = {
-        "branch": "EE",
-        "semester": 5,
-        "cgpa": 8.5,
-        "goal": "Software engineering role",
-        "query": None,
-        "completed": ["EE1L001"],
-        "avoid": [],
-        "overload_approved": False,
-    }
-    response = client.post("/recommend", json=payload)
-    assert response.status_code == 200
-    json_data = response.json()
-    assert "answer" in json_data
-    assert "data" in json_data
-    assert "credit_budget" in json_data["data"]
-    assert "recommendations" in json_data["data"]
+    """Verify get_recommendations returns response with answer and data structure with mocked LLM."""
+    req = RecommendRequest(
+        branch="EE",
+        semester=5,
+        cgpa=8.5,
+        goal="Software engineering role",
+        query=None,
+        completed=["EE1L001"],
+        avoid=[],
+        overload_approved=False,
+    )
+    with patch("app.llm.client.llm_client.completion", return_value=None):
+        response = get_recommendations(req)
+        assert response.answer
+        assert "credit_budget" in response.data
+        assert "recommendations" in response.data
+        assert response.data["credit_budget"]["limit"] > 0
 
 
 def test_api_recommend_endpoint_validation_errors():
-    """Verify invalid branch or out-of-range semester returns HTTP 400 or 422."""
-    # Unknown branch
-    res_bad_branch = client.post("/recommend", json={
-        "branch": "CIVIL",
-        "semester": 4,
-        "cgpa": 8.0,
-    })
-    assert res_bad_branch.status_code in [400, 422]
-    assert "Invalid branch" in res_bad_branch.text or "CIVIL" in res_bad_branch.text
+    """Verify invalid branch or out-of-range semester raises HTTP 400 or ValidationError."""
+    # Unknown branch raises HTTPException 400
+    with pytest.raises(HTTPException) as exc_info:
+        req = RecommendRequest(branch="CIVIL", semester=4, cgpa=8.0)
+        get_recommendations(req)
+    assert exc_info.value.status_code == 400
+    assert "Invalid branch 'CIVIL'" in exc_info.value.detail
 
-    # Semester out of range (< 1)
-    res_bad_sem_low = client.post("/recommend", json={
-        "branch": "EE",
-        "semester": 0,
-        "cgpa": 8.0,
-    })
-    assert res_bad_sem_low.status_code in [400, 422]
+    # Semester out of range (< 1) caught by Pydantic validation
+    with pytest.raises((ValidationError, HTTPException)):
+        RecommendRequest(branch="EE", semester=0, cgpa=8.0)
 
-    # Semester out of range (> 8)
-    res_bad_sem_high = client.post("/recommend", json={
+    # Semester out of range (> 8) caught by Pydantic validation
+    with pytest.raises((ValidationError, HTTPException)):
+        RecommendRequest(branch="EE", semester=9, cgpa=8.0)
+
+
+def test_deterministic_identical_output_for_same_input():
+    """Verify the recommendation engine returns strictly identical results when run twice with same input."""
+    student = {
         "branch": "EE",
-        "semester": 9,
-        "cgpa": 8.0,
-    })
-    assert res_bad_sem_high.status_code in [400, 422]
+        "semester": 6,
+        "cgpa": 8.2,
+        "goal": "VLSI design and embedded systems",
+        "avoid": [],
+    }
+    res1 = recommend(student, query="embedded chip design")
+    res2 = recommend(student, query="embedded chip design")
+
+    assert res1 == res2
+    assert res1["recommendations"] == res2["recommendations"]

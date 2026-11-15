@@ -3,6 +3,11 @@ import time
 import json
 import logging
 from typing import Dict, Any, Optional
+
+# Enforce zero-outbound airgap & local cost map before any litellm import
+os.environ.setdefault("LITELLM_LOCAL_MODEL_COST_MAP", "True")
+os.environ.setdefault("LITELLM_TELEMETRY", "False")
+
 from app.llm.fake import FakeLLM
 
 logger = logging.getLogger("ebuddy.llm")
