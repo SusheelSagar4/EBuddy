@@ -49,7 +49,10 @@ class MBAPlannerEngine:
             template_id = "MBA-T-CAT3"
 
         template = self.repo.prep_templates.get(template_id)
-        phases = self.repo.template_phases.get(template_id, [])
+        if isinstance(self.repo.template_phases, dict):
+            phases = self.repo.template_phases.get(template_id, [])
+        else:
+            phases = [p for p in self.repo.template_phases if p.template_id == template_id]
         if not phases:
             # Fallback to standard 4 phases
             phases = [
