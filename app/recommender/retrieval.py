@@ -212,8 +212,13 @@ def score_courses(
                 course_matched_terms.update(hits)
                 title_syllabus_score = min(1.0, len(hits) / 3.0)
 
-        # Combined weighted score
-        final_score = round(0.7 * best_skill_score + 0.3 * title_syllabus_score, 4)
+        # Combined score:
+        # If a course has no course_skill rows, final = 0.85 * text_score.
+        # Otherwise keep 0.7 * skill + 0.3 * text.
+        if not linked_skills:
+            final_score = round(0.85 * title_syllabus_score, 4)
+        else:
+            final_score = round(0.7 * best_skill_score + 0.3 * title_syllabus_score, 4)
 
         results[cid] = {
             "score": final_score,

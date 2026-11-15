@@ -1,10 +1,22 @@
 # Course Recommender Status & Checklists
 
-Last Updated: 2026-11-15 (Phase G Enhancements Complete & Verified)
+Last Updated: 2026-11-15 (Phase G Skill-Mapping Coverage Fix & Proposal Complete)
 
 ## 1. Feature Checklist
 
 ### DONE (Verified Green)
+- [x] **Skill-Mapping Coverage Fix (`app/recommender/retrieval.py`)**:
+  - For courses without `course_skill` rows, final relevance score is computed as `0.85 * text_score` (instead of being penalized to 30%).
+  - Courses with `course_skill` rows maintain `0.7 * skill + 0.3 * text`.
+  - Mapped and unmapped courses are now directly comparable. `CS4L003` (*Artificial Intelligence*) scores `0.5667 > 0.5` for goal *"Software engineering role"*.
+  - Verified with `test_unmapped_course_scoring_comparable`.
+- [x] **Proposed Skill Mapping Table (`docs/proposed_course_skill.csv`)**:
+  - Generated proposed mapping for the 34 slot-candidate courses missing from `course_skill.csv`.
+  - Strictly references valid `skill_id`s from `skill.csv`.
+  - Skipped unmatchable courses (e.g. `ML4L012 Materials in archaeology`) per instructions.
+  - Zero modifications made to `data/` seed files pending user approval.
+- [x] **Audit of Existing `course_skill.csv` Mappings**:
+  - Identified 11 anomalous or erroneous existing rows in `data/seed/kb/course_skill.csv` (e.g. `EC6L005 Statistical Signal Processing` -> `SKILL_EMBEDDED_SYSTEMS`, `EE3L008 Soft Computing` -> `SKILL_POWER_ELECTRONICS`).
 - [x] **Intent Determination & Topic Fallback (`app/recommender/retrieval.py` & `app/recommender/engine.py`)**:
   - Pure Python rule-based tokenizer, stopword filtering, and suffix stemming (`light_stem`).
   - Generic noise words (`system`, `systems`, `engineering`, `technology`, `design`, `analysis`, `introduction`, `advanced`) filtered from retrieval stoplist.
@@ -23,11 +35,10 @@ Last Updated: 2026-11-15 (Phase G Enhancements Complete & Verified)
 - [x] **Multi-Slot Credit Budgeting (`app/recommender/credits.py` & `app/recommender/engine.py`)**:
   - `open_slot_info()` parses slot definition rows (`Lateral`, `Breadth`, `Elective`) without concrete codes.
   - Computes `open_slots`, `min_credits_needed`, `max_credits_needed`, and `slot_credit_status` (`"sufficient"`, `"tight"`, `"insufficient"`).
-  - Explicitly states slot headroom and warns when choices are tight (e.g. headroom 7 vs two 4-credit electives requiring 8).
+  - Explicitly states slot headroom and warns when choices are tight.
 - [x] **Future Elective Options (`app/recommender/engine.py`)**:
   - Computes `future_options`: top 3 goal-relevant courses from later semesters' slots for the same branch.
   - Reports course code, title, credits, semester, relevance score, and missing prerequisites.
-  - Highlighted in explanation to aid academic roadmapping.
 - [x] **Template Formatting & Grammar (`app/recommender/explain.py`)**:
   - Removed duplicate course code display (e.g. `**EE3L005** (EE3L005 ...)` -> `**EE3L005**: ...`).
   - Removed duplicated provider tags (e.g. `(NPTEL) (NPTEL)` -> single reference).
@@ -53,7 +64,7 @@ Last Updated: 2026-11-15 (Phase G Enhancements Complete & Verified)
 - None.
 
 ### BROKEN
-- None. All 41 tests pass cleanly across the repository.
+- None. All 42 tests pass cleanly across the repository.
 
 ---
 
@@ -96,11 +107,11 @@ python -m pytest tests/test_recommender.py tests/unit/test_import_boundaries.py 
 
 Output:
 ```text
-======================= 41 passed, 1 warning in 11.01s ========================
+======================= 42 passed, 1 warning in 11.20s ========================
 ```
 
 Key verified test suites:
-- `tests/test_recommender.py`: 19 passed (determinism, credit limits, prerequisite checks, fallback templates, hallucination guard, MME duplicate codes, intent fallback, backlogs, relevance honesty, future options, multi-slot credits, template formatting, mocked LLM path, API validation & visibility).
+- `tests/test_recommender.py`: 20 passed (including `test_unmapped_course_scoring_comparable`, determinism, credit limits, prerequisite checks, fallback templates, hallucination guard, MME duplicate codes, intent fallback, backlogs, relevance honesty, future options, multi-slot credits, template formatting, mocked LLM path, API validation & visibility).
 - `tests/unit/test_import_boundaries.py`: 4 passed (clean LiteLLM isolation, engine boundaries, KB boundaries, contracts isolation).
 - `tests/test_db_free.py`: 9 passed (env compliance, docker ignore, air-gap flags, seed data).
 - `tests/conformance/test_persona_conformance.py`: 8 passed (all 8 persona gates).
@@ -108,116 +119,7 @@ Key verified test suites:
 
 ---
 
-## 4. Sanity Report
-
-### Case 1: EE Semester 5
-- **Request**: Branch: `EE`, Semester: `5`, CGPA: `7.8`, Goal: `"Software engineering role"`, Query: `"what course should I take this semester"`
-- **Intent**: `source`: `"profile_goal"`, `query_had_topic`: `False`, terms: `['algorithm', 'artifici', 'cod', 'compu', 'data', 'database', 'develop', 'embedd', 'intelligence', 'machine', 'oop', 'programm', 'python', 'software', 'structur']`
-- **Budget**: Limit: `25.0`, Core Credits: `18.0`, Headroom: `7.0`, Open Slots: `2` (requires min `6.0` cr, max `7.0` cr), Status: `"sufficient"`
-- **Match Status**: `weak_match`: `True`, `no_direct_match`: `True` (all Sem 5 EE lateral options are power/circuits)
-- **Recommendations**:
-  1. `EE3L005`: Control System Technology (3.0 cr, score: 0.0)
-  2. `EE3L006`: Signals and Circuits (3.0 cr, score: 0.0)
-- **Future Options (Sem 7 Electives matching goal)**:
-  1. `CS6L001`: Computational Intelligence [Sem 7, 3.0 cr, score: 0.8]
-  2. `EC6L005`: Statistical Signal Processing [Sem 7, 3.0 cr, score: 0.4667] (Prerequisites needed: EC3L003)
-  3. `CS4L003`: Artificial Intelligence [Sem 7, 3.0 cr, score: 0.2]
-- **Generated Answer**:
-  ```text
-  Credit Summary: Your semester limit is 25.0 credits under RULE_SEM_CREDIT_CAP_REGULAR. Core courses require 18.0 credits, leaving 7.0 credits of headroom for 2 open slot(s) (requires at least 6.0 credits).
-
-  Note: No direct matches were found for your query. Here are the eligible elective courses for this semester:
-
-  - **EE3L005**: Control System Technology (3.0 cr) – eligible elective matching semester slot criteria. Resource: Control Engineering – Prof. M. Gopal, IIT Delhi (NPTEL).
-
-  - **EE3L006**: Signals and Circuits (3.0 cr) – eligible elective matching semester slot criteria. Resource: Networks, Signals and Systems – Prof. T.K. Basu, IIT Kharagpur (NPTEL).
-
-  Upcoming Electives in Later Semesters:
-
-  - **CS6L001**: Computational Intelligence [Sem 7, 3.0 cr]
-
-  - **EC6L005**: Statistical Signal Processing [Sem 7, 3.0 cr] (Prerequisites needed: EC3L003)
-
-  - **CS4L003**: Artificial Intelligence [Sem 7, 3.0 cr]
-
-  What specific topics or elective areas would you prefer to focus on?
-  ```
-
-### Case 2: EE Semester 7
-- **Request**: Branch: `EE`, Semester: `7`, CGPA: `8.0`, Goal: `"Software engineering role"`, Query: `"what course should I take this semester"`
-- **Intent**: `source`: `"profile_goal"`, `query_had_topic`: `False`
-- **Budget**: Limit: `19.0`, Core Credits: `12.0`, Headroom: `7.0`, Open Slots: `2` (requires min `6.0` cr, max `7.0` cr), Status: `"sufficient"`
-- **Match Status**: `weak_match`: `False`, `no_direct_match`: `False` (strong matches found)
-- **Recommendations**:
-  1. `CS6L001`: Computational Intelligence (3.0 cr, score: 0.8, skill: Machine Learning & Pattern Recognition)
-  2. `EC6L005`: Statistical Signal Processing (3.0 cr, score: 0.4667, skill: Embedded Systems & Real-Time Computing)
-  3. `CS4L003`: Artificial Intelligence (3.0 cr, score: 0.2, topics: artificial, intelligence)
-  4. `EC4L001`: Semiconductor Devices (3.0 cr, score: 0.0)
-  5. `EC4L002`: Opto-Electronics (3.0 cr, score: 0.0)
-- **Future Options (Sem 8 Electives)**:
-  1. `EC6L030`: Embedded Systems [Sem 8, 3.0 cr, score: 0.1]
-  2. `EC4L003`: VLSI Design [Sem 8, 3.0 cr, score: 0.0] (Prerequisites needed: EC4L001)
-  3. `EC6L015`: Biomedical Signal Processing [Sem 8, 3.0 cr, score: 0.0]
-- **Generated Answer**:
-  ```text
-  Credit Summary: Your semester limit is 19.0 credits under RULE_SEM_CREDIT_CAP_REGULAR. Core courses require 12.0 credits, leaving 7.0 credits of headroom for 2 open slot(s) (requires at least 6.0 credits).
-
-  Here are your recommended courses:
-
-  - **CS6L001**: Computational Intelligence (3.0 cr) – teaches Machine Learning & Pattern Recognition. Resource: Introduction to Soft Computing Live 1 – Prof. D. Samanta, IIT Kharagpur (NPTEL) – single video.
-
-  - **EC6L005**: Statistical Signal Processing (3.0 cr) – teaches Embedded Systems & Real-Time Computing. Resource: Statistical Signal Processing Lec 9 (NPTEL NOC20_EE53) – single video; its description links the full playlist.
-
-  - **CS4L003**: Artificial Intelligence (3.0 cr) – covers topics in artifici, intelligence. Resource: Artificial Intelligence – Prof. D. Khemani, IIT Madras (NPTEL).
-
-  - **EC4L001**: Semiconductor Devices (3.0 cr) – eligible elective matching semester slot criteria. Resource: Electron Devices – Prof. A.N. Chandorkar, IIT Bombay (NPTEL lectures).
-
-  - **EC4L002**: Opto-Electronics (3.0 cr) – eligible elective matching semester slot criteria. Resource: Advanced Optical Communication – Prof. R.K. Shevgaonkar, IIT Bombay (NPTEL).
-
-  Upcoming Electives in Later Semesters:
-
-  - **EC6L030**: Embedded Systems [Sem 8, 3.0 cr]
-
-  - **EC4L003**: VLSI Design [Sem 8, 3.0 cr] (Prerequisites needed: EC4L001)
-
-  - **EC6L015**: Biomedical Signal Processing [Sem 8, 3.0 cr]
-  ```
-
-### Case 3: MME Semester 6
-- **Request**: Branch: `MME`, Semester: `6`, CGPA: `7.5`, Goal: `"Materials research"`
-- **Budget**: Limit: `24.0`, Core Credits: `16.0`, Headroom: `8.0`, Open Slots: `2` (requires min `6.0` cr, max `8.0` cr), Status: `"sufficient"`
-- **Recommendations**:
-  1. `ML3L011`: Recent advances in composite materials (3.0 cr, score: 0.62, skill: Composites & Nanostructured Materials)
-  2. `ML2L006`: Advances in nanoscience and nanotechnology (3.0 cr, score: 0.42, skill: Composites & Nanostructured Materials)
-  3. `ML3L012`: Mineral processing plant design (3.0 cr, score: 0.21, skill: Mineral Processing & Extractive Metallurgy)
-- **Future Options (Sem 7 Electives)**:
-  1. `ML4L010`: Science and technology of composite materials [Sem 7, 3.0 cr, score: 0.6667]
-  2. `ML4L006`: Energy materials [Sem 7, 3.0 cr, score: 0.5667]
-  3. `ML4L004`: Powder metallurgy [Sem 7, 3.0 cr, score: 0.3333]
-- **Generated Answer**:
-  ```text
-  Credit Summary: Your semester limit is 24.0 credits under RULE_SEM_CREDIT_CAP_REGULAR. Core courses require 16.0 credits, leaving 8.0 credits of headroom for 2 open slot(s) (requires at least 6.0 credits).
-
-  Here are your recommended courses:
-
-  - **ML3L011**: Recent advances in composite materials (3.0 cr) – teaches Composites & Nanostructured Materials. Resource: NPTEL 'Metallurgy and Material Science' channel (browse by course name):.
-
-  - **ML2L006**: Advances in nanoscience and nanotechnology (3.0 cr) – teaches Composites & Nanostructured Materials. Resource: NPTEL 'Metallurgy and Material Science' channel (browse by course name):.
-
-  - **ML3L012**: Mineral processing plant design (3.0 cr) – teaches Mineral Processing & Extractive Metallurgy. Resource: NPTEL 'Metallurgy and Material Science' channel (browse by course name):.
-
-  Upcoming Electives in Later Semesters:
-
-  - **ML4L010**: Science and technology of composite materials [Sem 7, 3.0 cr]
-
-  - **ML4L006**: Energy materials [Sem 7, 3.0 cr]
-
-  - **ML4L004**: Powder metallurgy [Sem 7, 3.0 cr]
-  ```
-
----
-
-## 5. Commands to Run & Test
+## 4. Commands to Run & Test
 
 ### Run Pytest Test Suite
 ```powershell

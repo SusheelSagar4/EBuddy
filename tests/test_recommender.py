@@ -30,7 +30,7 @@ from app.recommender.kb import (
     slot_branch,
     slot_semester,
 )
-from app.recommender.retrieval import STOPWORDS, intent_terms
+from app.recommender.retrieval import STOPWORDS, intent_terms, score_courses
 
 
 def test_core_credits_plus_headroom_equals_limit_ee_and_mme():
@@ -245,6 +245,19 @@ def test_deterministic_identical_output_for_same_input():
 
     assert res1 == res2
     assert res1["recommendations"] == res2["recommendations"]
+
+
+def test_unmapped_course_scoring_comparable():
+    """Verify unmapped course CS4L003 scores > 0.5 for software engineering role and is comparable to mapped courses."""
+    terms = intent_terms("Software engineering role")
+    scored = score_courses(["CS4L003", "CS6L001"], terms)
+
+    cs4_score = scored["CS4L003"]["score"]
+    cs6_score = scored["CS6L001"]["score"]
+
+    assert cs4_score > 0.5, f"Expected CS4L003 score > 0.5, got {cs4_score}"
+    assert cs6_score > 0.5, f"Expected CS6L001 score > 0.5, got {cs6_score}"
+    assert abs(cs6_score - cs4_score) < 0.35, "Mapped and unmapped scores should be comparable"
 
 
 # ==============================================================================
