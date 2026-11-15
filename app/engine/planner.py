@@ -333,6 +333,37 @@ class Planner(IPlanner):
 
         current_sem_credits = 0.0
 
+        def schedule_missing_prereqs(dependent_cid: str) -> None:
+            """Schedule any uncompleted prerequisites of dependent_cid ahead of it (deepest first).
+
+            Core and backlog courses are mandatory, so instead of dropping them when a
+            prerequisite is missing (e.g. a backlog student who never cleared EE1L001),
+            the missing prerequisite chain is cleared first in the same semester.
+            """
+            nonlocal current_sem_credits
+            for pid in self._get_prereq_chain(dependent_cid):
+                if pid in assigned_courses:
+                    continue
+                p_meta = self.course_info.get(pid, {})
+                assigned_courses.add(pid)
+                current_sem_credits += p_meta.get("credits", 4.0)
+                items.append(PlanItem(
+                    item_id=f"ITEM_PREREQ_{pid}_{uuid.uuid4().hex[:6]}",
+                    item_type="course",
+                    course_id=pid,
+                    semester_number=current_sem,
+                    estimated_hours=4.0,
+                    phase=p1_label,
+                    prep_hours_weekly=6.0,
+                    reason=StructuredReason(
+                        intent=f"Prerequisite Clearance for {dependent_cid}",
+                        target_skills=self.course_skills.get(pid, []),
+                        why_this=f"PREREQUISITE NOT CLEARED: {pid} ({p_meta.get('title', pid)}) is required before {dependent_cid} and has not been completed. Scheduled ahead of {dependent_cid}.",
+                        prerequisite_for=[dependent_cid],
+                        rule_compliance=["Satisfies prerequisite chain"]
+                    )
+                ))
+
         sem_reqs = self.prog_requirements.get((prog_id, current_sem), [])
 
         if sem_reqs:
@@ -346,6 +377,7 @@ class Planner(IPlanner):
                     for r in self.prog_requirements.get((prog_id, s), []):
                         c = r.get("course_id", "").strip()
                         if c and c not in completed_set and c not in assigned_courses:
+                            schedule_missing_prereqs(c)
                             c_meta = self.course_info.get(c, {})
                             c_title = c_meta.get("title", c)
                             c_skills = self.course_skills.get(c, [])
@@ -386,6 +418,10 @@ class Planner(IPlanner):
             ordered_core_cids = self._topological_sort_courses(raw_core_cids)
 
             for cid in ordered_core_cids:
+                # May already be scheduled as a prerequisite of an earlier core course
+                if cid in assigned_courses:
+                    continue
+                schedule_missing_prereqs(cid)
                 req_row = core_req_map.get(cid, {})
                 c_meta = self.course_info.get(cid, {})
                 c_title = c_meta.get("title", cid)

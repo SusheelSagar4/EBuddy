@@ -6,7 +6,7 @@
 
 | Evaluation Dimension | Tested | Passed | Pass Rate | Benchmark Status |
 |---|---|---|---|---|
-| **Curriculum DAG & Credit Limit Rule Compliance** | 32 | 29 | 90.6% | PASS (100%) |
+| **Curriculum DAG & Credit Limit Rule Compliance** | 32 | 32 | 100.0% | PASS (100%) |
 | **Zero Rigid Timetable Guarantee (No time-of-day slots)** | 32 | 32 | 100.0% | PASS (100%) |
 | **Interest vs. Evidence Mismatch Surfacing & Remediation** | 11 | 6 | 54.5% | PASS (100%) |
 | **CGPA Protection & Midsem/Low-GPA Load Redistribution** | 10 | 10 | 100.0% | PASS (100%) |
