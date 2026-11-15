@@ -5,8 +5,8 @@
 ## 1. Executive Summary
 
 - **Total B-Schools / Institutions Cataloged:** 13
-- **Total Management Programmes:** 6
-- **Total Admission Cut-off Stats:** 8
+- **Total Management Programmes:** 7
+- **Total Admission Cut-off Stats:** 9
 - **Total Practice Items Audited:** 42
 - **Unreviewed Items Count:** 0 (Strictly 0 allowed in scored diagnostic)
 - **Data Integrity Issues Found:** 0
