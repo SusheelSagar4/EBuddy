@@ -37,10 +37,6 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 templates_dir = os.path.join(os.path.dirname(__file__), "templates")
 templates = Jinja2Templates(directory=templates_dir)
 
-# Mount optional web frontend if present
-web_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web")
-if os.path.exists(web_dir):
-    app.mount("/legacy-web", StaticFiles(directory=web_dir, html=True), name="legacy_web")
 
 # -----------------------------------------------------------------------------
 # 7 UI Shell Pages (Plain HTML + Vanilla JS + CSS / Jinja2)

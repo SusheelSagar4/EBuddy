@@ -29,9 +29,9 @@ print(f"[PASS] 2. GET / (Home HTML) -> Status: {status} | Size: {len(body)} byte
 status, body = test_endpoint(f"{base_url}/roadmap")
 print(f"[PASS] 3. GET /roadmap -> Status: {status} | Size: {len(body)} bytes")
 
-# 4. Web SPA
-status, body = test_endpoint(f"{base_url}/legacy-web/")
-print(f"[PASS] 4. GET /legacy-web/ (SPA) -> Status: {status} | Size: {len(body)} bytes")
+# 4. Goals page
+status, body = test_endpoint(f"{base_url}/goals")
+print(f"[PASS] 4. GET /goals -> Status: {status} | Size: {len(body)} bytes")
 
 # 5. Onboard student
 onboard_payload = {
