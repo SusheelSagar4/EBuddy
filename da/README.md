@@ -1,17 +1,19 @@
-# Data Analyst (DA) Knowledge Base
+# Data Analyst Knowledge Base
 
-This package contains the official source workbook, transformation pipeline, and generated relational CSV knowledge bases for the Data Analyst personalized learning path in **eBuddy** (Adobe Personalised Learning Buddy, Inter IIT Tech Meet 15.0).
+This package contains the official source workbooks, transformation pipelines, and generated relational CSV knowledge bases for the Data Analyst personalized learning and events recommendation path in **eBuddy** (Adobe Personalised Learning Buddy, Inter IIT Tech Meet 15.0).
 
 ---
 
 ## Directory Structure
 
 ```text
-da/
-├── data/                                 # Raw source Excel workbook
-│   └── Data_Analyst_Roadmap.xlsx         # 9 relational sheets (roles, skills, modules, templates, phases, projects, resources, milestones, learning methods)
-├── scripts/                              # Automated Python transformation pipeline
-│   └── build_da_csvs.py                  # Generates the 9 relational CSV files with strict validation assertions
+data_analyst/
+├── data/                                 # Raw source Excel workbooks
+│   ├── Data_Analyst_Roadmap.xlsx         # 9 relational sheets (curriculum, skills, modules, projects, rubrics)
+│   └── Data_Analytics_Hackathons.xlsx    # 35 curated all-India data hackathons & competitions
+├── scripts/                              # Automated Python transformation pipelines
+│   ├── build_da_csvs.py                  # Generates curriculum & portfolio CSV datasets
+│   └── build_da_events_csvs.py           # Generates events master, eligibility gating & recommendation rules
 ├── output/                               # Clean, relational CSV files (UTF-8 with BOM)
 │   ├── 01_da_roadmap_overview.csv        # 5-phase overview roadmap with skills in order and outcomes
 │   ├── 02_phase_modules_resources.csv    # 44 curriculum modules joined with learning resources
@@ -21,14 +23,18 @@ da/
 │   ├── 06_project_rubric_items.csv       # 12 granular rubric evaluation criteria
 │   ├── 07_pacing_templates.csv           # 3 pacing templates (DA-12, DA-6, DA-3) across 5 phases
 │   ├── 08_milestones.csv                 # 6 sequential career and learning milestones
-│   └── 09_learning_methods.csv           # 6 evidence-based pedagogical study methods
+│   ├── 09_learning_methods.csv           # 6 evidence-based pedagogical study methods
+│   ├── 01_events_master.csv              # Unified events catalog (12 Hackathons, 23 Competitions)
+│   ├── 02_phase_eligibility.csv          # Stage-wise unlock gating rules (6 stages: NONE_YET to DA-PH5)
+│   └── 03_recommendation_rules.csv       # Machine-readable recommendation engine rules (R01–R12)
 └── README.md                             # Package documentation (this file)
 ```
 
 ---
 
-## Generated CSV Catalog (`da/output/`)
+## Generated CSV Catalog (`data_analyst/output/`)
 
+### 1. Curriculum & Portfolio Knowledge Base
 | File | Rows | Description |
 |---|---|---|
 | **`01_da_roadmap_overview.csv`** | 5 | High-level roadmap showing phase progression across `DA-PH1` (Foundations), `DA-PH2` (Core SQL and Python), `DA-PH3` (Cleaning, EDA and visualisation), `DA-PH4` (BI, advanced SQL and statistics), and `DA-PH5` (Storytelling, portfolio and interview prep). |
@@ -41,15 +47,29 @@ da/
 | **`08_milestones.csv`** | 6 | Sequential learning milestones (`DA-MS1` through `DA-MS6`) with phase mappings, dependency chains, and placement timings. |
 | **`09_learning_methods.csv`** | 6 | Pedagogical guidance for the learner (Learn by querying, Error log, Spaced review, Think out loud, Timeboxed problem solving, Feynman technique). |
 
+### 2. Events & Competitions Knowledge Base (Reference Date: 2026-11-15)
+| File | Rows | Description |
+|---|---|---|
+| **`01_events_master.csv`**<br/>*(alias: `01_da_events_master.csv`)* | 35 | Master catalog of 35 curated Indian data hackathons (12) and competitions (23) covering expected month ranges, ISO timeline start/end, offline venues, eligibility criteria, restriction flags, and mapped DA skills. |
+| **`02_phase_eligibility.csv`**<br/>*(alias: `02_da_phase_eligibility.csv`)* | 6 | Stage-wise gating rules defining category unlocks (`hackathons_unlocked`, `competitions_unlocked`), recommendation quotas, and contextual user nudges across `NONE_YET` and Phases `DA-PH1` through `DA-PH5`. |
+| **`03_recommendation_rules.csv`**<br/>*(alias: `03_da_recommendation_rules.csv`)* | 12 | Machine-readable engine rules (R01–R12) governing eligibility, set sizing, category mix, diversity, timeline filters, home campus preference, and skill readiness hints. |
+
 ---
 
-## Running the Pipeline
+## Running the Pipelines
 
-To regenerate the Data Analyst knowledge base:
+To regenerate the Data Analyst curriculum knowledge base:
 ```bash
-python da/scripts/build_da_csvs.py
+python data_analyst/scripts/build_da_csvs.py
 ```
-Or use the repository root forwarder:
+
+To regenerate the Data Analyst events and hackathons knowledge base:
+```bash
+python data_analyst/scripts/build_da_events_csvs.py
+```
+
+Or run via repository root forwarders:
 ```bash
 python build_da_csvs.py
+python build_da_events_csvs.py
 ```

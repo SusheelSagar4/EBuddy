@@ -1,15 +1,13 @@
 ﻿rule_id,rule_name,rule_description,applies_to_category,parameter,value
-R01,MIN_PHASE_FOR_HACKATHON,Learner must have completed Phase 1 (Programming & Dev Basics) or any subsequent phase to receive hackathon recommendations.,HACKATHON,min_phase_id,P1_Programming_and_Dev_Basics
-R02,MIN_PHASE_FOR_COMPETITION,Competitions require either Phase 1 or Phase 2 depending on whether foundational DSA or basic programming is evaluated.,COMPETITION,min_phase_id,PER_EVENT_MIN_PHASE
-R03,FEST_ALWAYS_ELIGIBLE,"Tech fests are eligible for recommendation at every learner stage for orientation, exposure, and inspiration.",FEST,min_phase_id,NONE
-R04,RECOMMENDATION_SET_SIZE,"Total number of events recommended per prompt: 6 when all categories are unlocked, or 2 (fests only) when locked.",ALL,set_size,6_OR_2
-R05,CATEGORY_MIX,Every recommendation set must include at least 1 event from each unlocked category where events are available.,ALL,min_per_unlocked_category,1
-R06,EXCLUDE_ENDED_EVENTS,Skip events whose end_month is strictly prior to the current reference month.,ALL,end_month_cutoff,CURRENT_MONTH
-R07,EXCLUDE_CLOSED_REGISTRATION,"Skip events whose registration_status_vs_ref_date is CLOSED, unless timeline_type is ROLLING.",ALL,registration_status,EXCLUDE_CLOSED_EXCEPT_ROLLING
-R08,PREFER_UPCOMING,Prioritize events occurring within the next 1 to 4 months before recommending events further out in the season.,ALL,upcoming_window_months,1-4
-R09,PREFER_HIRING,"When ranking otherwise comparable events, prioritize can_get_hired = YES, then POSSIBLE, then EXPOSURE_ONLY.",ALL,hiring_rank_order,YES > POSSIBLE > EXPOSURE_ONLY > NO
-R10,PREFER_HIGH_CONFIDENCE_DATES,Rank HIGH confidence dates above MEDIUM above LOW; never present LOW confidence dates as confirmed.,ALL,confidence_rank_order,HIGH > MEDIUM > LOW
-R11,ELIGIBILITY_MATCH,Skip women_only events for learners who do not match; verify eligibility_group against learner profile while displaying eligibility_raw.,ALL,eligibility_filter,PROFILE_COMPLIANT
-R12,REQUIRED_FIELDS_IN_EVERY_RECOMMENDATION,"Mandatory metadata fields that eBuddy must display in every card: event_name, category, type_raw, expected_month_range, date_wording, eligibility_raw, prize_pool_raw, can_get_hired, hiring_detail.",ALL,mandatory_fields,"event_name,category,type_raw,expected_month_range,date_wording,eligibility_raw,prize_pool_raw,can_get_hired,hiring_detail"
-R13,SHOW_CAVEATS,"Use expected wording when date_wording = EXPECTED; surface critical data quality flags (closed registration, past prize figure, unannounced dates) clearly.",ALL,caveat_display,SURFACE_QUALITY_FLAGS
-R14,MAX_SAME_ORGANISER_PER_SET,Cap recommendations at a maximum of 2 events from the same organizer in any single recommendation set to maintain ecosystem diversity.,ALL,max_same_organiser,2
+R01,MIN_PHASE_FOR_HACKATHON,Learner must have completed at least Phase 1 (DA-PH1 Foundations) or any subsequent phase to receive hackathon recommendations.,HACKATHON,min_phase_id,DA-PH1
+R02,MIN_PHASE_FOR_COMPETITION,Learner must have completed at least Phase 1 (DA-PH1 Foundations) or any subsequent phase to receive data competition recommendations.,COMPETITION,min_phase_id,DA-PH1
+R03,RECOMMENDATION_SET_SIZE,eBuddy recommends a small curated set of 4 to 6 events per interaction once unlocked (0 when locked).,ALL,set_size,4_TO_6
+R04,CATEGORY_MIX,Recommendation sets should mix hackathons and competitions where events are available in the upcoming window.,ALL,mix_categories,TRUE
+R05,EXCLUDE_ENDED_EVENTS,Filter out events whose scheduled end month is strictly prior to the current reference month (2026-11).,ALL,end_month_cutoff,CURRENT_MONTH
+R06,PREFER_UPCOMING,Prioritize events occurring within the next 1 to 4 months before recommending events further out in the season.,ALL,upcoming_window_months,1-4
+R07,PREFER_HOME_CAMPUS,"Boost IIT Bhubaneswar home campus events (Wissenaire, TechZephyr) for local learners.",ALL,home_campus_preference,BOOST_HOME_CAMPUS
+R08,SKILL_READINESS_MATCH,Use skill_readiness_phase_derived as a soft recommendation hint to align events with learner's current or completed phase.,ALL,soft_hint,skill_readiness_phase_derived
+R09,MANDATORY_DISPLAY_FIELDS,"Mandatory fields in event recommendation card: event_name, category_track, expected_month_range, date_wording, last_held_month_range, eligibility_raw, mode_derived, skills_required_raw.",ALL,mandatory_fields,"event_name,category_track,expected_month_range,date_wording,last_held_month_range,eligibility_raw,mode_derived,skills_required_raw"
+R10,DATE_WORDING_CAVEAT,Explicitly display EXPECTED or TENTATIVE wording in event cards since source dates are forward-looking schedules.,ALL,date_wording_display,ENFORCE_CAVEAT
+R11,DIVERSITY_QUOTA,Cap recommendations at a maximum of 2 events from the same organizer in any single recommendation set.,ALL,max_same_organiser,2
+R12,ELIGIBILITY_COMPLIANCE,Filter out events whose restriction_flags_derived or eligibility_group conflicts with learner's institutional profile.,ALL,eligibility_filter,PROFILE_COMPLIANT

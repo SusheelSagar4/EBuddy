@@ -286,10 +286,12 @@ python scripts/check_data.py
 │   │   └── 04_domain_to_phase_map.csv
 │   └── README.md                         # AI/ML domain catalog & execution guide
 ├── data_analyst/                         # Data Analyst (DA) domain package
-│   ├── data/                             # Raw DA Excel knowledge base source
-│   │   └── Data_Analyst_Roadmap.xlsx     # 9 relational sheets
-│   ├── scripts/                          # DA transformation pipeline
-│   │   └── build_da_csvs.py              # DA curriculum, skills, checkpoints, projects & rubrics builder
+│   ├── data/                             # Raw DA Excel knowledge base sources
+│   │   ├── Data_Analyst_Roadmap.xlsx     # 9 relational sheets
+│   │   └── Data_Analytics_Hackathons.xlsx # 35 curated Indian data hackathons & competitions
+│   ├── scripts/                          # DA transformation pipelines
+│   │   ├── build_da_csvs.py              # DA curriculum, skills, checkpoints, projects & rubrics builder
+│   │   └── build_da_events_csvs.py       # DA hackathons, competitions & recommendation rules builder
 │   ├── output/                           # Generated DA relational CSV datasets (UTF-8 with BOM)
 │   │   ├── 01_da_roadmap_overview.csv
 │   │   ├── 02_phase_modules_resources.csv
@@ -299,11 +301,14 @@ python scripts/check_data.py
 │   │   ├── 06_project_rubric_items.csv
 │   │   ├── 07_pacing_templates.csv
 │   │   ├── 08_milestones.csv
-│   │   └── 09_learning_methods.csv
+│   │   ├── 09_learning_methods.csv
+│   │   ├── 01_events_master.csv
+│   │   ├── 02_phase_eligibility.csv
+│   │   └── 03_recommendation_rules.csv
 │   └── README.md                         # DA domain catalog & execution guide
 ├── da/                                   # Shorthand alias package for Data Analyst
-│   ├── data/                             # Raw DA Excel knowledge base source
-│   ├── scripts/                          # DA transformation pipeline
+│   ├── data/                             # Raw DA Excel knowledge base sources
+│   ├── scripts/                          # DA transformation pipelines
 │   ├── output/                           # Mirrored DA relational CSV datasets
 │   └── README.md                         # DA package documentation
 ├── output/                               # Unified legacy output directory (synchronized mirrors)
@@ -313,6 +318,8 @@ python scripts/check_data.py
 ├── build_sde_events_csvs.py              # Root forwarder -> sde/scripts/build_sde_events_csvs.py
 ├── build_data_analyst_csvs.py            # Root forwarder -> data_analyst/scripts/build_da_csvs.py
 ├── build_da_csvs.py                      # Root forwarder -> data_analyst/scripts/build_da_csvs.py
+├── build_data_analyst_events_csvs.py     # Root forwarder -> data_analyst/scripts/build_da_events_csvs.py
+├── build_da_events_csvs.py               # Root forwarder -> data_analyst/scripts/build_da_events_csvs.py
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
@@ -468,9 +475,9 @@ The repository organizes data assets, transformation pipelines, and generated kn
    - `aiml/README.md`: Detailed documentation and data dictionaries for the AI/ML track.
 
 3. **`data_analyst/` Package** *(alias: `da/`)*:
-   - `data_analyst/data/`: Official Excel workbook (`Data_Analyst_Roadmap.xlsx`) containing 9 sheets.
-   - `data_analyst/scripts/`: Standalone Python transformation script (`build_da_csvs.py`).
-   - `data_analyst/output/`: Relational CSV outputs for 5-phase overview, module-resource pairings, skills catalog, readiness checkpoints, projects, rubrics, pacing templates, milestones, and learning methods.
+   - `data_analyst/data/`: Official Excel workbooks (`Data_Analyst_Roadmap.xlsx`, `Data_Analytics_Hackathons.xlsx`).
+   - `data_analyst/scripts/`: Standalone Python transformation scripts (`build_da_csvs.py`, `build_da_events_csvs.py`).
+   - `data_analyst/output/`: Relational CSV outputs for curriculum overview, module-resource pairings, skills catalog, readiness checkpoints, projects, rubrics, pacing templates, milestones, learning methods, events master, phase eligibility, and engine rules.
    - `data_analyst/README.md`: Detailed documentation and data dictionaries for the Data Analyst track.
 
 ### Execution Flexibility
@@ -484,12 +491,14 @@ python sde/scripts/build_sde_events_csvs.py
 python aiml/scripts/build_csvs.py
 python aiml/scripts/build_events_csvs.py
 
-# Data Analyst Pipeline
+# Data Analyst Pipelines
 python data_analyst/scripts/build_da_csvs.py
-# or
+python data_analyst/scripts/build_da_events_csvs.py
+# or shorthand
 python da/scripts/build_da_csvs.py
+python da/scripts/build_da_events_csvs.py
 ```
-*Root-level forwarders (`build_csvs.py`, `build_events_csvs.py`, `build_sde_csvs.py`, `build_sde_events_csvs.py`, `build_data_analyst_csvs.py`, `build_da_csvs.py`) and legacy `output/` directories are maintained for seamless backward compatibility.*
+*Root-level forwarders (`build_csvs.py`, `build_events_csvs.py`, `build_sde_csvs.py`, `build_sde_events_csvs.py`, `build_data_analyst_csvs.py`, `build_da_csvs.py`, `build_data_analyst_events_csvs.py`, `build_da_events_csvs.py`) and legacy `output/` directories are maintained for seamless backward compatibility.*
 
 ---
 
@@ -517,11 +526,31 @@ An automated data engineering pipeline (`build_da_csvs.py` / `build_data_analyst
 3. **Dataset Linking**: All three project dataset URLs directly correspond to source dataset resources (`DA-P01` -> `DA-R13`, `DA-P02` -> `DA-R14`, `DA-P03` -> `DA-R15`).
 4. **Prerequisite Integrity**: Prerequisite DAG audit verified that all skill prerequisites belong to earlier phases or earlier positions within the same phase, ensuring zero forward dependency violations.
 
-### Running the Data Analyst Pipeline
+### Running the Data Analyst Curriculum Pipeline
 ```bash
 python build_da_csvs.py
 ```
 *The pipeline executes comprehensive validation assertions on run, verifying 100% exact cell preservation against the source Excel workbook, row count constraints, template phase identity, and relational foreign keys.*
+
+---
+
+## 17. Data Analyst (DA) Events, Hackathons & Competitions Knowledge Base Pipeline
+
+An automated data engineering pipeline (`build_da_events_csvs.py` / `build_data_analyst_events_csvs.py`) ingests official data analytics hackathon and competition schedules (`Data_Analytics_Hackathons.xlsx`) to construct an events recommendation knowledge base in `data_analyst/output/`, `da/output/`, and `output/` relative to reference date **2026-11-15**:
+
+### Datasets Generated (`data_analyst/output/`, `da/output/`, and `output/`)
+
+| File | Rows | Schema & Purpose | Key Highlights |
+|---|---|---|---|
+| **`01_events_master.csv`**<br/>*(alias: `01_da_events_master.csv`)* | 35 | Master catalog of 35 curated Indian data hackathons and competitions. | • Event type classification: 12 HACKATHON (`HACK-01..12`) and 23 COMPETITION (`COMP-01..23`)<br/>• Organiser categorization (IIT, NIT, BITS/IIM/B-School, Corporate, Government/Ministry, Community platform)<br/>• Home campus tagging (`is_home_campus_event = TRUE` for IIT Bhubaneswar events)<br/>• Mode & offline finale venues (e.g., IIT Bombay Powai, IIT Kharagpur, Gurugram / Virtual)<br/>• Timeline parsing (`expected_month_range`, `start_month`, `end_month`, `next_cycle_note`, `date_wording`)<br/>• Normalised last held edition tracking and multiple year detection<br/>• Structured eligibility classification, restriction flags, and team size phrases<br/>• Granular skill set splitting and DA roadmap skill mapping with soft readiness phase hint |
+| **`02_phase_eligibility.csv`**<br/>*(alias: `02_da_phase_eligibility.csv`)* | 6 | Stage-wise gating rules defining category unlocks, quotas, and contextual user nudges. | • `NONE_YET`: Hackathons and competitions locked (set size 0); prompts learner to complete DA-PH1 Foundations<br/>• `DA-PH1`: Full unlock (2 hackathons, 2 competitions; set size 4)<br/>• `DA-PH2` to `DA-PH5`: Full unlock (3 hackathons, 3 competitions; set size 6) with stage-specific encouraging nudges |
+| **`03_recommendation_rules.csv`**<br/>*(alias: `03_da_recommendation_rules.csv`)* | 12 | Machine-readable engine rules (R01–R12) governing recommendation behavior. | • Minimum phase prerequisites (R01, R02: DA-PH1)<br/>• Set sizing and category mix enforcement (R03, R04)<br/>• Reference date filtering vs 2026-11-15 (R05, R06)<br/>• Home campus boost for IIT Bhubaneswar learners (R07)<br/>• Skill readiness soft matching (R08)<br/>• Mandatory display fields & date wording caveats (R09, R10)<br/>• Diversity quota capping same organizer at 2 (R11)<br/>• Eligibility profile compliance (R12) |
+
+### Running the Data Analyst Events Pipeline
+```bash
+python build_da_events_csvs.py
+```
+*The pipeline executes deterministic validation assertions upon execution, verifying 100% exact cell preservation against raw source data, row count constraints, ISO month formats, and eligibility gating rules.*
 
 
 
