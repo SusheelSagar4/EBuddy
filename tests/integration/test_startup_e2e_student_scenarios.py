@@ -290,5 +290,113 @@ class TestStartupE2EStudentScenarios(unittest.TestCase):
         self.assertTrue(report.passed, f"Validation failed: {report.messages}")
         self.assertGreater(len(plan.items), 0)
 
+    def test_04_unverified_resources_and_no_scheme_figures(self):
+        """
+        Test matching btech_upsc test_04:
+        - SR12, SR14, and SR15 never appear as resource plan items for any of the 3 e2e students.
+        - Any mention of them carries 'not confirmed yet'.
+        - Skills without verified resources (SKILL_STARTUP_TECH_DEPTH and SKILL_STARTUP_TEAM_EXECUTION)
+          have exercises with 'not confirmed yet'.
+        - No plan item text contains a rupee amount (₹, Rs., INR, lakh, crore) or a deadline
+          for Startup India, Startup Odisha, or IIT BBS REP.
+        """
+        # Load resources.csv to audit verification flags
+        raw_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw", "higher_studies", "startup")
+        )
+        resources_map = {}
+        with open(os.path.join(raw_dir, "resources.csv"), "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                resources_map[r["resource_id"]] = r
+
+        unverified_rids = {"SR12", "SR14", "SR15"}
+        for rid in unverified_rids:
+            self.assertEqual(
+                resources_map[rid]["verified"].strip().upper(),
+                "FALSE",
+                f"Resource {rid} expected verified=FALSE in raw data"
+            )
+
+        students = [
+            StudentProfile(student_id="STU_E2E_EE_S3", name="Sem3 EE", programme_id="BTECH_EE", current_semester=3, cgpa=8.2, backlogs=0, is_synthetic=True),
+            StudentProfile(student_id="STU_E2E_MM_S6", name="Sem6 MM", programme_id="BTECH_MM", current_semester=6, cgpa=7.5, backlogs=0, is_synthetic=True),
+            StudentProfile(student_id="STU_E2E_EE_S8", name="Sem8 EE", programme_id="BTECH_EE", current_semester=8, cgpa=8.0, backlogs=0, is_synthetic=True)
+        ]
+
+        import re
+        currency_pattern = re.compile(r"(\b(rs\.?|inr|rupees?|lakhs?|crores?)\b|₹)", re.IGNORECASE)
+        scheme_keywords = ["startup india", "startup odisha", "rep", "research and entrepreneurship park", "entrepreneurship park"]
+        deadline_keywords = ["deadline", "due date", "last date", "by 31st", "by 15th"]
+
+        for stu in students:
+            gaps = self.gap_analyzer.analyze_gaps(self.goal, self.reqs, [])
+            plan = self.planner.generate_plan(stu, self.goal, gaps, [], [])
+
+            # 1. Check all resource items
+            resource_items = [it for it in plan.items if it.item_type == "resource"]
+            self.assertGreater(len(resource_items), 0, f"Plan for {stu.student_id} should include resources")
+
+            assigned_rids = {it.resource_id for it in resource_items}
+            for unv in unverified_rids:
+                self.assertNotIn(
+                    unv,
+                    assigned_rids,
+                    f"Unverified resource {unv} was assigned as a resource plan item for {stu.student_id}!"
+                )
+
+            for it in resource_items:
+                rid = it.resource_id
+                self.assertIn(rid, resources_map)
+                self.assertEqual(
+                    resources_map[rid]["verified"].strip().upper(),
+                    "TRUE",
+                    f"Resource {rid} in plan for {stu.student_id} must have verified=TRUE"
+                )
+
+            # 2. Check unverified skills exercises carry 'not confirmed yet'
+            unv_skills = ["SKILL_STARTUP_TECH_DEPTH", "SKILL_STARTUP_TEAM_EXECUTION"]
+            for sid in unv_skills:
+                matching_ex = [
+                    it for it in plan.items
+                    if it.item_type == "exercise" and sid in it.reason.target_skills
+                ]
+                self.assertGreater(len(matching_ex), 0, f"Missing exercise item for unverified skill {sid}")
+                for ex in matching_ex:
+                    self.assertIn(
+                        "not confirmed yet",
+                        ex.reason.why_this.lower(),
+                        f"Exercise for unverified skill {sid} must contain 'not confirmed yet' for {stu.student_id}"
+                    )
+
+            # 3. Check that ANY plan item mentioning unverified resources carries 'not confirmed yet'
+            for it in plan.items:
+                text = (
+                    (it.reason.why_this or "") + " " +
+                    " ".join(it.reason.rule_compliance or []) + " " +
+                    (it.reason.intent or "")
+                ).lower()
+
+                if any(x in text for x in ["sr12", "sr14", "sr15", "hisrich", "nptel equivalents"]):
+                    self.assertIn(
+                        "not confirmed yet",
+                        text,
+                        f"Plan item {it.item_id} mentions unverified reference without 'not confirmed yet': {text}"
+                    )
+
+                # 4. Check no rupee amount or deadlines for schemes
+                match_currency = currency_pattern.search(text)
+                self.assertIsNone(
+                    match_currency,
+                    f"Plan item {it.item_id} contains forbidden currency token '{match_currency.group(0) if match_currency else ''}': {text}"
+                )
+
+                for dk in deadline_keywords:
+                    if any(sk in text for sk in scheme_keywords):
+                        self.assertNotIn(
+                            dk,
+                            text,
+                            f"Plan item {it.item_id} contains deadline term '{dk}' for scheme: {text}"
+                        )
+
 if __name__ == "__main__":
     unittest.main()
