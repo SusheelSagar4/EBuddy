@@ -1,10 +1,23 @@
 # Course Recommender Status & Checklists
 
-Last Updated: 2026-11-15 (Commits A & B Landed: Skill Mappings Applied, 10 Anomalies Corrected, Full 42-Test Suite Green)
+Last Updated: 2026-11-15 (Polish Complete: other_eligible Partition, Neutral Heading, Unstemmed Words, Resource Punctuation Cleaned, 45 Tests Green)
 
 ## 1. Feature Checklist
 
 ### DONE (Verified Green)
+- [x] **Recommendations vs. Other Eligible Partitioning (`app/recommender/engine.py` & `explain.py`)**:
+  - Only courses with `score >= MIN_RELEVANCE` (0.20) are placed into `recommendations`.
+  - Eligible courses with score `< 0.20` (or beyond `top_k`) are placed into `other_eligible`.
+  - Zero-score courses are strictly never described as recommended or relevant.
+  - Drop the filler phrase `"eligible elective matching semester slot criteria"`.
+  - Courses in `other_eligible` are presented under the neutral heading: `"Other eligible electives, not matched to your goal:"` (or `"Other eligible electives, not matched to your query:"`).
+- [x] **Goal-Aware Phrasing (`app/recommender/explain.py`)**:
+  - When `intent.source` is `"profile_goal"`, user-facing text says `"your goal (<goal text>)"` instead of `"your query"`.
+- [x] **Unstemmed Original Words in User-Facing Text (`app/recommender/retrieval.py`)**:
+  - Pure Python rule-based unstemmer (`unstem()`) maps stemmed tokens back to canonical human-readable words (e.g. `artificial`, `computing`, `solidification`, `simulation`, `structures`).
+  - `matched_terms` outputs clean original words instead of raw stems like `artifici` or `compu`.
+- [x] **Resource Title Punctuation Cleaned (`app/recommender/explain.py`)**:
+  - Strips trailing punctuation from resource titles (`.rstrip(" :;,.")`) preventing stray punctuation like `):.` or `channel (browse by course name):.`.
 - [x] **Approved Skill Mappings Applied (`data/seed/kb/course_skill.csv`, Commit `c1b69d6`)**:
   - Added approved skill mappings for 33 slot-candidate courses (34 total mappings, including dual skills for `EE6L011`).
   - `ML4L012` (*Materials in archaeology*) skipped per instructions.
@@ -43,7 +56,7 @@ Last Updated: 2026-11-15 (Commits A & B Landed: Skill Mappings Applied, 10 Anoma
 - [x] **Template Formatting & Grammar (`app/recommender/explain.py`)**:
   - Removed duplicate course code display (e.g. `**EE3L005** (EE3L005 ...)` -> `**EE3L005**: ...`).
   - Removed duplicated provider tags (e.g. `(NPTEL) (NPTEL)` -> single reference).
-  - Fixed grammatical phrasing (`"eligible elective matching semester slot criteria"`).
+  - Clean sentence phrasing with zero broken grammatical constructs.
 - [x] **LLM Visibility & Error Transparency (`app/recommender/explain.py` & `app/recommender/api.py`)**:
   - Added `llm_used: bool` and `llm_error: Optional[str]` to `/recommend` response.
   - Logs exceptions at `WARNING` without leaking sensitive secrets.
@@ -108,11 +121,11 @@ python -m pytest tests/test_recommender.py tests/unit/test_import_boundaries.py 
 
 Output:
 ```text
-======================= 42 passed, 1 warning in 11.20s ========================
+======================= 45 passed, 1 warning in 10.61s ========================
 ```
 
 Key verified test suites:
-- `tests/test_recommender.py`: 20 passed (including `test_unmapped_course_scoring_comparable`, determinism, credit limits, prerequisite checks, fallback templates, hallucination guard, MME duplicate codes, intent fallback, backlogs, relevance honesty, future options, multi-slot credits, template formatting, mocked LLM path, API validation & visibility).
+- `tests/test_recommender.py`: 23 passed (including `test_other_eligible_partition_and_neutral_heading`, `test_resource_punctuation_formatting_clean`, `test_unstemmed_original_words_in_matched_terms`, `test_unmapped_course_scoring_comparable`, determinism, credit limits, prerequisite checks, fallback templates, hallucination guard, MME duplicate codes, intent fallback, backlogs, relevance honesty, future options, multi-slot credits, template formatting, mocked LLM path, API validation & visibility).
 - `tests/unit/test_import_boundaries.py`: 4 passed (clean LiteLLM isolation, engine boundaries, KB boundaries, contracts isolation).
 - `tests/test_db_free.py`: 9 passed (env compliance, docker ignore, air-gap flags, seed data).
 - `tests/conformance/test_persona_conformance.py`: 8 passed (all 8 persona gates).
@@ -157,11 +170,12 @@ $response | ConvertTo-Json -Depth 5
 ### 1. EE Semester 5 (Goal: "Software engineering role", Query: "what course should I take this semester")
 - **Intent**: Falls back to `profile_goal` (`query_had_topic: False`).
 - **Credit Budget**: Core 18.0, Limit 25.0, Headroom 7.0 (2 open slots, needs 6.0-7.0 credits, status: `sufficient`).
-- **Relevance Flag**: `weak_match: True`, `no_direct_match: True` (EE Sem 5 slots strictly offer `EE3L005` & `EE3L006`).
-- **Recommendations**:
+- **Relevance Flag**: `weak_match: True`, `no_direct_match: True` (EE Sem 5 slots strictly offer `EE3L005` & `EE3L006`; neither matches software).
+- **Recommendations**: *(None with score >= 0.20)*
+- **Other Eligible (Not Matched to Goal)**:
   - `EE3L005`: Control System Technology (3.0 cr, score: 0.00)
   - `EE3L006`: Signals and Circuits (3.0 cr, score: 0.00)
-- **Honest Explanation**: Plainly reports no direct matches for the software goal, lists available slot electives, and highlights upcoming courses.
+- **Honest Explanation**: Plainly reports no direct matches for your goal (Software engineering role), lists available slot electives neutrally under `"Other eligible electives, not matched to your goal:"`, and highlights upcoming courses.
 - **Future Options**:
   - `CS4L003`: Artificial Intelligence (Sem 7, 3.0 cr, score: 0.90)
   - `EE3L008`: Soft Computing and Applications (Sem 6, 3.0 cr, score: 0.80)
@@ -171,12 +185,20 @@ $response | ConvertTo-Json -Depth 5
 - **Intent**: Falls back to `profile_goal` (`query_had_topic: False`).
 - **Credit Budget**: Core 12.0, Limit 19.0, Headroom 7.0 (2 open slots, needs 6.0-7.0 credits, status: `sufficient`).
 - **Relevance Flag**: `weak_match: False`, `no_direct_match: False`.
-- **Top Recommendations**:
+- **Top Recommendations (score >= 0.20)**:
   - `CS4L003`: Artificial Intelligence (3.0 cr, score: 0.90, skill: `SKILL_AI_ML`)
   - `CS6L001`: Computational Intelligence (3.0 cr, score: 0.80, skill: `SKILL_AI_ML`)
+- **Other Eligible (Not Matched to Goal, score < 0.20)**:
   - `EC4L001`: Semiconductor Devices (3.0 cr, score: 0.00)
   - `EC4L002`: Opto-Electronics (3.0 cr, score: 0.00)
   - `EC6L002`: Image and Video Processing (4.0 cr, score: 0.00)
+  - `EC6L005`: Statistical Signal Processing (3.0 cr, score: 0.00)
+  - `EC6L012`: Optical Communication (3.0 cr, score: 0.00)
+  - `EE6L002`: Electric Power Quality (3.0 cr, score: 0.00)
+  - `EE6L007`: Industrial Instrumentation (3.0 cr, score: 0.00)
+  - `EE6L009`: High Voltage Engineering (3.0 cr, score: 0.00)
+  - `EE6L010`: Advanced Power Electronics (3.0 cr, score: 0.00)
+  - `EE6L011`: Energy Storage Systems (3.0 cr, score: 0.00)
 - **Future Options**:
   - `EC6L027`: Pattern Recognition (Sem 8, 3.0 cr, score: 0.70)
   - `EC6L031`: Computer Vision (Sem 8, 3.0 cr, score: 0.70, missing prereq: `EC6L002`)
@@ -186,7 +208,7 @@ $response | ConvertTo-Json -Depth 5
 - **Intent**: Falls back to `profile_goal` (`query_had_topic: False`).
 - **Credit Budget**: Core 16.0, Limit 24.0, Headroom 8.0 (2 open slots, needs 6.0-8.0 credits, status: `sufficient`).
 - **Relevance Flag**: `weak_match: False`, `no_direct_match: False`.
-- **Top Recommendations**:
+- **Top Recommendations (score >= 0.20)**:
   - `ML3L011`: Recent advances in composite materials (3.0 cr, score: 0.62, skill: `SKILL_COMPOSITES_NANO`)
   - `ML2L006`: Advances in nanoscience and nanotechnology (3.0 cr, score: 0.42, skill: `SKILL_COMPOSITES_NANO`)
   - `ML3L012`: Mineral processing plant design (3.0 cr, score: 0.21, skill: `SKILL_EXTRACTIVE_MET`)
@@ -199,8 +221,25 @@ $response | ConvertTo-Json -Depth 5
 
 ## 6. Known Seed Data Quirks & Handling
 
-1. **MME Slot-Semester Mapping**: MME slot IDs (`SLOT_MME_ELEC_1`, `SLOT_MME_ELEC_2`, etc.) do not encode semester numbers. Mapped sequentially by curriculum occurrence order (Sem 6: slots 1-2, Sem 7: slots 3-4, Sem 8: slots 5-6).
-2. **Duplicate Course Codes in MME**: `ML4L001`, `ML4L002`, `ML4L003` appear twice in seed data (as both core courses and slot electives). Handled by mapping course IDs with `_CORE` and `_ELEC` suffixes and displaying clean base codes to students.
-3. **Sparse Skill Mappings**: Resolved via approved Commit A (34 mappings added) and Commit B (10 anomalies corrected and documented in `data_issue.csv`).
-4. **Credit Cap Rules**: Standard caps (24-25 regular, 28 overload, 18-20 probation) enforced deterministically per institute B.Tech ordinances.
+1. **MME Slot-Semester Mapping**:
+   - In `data/seed/kb/slot_option.csv`, MME slot IDs do not contain semester numbers. The real slot IDs in data and code are:
+     - `MM_LATERAL_1`, `MM_LATERAL_2`, `MM_LATERAL_3`
+     - `MM_ELECTIVE_1`, `MM_ELECTIVE_2`, `MM_ELECTIVE_3`, `MM_ELECTIVE_4`, `MM_ELECTIVE_5`
+   - In `app/recommender/kb.py`, the explicit mapping `MME_SLOT_SEMESTER_MAP` assigns:
+     - `MM_LATERAL_1` -> Semester 4
+     - `MM_LATERAL_2` -> Semester 5
+     - `MM_LATERAL_3` -> Semester 6
+     - `MM_ELECTIVE_1`, `MM_ELECTIVE_2` -> Semester 7
+     - `MM_ELECTIVE_3`, `MM_ELECTIVE_4`, `MM_ELECTIVE_5` -> Semester 8
+2. **Duplicate Course Codes in MME**: `ML4L001`, `ML4L002`, `ML4L003` appear twice in seed data (as both core courses and slot electives). Handled by mapping course IDs with `_CORE` and `_ELEC` suffixes in `resolve_course_id()` and displaying clean base codes to students.
+3. **Sparse Skill Mappings & Seed Corrections**:
+   - Resolved via approved Commit A (`c1b69d6`, 34 candidate mappings added) and Commit B (`35949f6`, 10 anomalies corrected and documented in `data/seed/kb/data_issue.csv` and `docs/course_skill_corrections.md`).
+4. **Credit Cap Rules & Status**:
+   - All academic rules in `data/seed/kb/academic_rule.json` have `status: "unsourced_baseline"` (`source_id: "UNSOURCED_BASELINE"`).
+   - Baseline credit caps defined in `academic_rule.json` and enforced by `app/recommender/credits.py`:
+     - Regular cap (`RULE_SEM_CREDIT_CAP_REGULAR`): 26.0 credits max (16.0 min). Overload up to 30.0 credits for CGPA >= 8.5 with Faculty Advisor approval.
+     - Probation cap (`RULE_SEM_CREDIT_CAP_PROBATION`): 18.0 credits max (for CGPA < 6.0 or academic probation).
+     - Minor eligibility (`RULE_MINOR_ELIGIBILITY`): CGPA >= 8.0, 18 credits between Sem V and Sem VIII.
+     - Online credit transfer cap (`RULE_ONLINE_CREDIT_NPTEL`): Max 12 credits via approved 8/12-week NPTEL/SWAYAM courses.
+
 
