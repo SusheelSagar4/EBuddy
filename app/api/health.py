@@ -6,17 +6,17 @@ from app.config import settings
 
 router = APIRouter()
 
-@router.get("/health")
-def health_check(db: Session = Depends(get_db)):
+def _check_health(db: Session):
     db_status = "connected"
     table_counts = {}
     try:
-        # Check DB connection and count core tables
         queries = {
             "kb_courses": "SELECT COUNT(*) FROM kb.course",
             "kb_slots": "SELECT COUNT(*) FROM kb.programme_requirement",
             "kb_resources": "SELECT COUNT(*) FROM kb.resource",
-            "kb_projects": "SELECT COUNT(*) FROM kb.research_project",
+            "kb_exercises": "SELECT COUNT(*) FROM kb.exercise",
+            "kb_skills": "SELECT COUNT(*) FROM kb.skill",
+            "kb_goals": "SELECT COUNT(*) FROM kb.goal",
             "kb_faculty": "SELECT COUNT(*) FROM kb.faculty",
             "kb_data_issues": "SELECT COUNT(*) FROM kb.data_issue",
             "students": "SELECT COUNT(*) FROM student.student",
@@ -28,13 +28,30 @@ def health_check(db: Session = Depends(get_db)):
     except Exception as e:
         db_status = f"unhealthy: {str(e)}"
 
+    llm_key = (settings.LLM_API_KEY or "").strip()
+    is_llm_configured = bool(
+        llm_key
+        and llm_key.lower() not in ["", "placeholder", "your-api-key-here", "your_key", "sk-placeholder"]
+        and not llm_key.startswith("your_api_key")
+    )
+
     return {
         "status": "healthy" if "unhealthy" not in db_status else "degraded",
         "database": db_status,
+        "llm_configured": is_llm_configured,
         "counts": table_counts,
         "configured_llm_model": settings.LLM_MODEL,
         "configured_embedding_model": settings.EMBEDDING_MODEL,
         "telemetry_disabled": not settings.LITELLM_TELEMETRY,
         "local_cost_map": settings.LITELLM_LOCAL_MODEL_COST_MAP
     }
+
+@router.get("/health")
+def health_endpoint(db: Session = Depends(get_db)):
+    return _check_health(db)
+
+@router.get("/api/health")
+def api_health_endpoint(db: Session = Depends(get_db)):
+    return _check_health(db)
+
 

@@ -1,0 +1,1769 @@
+course_id,goal_id,relevance_score,rationale,status,source_id
+CE1P001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CE1P001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS1L001,GOAL_CROSS_SDE_DATA,3,"Essential competency match for SKILL_PROGRAMMING_DS, SKILL_DATA_STRUCTURES_ALGO (overlap strength 1.02)",draft_for_review,AI_DRAFT
+CS1L001,GOAL_EE_CORE_POWER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_UPSC_COMPETITIVE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1L001,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_CROSS_SDE_DATA,3,"Essential competency match for SKILL_PROGRAMMING_DS, SKILL_DATA_STRUCTURES_ALGO (overlap strength 0.94)",draft_for_review,AI_DRAFT
+CS1P001,GOAL_EE_CORE_POWER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_UPSC_COMPETITIVE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS1P001,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+CS4L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS4L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_CROSS_SDE_DATA,3,Essential competency match for SKILL_AI_ML (overlap strength 0.68),draft_for_review,AI_DRAFT
+CS6L001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_TECH_STARTUP,2,Useful elective supporting SKILL_AI_ML (overlap strength 0.48),draft_for_review,AI_DRAFT
+CS6L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CS6L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+CY1P001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L001,GOAL_EE_CORE_VLSI,2,Useful elective supporting SKILL_ANALOG_ELECTRONICS (overlap strength 0.31),draft_for_review,AI_DRAFT
+EC2L001,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L002,GOAL_EE_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_SIGNALS_SYSTEMS (overlap strength 0.48),draft_for_review,AI_DRAFT
+EC2L002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L005,GOAL_EE_CORE_VLSI,2,Useful elective supporting SKILL_ANALOG_ELECTRONICS (overlap strength 0.34),draft_for_review,AI_DRAFT
+EC2L005,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L006,GOAL_EE_CORE_VLSI,2,Useful elective supporting SKILL_DIGITAL_LOGIC (overlap strength 0.47),draft_for_review,AI_DRAFT
+EC2L006,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2L006,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2L006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P001,GOAL_EE_CORE_VLSI,2,Useful elective supporting SKILL_ANALOG_ELECTRONICS (overlap strength 0.28),draft_for_review,AI_DRAFT
+EC2P001,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P002,GOAL_EE_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_SIGNALS_SYSTEMS (overlap strength 0.44),draft_for_review,AI_DRAFT
+EC2P002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P005,GOAL_EE_CORE_VLSI,2,Useful elective supporting SKILL_ANALOG_ELECTRONICS (overlap strength 0.31),draft_for_review,AI_DRAFT
+EC2P005,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P006,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P006,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC2P006,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC2P006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC3L003,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC3L003,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC3L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC3P002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC3P002,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC3P002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC3P002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L001,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L001,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L002,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L003,GOAL_EE_CORE_VLSI,3,Essential competency match for SKILL_VLSI_DESIGN (overlap strength 0.68),draft_for_review,AI_DRAFT
+EC4L003,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC4L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC4L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L002,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L004,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L004,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L004,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L005,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L005,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L012,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L012,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L012,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L012,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L015,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L015,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L015,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L015,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L016,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L016,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L016,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L016,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L017,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L017,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L017,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L017,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L019,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L019,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L019,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L019,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L023,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L023,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L023,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L023,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L024,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L024,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L024,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L024,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L027,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L027,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L027,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L027,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L030,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L030,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L030,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L030,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L031,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L031,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EC6L031,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EC6L031,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE1L001,GOAL_CROSS_SDE_DATA,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_EE_CORE_POWER,2,Useful elective supporting SKILL_ELECTRIC_MACHINES (overlap strength 0.15),draft_for_review,AI_DRAFT
+EE1L001,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_UPSC_COMPETITIVE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1L001,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_CROSS_SDE_DATA,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_EE_CORE_POWER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_UPSC_COMPETITIVE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE1P001,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+EE2L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L001,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L001,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L001,GOAL_UPSC_CSE,3,Essential competency match for SKILL_UPSC_OPTIONAL (overlap strength 0.64),draft_for_review,AI_DRAFT
+EE2L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L002,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_EE_CORE_POWER,2,Useful elective supporting SKILL_ELECTRIC_MACHINES (overlap strength 0.42),draft_for_review,AI_DRAFT
+EE2L003,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L003,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L004,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L004,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2L004,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_EE_CORE_POWER,2,Useful elective supporting SKILL_ELECTRIC_MACHINES (overlap strength 0.39),draft_for_review,AI_DRAFT
+EE2P003,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2P003,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2P003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2P003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2S001,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2S001,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE2S001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE2S001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
+EE2S001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L003,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L003,GOAL_EE_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_CONTROL_SYSTEMS (overlap strength 0.58),draft_for_review,AI_DRAFT
+EE3L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_EE_CORE_POWER,3,Essential competency match for SKILL_POWER_ELECTRONICS (overlap strength 0.61),draft_for_review,AI_DRAFT
+EE3L004,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L004,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L004,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_TECH_STARTUP,2,Useful elective supporting SKILL_POWER_ELECTRONICS (overlap strength 0.48),draft_for_review,AI_DRAFT
+EE3L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L005,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L005,GOAL_EE_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_CONTROL_SYSTEMS (overlap strength 0.58),draft_for_review,AI_DRAFT
+EE3L005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L006,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L006,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L006,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_EE_CORE_POWER,3,Essential competency match for SKILL_POWER_SYSTEMS (overlap strength 0.68),draft_for_review,AI_DRAFT
+EE3L007,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L007,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L007,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L007,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_CROSS_SDE_DATA,3,Essential competency match for SKILL_AI_ML (overlap strength 0.64),draft_for_review,AI_DRAFT
+EE3L008,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L008,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L008,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L008,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_TECH_STARTUP,2,Useful elective supporting SKILL_AI_ML (overlap strength 0.45),draft_for_review,AI_DRAFT
+EE3L008,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L008,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L009,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L009,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L009,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L009,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L010,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L010,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L010,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L010,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L011,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L011,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L011,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L011,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L012,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L012,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3L012,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3L012,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P002,GOAL_EE_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_CONTROL_SYSTEMS (overlap strength 0.54),draft_for_review,AI_DRAFT
+EE3P002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_EE_CORE_POWER,3,Essential competency match for SKILL_POWER_ELECTRONICS (overlap strength 0.58),draft_for_review,AI_DRAFT
+EE3P004,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P004,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P004,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_TECH_STARTUP,2,Useful elective supporting SKILL_POWER_ELECTRONICS (overlap strength 0.45),draft_for_review,AI_DRAFT
+EE3P004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P005,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P005,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_EE_CORE_POWER,3,Essential competency match for SKILL_POWER_SYSTEMS (overlap strength 0.60),draft_for_review,AI_DRAFT
+EE3P006,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P006,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE3P006,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE3P006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4D001,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4D001,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4D001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
+EE4D001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4D002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4D002,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4D002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4D002,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
+EE4D002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_EE_CORE_POWER,3,Essential competency match for SKILL_POWER_ELECTRONICS (overlap strength 0.65),draft_for_review,AI_DRAFT
+EE4L003,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L003,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_TECH_STARTUP,3,Essential competency match for SKILL_POWER_ELECTRONICS (overlap strength 0.50),draft_for_review,AI_DRAFT
+EE4L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_EE_CORE_POWER,3,Essential competency match for SKILL_ELECTRIC_MACHINES (overlap strength 0.54),draft_for_review,AI_DRAFT
+EE4L004,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L004,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L004,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L005,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L005,GOAL_EE_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_CONTROL_SYSTEMS (overlap strength 0.65),draft_for_review,AI_DRAFT
+EE4L005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_EE_CORE_POWER,2,Useful elective supporting SKILL_RENEWABLE_ENERGY (overlap strength 0.42),draft_for_review,AI_DRAFT
+EE4L006,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L006,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4L006,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4L006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4P002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4P002,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4P002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4P002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4T001,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4T001,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE4T001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE4T001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L002,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L002,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L004,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L004,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L004,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L005,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L005,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L005,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L007,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L007,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L007,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L007,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L009,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L009,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L009,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L009,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L010,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L010,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L010,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L010,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L011,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L011,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L011,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L011,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L014,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L014,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L014,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L014,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L015,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L015,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L015,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L015,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L017,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L017,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L017,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L017,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_EE_CORE_POWER,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L018,GOAL_EE_CORE_VLSI,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L018,GOAL_EE_RES_HIGHER_STUDIES,1,General electrical/electronics engineering curriculum,draft_for_review,AI_DRAFT
+EE6L018,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+EE6L018,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+HS1L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID1T002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.42),draft_for_review,AI_DRAFT
+ID2L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.42),draft_for_review,AI_DRAFT
+ID2L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_MM_BIOMATERIALS,3,Essential competency match for SKILL_BIOMATERIALS (overlap strength 0.34),draft_for_review,AI_DRAFT
+ID2L002,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_MM_PROCESS_ENGINEER,2,Useful elective supporting SKILL_MINERAL_PROCESSING (overlap strength 0.30),draft_for_review,AI_DRAFT
+ID2L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ID2L003,GOAL_UPSC_CSE,2,Useful elective supporting SKILL_UPSC_GS3_STI_ENV_SECURITY (overlap strength 0.47),draft_for_review,AI_DRAFT
+MA1L001,GOAL_CROSS_SDE_DATA,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_EE_CORE_POWER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L001,GOAL_UPSC_COMPETITIVE,2,Useful elective supporting SKILL_ENGINEERING_MATH (overlap strength 0.38),draft_for_review,AI_DRAFT
+MA1L001,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_CROSS_SDE_DATA,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_EE_CORE_POWER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA1L002,GOAL_UPSC_COMPETITIVE,2,Useful elective supporting SKILL_ENGINEERING_MATH (overlap strength 0.41),draft_for_review,AI_DRAFT
+MA1L002,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+MA2L003,GOAL_CROSS_SDE_DATA,2,Useful elective supporting SKILL_PROBABILITY_STATS (overlap strength 0.39),draft_for_review,AI_DRAFT
+MA2L003,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_EE_RES_HIGHER_STUDIES,2,Useful elective supporting SKILL_PROBABILITY_STATS (overlap strength 0.39),draft_for_review,AI_DRAFT
+MA2L003,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L003,GOAL_UPSC_COMPETITIVE,2,Useful elective supporting SKILL_PROBABILITY_STATS (overlap strength 0.36),draft_for_review,AI_DRAFT
+MA2L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_MM_RES_HIGHER_STUDIES,2,Useful elective supporting SKILL_SIMULATION_MODELING (overlap strength 0.43),draft_for_review,AI_DRAFT
+MA2L007,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+MA2L007,GOAL_UPSC_COMPETITIVE,2,Useful elective supporting SKILL_ENGINEERING_MATH (overlap strength 0.44),draft_for_review,AI_DRAFT
+MA2L007,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_MM_ADVANCED_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_MM_BIOMATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_MM_ENERGY_MATERIALS,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_MM_PROCESS_ENGINEER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_MM_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ME1P001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L002,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L002,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_THERMODYNAMICS_MAT (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML2L002,GOAL_MM_PROCESS_ENGINEER,3,Essential competency match for SKILL_THERMODYNAMICS_MAT (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML2L002,GOAL_MM_RES_HIGHER_STUDIES,2,Useful elective supporting SKILL_THERMODYNAMICS_MAT (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML2L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L003,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L003,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L003,GOAL_MM_PROCESS_ENGINEER,2,Useful elective supporting SKILL_MATERIALS_PROCESSING (overlap strength 0.45),draft_for_review,AI_DRAFT
+ML2L003,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L004,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L004,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_THERMODYNAMICS_MAT (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML2L004,GOAL_MM_PROCESS_ENGINEER,3,"Essential competency match for SKILL_THERMODYNAMICS_MAT, SKILL_IRON_STEELMAKING (overlap strength 1.05)",draft_for_review,AI_DRAFT
+ML2L004,GOAL_MM_RES_HIGHER_STUDIES,2,Useful elective supporting SKILL_THERMODYNAMICS_MAT (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML2L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.68),draft_for_review,AI_DRAFT
+ML2L005,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L005,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L005,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L005,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.68),draft_for_review,AI_DRAFT
+ML2L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_MM_ADVANCED_MATERIALS,2,Useful elective supporting SKILL_COMPOSITES_NANO (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML2L006,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L006,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L006,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L006,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2L006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2L006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_MM_ADVANCED_MATERIALS,2,Useful elective supporting SKILL_MATERIALS_CHAR (overlap strength 0.35),draft_for_review,AI_DRAFT
+ML2P001,GOAL_MM_BIOMATERIALS,2,Useful elective supporting SKILL_MATERIALS_CHAR (overlap strength 0.33),draft_for_review,AI_DRAFT
+ML2P001,GOAL_MM_ENERGY_MATERIALS,2,Useful elective supporting SKILL_MATERIALS_CHAR (overlap strength 0.33),draft_for_review,AI_DRAFT
+ML2P001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P001,GOAL_MM_RES_HIGHER_STUDIES,2,Useful elective supporting SKILL_MATERIALS_CHAR (overlap strength 0.42),draft_for_review,AI_DRAFT
+ML2P001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P002,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P002,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P002,GOAL_MM_PROCESS_ENGINEER,2,Useful elective supporting SKILL_MATERIALS_PROCESSING (overlap strength 0.42),draft_for_review,AI_DRAFT
+ML2P002,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.64),draft_for_review,AI_DRAFT
+ML2P003,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P003,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P003,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P003,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.64),draft_for_review,AI_DRAFT
+ML2P003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P004,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2P004,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_THERMODYNAMICS_MAT (overlap strength 0.50),draft_for_review,AI_DRAFT
+ML2P004,GOAL_MM_PROCESS_ENGINEER,3,Essential competency match for SKILL_THERMODYNAMICS_MAT (overlap strength 0.50),draft_for_review,AI_DRAFT
+ML2P004,GOAL_MM_RES_HIGHER_STUDIES,2,Useful elective supporting SKILL_THERMODYNAMICS_MAT (overlap strength 0.45),draft_for_review,AI_DRAFT
+ML2P004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2P004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2S001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2S001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2S001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2S001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2S001,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2S001,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2S001,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2S001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2S001,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML2S001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2S001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML2S001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
+ML2S001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L001,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L001,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L001,GOAL_MM_PROCESS_ENGINEER,2,Useful elective supporting SKILL_MINERAL_PROCESSING (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML3L001,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L002,GOAL_MM_BIOMATERIALS,3,Essential competency match for SKILL_CORROSION_SURFACE (overlap strength 0.58),draft_for_review,AI_DRAFT
+ML3L002,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L002,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L002,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MECHANICAL_BEHAVIOR (overlap strength 0.58),draft_for_review,AI_DRAFT
+ML3L003,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L003,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L003,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L003,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.72),draft_for_review,AI_DRAFT
+ML3L004,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L004,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L004,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L004,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.72),draft_for_review,AI_DRAFT
+ML3L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L005,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L005,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_THERMODYNAMICS_MAT (overlap strength 0.50),draft_for_review,AI_DRAFT
+ML3L005,GOAL_MM_PROCESS_ENGINEER,3,"Essential competency match for SKILL_IRON_STEELMAKING, SKILL_THERMODYNAMICS_MAT (overlap strength 1.14)",draft_for_review,AI_DRAFT
+ML3L005,GOAL_MM_RES_HIGHER_STUDIES,2,Useful elective supporting SKILL_THERMODYNAMICS_MAT (overlap strength 0.45),draft_for_review,AI_DRAFT
+ML3L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML3L006,GOAL_MM_BIOMATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML3L006,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML3L006,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L006,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.65),draft_for_review,AI_DRAFT
+ML3L006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L007,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L007,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L007,GOAL_MM_PROCESS_ENGINEER,3,Essential competency match for SKILL_IRON_STEELMAKING (overlap strength 0.77),draft_for_review,AI_DRAFT
+ML3L007,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L007,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L007,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MECHANICAL_BEHAVIOR (overlap strength 0.61),draft_for_review,AI_DRAFT
+ML3L008,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L008,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L008,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L008,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L008,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L008,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L009,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L009,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L009,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L009,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_SIMULATION_MODELING (overlap strength 0.58),draft_for_review,AI_DRAFT
+ML3L009,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L009,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_MM_ADVANCED_MATERIALS,2,Useful elective supporting SKILL_COMPOSITES_NANO (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML3L011,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L011,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L011,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L011,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L011,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L011,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L012,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L012,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L012,GOAL_MM_PROCESS_ENGINEER,2,Useful elective supporting SKILL_MINERAL_PROCESSING (overlap strength 0.45),draft_for_review,AI_DRAFT
+ML3L012,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3L012,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3L012,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MECHANICAL_BEHAVIOR (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML3P001,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P001,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P001,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML3P002,GOAL_MM_BIOMATERIALS,2,Useful elective supporting SKILL_MATERIALS_CHAR (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML3P002,GOAL_MM_ENERGY_MATERIALS,2,Useful elective supporting SKILL_MATERIALS_CHAR (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML3P002,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P002,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.61),draft_for_review,AI_DRAFT
+ML3P002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P003,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P003,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P003,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML3P003,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_SIMULATION_MODELING (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML3P003,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML3P003,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D001,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D001,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D001,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D001,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D001,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
+ML4D001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D002,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D002,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D002,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D002,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D002,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4D002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4D002,GOAL_UPSC_COMPETITIVE,1,Degree academic requirement; UPSC GS preparation is outside catalog and pursued via open resources,draft_for_review,AI_DRAFT
+ML4D002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.68),draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_MM_PROCESS_ENGINEER,3,Essential competency match for SKILL_MATERIALS_PROCESSING (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_PHYSICAL_METALLURGY (overlap strength 0.68),draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_CORE,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L001_ELEC,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_ENERGY_MATERIALS (overlap strength 0.64),draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_CORE,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L002_ELEC,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_COMPOSITES_NANO (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_CORE,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L003_ELEC,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L004,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L004,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L004,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L004,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L004,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L004,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MECHANICAL_BEHAVIOR (overlap strength 0.58),draft_for_review,AI_DRAFT
+ML4L005,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L005,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L005,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L005,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L005,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L005,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L006,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L006,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_ENERGY_MATERIALS (overlap strength 0.72),draft_for_review,AI_DRAFT
+ML4L006,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L006,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L006,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L006,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.58),draft_for_review,AI_DRAFT
+ML4L007,GOAL_MM_BIOMATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML4L007,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML4L007,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L007,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.69),draft_for_review,AI_DRAFT
+ML4L007,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L007,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L008,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L008,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L008,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L008,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L008,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L008,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L009,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L009,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L009,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L009,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L009,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L009,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_COMPOSITES_NANO (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML4L010,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L010,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L010,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L010,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L010,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L010,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L011,GOAL_MM_BIOMATERIALS,3,Essential competency match for SKILL_BIOMATERIALS (overlap strength 0.77),draft_for_review,AI_DRAFT
+ML4L011,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L011,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L011,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L011,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L011,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L012,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L012,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L012,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L012,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L012,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L012,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L013,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L013,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L013,GOAL_MM_PROCESS_ENGINEER,3,Essential competency match for SKILL_MINERAL_PROCESSING (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML4L013,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L013,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L013,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L014,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L014,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L014,GOAL_MM_PROCESS_ENGINEER,3,Essential competency match for SKILL_IRON_STEELMAKING (overlap strength 0.68),draft_for_review,AI_DRAFT
+ML4L014,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L014,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L014,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L015,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L015,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L015,GOAL_MM_PROCESS_ENGINEER,2,Useful elective supporting SKILL_MINERAL_PROCESSING (overlap strength 0.48),draft_for_review,AI_DRAFT
+ML4L015,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4L015,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4L015,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_MM_ADVANCED_MATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.54),draft_for_review,AI_DRAFT
+ML4P001,GOAL_MM_BIOMATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML4P001,GOAL_MM_ENERGY_MATERIALS,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.51),draft_for_review,AI_DRAFT
+ML4P001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4P001,GOAL_MM_RES_HIGHER_STUDIES,3,Essential competency match for SKILL_MATERIALS_CHAR (overlap strength 0.65),draft_for_review,AI_DRAFT
+ML4P001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4P002,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4P002,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4P002,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4P002,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4P002,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4P002,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_CROSS_SDE_DATA,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_EE_CORE_POWER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_EE_CORE_VLSI,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_EE_RES_HIGHER_STUDIES,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_MM_ADVANCED_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4T001,GOAL_MM_BIOMATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4T001,GOAL_MM_ENERGY_MATERIALS,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4T001,GOAL_MM_PROCESS_ENGINEER,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4T001,GOAL_MM_RES_HIGHER_STUDIES,1,General metallurgical & materials engineering curriculum,draft_for_review,AI_DRAFT
+ML4T001,GOAL_STARTUP_FOUNDER,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_TECH_STARTUP,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_UPSC_COMPETITIVE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+ML4T001,GOAL_UPSC_CSE,0,Non-overlapping cross-department course,draft_for_review,AI_DRAFT
+PH1L001,GOAL_CROSS_SDE_DATA,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_EE_CORE_POWER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_UPSC_COMPETITIVE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1L001,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_CROSS_SDE_DATA,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_EE_CORE_POWER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_EE_CORE_VLSI,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_EE_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_MM_ADVANCED_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_MM_BIOMATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_MM_ENERGY_MATERIALS,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_MM_PROCESS_ENGINEER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_MM_RES_HIGHER_STUDIES,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_STARTUP_FOUNDER,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_TECH_STARTUP,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_UPSC_COMPETITIVE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT
+PH1P001,GOAL_UPSC_CSE,1,Foundational science and mathematics core,draft_for_review,AI_DRAFT

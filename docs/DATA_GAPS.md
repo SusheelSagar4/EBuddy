@@ -25,7 +25,7 @@
 | Issue ID | Scope | Impact | Status |
 |---|---|---|---|
 | `GAP_SYLLABUS_TEXT` | Detailed syllabus topics & learning objectives | `syllabus_text = NULL` on courses; derived modules set to `is_placeholder = true`. | User to provide syllabus text / course booklet. |
-| `GAP_MME_SEM_I_II` | MME Curriculum Sem I–II | Source PDF covers Sem III–VIII only. Sem I–II curriculum is completely absent. | **No courses or slots inferred or inherited.** Exactly 0 rows exist in `kb.course_offering` and `kb.programme_requirement` for MME in Semesters I–II. Official curriculum document for Sem I–II is required from SMMME. |
+| `GAP_MME_SEM_I_II` | MME Curriculum Sem I–II | Sem I–II is simply missing from SMMME raw documents. Source PDF covers Sem III–VIII only. | **Sem I–II is simply missing.** Zero courses, completions, or common first-year curriculum assumptions made. Exactly 0 rows exist in `kb.course_offering` and `kb.programme_requirement` for MME in Semesters I–II. Official curriculum document for Sem I–II is required from SMMME. |
 | `GAP_ACADEMIC_RULES` | Official UG Regulations document | Credit caps, minor eligibility, and backlog policies currently use initial baseline rules. | User to provide UG ordinances document. |
 | `GAP_CURRENCY_2016_17` | Academic Batch Currency | Raw curriculum reflects 2016-17 batch. | Flagged with warning label in UI and reports. |
 

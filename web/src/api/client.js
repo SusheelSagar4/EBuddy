@@ -49,6 +49,29 @@ class ApiClient {
     return this._request(`/api/student/${studentId}/plan`);
   }
 
+  async getWeeklyRoadmap(studentId, week = 1) {
+    return this._request(`/api/student/${studentId}/roadmap/weekly?week=${encodeURIComponent(week)}`);
+  }
+
+  async getRoadmapVersions(studentId) {
+    return this._request(`/api/student/${studentId}/roadmap/versions`);
+  }
+
+  async getLearnToday(studentId) {
+    return this._request(`/api/student/${studentId}/learn/today`);
+  }
+
+  async getProposals(studentId) {
+    return this._request(`/api/student/${studentId}/proposals`);
+  }
+
+  async decideProposal(studentId, proposalId, approve, feedback = null) {
+    return this._request(`/api/student/${studentId}/proposals/${proposalId}/decide`, {
+      method: 'POST',
+      body: JSON.stringify({ approve, feedback })
+    });
+  }
+
   async validatePlan(studentId, plan) {
     return this._request(`/api/student/${studentId}/plan/validate`, {
       method: 'POST',

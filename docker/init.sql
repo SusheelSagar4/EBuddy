@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS kb.course (
     syllabus_text TEXT,
     learning_objectives TEXT,
     in_semester_table BOOLEAN DEFAULT TRUE,
+    status VARCHAR(50) DEFAULT 'verified',
     source_id VARCHAR(100) REFERENCES kb.source(source_id),
     is_placeholder BOOLEAN DEFAULT FALSE
 );
@@ -114,7 +115,9 @@ CREATE TABLE IF NOT EXISTS kb.minor (
 CREATE TABLE IF NOT EXISTS kb.minor_course (
     minor_id VARCHAR(50) REFERENCES kb.minor(minor_id) ON DELETE CASCADE,
     course_id VARCHAR(50) REFERENCES kb.course(course_id) ON DELETE CASCADE,
-    is_mandatory BOOLEAN DEFAULT TRUE,
+    is_mandatory BOOLEAN DEFAULT FALSE,
+    status VARCHAR(50) DEFAULT 'draft_for_review',
+    source_id VARCHAR(100) REFERENCES kb.source(source_id),
     PRIMARY KEY (minor_id, course_id)
 );
 
@@ -211,7 +214,10 @@ CREATE TABLE IF NOT EXISTS kb.exercise (
     answer_key JSONB,
     rubric TEXT,
     est_minutes INT DEFAULT 15,
-    source_id VARCHAR(100) REFERENCES kb.source(source_id)
+    status VARCHAR(50) DEFAULT 'draft_for_review',
+    source_id VARCHAR(100) REFERENCES kb.source(source_id),
+    licence VARCHAR(100) DEFAULT 'CC-BY-4.0',
+    source_url TEXT DEFAULT 'data/seed/kb/exercise.csv'
 );
 
 CREATE TABLE IF NOT EXISTS kb.goal (
@@ -471,6 +477,34 @@ CREATE TABLE IF NOT EXISTS plan.decision_log (
     outputs JSONB NOT NULL,
     rationale TEXT NOT NULL,
     logged_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS plan.change_proposal (
+    proposal_id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    proposer_agent VARCHAR(50) NOT NULL, -- agent_2_resource, agent_3_assessment, agent_4_query
+    proposal_type VARCHAR(50) NOT NULL,  -- resource_swap, remediation_insertion, workload_reduction, pace_change, schedule_shift, goal_pivot
+    status VARCHAR(50) NOT NULL DEFAULT 'pending_student_approval', -- pending_student_approval, approved, rejected, committed, validation_failed
+    reasoning TEXT NOT NULL,
+    target_week INT,
+    target_semester INT,
+    proposed_modifications JSONB NOT NULL,
+    impact_summary TEXT NOT NULL,
+    student_feedback TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE IF NOT EXISTS plan.roadmap_version (
+    version_id SERIAL PRIMARY KEY,
+    plan_id VARCHAR(100) NOT NULL REFERENCES plan.plan(plan_id) ON DELETE CASCADE,
+    diff_id INT REFERENCES plan.plan_diff(diff_id),
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    version_number INT NOT NULL,
+    commit_reason TEXT NOT NULL,
+    approved_proposal_id VARCHAR(100) REFERENCES plan.change_proposal(proposal_id),
+    plan_snapshot JSONB NOT NULL,
+    committed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =============================================================================

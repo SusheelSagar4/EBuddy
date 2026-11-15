@@ -2,6 +2,54 @@
 
 All notable changes and phase milestones are documented in this file.
 
+## [Contracts v1.2.0 & Adaptive Memory Architecture] - 2026-11-15
+### Added
+- **Contracts (`app/contracts/` v1.2.0):**
+  - Added `conflict_flag: Optional[str]` and `optional_overload_proposals: List[Dict[str, Any]]` to `Plan` (`app/contracts/plan.py`).
+  - Added `weekly_hours_budget: Optional[float]` and `deferred_tasks: List[str]` to `WeeklyRoadmap` (`app/contracts/roadmap.py`).
+  - Added `long_term_memory: Optional[str]` to `ContextCard` (`app/contracts/chat.py`).
+  - Bumped `VERSION` to `1.2.0` and regenerated all 28 JSON schemas in `docs/contracts/`.
+- **Student Constraint Strict Bounding & Overload Routing:**
+  - Student-stated constraints (`credit_cap`, `headroom`, `weekly_hours`, `avoid_course`, `not_together`) are enforced as HARD limits by default.
+  - Courses exceeding student credit limits or avoiding student filters are excluded from default plan items and routed to `plan.optional_overload_proposals` awaiting student confirmation.
+  - Unsourced institute rules (`unsourced_baseline`) emit non-blocking warnings without dropping courses.
+- **Interest-vs-Evidence Conflict Detection:**
+  - `GapAnalyzer` detects divergence between high target goals ($\ge 70$) and weak demonstrated/diagnostic evidence ($< 40$).
+  - Surfaces conflict flag in `PlanItem.reason.why_this`, `Plan.conflict_flag`, and Agent 4 conversational advisories.
+- **Adaptive Diagnostic Engine:**
+  - `AdaptiveDiagnostic` starts at medium difficulty (50.0), raises difficulty (+15.0) on correct responses, and lowers difficulty (-15.0) on incorrect responses.
+  - Terminates between 5 and 8 items once confidence threshold ($\ge 0.85$) is attained.
+- **Rolling Long-Term Conversation Memory:**
+  - Persists multi-turn rolling conversation summaries in `ops.memory_summary` table (and in-memory fallback).
+  - Automatically loads prior summaries into `ContextCard.long_term_memory` on subsequent conversational turns.
+- **Original Non-Copyrighted Question Bank:**
+  - Authored 10 verified engineering questions with step-by-step answer keys for `ee_power_core` in `data/seed/personas/ee_power_core/questions.yaml`, `exercises.csv`, and canonical `data/seed/kb/exercise.csv`.
+  - Added `status="draft_for_review"` and `source_id="DESIGN_TEAM"` to `kb.exercise`.
+- **Persona Conformance Quality Gate:**
+  - Conformance runner validates all registered personas against concrete student profiles in `data/seed/personas/<id>/students.csv`, failing if any persona lacks profiles.
+  - Generates comprehensive Persona $\times$ Profile $\times$ Check matrix in `docs/evaluation/conformance_report.md`.
+
+## [Contracts v1.1.0 & Four-Agent Architecture] - 2026-11-14
+### Added
+- **Domain Contracts (`app/contracts/`):**
+  - Bumped contract version to `1.1.0` in `app/contracts/VERSION`.
+  - Added `ChangeProposal` and `ProposalStatus` (`app/contracts/proposal.py`).
+  - Added `WeeklyRoadmap`, `DailyTask`, and `RoadmapVersionRecord` (`app/contracts/roadmap.py`).
+  - Exported 28 JSON schemas to `docs/contracts/*.json`.
+- **Four-Agent Architecture (`app/agents/`):**
+  - `RoadmapPlannerAgent` (Agent 1): Sole designated writer for roadmap versions and weekly roadmaps.
+  - `LearningResourceAgent` (Agent 2): Daily resource curation and backup alternative retrieval with zero URL fabrication.
+  - `AssessmentQuizAgent` (Agent 3): Diagnostic generation, grading, and remediation proposals for low mastery.
+  - `QueryAdaptationAgent` (Agent 4): Student conversation, prompt-injection defense, and workload reduction proposals.
+- **Curriculum and Course Relevance Engine:**
+  - `CourseRelevanceEngine` (`app/engine/relevance.py`) and seed dataset `relevance_tags.csv` (1,496 rows with `status="draft_for_review"` and `source_id="DESIGN_TEAM"`).
+  - Branch-specific core curriculum enforcement: major/core courses are fixed and never excluded by career relevance.
+  - Strict academic prerequisite gating: electives with unmet prerequisites are never recommended.
+  - Dynamic minor course track (`data/seed/kb/minor_course.csv`).
+  - Unsourced baseline rules (credit cap, minor eligibility) emit labeled warnings without silently dropping courses.
+- **Clean Architecture Import Boundaries:**
+  - Added `test_agents_import_boundaries` to `tests/unit/test_import_boundaries.py` ensuring `app/agents/` never imports `litellm` directly or `app/api/`.
+
 ## [Phase F: Foundation & Team Architecture] - 2026-11-14
 ### Added
 - **F1 Shared Frozen Contracts (`app/contracts/`):**

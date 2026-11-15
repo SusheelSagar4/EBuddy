@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}System Admin & Knowledge Base Explorer{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+  <div>
+    <h1>System Status & Knowledge Base Explorer</h1>
+    <p>Read-only institutional database inspections, provenance metrics, and administrative utilities.</p>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <a href="/adminer" target="_blank" class="btn btn-secondary">🗄 Open Adminer (:8080)</a>
+    <button id="btn-reload-seed" class="btn btn-danger">🔄 Reload Seed Data</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2>System Status Panel</h2>
+  <div id="admin-status-panel">
+    <div style="color: var(--text-muted); padding: 12px 0;">Loading system metrics...</div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+    <h2>Knowledge Base Table Viewer</h2>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <label for="admin-table-select" style="font-weight: 700; font-size: 0.9rem;">Select Table:</label>
+      <select id="admin-table-select" style="padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-family: inherit;">
+        <option value="kb.course">kb.course (Curriculum Courses)</option>
+        <option value="kb.programme_requirement">kb.programme_requirement (Curriculum Slots)</option>
+        <option value="kb.skill">kb.skill (Taxonomy Skills)</option>
+        <option value="kb.goal">kb.goal (Career Specializations)</option>
+        <option value="kb.exercise">kb.exercise (CAT Question Bank)</option>
+        <option value="kb.resource">kb.resource (Open Educational Resources)</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="admin-table-preview">
+    <div style="color: var(--text-muted); padding: 20px 0;">Select a table above to preview records.</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    EBuddy.initAdmin();
+  });
+</script>
+{% endblock %}

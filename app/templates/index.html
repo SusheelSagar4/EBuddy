@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Home — Student Profile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Student Profile & Academic Record</h1>
+  <p>Select a synthetic persona profile to view academic background and plan customized degree pathways.</p>
+</div>
+
+<div class="card" id="student-profile-card">
+  <h2>Academic Profile</h2>
+  <div id="student-profile-info">
+    <div style="color: var(--text-muted); padding: 20px 0;">Loading profile details...</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Completed Courses & Foundations</h2>
+  <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px;">
+    Verified prerequisite and completed course history used by the deterministic planner to skip duplicate content:
+  </p>
+  <div id="completed-courses-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+    <div style="color: var(--text-muted);">Loading completed courses...</div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 12px; margin-top: 16px;">
+  <a href="/goals" class="btn btn-primary">🎯 Select Career Goal & Build Roadmap</a>
+  <a href="/diagnostic" class="btn btn-secondary">📝 Take Adaptive Diagnostic</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    EBuddy.initHome();
+  });
+</script>
+{% endblock %}

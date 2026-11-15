@@ -1,0 +1,36 @@
+﻿phase_order,phase_id,step_number,topic_skill,checkpoint_text,checkpoint_type,target_count_min,target_count_max,passing_criteria_summary
+1,P1_Programming_and_Dev_Basics,1,"Programming language (pick ONE: Python, C++ or Java)",Solve 30 basic problems in your chosen language,PROBLEM_SET,30,30,Pass when 30 basic problems are solved correctly in the chosen language.
+1,P1_Programming_and_Dev_Basics,2,Git & GitHub,Push a project to GitHub and open one PR,BUILD_OR_SHIP,1,1,Pass when a project is committed to GitHub and at least one pull request is successfully opened.
+2,P2_DSA_Foundations,3,DSA 1 – Complexity analysis (Big-O),Give the complexity of 20 code snippets without running them,EXPLAIN_CONCEPT,20,20,Pass when the time and space complexity of 20 code snippets is accurately determined without execution.
+2,P2_DSA_Foundations,4,DSA 2 – Arrays,Solve 30 array problems (easy→medium),PROBLEM_SET,30,30,Pass when 30 easy to medium array problems are solved.
+2,P2_DSA_Foundations,5,DSA 3 – Strings,Solve 20 string problems,PROBLEM_SET,20,20,Pass when 20 string problems are solved.
+2,P2_DSA_Foundations,6,DSA 4 – Hashing (hash maps & sets),Solve 20 hash map/set problems,PROBLEM_SET,20,20,Pass when 20 hash map and set problems are solved.
+2,P2_DSA_Foundations,7,DSA 5 – Sorting,Implement 5 sorts from scratch; solve 10 sorting problems,PROBLEM_SET,10,10,Pass when 5 sorting algorithms are implemented from scratch and 10 sorting problems are solved.
+2,P2_DSA_Foundations,8,DSA 6 – Binary search,Solve 25 binary search problems,PROBLEM_SET,25,25,Pass when 25 binary search problems are solved.
+3,P3_DSA_Core_Techniques,9,DSA 7 – Two pointers,Solve 15 two-pointer problems,PROBLEM_SET,15,15,Pass when 15 two-pointer problems are solved.
+3,P3_DSA_Core_Techniques,10,DSA 8 – Sliding window,Solve 15 sliding window problems,PROBLEM_SET,15,15,Pass when 15 sliding window problems are solved.
+3,P3_DSA_Core_Techniques,11,DSA 9 – Linked lists,Solve 20 linked list problems,PROBLEM_SET,20,20,Pass when 20 linked list problems are solved.
+3,P3_DSA_Core_Techniques,12,DSA 10 – Stack,Solve 15 stack problems,PROBLEM_SET,15,15,Pass when 15 stack problems are solved.
+3,P3_DSA_Core_Techniques,13,DSA 11 – Queue & deque,Solve 10 queue/deque problems,PROBLEM_SET,10,10,Pass when 10 queue and deque problems are solved.
+3,P3_DSA_Core_Techniques,14,DSA 12 – Recursion,Solve 15 recursion problems,PROBLEM_SET,15,15,Pass when 15 recursion problems are solved.
+3,P3_DSA_Core_Techniques,15,DSA 13 – Backtracking,Solve 15 backtracking problems,PROBLEM_SET,15,15,Pass when 15 backtracking problems are solved.
+3,P3_DSA_Core_Techniques,16,DSA 14 – Bit manipulation,Solve 12 bit problems,PROBLEM_SET,12,12,Pass when 12 bit manipulation problems are solved.
+3,P3_DSA_Core_Techniques,17,DSA 15 – Greedy algorithms,Solve 15 greedy problems,PROBLEM_SET,15,15,Pass when 15 greedy algorithm problems are solved.
+4,P4_Trees_and_Graphs,18,DSA 16 – Binary trees,Solve 25 binary tree problems,PROBLEM_SET,25,25,Pass when 25 binary tree problems are solved.
+4,P4_Trees_and_Graphs,19,DSA 17 – Binary search trees (BST),Solve 10 BST problems,PROBLEM_SET,10,10,Pass when 10 binary search tree problems are solved.
+4,P4_Trees_and_Graphs,20,DSA 18 – Heaps / priority queues,Solve 12 heap problems,PROBLEM_SET,12,12,Pass when 12 heap and priority queue problems are solved.
+4,P4_Trees_and_Graphs,21,DSA 19 – Tries,Implement a trie; solve 6 trie problems,PROBLEM_SET,6,6,Pass when a trie data structure is implemented and 6 trie problems are solved.
+4,P4_Trees_and_Graphs,22,DSA 20 – Graphs: basics & traversal,Solve 20 graph problems,PROBLEM_SET,20,20,Pass when 20 graph traversal problems are solved.
+4,P4_Trees_and_Graphs,23,DSA 21 – Graphs: shortest paths & MST,Solve 8 shortest path / MST problems,PROBLEM_SET,8,8,Pass when 8 shortest path and minimum spanning tree problems are solved.
+4,P4_Trees_and_Graphs,24,DSA 22 – Union-Find (disjoint set),Solve 6 DSU problems,PROBLEM_SET,6,6,Pass when 6 disjoint set union problems are solved.
+5,P5_Dynamic_Programming_and_Practice,25,DSA 23 – Dynamic programming: fundamentals,Solve 25 DP problems,PROBLEM_SET,25,25,Pass when 25 foundational dynamic programming problems are solved.
+5,P5_Dynamic_Programming_and_Practice,26,"DSA 24 – Dynamic programming: 2D, grids, strings, partitions",Solve 25 harder DP problems,PROBLEM_SET,25,25,Pass when 25 advanced multi-dimensional dynamic programming problems are solved.
+5,P5_Dynamic_Programming_and_Practice,27,DSA 25 – Mixed interview pattern practice,"Finish a 75–150 problem set, then timed mocks",MOCK_OR_TIMED,75,150,Pass when 75 to 150 mixed interview problems are completed and followed by timed mock assessments.
+6,P6_CS_Core_Subjects,28,OOP & Low-Level Design,"Code 4 LLD problems (parking lot, elevator, BookMyShow, cache)",BUILD_OR_SHIP,4,4,Pass when 4 complete low-level design machine coding problems are coded.
+6,P6_CS_Core_Subjects,29,DBMS concepts,Explain indexing and isolation levels from memory,EXPLAIN_CONCEPT,,,Pass when database indexing mechanics and transaction isolation levels are accurately explained from memory.
+6,P6_CS_Core_Subjects,30,SQL,Solve 40 SQL problems incl. window functions,PROBLEM_SET,40,40,Pass when 40 SQL problems including window functions are solved.
+6,P6_CS_Core_Subjects,31,Operating systems,Answer the top 40 OS interview questions,EXPLAIN_CONCEPT,40,40,Pass when the top 40 operating systems interview questions are correctly answered.
+6,P6_CS_Core_Subjects,32,Computer networks,Trace what happens when you type a URL into a browser,EXPLAIN_CONCEPT,,,Pass when the end-to-end network lifecycle of typing a URL into a browser is accurately traced.
+7,P7_System_Design_and_Backend,33,System design (HLD),"Design 8 systems (URL shortener, chat, feed, rate limiter…) on paper",BUILD_OR_SHIP,8,8,Pass when 8 distributed systems architectures are designed on paper.
+7,P7_System_Design_and_Backend,34,Backend development & Docker,Ship one full-stack project with Docker and a live demo,BUILD_OR_SHIP,1,1,Pass when a containerized full-stack project is shipped with a live demo.
+8,P8_Interview_Readiness,35,Mock interviews & behavioural prep,Complete 6+ mock interviews,MOCK_OR_TIMED,6,,Pass when at least 6 mock technical and behavioural interviews are completed.

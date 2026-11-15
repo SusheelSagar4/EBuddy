@@ -77,9 +77,33 @@
       "type": "string"
     },
     "source_id": {
-      "default": "SYNTHETIC_EXERCISE",
+      "default": "AI_DRAFT",
       "title": "Source Id",
       "type": "string"
+    },
+    "licence": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "CC-BY-4.0",
+      "title": "Licence"
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "https://ebuddy.internal/exercises/original_synthetic",
+      "title": "Source Url"
     },
     "verified": {
       "default": false,

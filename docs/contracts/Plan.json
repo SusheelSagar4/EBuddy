@@ -245,6 +245,27 @@
       ],
       "default": null
     },
+    "conflict_flag": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Conflict Flag"
+    },
+    "optional_overload_proposals": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Optional Overload Proposals",
+      "type": "array"
+    },
     "is_active": {
       "default": true,
       "title": "Is Active",
