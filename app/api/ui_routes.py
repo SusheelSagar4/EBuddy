@@ -374,6 +374,11 @@ def get_weekly_schedule(student_id: str, week_number: int = 1, goal_id: Optional
     if goal_id:
         goal_id = canonicalize_goal_id(goal_id)
 
+    plan = plan_service.get_plan(student_id, goal_id)
+    if not plan:
+        onboarding_service.ensure_student_onboarded(student_id, goal_id)
+        roadmap_orchestrator.create_initial_roadmap(student_id, goal_id)
+
     weekly = roadmap_orchestrator.get_weekly_roadmap(student_id, week_number=week_number, goal_id=goal_id)
     return weekly.model_dump()
 
