@@ -27,6 +27,16 @@ class Settings(BaseSettings):
     ADMINER_PORT: int = 8080
     LOG_LEVEL: str = "INFO"
 
+    # Planner Assumptions (assumption=True flag for indicative planning)
+    PLANNER_ASSUMPTIONS: dict = {
+        "exam_week_factor": 0.4,
+        "hours_per_credit": 1.0,
+        "default_autumn_start": "2026-08-03",
+        "default_spring_start": "2027-01-04",
+        "default_semester_weeks": 16,
+        "assumption": True
+    }
+
     @property
     def effective_db_url(self) -> str:
         # If running locally outside docker and DB host is 'db', fallback to localhost

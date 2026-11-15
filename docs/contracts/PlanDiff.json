@@ -13,7 +13,15 @@
             "exercise",
             "resource",
             "milestone",
-            "remediation"
+            "remediation",
+            "REQUIRED_COURSE",
+            "ELECTIVE_PICK",
+            "RESOURCE",
+            "EXERCISE_SET",
+            "PROJECT",
+            "RESEARCH_TASTER",
+            "CHECKPOINT",
+            "BUFFER_EXAM_WEEK"
           ],
           "title": "Item Type",
           "type": "string"
@@ -83,8 +91,139 @@
           "title": "Estimated Hours",
           "type": "number"
         },
+        "phase": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase"
+        },
+        "prep_hours_weekly": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prep Hours Weekly"
+        },
         "reason": {
           "$ref": "#/$defs/StructuredReason"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "week_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Week Index"
+        },
+        "is_indicative": {
+          "default": false,
+          "title": "Is Indicative",
+          "type": "boolean"
+        },
+        "hours_per_week": {
+          "default": 0.0,
+          "title": "Hours Per Week",
+          "type": "number"
+        },
+        "skill_gap_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Skill Gap Reason"
+        },
+        "cited_kb_codes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Cited Kb Codes",
+          "type": "array"
+        },
+        "status_badge": {
+          "default": "RECOMMENDED",
+          "title": "Status Badge",
+          "type": "string"
+        },
+        "goal_emphasis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Goal Emphasis"
+        },
+        "slot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Id"
+        },
+        "pool_rule_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pool Rule Status"
         }
       },
       "required": [

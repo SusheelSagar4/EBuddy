@@ -1,5 +1,107 @@
 {
   "$defs": {
+    "MonthlyTheme": {
+      "additionalProperties": false,
+      "properties": {
+        "month_index": {
+          "title": "Month Index",
+          "type": "integer"
+        },
+        "theme_name": {
+          "title": "Theme Name",
+          "type": "string"
+        },
+        "focus_skills": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Focus Skills",
+          "type": "array"
+        },
+        "checkpoint": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checkpoint"
+        },
+        "weekly_hours_cap": {
+          "default": 20.0,
+          "title": "Weekly Hours Cap",
+          "type": "number"
+        },
+        "items": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "month_index",
+        "theme_name"
+      ],
+      "title": "MonthlyTheme",
+      "type": "object"
+    },
+    "PlanDiff": {
+      "additionalProperties": false,
+      "properties": {
+        "previous_plan_id": {
+          "title": "Previous Plan Id",
+          "type": "string"
+        },
+        "new_plan_id": {
+          "title": "New Plan Id",
+          "type": "string"
+        },
+        "added_items": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Added Items",
+          "type": "array"
+        },
+        "removed_items": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Removed Items",
+          "type": "array"
+        },
+        "modified_items": {
+          "default": [],
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Modified Items",
+          "type": "array"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "previous_plan_id",
+        "new_plan_id",
+        "summary"
+      ],
+      "title": "PlanDiff",
+      "type": "object"
+    },
     "PlanItem": {
       "additionalProperties": false,
       "properties": {
@@ -13,7 +115,15 @@
             "exercise",
             "resource",
             "milestone",
-            "remediation"
+            "remediation",
+            "REQUIRED_COURSE",
+            "ELECTIVE_PICK",
+            "RESOURCE",
+            "EXERCISE_SET",
+            "PROJECT",
+            "RESEARCH_TASTER",
+            "CHECKPOINT",
+            "BUFFER_EXAM_WEEK"
           ],
           "title": "Item Type",
           "type": "string"
@@ -83,8 +193,139 @@
           "title": "Estimated Hours",
           "type": "number"
         },
+        "phase": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase"
+        },
+        "prep_hours_weekly": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prep Hours Weekly"
+        },
         "reason": {
           "$ref": "#/$defs/StructuredReason"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "week_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Week Index"
+        },
+        "is_indicative": {
+          "default": false,
+          "title": "Is Indicative",
+          "type": "boolean"
+        },
+        "hours_per_week": {
+          "default": 0.0,
+          "title": "Hours Per Week",
+          "type": "number"
+        },
+        "skill_gap_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Skill Gap Reason"
+        },
+        "cited_kb_codes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Cited Kb Codes",
+          "type": "array"
+        },
+        "status_badge": {
+          "default": "RECOMMENDED",
+          "title": "Status Badge",
+          "type": "string"
+        },
+        "goal_emphasis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Goal Emphasis"
+        },
+        "slot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slot Id"
+        },
+        "pool_rule_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pool Rule Status"
         }
       },
       "required": [
@@ -93,6 +334,91 @@
         "reason"
       ],
       "title": "PlanItem",
+      "type": "object"
+    },
+    "SemesterBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "semester_number": {
+          "title": "Semester Number",
+          "type": "integer"
+        },
+        "semester_name": {
+          "title": "Semester Name",
+          "type": "string"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "is_indicative": {
+          "default": false,
+          "title": "Is Indicative",
+          "type": "boolean"
+        },
+        "required_courses": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Required Courses",
+          "type": "array"
+        },
+        "elective_picks": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Elective Picks",
+          "type": "array"
+        },
+        "monthly_themes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/MonthlyTheme"
+          },
+          "title": "Monthly Themes",
+          "type": "array"
+        },
+        "total_credits": {
+          "default": 0.0,
+          "title": "Total Credits",
+          "type": "number"
+        },
+        "buffer_exam_weeks": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Buffer Exam Weeks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "semester_number",
+        "semester_name"
+      ],
+      "title": "SemesterBlock",
       "type": "object"
     },
     "StructuredReason": {
@@ -136,6 +462,57 @@
         "why_this"
       ],
       "title": "StructuredReason",
+      "type": "object"
+    },
+    "TimelineRoadmap": {
+      "additionalProperties": false,
+      "properties": {
+        "plan_id": {
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "student_id": {
+          "title": "Student Id",
+          "type": "string"
+        },
+        "goal_id": {
+          "title": "Goal Id",
+          "type": "string"
+        },
+        "horizon_deadline": {
+          "title": "Horizon Deadline",
+          "type": "string"
+        },
+        "semester_blocks": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SemesterBlock"
+          },
+          "title": "Semester Blocks",
+          "type": "array"
+        },
+        "next_4_weeks": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/WeeklyScheduleItem"
+          },
+          "title": "Next 4 Weeks",
+          "type": "array"
+        },
+        "assumptions": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Assumptions",
+          "type": "object"
+        }
+      },
+      "required": [
+        "plan_id",
+        "student_id",
+        "goal_id",
+        "horizon_deadline"
+      ],
+      "title": "TimelineRoadmap",
       "type": "object"
     },
     "ValidationCheck": {
@@ -206,6 +583,100 @@
       ],
       "title": "ValidationReport",
       "type": "object"
+    },
+    "WeeklyScheduleItem": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "title": "Item Id",
+          "type": "string"
+        },
+        "item_type": {
+          "title": "Item Type",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "hours_per_week": {
+          "title": "Hours Per Week",
+          "type": "number"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "week_index": {
+          "title": "Week Index",
+          "type": "integer"
+        },
+        "is_indicative": {
+          "default": false,
+          "title": "Is Indicative",
+          "type": "boolean"
+        },
+        "skill_gap_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Skill Gap Reason"
+        },
+        "cited_kb_codes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Cited Kb Codes",
+          "type": "array"
+        },
+        "status_badge": {
+          "default": "RECOMMENDED",
+          "title": "Status Badge",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Details",
+          "type": "object"
+        }
+      },
+      "required": [
+        "item_id",
+        "item_type",
+        "title",
+        "hours_per_week",
+        "week_index"
+      ],
+      "title": "WeeklyScheduleItem",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -266,6 +737,42 @@
       "title": "Optional Overload Proposals",
       "type": "array"
     },
+    "plan_diff": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PlanDiff"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "what_changed_and_why": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "What Changed And Why"
+    },
+    "mismatch_warning": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mismatch Warning"
+    },
     "is_active": {
       "default": true,
       "title": "Is Active",
@@ -275,6 +782,61 @@
       "format": "date-time",
       "title": "Created At",
       "type": "string"
+    },
+    "timeline_roadmap": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TimelineRoadmap"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "semester_blocks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/SemesterBlock"
+      },
+      "title": "Semester Blocks",
+      "type": "array"
+    },
+    "next_4_weeks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/WeeklyScheduleItem"
+      },
+      "title": "Next 4 Weeks",
+      "type": "array"
+    },
+    "required_courses": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PlanItem"
+      },
+      "title": "Required Courses",
+      "type": "array"
+    },
+    "recommended_items": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PlanItem"
+      },
+      "title": "Recommended Items",
+      "type": "array"
+    },
+    "workload_cap_explanation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Workload Cap Explanation"
     }
   },
   "required": [

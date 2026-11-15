@@ -1,7 +1,10 @@
 from app.contracts.student import StudentProfile, EvidenceItem, SkillState, Constraint, Preference
 from app.contracts.goal import Goal, GoalRequirement, MasteryCriteria, Milestone
 from app.contracts.kb import Course, Module, Resource, Exercise, AcademicRule, ResearchProject, Skill
-from app.contracts.plan import StructuredReason, PlanItem, ValidationCheck, ValidationReport, PlanDiff, Plan
+from app.contracts.plan import (
+    StructuredReason, PlanItem, ValidationCheck, ValidationReport, PlanDiff, Plan,
+    WeeklyScheduleItem, MonthlyTheme, SemesterBlock, TimelineRoadmap
+)
 from app.contracts.chat import Intent, ContextCard, ChatTurn, Explanation
 from app.contracts.persona import PersonaSpec
 from app.contracts.proposal import ChangeProposal
@@ -12,6 +15,7 @@ __all__ = [
     "Goal", "GoalRequirement", "MasteryCriteria", "Milestone",
     "Course", "Module", "Resource", "Exercise", "AcademicRule", "ResearchProject", "Skill",
     "StructuredReason", "PlanItem", "ValidationCheck", "ValidationReport", "PlanDiff", "Plan",
+    "WeeklyScheduleItem", "MonthlyTheme", "SemesterBlock", "TimelineRoadmap",
     "Intent", "ContextCard", "ChatTurn", "Explanation",
     "PersonaSpec",
     "ChangeProposal", "DailyTask", "WeeklyRoadmap", "RoadmapVersionRecord"

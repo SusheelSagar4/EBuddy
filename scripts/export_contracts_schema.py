@@ -9,6 +9,7 @@ from app.contracts import (
     Goal, GoalRequirement, MasteryCriteria, Milestone,
     Course, Module, Resource, Exercise, AcademicRule, ResearchProject, Skill,
     Plan, PlanItem, ValidationReport, PlanDiff,
+    WeeklyScheduleItem, MonthlyTheme, SemesterBlock, TimelineRoadmap,
     Intent, ContextCard, ChatTurn, Explanation,
     PersonaSpec,
     ChangeProposal, DailyTask, WeeklyRoadmap, RoadmapVersionRecord
@@ -23,6 +24,7 @@ def export_schemas():
         Goal, GoalRequirement, MasteryCriteria, Milestone,
         Course, Module, Resource, Exercise, AcademicRule, ResearchProject, Skill,
         Plan, PlanItem, ValidationReport, PlanDiff,
+        WeeklyScheduleItem, MonthlyTheme, SemesterBlock, TimelineRoadmap,
         ContextCard, ChatTurn, Explanation,
         PersonaSpec,
         ChangeProposal, DailyTask, WeeklyRoadmap, RoadmapVersionRecord
