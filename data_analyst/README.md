@@ -1,6 +1,6 @@
 # Data Analyst Knowledge Base
 
-This package contains the official source workbooks, transformation pipelines, and generated relational CSV knowledge bases for the Data Analyst personalized learning and events recommendation path in **eBuddy** (Adobe Personalised Learning Buddy, Inter IIT Tech Meet 15.0).
+This package contains the official source workbooks, transformation pipelines, and generated relational CSV knowledge bases for the Data Analyst personalized learning, events recommendation, and assessment quiz path in **eBuddy** (Adobe Personalised Learning Buddy, Inter IIT Tech Meet 15.0).
 
 ---
 
@@ -10,10 +10,12 @@ This package contains the official source workbooks, transformation pipelines, a
 data_analyst/
 ├── data/                                 # Raw source Excel workbooks
 │   ├── Data_Analyst_Roadmap.xlsx         # 9 relational sheets (curriculum, skills, modules, projects, rubrics)
-│   └── Data_Analytics_Hackathons.xlsx    # 35 curated all-India data hackathons & competitions
+│   ├── Data_Analytics_Hackathons.xlsx    # 35 curated all-India data hackathons & competitions
+│   └── Data_Analyst_Questions.xlsx       # 47 curated assessment questions across 20 skills
 ├── scripts/                              # Automated Python transformation pipelines
 │   ├── build_da_csvs.py                  # Generates curriculum & portfolio CSV datasets
-│   └── build_da_events_csvs.py           # Generates events master, eligibility gating & recommendation rules
+│   ├── build_da_events_csvs.py           # Generates events master, eligibility gating & recommendation rules
+│   └── build_da_quiz_csvs.py             # Generates question bank, skills map, related skills, pool & checkpoints
 ├── output/                               # Clean, relational CSV files (UTF-8 with BOM)
 │   ├── 01_da_roadmap_overview.csv        # 5-phase overview roadmap with skills in order and outcomes
 │   ├── 02_phase_modules_resources.csv    # 44 curriculum modules joined with learning resources
@@ -26,7 +28,13 @@ data_analyst/
 │   ├── 09_learning_methods.csv           # 6 evidence-based pedagogical study methods
 │   ├── 01_events_master.csv              # Unified events catalog (12 Hackathons, 23 Competitions)
 │   ├── 02_phase_eligibility.csv          # Stage-wise unlock gating rules (6 stages: NONE_YET to DA-PH5)
-│   └── 03_recommendation_rules.csv       # Machine-readable recommendation engine rules (R01–R12)
+│   ├── 03_recommendation_rules.csv       # Machine-readable recommendation engine rules (R01–R12)
+│   ├── 01_question_bank.csv              # 47 calibrated assessment items (MCQ, Numeric, SQL)
+│   ├── 02_skills_phase_map.csv           # 20 skills taxonomy with question pool coverage & shortfall metrics
+│   ├── 03_related_skills.csv             # 62 directional relationships (Prerequisite, Dependent, Same Category)
+│   ├── 04_skill_difficulty_pool.csv      # 60 difficulty slots with status and fallback difficulty resolution
+│   ├── 05_quiz_checkpoints.csv           # 17 adaptive quiz checkpoints (Cluster Checks, Phase End & Final)
+│   └── 06_quiz_rules.csv                 # 29 machine-readable rules across 6 operational assessment scenarios
 └── README.md                             # Package documentation (this file)
 ```
 
@@ -54,6 +62,16 @@ data_analyst/
 | **`02_phase_eligibility.csv`**<br/>*(alias: `02_da_phase_eligibility.csv`)* | 6 | Stage-wise gating rules defining category unlocks (`hackathons_unlocked`, `competitions_unlocked`), recommendation quotas, and contextual user nudges across `NONE_YET` and Phases `DA-PH1` through `DA-PH5`. |
 | **`03_recommendation_rules.csv`**<br/>*(alias: `03_da_recommendation_rules.csv`)* | 12 | Machine-readable engine rules (R01–R12) governing eligibility, set sizing, category mix, diversity, timeline filters, home campus preference, and skill readiness hints. |
 
+### 3. Assessment & Quiz Engine Knowledge Base
+| File | Rows | Description |
+|---|---|---|
+| **`01_question_bank.csv`**<br/>*(alias: `01_da_question_bank.csv`)* | 47 | Master question bank covering 32 MCQs, 10 Numeric, and 5 SQL problems. Features exact source preservation, derived grading methods (`MCQ_EXACT_OPTION_TEXT`, `NUMERIC_TOLERANCE`, `SQL_RESULT_COMPARE`), parsed numeric values, unit hints (`percent`), extracted SQL schema definitions, and option length bias metrics. |
+| **`02_skills_phase_map.csv`**<br/>*(alias: `02_da_skills_phase_map.csv`)* | 20 | Complete 20-skill taxonomy mapped across Phases 1 to 5 with question counts by difficulty and type, pool health status (`OK`, `THIN`, `VERY_THIN`), and shortfall relative to the 3-question design target. |
+| **`03_related_skills.csv`**<br/>*(alias: `03_da_related_skills.csv`)* | 62 | Directional inter-skill dependency graph linking skills via `PREREQUISITE` (STRONG, 22), `DEPENDENT` (STRONG, 22), and `SAME_CATEGORY` (MODERATE, 18) with concise pedagogical rationale strings ($\le 12$ words). |
+| **`04_skill_difficulty_pool.csv`**<br/>*(alias: `04_da_skill_difficulty_pool.csv`)* | 60 | Exhaustive grid of 20 skills $\times$ 3 difficulty levels with question counts, pool status (`OK`, `THIN`, `EMPTY`), nearest fallback difficulty with questions, and synthetic generation flags. |
+| **`05_quiz_checkpoints.csv`**<br/>*(alias: `05_da_quiz_checkpoints.csv`)* | 17 | Comprehensive checkpoint registry featuring 12 Skill Cluster Checks, 4 Phase-End Barrier Quizzes, and 1 Final Cumulative Quiz with target lengths, difficulty mixes, new vs. review shares, pass thresholds (70%), and pool shortfall evaluations. |
+| **`06_quiz_rules.csv`**<br/>*(alias: `06_da_quiz_rules.csv`)* | 29 | Machine-readable operational rules (G01–G05, D01–D08, S01–S04, C01–C04, P01–P04, L01–L04) governing item presentation, option shuffling, numeric tolerance, SQL sandbox testing, diagnostic onboarding, and spaced repetition. |
+
 ---
 
 ## Running the Pipelines
@@ -68,8 +86,14 @@ To regenerate the Data Analyst events and hackathons knowledge base:
 python data_analyst/scripts/build_da_events_csvs.py
 ```
 
+To regenerate the Data Analyst quiz assessment knowledge base:
+```bash
+python data_analyst/scripts/build_da_quiz_csvs.py
+```
+
 Or run via repository root forwarders:
 ```bash
 python build_da_csvs.py
 python build_da_events_csvs.py
+python build_da_quiz_csvs.py
 ```

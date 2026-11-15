@@ -606,3 +606,35 @@ An automated data engineering pipeline (`build_sde_quiz_csvs.py` located in root
 python build_sde_quiz_csvs.py
 ```
 *The pipeline executes end-to-end data extraction, hyperlink resolution, cross-file conflict classification, roadmap mapping, and validation assertions upon execution.*
+
+
+---
+
+## 19. Data Analyst (DA) Quiz Assessment Knowledge Base Pipeline
+
+An automated data engineering pipeline (`build_da_quiz_csvs.py` located in root and `data_analyst/scripts/build_da_quiz_csvs.py`) transforms the curated Data Analyst question bank workbook (`Data_Analyst_Questions.xlsx`) into a relational assessment knowledge base in `data_analyst/output/`, `da/output/`, and `output/`:
+
+### Datasets Generated (`data_analyst/output/`, `da/output/`, and `output/`)
+
+| File | Rows | Schema & Purpose | Key Highlights |
+|---|---|---|---|
+| **`01_question_bank.csv`**<br/>*(alias: `01_da_question_bank.csv`)* | 47 | Master question bank covering 32 MCQs, 10 Numeric, and 5 SQL problems. | • Exact source preservation of stems, options, answers, and explanations<br/>• Grading method derivation: `MCQ_EXACT_OPTION_TEXT` (32), `NUMERIC_TOLERANCE` (10), `SQL_RESULT_COMPARE` (5)<br/>• Standardized difficulty level numbers (`1` = Easy [26], `2` = Medium [18], `3` = Hard [3])<br/>• Numeric answer parsing and automatic `percent` unit hint extraction for rate, churn, and lift calculations<br/>• SQL schema definition extraction via regex (`Table name(...)`) for dynamic sandbox database initialization<br/>• MCQ answer-position bias tracking: 26 of 32 correct answers are option `b` (81.25%), and 21 of 32 correct options are the strictly longest text (65.6%) |
+| **`02_skills_phase_map.csv`**<br/>*(alias: `02_da_skills_phase_map.csv`)* | 20 | Complete 20-skill taxonomy mapped across Phases 1 to 5 with question coverage metrics. | • Skill taxonomy: 5 Tools, 3 SQL, 2 Python, 4 Analysis, 3 Visualisation, 3 Statistics<br/>• Phase allocation: DA-PH1 (12 questions), DA-PH2 (12), DA-PH3 (8), DA-PH4 (11), DA-PH5 (4)<br/>• Pool status classification: 3 `OK` ($\ge 4$), 12 `THIN` (2–3), 5 `VERY_THIN` (1 question), 0 `EMPTY`<br/>• Shortfall tracking relative to design target of 3 questions per skill (total shortfall: 16 questions)<br/>• Prerequisite DAG verification confirming zero forward-dependency violations |
+| **`03_related_skills.csv`**<br/>*(alias: `03_da_related_skills.csv`)* | 62 | Directional inter-skill dependency graph powering related-topic questions in diagnostic quizzes. | • 22 `PREREQUISITE` links (STRONG strength)<br/>• 22 `DEPENDENT` links (STRONG strength)<br/>• 18 `SAME_CATEGORY` domain links (MODERATE strength)<br/>• Concise pedagogical rationales ($\le 12$ words) grounded solely in domain competencies<br/>• Zero self-relations and zero duplicate pairs verified |
+| **`04_skill_difficulty_pool.csv`**<br/>*(alias: `04_da_skill_difficulty_pool.csv`)* | 60 | Exhaustive grid of 20 skills $\times$ 3 difficulty levels (Easy, Medium, Hard). | • Inventory breakdown: 4 `OK`, 24 `THIN`, 32 `EMPTY` slots<br/>• Nearest fallback difficulty resolution preferring lower difficulty when tied (e.g., DA-S01 d2/d3 fallback to d1; DA-S06 d1 fallback to d2)<br/>• Explicit generation trigger flags (`needs_generated_questions = TRUE` for 56 THIN/EMPTY slots) |
+| **`05_quiz_checkpoints.csv`**<br/>*(alias: `05_da_quiz_checkpoints.csv`)* | 17 | Comprehensive checkpoint registry defining when and how eBuddy quizzes scratch learners. | • 12 Skill Cluster Checks (`CP-1A` through `CP-5B`) after learning milestones<br/>• 4 Phase-End Barrier Quizzes (`CP-1E`, `CP-2E`, `CP-3E`, `CP-4E`, `CP-5E`) verifying phase readiness<br/>• 1 Final Cumulative Quiz (`CP-FIN`) across all 20 skills<br/>• Parameterized targets (10–15 questions), difficulty distributions, and new vs. review balance (70/30)<br/>• Standardized 70% passing bar aligned with official roadmap checkpoint criteria<br/>• Pool adequacy analysis: 13 checkpoints meet target length natively; 4 cluster checks (`CP-1A`, `CP-1B`, `CP-2A`, `CP-4C`) flagged for verified synthetic question generation |
+| **`06_quiz_rules.csv`**<br/>*(alias: `06_da_quiz_rules.csv`)* | 29 | Machine-readable operational rules governing quiz presentation, scoring, and adaptive planning. | • `ITEM_AND_GRADING` (G01–G05): MCQ option shuffling, numeric error tolerance ($\le \max(0.01, 1\%)$), SQL result-set diffing, explanation displays<br/>• `DECLARED_KNOWLEDGE` (D01–D08): Dynamic onboarding quiz length (10–15), 75/25 declared-to-related ratio, difficulty mix by claim, confirmation verdicts (70% threshold)<br/>• `SCRATCH_LEARNER` (S01–S04): Cluster triggers, proceed/review/repeat rules, 2-failure prerequisite retake limits, roadmap checkpoint alignment<br/>• `SCORING` (C01–C04): Difficulty-weighted accuracy, strong/ok/weak thresholds, category-level rollups for sparse skills<br/>• `PLANNING` (P01–P04): Weak-first scheduling, prerequisite-first dependency resolution, 7-day spaced repetition, Phase 5 refresher quiz<br/>• `POOL_AND_GENERATION` (L01–L04): Intra-quiz deduplication, fallback difficulty chains, verified synthetic question generation, provenance auditing |
+
+### Key Assessment Engine Insights
+1. **Source Answer-Position Bias Mitigation**: In the raw question bank, 26 of 32 MCQs (81.25%) have option `b` as the correct answer, and 21 of 32 correct options (65.6%) are strictly the longest string. To prevent learners from gaming assessments through position or length heuristics, Rule `G02` enforces dynamic option shuffling at quiz presentation time and grades strictly by `correct_option_text`.
+2. **Deterministic Grading Mechanisms**:
+   - *MCQs*: Graded by exact option text matching.
+   - *Numeric*: Graded via absolute tolerance rule $\le \max(0.01, 0.01 \times \text{correct})$, stripping commas, trailing `%`, and whitespace.
+   - *SQL*: Graded by comparing result sets from in-memory sample tables extracted from `sql_tables_in_stem_derived`, ignoring column alias variations and unordered rows.
+3. **Adaptive Diagnostic Calibration**: When learners claim prior data analytics knowledge, eBuddy allocates 75% questions to declared competencies and 25% to undeclared related skills (`03_related_skills.csv`) at claimed difficulty minus one level. A 70% weighted accuracy threshold confirms mastery, allowing learners to bypass foundational topics while automatically scheduling weak prerequisites.
+
+### Running the Data Analyst Quiz Assessment Pipeline
+```bash
+python build_da_quiz_csvs.py
+```
+*The pipeline executes deterministic schema validation, OpenPyXL cell extraction, prerequisite DAG audits, 100% exact cell fidelity verification, and CSV generation across all target folders.*
