@@ -522,7 +522,7 @@ The payload includes items for all active Semester 5 milestones (`upsc_optional_
 
   +----------------------------------------------------------------------------------------------+
   | PHASE 1: Orientation, Newspaper Habit & NCERT Foundation (Sem 1-3)            [100% COMPLETE] |
-  | Progress: [==============================================================================] 100% (15% template share achieved) |
+  | Progress: [==============================================================================] 100% complete (prerequisite, not counted in the UPSC-12 share) |
   | [x] upsc_orientation_habit: 60-day newspaper streak verified.                                |
   | [x] upsc_ncert_baseline: 90% NCERT chapters completed with 1-page notes.                      |
   +----------------------------------------------------------------------------------------------+
@@ -546,12 +546,12 @@ The payload includes items for all active Semester 5 milestones (`upsc_optional_
 
   +----------------------------------------------------------------------------------------------+
   | PHASE 3: Answer Writing, Ethics/Essay & Summer Intensive (Sem 6 + Summer)           [LOCKED] |
-  | Target Share: 20% | Unlock Condition: Complete Phase 2 + Optional Subject Locked             |
+  | Target Share: 10% | Unlock Condition: Complete Phase 2 + Optional Subject Locked             |
   +----------------------------------------------------------------------------------------------+
 
   +----------------------------------------------------------------------------------------------+
   | PHASE 4: Revision Pass 2, Prelims Mock Sprint & Attempt Decision (Sem 7-8)          [LOCKED] |
-  | Target Share: 25% | Exam Clash Freeze Window (R10): Starts 2027-04-22 (Viva: 2027-05-19)     |
+  | Target Share: 50% | Exam Clash Freeze Window (R10): Starts 2027-04-22 (Viva: 2027-05-19)     |
   +----------------------------------------------------------------------------------------------+
 ```
 
