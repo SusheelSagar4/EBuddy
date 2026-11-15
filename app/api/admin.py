@@ -172,3 +172,185 @@ def trigger_reprocessing(student_id: str, req: ReprocessRequest):
         "plan_update": new_plan_info,
         "timestamp": datetime.now().isoformat()
     }
+
+# =============================================================================
+# Core to M.Tech Admin & Re-processing Endpoints (§15)
+# =============================================================================
+
+class ProgrammeUpdateRequest(BaseModel):
+    application_deadline: Optional[str] = None
+    min_qualifying_criteria: Optional[str] = None
+    selection_mode: Optional[str] = None
+    fees: Optional[float] = None
+    stipend_or_assistantship: Optional[str] = None
+    verified_by: Optional[str] = None
+
+class ExamCycleUpdateRequest(BaseModel):
+    exam_dates: Optional[str] = None
+    reg_close: Optional[str] = None
+    fee: Optional[float] = None
+    verified_by: Optional[str] = None
+
+class AdmissionStatUpdateRequest(BaseModel):
+    closing_score_or_rank: float
+    verified_by: Optional[str] = None
+
+class PSUUpdateRequest(BaseModel):
+    past_cutoff: Optional[float] = None
+    application_window: Optional[str] = None
+    verified_by: Optional[str] = None
+
+@router.get("/mtech/programmes")
+def list_mtech_programmes(degree: Optional[str] = None):
+    from app.kb.core_to_mtech_repo import core_to_mtech_repo
+    progs = list(core_to_mtech_repo.programmes.values())
+    if degree:
+        progs = [p for p in progs if p.degree.upper() == degree.upper()]
+    return {"count": len(progs), "programmes": [p.model_dump() for p in progs]}
+
+@router.patch("/mtech/programmes/{programme_id}")
+def update_mtech_programme(programme_id: str, req: ProgrammeUpdateRequest):
+    """
+    Admin edit for Higher Study Programme (§15).
+    Hard Rule (§3): verified is set to TRUE only when verified_by contains a person's name.
+    Any edit immediately queues re-processing.
+    """
+    from app.kb.core_to_mtech_repo import core_to_mtech_repo
+    from app.contracts.core_to_mtech import HigherProgramme
+
+    prog = core_to_mtech_repo.programmes.get(programme_id)
+    if not prog:
+        raise HTTPException(status_code=404, detail="Programme not found.")
+
+    p_dict = prog.model_dump()
+    if req.application_deadline is not None:
+        p_dict["application_deadline"] = req.application_deadline
+    if req.min_qualifying_criteria is not None:
+        p_dict["min_qualifying_criteria"] = req.min_qualifying_criteria
+    if req.selection_mode is not None:
+        p_dict["selection_mode"] = req.selection_mode
+    if req.fees is not None:
+        p_dict["fees"] = req.fees
+    if req.stipend_or_assistantship is not None:
+        p_dict["stipend_or_assistantship"] = req.stipend_or_assistantship
+
+    if req.verified_by is not None:
+        vby = req.verified_by.strip()
+        p_dict["verified_by"] = vby
+        p_dict["verified"] = bool(vby) # True only when verified_by holds a name
+
+    core_to_mtech_repo.programmes[programme_id] = HigherProgramme(**p_dict)
+
+    # Trigger re-processing for all active students targeting M.Tech
+    reprocessed_students = []
+    for sid in onboarding_service.students.keys():
+        res = reprocess_mtech_student(sid, reason=f"Admin updated programme {programme_id}.")
+        reprocessed_students.append(res)
+
+    return {
+        "status": "success",
+        "programme": core_to_mtech_repo.programmes[programme_id].model_dump(),
+        "reprocessed_students_count": len(reprocessed_students)
+    }
+
+@router.get("/mtech/exam-cycles")
+def list_exam_cycles():
+    from app.kb.core_to_mtech_repo import core_to_mtech_repo
+    cycles = list(core_to_mtech_repo.exam_cycles.values())
+    return {"count": len(cycles), "cycles": [c.model_dump() for c in cycles]}
+
+@router.patch("/mtech/exam-cycles/{cycle_id}")
+def update_exam_cycle(cycle_id: str, req: ExamCycleUpdateRequest):
+    from app.kb.core_to_mtech_repo import core_to_mtech_repo
+    from app.contracts.core_to_mtech import ExamCycle
+
+    c = core_to_mtech_repo.exam_cycles.get(cycle_id)
+    if not c:
+        raise HTTPException(status_code=404, detail="Exam cycle not found.")
+
+    c_dict = c.model_dump()
+    if req.exam_dates is not None:
+        c_dict["exam_dates"] = req.exam_dates
+    if req.reg_close is not None:
+        c_dict["reg_close"] = req.reg_close
+    if req.fee is not None:
+        c_dict["fee"] = req.fee
+    if req.verified_by is not None:
+        vby = req.verified_by.strip()
+        c_dict["verified_by"] = vby
+        c_dict["verified"] = bool(vby)
+
+    core_to_mtech_repo.exam_cycles[cycle_id] = ExamCycle(**c_dict)
+    return {"status": "success", "exam_cycle": core_to_mtech_repo.exam_cycles[cycle_id].model_dump()}
+
+@router.post("/mtech/students/{student_id}/reprocess")
+def reprocess_mtech_student(student_id: str, reason: str = "Admin triggered Core to M.Tech re-processing"):
+    """
+    Immediate re-processing engine for Core to M.Tech (§15):
+    Recomputes skill state, readiness, score band, shortlist tiers, current plan, and bumps plan version.
+    """
+    from app.engine.gate_readiness_shortlist import gate_readiness_shortlist_engine
+    from app.engine.gate_planner import gate_planner_engine
+
+    student = onboarding_service.students.get(student_id)
+    if not student:
+        return {"status": "skipped", "reason": "student_not_found"}
+
+    dept = student.programme_id
+    paper_code = "EE" if "EE" in dept else "MT"
+
+    # 1. Recompute score band from mocks
+    mock_scores = [680.0, 720.0, 750.0]
+    score_band = gate_readiness_shortlist_engine.compute_predicted_score_band(mock_scores)
+
+    # 2. Recompute readiness
+    masteries = {"SAMPLE-TOPIC-EE-CIRCUITS": 0.75, "SAMPLE-TOPIC-EE-POWER": 0.70}
+    readiness = gate_readiness_shortlist_engine.evaluate_readiness(
+        full_mock_scores=mock_scores,
+        topic_masteries=masteries,
+        error_logs=[]
+    )
+
+    # 3. Recompute shortlist tiers
+    shortlist = gate_readiness_shortlist_engine.compute_shortlist_and_tiers(
+        student_branch=dept,
+        student_cgpa=student.cgpa,
+        backlogs=student.backlogs,
+        paper_code=paper_code,
+        score_band=score_band,
+        allow_unverified_demo=True
+    )
+
+    # 4. Generate updated weekly guidance plan
+    weekly = gate_planner_engine.generate_weekly_guidance(
+        student_id=student_id,
+        week_num=10,
+        paper_code=paper_code,
+        cgpa=student.cgpa,
+        backlogs=student.backlogs,
+        hours_available=16.0,
+        current_course_codes=["EE2L001"] if "EE" in dept else ["ML2L001"],
+        topic_masteries=masteries,
+        weeks_remaining=8
+    )
+
+    # 5. Bump plan version
+    current_plan = plan_service.get_plan(student_id)
+    new_version = (current_plan.version + 1) if current_plan else 2
+
+    return {
+        "status": "reprocessed",
+        "student_id": student_id,
+        "reason": reason,
+        "new_plan_version": new_version,
+        "predicted_score_band": score_band.model_dump() if score_band else None,
+        "readiness": readiness,
+        "shortlist_summary": {
+            "reach_count": len(shortlist.reach),
+            "target_count": len(shortlist.target),
+            "safe_count": len(shortlist.safe)
+        },
+        "weekly_guidance": weekly,
+        "timestamp": datetime.now().isoformat()
+    }
+

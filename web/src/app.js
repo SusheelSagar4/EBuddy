@@ -6,6 +6,7 @@ import { renderProgress } from './screens/progress.js';
 import { renderChat } from './screens/chat.js';
 import { renderAdapt } from './screens/adapt.js';
 import { renderAdmin } from './screens/admin.js';
+import { renderMTechScreen } from './screens/mtech.js';
 
 // Application global state
 const state = {
@@ -20,6 +21,7 @@ const routes = {
   '#plan': { title: 'Academic Plan', render: renderPlan },
   '#learn': { title: 'Learn & Practise', render: renderLearn },
   '#progress': { title: 'Mastery Progress', render: renderProgress },
+  '#mtech': { title: 'Core to M.Tech Higher Studies', render: renderMTechScreen },
   '#chat': { title: 'Buddy Chat', render: renderChat },
   '#adapt': { title: 'Adapt Simulator', render: renderAdapt },
   '#admin': { title: 'Admin & Integrity', render: renderAdmin }
