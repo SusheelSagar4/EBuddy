@@ -65,7 +65,7 @@ On Windows environments without `make`, use the built-in PowerShell control scri
 
 ## 2. Models & Air-Gapped LLM Gateway
 
-- **Primary LLM:** `openai/gpt-4o-mini` (Configured default in `.env.example`; supports `gemini/gemini-1.5-flash`, `azure/<deployment>`, or `ollama/<model>` purely via environment variables).
+- **Primary LLM:** `gemini/gemini-3.5-flash-lite` (Configured default in `.env.example`; supports `openai/gpt-4o-mini`, `gemini/gemini-1.5-flash`, `azure/<deployment>`, or `ollama/<model>` purely via environment variables).
 - **Embedding Model:** `text-embedding-3-small` (Configured via `EMBEDDING_MODEL`; optional).
 - **LiteLLM Gateway:** All model and embedding interactions route exclusively through LiteLLM. No vendor-specific SDK imports exist in the codebase.
 - **Strict Air-Gap & Cost Isolation:**
@@ -81,7 +81,7 @@ All application settings are read dynamically from environment variables without
 
 | Variable | Default Value | Purpose |
 |---|---|---|
-| `LLM_MODEL` | `openai/gpt-4o-mini` | Model string passed directly to LiteLLM. |
+| `LLM_MODEL` | `gemini/gemini-3.5-flash-lite` | Model string passed directly to LiteLLM. |
 | `LLM_API_KEY` | *(empty in example)* | API credential for configured provider. |
 | `LLM_API_BASE` | *(empty)* | Optional custom endpoint (Ollama, Azure, LiteLLM proxy). |
 | `EMBEDDING_MODEL` | `text-embedding-3-small` | Model for vector representations if active. |
@@ -217,7 +217,7 @@ python scripts/check_data.py
 |---|---|---|
 | **Rule 1** | LiteLLM Only | `app/config.py` enforces LiteLLM gateway; zero vendor-specific SDK imports. |
 | **Rule 2** | Configuration by Env Vars Only | `app/config.py` uses Pydantic BaseSettings; verified by `test_no_hardcoded_secrets_or_endpoints`. |
-| **Rule 3** | `.env.example` Committed | Default tuned to `openai/gpt-4o-mini`; verified by `test_01_env_example_compliance`. |
+| **Rule 3** | `.env.example` Committed | Default tuned to `gemini/gemini-3.5-flash-lite`; verified by `test_01_env_example_compliance`. |
 | **Rule 4** | Single-command Start, < 5 GB, linux/amd64 | `docker-compose.yml` specifies `platform: linux/amd64` across `app`, `db`, and `adminer`. Footprint < 1.5 GB. |
 | **Rule 5** | No Secrets in Image | `.env` ignored in `.gitignore` and `.dockerignore`; verified by `test_02_env_git_and_docker_ignored`. |
 | **Rule 6** | Plain CSV/JSON Seeds & Idempotent Reset | `scripts/seed_loader.py --reset` restores state in topological order. Tested twice with identical row counts. |
@@ -409,8 +409,8 @@ pip install -r requirements.txt
 #### 2. Configure Environment Variables (`.env`)
 ```ini
 # LLM Model Configuration
-# Replace <MODEL_USED> with your target model (e.g. openai/gpt-4o-mini, gemini/gemini-1.5-flash)
-LLM_MODEL=<MODEL_USED>
+# Tested model: gemini/gemini-3.5-flash-lite
+LLM_MODEL=gemini/gemini-3.5-flash-lite
 LLM_API_KEY=your_api_key_here
 LLM_API_BASE=
 
@@ -418,6 +418,8 @@ LLM_API_BASE=
 LITELLM_LOCAL_MODEL_COST_MAP=True
 LITELLM_TELEMETRY=False
 ```
+
+> **Note**: This is the model the project was tested with (`gemini/gemini-3.5-flash-lite`), and it is configured only through `LLM_MODEL`, `LLM_API_KEY`, `LLM_API_BASE` and `EMBEDDING_MODEL` (no hard-coded models, keys or endpoints).
 
 #### 3. Run Test Suite
 ```powershell
