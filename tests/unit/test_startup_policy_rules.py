@@ -14,8 +14,8 @@ class TestStartupPolicyRules(unittest.TestCase):
     def setUpClass(cls):
         persona_registry.discover()
         cls.pkg = persona_registry.get("student_startup")
-        cls.assertIsNotNone(cls.pkg, "student_startup persona must be registered in persona_registry")
-        cls.policy: CustomPersonaPolicy = cls.pkg.policy
+        assert cls.pkg is not None, "student_startup persona must be registered in persona_registry"
+        cls.policy = cls.pkg.policy
         cls.spec = cls.pkg.spec
 
     def test_00_persona_registration_and_spec(self):
