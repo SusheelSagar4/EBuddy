@@ -350,3 +350,33 @@ docker compose exec app pytest tests -q
 ├── Makefile                              # Make commands for Linux/macOS
 └── requirements.txt                      # Project Python dependencies
 ```
+
+---
+
+## 11. Core to MBA Pathway (Feature Documentation)
+
+The **Core to MBA** feature guides core engineering students (**B.Tech EE & B.Tech MM**) who are considering management careers. It builds around their engineering foundations and follows the Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
+
+### A. Key Architectural Modules
+1. **Decision View (`app/engine/mba_decision.py`):** Neutral side-by-side comparative timelines and requirements for 5 routes: Stay Core Research, Stay Core Industry, Core Higher Studies (GATE), MBA Now (CAT Fresher), and MBA After 2-3 Years Core Work Experience.
+2. **Career Map (`app/engine/mba_career_map.py`):** Verified management pathways leveraging engineering skills (EE: power and energy management, semiconductor product management; MM: metals supply chain, materials sourcing, green steel consulting). Zero unverified salary or placement claims.
+3. **Adaptive Diagnostic & Profile Audit (`app/engine/mba_diagnostic.py`, `app/engine/mba_profile_audit.py`):** Short adaptive test across QA, DILR, VARC (max 15 items) and 6-criterion profile audit against 4-level descriptive benchmarks.
+4. **Weekly Guidance & CGPA Protection (`app/engine/mba_planner.py`):** Weekly focus goals and hours budgets (never rigid timetables). Automatically throttles MBA prep to <= 2h during mid-sems (weeks 7-8) and end-sems (weeks 14-16) to protect academic GPA.
+5. **Verbal-Gap Remediation:** Allocates 45% of MBA hours to daily reading (MBA-L1) and RC practice for students weak in VARC, treating quant as a confidence builder.
+6. **Story Builder (`app/engine/mba_story.py`):** Rigorous coaching on "Why MBA", "Why not core", and project STAR narratives. Strictly NO ghostwriting; provides 5-criterion rubric scoring and probing questions.
+7. **Mock Calibration & Shortlist Tiering (`app/engine/mba_mocks_shortlist.py`):** Requires >= 2 full mocks for calibrated score bands. Tiers into Reach, Target, and Safe against verified institutional cutoffs with a strict Zero-Leak Guarantee.
+8. **Interview Prep (`app/engine/mba_interview.py`):** Technical viva on branch fundamentals (circuits, power, metallurgy, heat treatment), general PI, and WAT essays evaluated on official rubrics.
+9. **Re-Plan & Core Pivot (`app/engine/mba_replan.py`):** Post-result alternatives when below target, and seamless lateral switch-back to Core Engineering (Industry or Research) preserving 100% of diagnostic evidence with version diffs.
+
+### B. Seed Data Locations
+- General MBA Tables (17 CSVs): `/data/seed/mba/mba_*.csv`
+- Core to MBA Specialized Tables (7 CSVs): `/data/seed/core_to_mba/*.csv`
+
+### C. Deterministic Split & Tested Models
+- **Deterministic Split:** All hours budgets, IRT skill estimations, rubric benchmarks, percentile bands, shortlist tiers, clashes, and version diffs are computed by 100% deterministic Python/SQL engines.
+- **Tested Models:** Tuned and validated on `openai/gpt-4o-mini` (default), fully compatible with `gemini/gemini-1.5-flash`, `azure/...`, or local `ollama/...` via LiteLLM.
+
+### D. Verification & Scorecard
+- **Comprehensive Test Suite:** `tests/test_core_to_mba.py` (15/15 tests passing).
+- **Evaluation Scorecard:** `scripts/evaluate_mba_scorecard.py` evaluated across 32 synthetic student profiles (16 EE, 16 MM) with 100% pass rates across all verification gates. Report available at `docs/core_to_mba_scorecard.md`.
+
