@@ -1,0 +1,3 @@
+id,exam_id,paper_code,name,branches_mapped,allowed_second_papers,syllabus_url,source_url,source_type,retrieved_on,cycle,verified,verified_by
+SAMPLE-PAPER-EE,SAMPLE-EXAM-GATE,EE,SAMPLE-Electrical Engineering,BTECH_EE,"IN,EC,DA",https://gate2027.iitm.ac.in/syllabus/ee,https://gate2027.iitm.ac.in/,official,2026-11-14,2027,FALSE,
+SAMPLE-PAPER-MT,SAMPLE-EXAM-GATE,MT,SAMPLE-Metallurgical Engineering,BTECH_MM,"ME,XE,PI",https://gate2027.iitm.ac.in/syllabus/mt,https://gate2027.iitm.ac.in/,official,2026-11-14,2027,FALSE,

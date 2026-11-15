@@ -795,3 +795,322 @@ DROP TRIGGER IF EXISTS trg_student_reflection ON student.reflection;
 CREATE TRIGGER trg_student_reflection
 AFTER INSERT OR UPDATE OR DELETE ON student.reflection
 FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+-- =============================================================================
+-- Core to M.Tech & Higher Studies Tables
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS kb.route (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kb.exam (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    conducting_body VARCHAR(255),
+    route_ids TEXT,
+    pattern_json TEXT,
+    marking_scheme TEXT,
+    score_scale VARCHAR(100),
+    score_validity_years INT DEFAULT 3,
+    official_url TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.exam_cycle (
+    id VARCHAR(100) PRIMARY KEY,
+    exam_id VARCHAR(50) REFERENCES kb.exam(id) ON DELETE CASCADE,
+    cycle VARCHAR(50) NOT NULL,
+    organiser VARCHAR(255),
+    reg_open DATE,
+    reg_close DATE,
+    exam_dates TEXT,
+    admit_card_date DATE,
+    result_date DATE,
+    fee NUMERIC(10, 2),
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.exam_paper (
+    id VARCHAR(50) PRIMARY KEY,
+    exam_id VARCHAR(50) REFERENCES kb.exam(id) ON DELETE CASCADE,
+    paper_code VARCHAR(50) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    branches_mapped TEXT,
+    allowed_second_papers TEXT,
+    syllabus_url TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.syllabus_topic (
+    id VARCHAR(100) PRIMARY KEY,
+    paper_code VARCHAR(50) NOT NULL,
+    section VARCHAR(100) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    subtopics TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.topic_weightage (
+    id VARCHAR(100) PRIMARY KEY,
+    paper_code VARCHAR(50) NOT NULL,
+    topic_id VARCHAR(100) REFERENCES kb.syllabus_topic(id) ON DELETE CASCADE,
+    year INT NOT NULL,
+    marks NUMERIC(5, 2) NOT NULL,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.course_topic_map (
+    id VARCHAR(100) PRIMARY KEY,
+    course_code VARCHAR(50) NOT NULL,
+    topic_id VARCHAR(100) REFERENCES kb.syllabus_topic(id) ON DELETE CASCADE,
+    coverage VARCHAR(50) NOT NULL DEFAULT 'partial', -- 'full' / 'partial'
+    reviewed_by VARCHAR(255),
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.pyq_item (
+    id VARCHAR(100) PRIMARY KEY,
+    paper_code VARCHAR(50) NOT NULL,
+    year INT NOT NULL,
+    topic_id VARCHAR(100) REFERENCES kb.syllabus_topic(id) ON DELETE CASCADE,
+    question_ref TEXT NOT NULL,
+    marks NUMERIC(4, 1) DEFAULT 1.0,
+    type VARCHAR(50) DEFAULT 'MCQ', -- MCQ / MSQ / NAT
+    answer_key_source TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.institution (
+    id VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL, -- IIT / IISc / NIT / IIIT / other
+    city VARCHAR(100),
+    official_url TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.higher_programme (
+    id VARCHAR(100) PRIMARY KEY,
+    institution_id VARCHAR(100) REFERENCES kb.institution(id) ON DELETE CASCADE,
+    degree VARCHAR(50) NOT NULL, -- M.Tech / ME / MS(R) / Direct PhD
+    department VARCHAR(100) NOT NULL,
+    specialisation VARCHAR(255) NOT NULL,
+    exams_accepted TEXT,
+    gate_papers_accepted TEXT,
+    branches_eligible TEXT,
+    min_qualifying_criteria TEXT,
+    selection_mode VARCHAR(100) DEFAULT 'GATE score', -- GATE score / written test / interview
+    application_portal VARCHAR(50) DEFAULT 'COAP', -- COAP / CCMT / institute
+    application_deadline DATE,
+    fees NUMERIC(10, 2),
+    stipend_or_assistantship TEXT,
+    research_areas TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.admission_stat (
+    id VARCHAR(100) PRIMARY KEY,
+    programme_id VARCHAR(100) REFERENCES kb.higher_programme(id) ON DELETE CASCADE,
+    year INT NOT NULL,
+    category VARCHAR(50) NOT NULL, -- GEN / OBC-NCL / EWS / SC / ST / PwD
+    round VARCHAR(50) NOT NULL,
+    closing_score_or_rank NUMERIC(8, 2) NOT NULL,
+    score_type VARCHAR(50) DEFAULT 'GATE score', -- 'GATE score' / 'AIR'
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.psu (
+    id VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    recruits_via_gate BOOLEAN DEFAULT TRUE,
+    disciplines TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.psu_cycle (
+    id VARCHAR(100) PRIMARY KEY,
+    psu_id VARCHAR(100) REFERENCES kb.psu(id) ON DELETE CASCADE,
+    cycle VARCHAR(50) NOT NULL,
+    gate_year_used INT,
+    application_window TEXT,
+    disciplines TEXT,
+    past_cutoff NUMERIC(8, 2),
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.counselling_cycle (
+    id VARCHAR(100) PRIMARY KEY,
+    portal VARCHAR(50) NOT NULL, -- COAP / CCMT
+    cycle VARCHAR(50) NOT NULL,
+    round_dates TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.prep_template (
+    id VARCHAR(100) PRIMARY KEY,
+    paper_code VARCHAR(50) NOT NULL,
+    speed_months INT NOT NULL, -- 12 / 6 / 3
+    readiness_rule_json TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS kb.template_phase (
+    id VARCHAR(100) PRIMARY KEY,
+    template_id VARCHAR(100) REFERENCES kb.prep_template(id) ON DELETE CASCADE,
+    phase_order INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    share_of_weeks NUMERIC(4, 3) NOT NULL,
+    topic_selector VARCHAR(255),
+    checkpoint VARCHAR(255),
+    activities TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    cycle VARCHAR(50),
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS student.mock_result (
+    id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    mock_id VARCHAR(100) NOT NULL,
+    kind VARCHAR(50) NOT NULL, -- topic test / subject test / full mock / official result
+    score NUMERIC(6, 2) NOT NULL,
+    max_score NUMERIC(6, 2) NOT NULL DEFAULT 100.0,
+    percentile NUMERIC(5, 2),
+    time_taken INT,
+    topic_breakdown_json TEXT,
+    taken_on DATE DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE IF NOT EXISTS student.error_log (
+    id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    item_ref VARCHAR(255) NOT NULL,
+    topic_id VARCHAR(100) NOT NULL,
+    mistake_type VARCHAR(50) NOT NULL, -- concept / calculation / reading / time
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.application (
+    id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    target_id VARCHAR(100) NOT NULL, -- programme_id or psu_id
+    target_type VARCHAR(50) NOT NULL DEFAULT 'programme', -- programme / psu
+    tier VARCHAR(50), -- Reach / Target / Safe
+    status VARCHAR(50) DEFAULT 'draft', -- draft / submitted / shortlisted / offered / rejected
+    checklist_json TEXT,
+    deadline DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.interview_session (
+    id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    programme_id VARCHAR(100),
+    kind VARCHAR(50) NOT NULL DEFAULT 'technical', -- technical / research
+    transcript_summary TEXT,
+    rubric_scores TEXT,
+    feedback TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.gate_result (
+    id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    cycle VARCHAR(50) NOT NULL,
+    paper_code VARCHAR(50) NOT NULL,
+    score NUMERIC(6, 2) NOT NULL,
+    rank INT,
+    verified_by_student BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Triggers for Core-to-MTech student updates to trigger re-processing
+DROP TRIGGER IF EXISTS trg_student_mock_result ON student.mock_result;
+CREATE TRIGGER trg_student_mock_result
+AFTER INSERT OR UPDATE OR DELETE ON student.mock_result
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+DROP TRIGGER IF EXISTS trg_student_application ON student.application;
+CREATE TRIGGER trg_student_application
+AFTER INSERT OR UPDATE OR DELETE ON student.application
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+DROP TRIGGER IF EXISTS trg_student_gate_result ON student.gate_result;
+CREATE TRIGGER trg_student_gate_result
+AFTER INSERT OR UPDATE OR DELETE ON student.gate_result
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+

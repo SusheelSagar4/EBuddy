@@ -1,0 +1,6 @@
+id,paper_code,year,topic_id,question_ref,marks,type,answer_key_source,source_url,source_type,retrieved_on,cycle,verified,verified_by
+SAMPLE-PYQ-EE-2024-Q12,EE,2024,SAMPLE-TOPIC-EE-CIRCUITS,GATE 2024 EE Question 12 (Thevenin equivalent across terminal AB),2.0,NAT,Official GATE 2024 Answer Key Key=4.5 to 4.7,https://gate2024.iisc.ac.in/,official,2026-11-14,2024,FALSE,
+SAMPLE-PYQ-EE-2024-Q25,EE,2024,SAMPLE-TOPIC-EE-MACHINES,GATE 2024 EE Question 25 (Synchronous machine load angle stability),2.0,MCQ,Official GATE 2024 Answer Key Key=B,https://gate2024.iisc.ac.in/,official,2026-11-14,2024,FALSE,
+SAMPLE-PYQ-EE-2023-Q18,EE,2023,SAMPLE-TOPIC-EE-POWER,GATE 2023 EE Question 18 (Bus admittance matrix zero sequence),1.0,MCQ,Official GATE 2023 Answer Key Key=C,https://gate2023.iitk.ac.in/,official,2026-11-14,2023,FALSE,
+SAMPLE-PYQ-MT-2024-Q15,MT,2024,SAMPLE-TOPIC-MT-THERMO,GATE 2024 MT Question 15 (Ellingham diagram free energy calculation at 1200 K),2.0,NAT,Official GATE 2024 Answer Key Key=-185.0 to -180.0,https://gate2024.iisc.ac.in/,official,2026-11-14,2024,FALSE,
+SAMPLE-PYQ-MT-2023-Q22,MT,2023,SAMPLE-TOPIC-MT-PHYSICAL,GATE 2023 MT Question 22 (TTT curve bainite transformation temperature range),1.0,MCQ,Official GATE 2023 Answer Key Key=A,https://gate2023.iitk.ac.in/,official,2026-11-14,2023,FALSE,
