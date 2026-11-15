@@ -1,0 +1,7 @@
+id,paper_code,speed_months,readiness_rule_json,source_url,source_type,retrieved_on,cycle,verified,verified_by
+SAMPLE-TMPL-EE-12M,EE,12,"{""min_full_mocks"": 3, ""min_core_mastery"": 0.6, ""max_concept_error_rate"": 0.25, ""target_band_overlap"": true}",https://gate.iitm.ac.in/prep,official,2026-11-14,2027,FALSE,
+SAMPLE-TMPL-EE-6M,EE,6,"{""min_full_mocks"": 3, ""min_core_mastery"": 0.6, ""max_concept_error_rate"": 0.25, ""target_band_overlap"": true}",https://gate.iitm.ac.in/prep,official,2026-11-14,2027,FALSE,
+SAMPLE-TMPL-EE-3M,EE,3,"{""min_full_mocks"": 3, ""min_core_mastery"": 0.6, ""max_concept_error_rate"": 0.25, ""target_band_overlap"": true}",https://gate.iitm.ac.in/prep,official,2026-11-14,2027,FALSE,
+SAMPLE-TMPL-MT-12M,MT,12,"{""min_full_mocks"": 3, ""min_core_mastery"": 0.6, ""max_concept_error_rate"": 0.25, ""target_band_overlap"": true}",https://gate.iitm.ac.in/prep,official,2026-11-14,2027,FALSE,
+SAMPLE-TMPL-MT-6M,MT,6,"{""min_full_mocks"": 3, ""min_core_mastery"": 0.6, ""max_concept_error_rate"": 0.25, ""target_band_overlap"": true}",https://gate.iitm.ac.in/prep,official,2026-11-14,2027,FALSE,
+SAMPLE-TMPL-MT-3M,MT,3,"{""min_full_mocks"": 3, ""min_core_mastery"": 0.6, ""max_concept_error_rate"": 0.25, ""target_band_overlap"": true}",https://gate.iitm.ac.in/prep,official,2026-11-14,2027,FALSE,

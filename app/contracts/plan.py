@@ -18,6 +18,8 @@ class PlanItem(BaseContract):
     semester_number: Optional[int] = None
     scheduled_week: Optional[int] = None
     estimated_hours: float = 0.0
+    phase: Optional[str] = None # 'Phase 1: Foundation', 'Phase 2: Core Depth', 'Phase 3: Applied Mastery'
+    prep_hours_weekly: Optional[float] = None
     reason: StructuredReason
 
 class ValidationCheck(BaseContract):
@@ -47,6 +49,11 @@ class Plan(BaseContract):
     version: int = 1
     items: List[PlanItem]
     validation_report: Optional[ValidationReport] = None
+    conflict_flag: Optional[str] = None
+    optional_overload_proposals: List[Dict[str, Any]] = []
+    plan_diff: Optional[PlanDiff] = None
+    what_changed_and_why: Optional[str] = None
+    mismatch_warning: Optional[Dict[str, Any]] = None
     is_active: bool = True
     created_at: datetime
 

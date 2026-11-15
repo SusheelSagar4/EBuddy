@@ -32,7 +32,6 @@ services:
     restart: unless-stopped
 
   app:
-    profiles: ["app"]
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -49,8 +48,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: >
-      sh -c "python scripts/seed_loader.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     restart: unless-stopped
 
 volumes:

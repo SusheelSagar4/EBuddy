@@ -1,0 +1,12 @@
+﻿rule_id,rule_name,rule_description,applies_to_category,parameter,value
+R01,MIN_PHASE_FOR_HACKATHON,Learner must complete at least Phase 1 (Classical ML) to unlock hackathons,HACKATHON,min_phase_id,1_Classical_ML
+R02,MIN_PHASE_FOR_COMPETITION,Learner must complete at least Phase 1 (Classical ML) to unlock leaderboard competitions,COMPETITION,min_phase_id,1_Classical_ML
+R03,FEST_ALWAYS_ELIGIBLE,Technical fests are unlocked for learners at all stages for exposure and inspiration,FEST,min_phase_id,NONE
+R04,RECOMMENDATION_SET_SIZE,"Total events recommended: 6 when all categories unlocked, 3 fests when hackathons/competitions locked",ALL,set_size_unlocked / set_size_locked,6 / 3
+R05,CATEGORY_MIX,Recommendation sets must include at least one event from each currently unlocked category,ALL,min_events_per_unlocked_category,1
+R06,MAX_SAME_PLATFORM_PER_SET,Maximum events allowed from the same platform or organizer in a single recommendation set,ALL,max_same_platform,2
+R07,EXCLUDE_ENDED_EVENTS,Filter out events whose scheduled end month is strictly prior to the current reference month,ALL,filter_condition,end_month < current_month
+R08,PREFER_UPCOMING_WINDOW,Prioritize events starting within the next 1 to 4 months from the reference date before later events,ALL,preferred_upcoming_window_months,1-4
+R09,REQUIRED_FIELDS_IN_EVERY_RECOMMENDATION,"Fields that must be displayed in every card: name, category, location, mode, prize, region, domain, expected window, and previous year occurrence",ALL,required_fields,"event_name, category, location, mode, prize_pool_listed, host_region, domain, expected_month_range, previous_year_month_range"
+R10,SHOW_DATA_CAVEATS,"Display caveats clearly: denote approximate timelines as expected, show placeholder text when mode/prize unquantified, never fabricate missing values",ALL,enforce_caveats,TRUE
+R11,DOMAIN_MATCH,Prioritize events whose domain matches the topics in the learner's current or completed phase per 04_domain_to_phase_map.csv,ALL,domain_mapping_file,04_domain_to_phase_map.csv

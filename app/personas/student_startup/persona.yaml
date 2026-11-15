@@ -1,0 +1,14 @@
+persona_id: "student_startup"
+goal_id: "GOAL_STARTUP_FOUNDER"
+description: "B.Tech EE or MME student at IIT Bhubaneswar building a venture during the degree (idea to first pilot/revenue), any year Sem 1-8."
+applicable_programmes: ["BTECH_EE", "BTECH_MM"]
+target_semester_range: [1, 8]
+eligibility_notes: "Open to students in regular academic standing. Check institute IP policy before founding or filing."
+planner_weights:
+  cgpa_protection: 0.6
+  skill_acceleration: 0.8
+  workload_smoothing: 0.7
+fallback_goals:
+  BTECH_EE: "GOAL_EE_CORE_POWER"
+  BTECH_MM: "GOAL_FALLBACK_MME_CORE"
+status: "draft_for_review"

@@ -1,0 +1,13 @@
+id,name,recruits_via_gate,disciplines,source_url,source_type,retrieved_on,cycle,verified,verified_by
+SAMPLE-PSU-PGCIL,SAMPLE-Power Grid Corporation of India Limited (POWERGRID),TRUE,EE,https://www.pgcil.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-NTPC,SAMPLE-NTPC Limited,TRUE,"EE,ME",https://www.ntpc.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-BHEL,SAMPLE-Bharat Heavy Electricals Limited,TRUE,"EE,ME,MT",https://www.bhel.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-IOCL,SAMPLE-Indian Oil Corporation Limited,TRUE,"EE,ME,MT,CH",https://www.iocl.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-ONGC,SAMPLE-Oil and Natural Gas Corporation,TRUE,"EE,ME,MT",https://www.ongc.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-SAIL,SAMPLE-Steel Authority of India Limited,TRUE,"MT,EE,ME",https://www.sail.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-NALCO,SAMPLE-National Aluminium Company Limited,TRUE,"MT,EE,ME",https://www.nalco.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-BARC,SAMPLE-Bhabha Atomic Research Centre (OCES/DGFS),TRUE,"EE,MT,ME,PH",https://www.barc.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-DRDO,SAMPLE-Defence Research and Development Organisation,TRUE,"EE,MT,ME,EC",https://www.drdo.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-ISRO,SAMPLE-Indian Space Research Organisation (ICRB via GATE),TRUE,"EE,EC,ME",https://www.isro.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-HAL,SAMPLE-Hindustan Aeronautics Limited,TRUE,"EE,ME,MT",https://www.hal.co.in/careers,official,2026-11-14,2027,FALSE,
+SAMPLE-PSU-BEL,SAMPLE-Bharat Electronics Limited,TRUE,"EE,EC",https://www.bel.co.in/careers,official,2026-11-14,2027,FALSE,

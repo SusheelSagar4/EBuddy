@@ -1,0 +1,6 @@
+id,name,description
+ROUTE_MTECH_INDIA,M.Tech India,"Higher studies through GATE leading to M.Tech / ME at IITs, IISc, and NITs."
+ROUTE_MSR_INDIA,MS(R) India,Master of Science (Research) with intensive research and thesis components.
+ROUTE_PHD_INDIA,Direct PhD India,Direct PhD admissions for high-performing B.Tech graduates.
+ROUTE_PSU_GATE,PSU via GATE,Public Sector Undertaking executive trainee recruitment through GATE scores.
+ROUTE_CORE_INDUSTRY,Core Industry,"Core engineering design, simulation, and campus recruitment route."

@@ -45,10 +45,37 @@ class PlanValidator(IPlanValidator):
                 for r in rules:
                     self.academic_rules[r["rule_id"]] = r
 
+        # 4. Programme requirements for prior semester inference
+        self.prog_cores: Dict[Any, Set[str]] = {}
+        pr_file = os.path.join(self.seed_dir, "programme_requirement.csv")
+        if os.path.exists(pr_file):
+            with open(pr_file, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for r in reader:
+                    p = r["programme_id"].strip().upper()
+                    try:
+                        sem = int(r["semester_number"])
+                    except (ValueError, TypeError):
+                        continue
+                    cid = r.get("course_id", "").strip()
+                    if cid:
+                        self.prog_cores.setdefault((p, sem), set()).add(cid)
+
     def validate_plan(self, plan: Plan, student: StudentProfile, completed_course_ids: Optional[List[str]] = None) -> ValidationReport:
         checks: List[ValidationCheck] = []
         messages: List[str] = []
         completed_set = set(completed_course_ids or [])
+
+        # If student has 0 backlogs or completed courses were not passed, infer completed core courses from prior semesters
+        if (completed_course_ids is None or (student.backlogs or 0) == 0) and (student.current_semester or 1) > 1:
+            raw_p = (student.programme_id or "").upper().strip()
+            prog = "BTECH_MM" if raw_p in ["BTECH_MME", "MME", "MM"] else ("BTECH_EE" if raw_p in ["BTECH_EE", "EE"] else raw_p)
+            for s in range(1, student.current_semester):
+                completed_set.update(self.prog_cores.get((prog, s), set()))
+            # Standard 1st-year foundation courses completed in year 1
+            if prog == "BTECH_EE":
+                completed_set.update(["MA1L001", "MA1L002", "EE1L001", "CS1L001"])
+            # Note: For BTECH_MM, Sem I-II is simply missing from official raw documents; no courses or completions are assumed.
 
         # 1. Course Existence Check
         missing_courses = []

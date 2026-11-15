@@ -1,8 +1,11 @@
 import os
+import sys
 import re
 import csv
 import json
 import unittest
+
+sys.path.insert(0, os.path.abspath("."))
 import app.config  # Loads Pydantic settings & LiteLLM flags
 
 class TestDBFree(unittest.TestCase):

@@ -9,5 +9,6 @@ class PersonaSpec(BaseContract):
     target_semester_range: List[int] = [1, 8]
     eligibility_notes: str = ""
     planner_weights: Dict[str, float] = {}
+    fallback_goals: Dict[str, str] = {}
     status: str = 'draft_for_review'
 

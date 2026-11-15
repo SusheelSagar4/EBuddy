@@ -10,8 +10,7 @@ import json
 import logging
 import re
 import time
-from typing import Any, Dict, Optional
-
+from typing import Any, Dict, List, Optional
 from app.llm.fake import FakeLLM
 
 logger = logging.getLogger("ebuddy.llm")
@@ -299,6 +298,52 @@ class LLMClient:
 
         return None
 
+    def embed(self, texts: List[str]) -> List[List[float]]:
+        """
+        Embeds a list of strings using LiteLLM embedding.
+        Reads EMBEDDING_MODEL from environment.
+        Falls back to deterministic hash vectors if offline or API unavailable.
+        """
+        emb_model = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+        api_key = os.getenv("LLM_API_KEY", self.api_key or "")
+
+        if (
+            os.getenv("PYTEST_CURRENT_TEST")
+            or emb_model in ["fake", "test", "mock", ""]
+            or not api_key
+            or api_key.startswith("your_api_key")
+        ):
+            return [self._deterministic_vector(t) for t in texts]
+
+        try:
+            import litellm
+            litellm.telemetry = False
+            kwargs = {
+                "model": emb_model,
+                "input": texts,
+            }
+            if self.api_base:
+                kwargs["api_base"] = self.api_base
+            if self.api_key:
+                kwargs["api_key"] = self.api_key
+
+            resp = litellm.embedding(**kwargs)
+            return [item["embedding"] for item in resp.data]
+        except Exception as e:
+            logger.warning(f"LiteLLM embedding failed ({str(e)}), using deterministic fallback vectors.")
+            return [self._deterministic_vector(t) for t in texts]
+
+    def _deterministic_vector(self, text: str, dim: int = 64) -> List[float]:
+        import hashlib
+        import math
+        vec = []
+        for i in range(dim):
+            h = hashlib.sha256(f"{text}_{i}".encode("utf-8")).hexdigest()
+            val = (int(h[:8], 16) / 0xFFFFFFFF) * 2.0 - 1.0
+            vec.append(val)
+        norm = math.sqrt(sum(x * x for x in vec)) or 1.0
+        return [x / norm for x in vec]
 
 # Global singleton client
 llm_client = LLMClient()
+

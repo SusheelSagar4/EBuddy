@@ -1,0 +1,3 @@
+id,exam_id,cycle,organiser,reg_open,reg_close,exam_dates,admit_card_date,result_date,fee,source_url,source_type,retrieved_on,verified,verified_by
+SAMPLE-CYCLE-2027,SAMPLE-EXAM-GATE,2027,SAMPLE-IIT Madras,2026-08-28,2026-10-11,"2027-02-06, 2027-02-07, 2027-02-13, 2027-02-14",2027-01-08,2027-03-19,1800.0,https://gate2027.iitm.ac.in/,official,2026-11-14,FALSE,
+SAMPLE-CYCLE-2026,SAMPLE-EXAM-GATE,2026,SAMPLE-IIT Roorkee,2025-08-28,2025-10-10,"2026-02-07, 2026-02-08, 2026-02-14, 2026-02-15",2026-01-07,2026-03-19,1800.0,https://gate2026.iitr.ac.in/,official,2026-11-14,FALSE,

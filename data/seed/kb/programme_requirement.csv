@@ -12,93 +12,93 @@ SLOT_SEM8_ELECTIVE_3,BTECH_EE,8,Elective – 3,elective,3.0,4.0,"Elective – 3,
 SLOT_SEM8_ELECTIVE_4,BTECH_EE,8,Elective – 4,elective,3.0,3.0,"Elective – 3, 4, 5, 6 pool",,elective,verified,IITBBS_EE_CURRICULUM_2016_17
 SLOT_SEM8_ELECTIVE_5,BTECH_EE,8,Elective – 5,elective,3.0,3.0,"Elective – 3, 4, 5, 6 pool",,elective,verified,IITBBS_EE_CURRICULUM_2016_17
 SLOT_SEM8_ELECTIVE_6,BTECH_EE,8,Elective – 6,elective,3.0,3.0,"Elective – 3, 4, 5, 6 pool",,elective,verified,IITBBS_EE_CURRICULUM_2016_17
-MM_BREADTH_1,BTECH_MM,3,Breadth – I,Breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_BREADTH_2,BTECH_MM,4,Breadth – II,Breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_LATERAL_1,BTECH_MM,4,Lateral – 1,Lateral,3.0,4.0,mme_lateral_pool,,lateral,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_BREADTH_3,BTECH_MM,5,Breadth – III,Breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_LATERAL_2,BTECH_MM,5,Lateral – II,Lateral,3.0,4.0,mme_lateral_pool,,lateral,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_BREADTH_4,BTECH_MM,6,Breadth – IV,Breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_LATERAL_3,BTECH_MM,6,Lateral – III,Lateral,3.0,4.0,mme_lateral_pool,,lateral,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_ELECTIVE_1,BTECH_MM,7,Elective – I,Elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_ELECTIVE_2,BTECH_MM,8,Elective – II,Elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_ELECTIVE_3,BTECH_MM,8,Elective – III,Elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_ELECTIVE_4,BTECH_MM,8,Elective – IV,Elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
-MM_ELECTIVE_5,BTECH_MM,8,Elective – V,Elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
-REQ_EE_MA1L001,BTECH_EE,1,Mathematics – 1,core,4.0,4.0,,MA1L001,Common Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_ID1T001,BTECH_EE,1,Extra Academic Activity – 1,extra academic activity,1.0,1.0,,ID1T001,Extra Academic Activity,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_MA1L002,BTECH_EE,2,Mathematics – 2,core,4.0,4.0,,MA1L002,Common Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_ID1T002,BTECH_EE,2,Extra Academic Activity – 2,extra academic activity,1.0,1.0,,ID1T002,Extra Academic Activity,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2L001,BTECH_EE,3,Introduction to Electronics,core,4.0,4.0,,EC2L001,Common Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_ID2L001,BTECH_EE,3,Introduction to Material Science and Engineering,core,2.0,2.0,,ID2L001,Institute Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_ID2L002,BTECH_EE,3,Introduction to Bio Science and Technology,core,2.0,2.0,,ID2L002,Institute Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_MA2L003,BTECH_EE,3,Probability Statistics and Stochastic Processes,core,4.0,4.0,,MA2L003,Institute Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2L002,BTECH_EE,3,Signals and Systems,core,4.0,4.0,,EC2L002,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2P001,BTECH_EE,3,Introduction to Electronics Laboratory,laboratory,2.0,2.0,,EC2P001,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2P002,BTECH_EE,3,Signals and Systems Laboratory,laboratory,2.0,2.0,,EC2P002,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE2S001,BTECH_EE,3,Seminar,seminar,2.0,2.0,,EE2S001,Seminar,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_ID2L003,BTECH_EE,4,"Environmental Science, Technology and Management",core,2.0,2.0,,ID2L003,Institute Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE2L001,BTECH_EE,4,Network Theory,core,4.0,4.0,,EE2L001,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE2L003,BTECH_EE,4,Electric Machines,core,4.0,4.0,,EE2L003,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2L006,BTECH_EE,4,Digital Electronics and Microprocessor,core,4.0,4.0,,EC2L006,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE2P003,BTECH_EE,4,Electric Machines Laboratory,laboratory,2.0,2.0,,EE2P003,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2P006,BTECH_EE,4,Digital Electronics and Microprocessor Laboratory,laboratory,2.0,2.0,,EC2P006,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE2L002,BTECH_EE,4,"Transducers, Sensors and Measurement",lateral,3.0,3.0,,EE2L002,Lateral,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE2L004,BTECH_EE,4,Introduction to Electromagnetic Engineering,lateral,3.0,3.0,,EE2L004,Lateral,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L004,BTECH_EE,5,Power Electronics,core,4.0,4.0,,EE3L004,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L007,BTECH_EE,5,Electrical Power Transmission and Distribution,core,4.0,4.0,,EE3L007,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L010,BTECH_EE,5,Measurement and Instrumentation,core,3.0,3.0,,EE3L010,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L011,BTECH_EE,5,Electromagnetic Field Theory,core,3.0,3.0,,EE3L011,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3P004,BTECH_EE,5,Power Electronics Laboratory,laboratory,2.0,2.0,,EE3P004,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3P005,BTECH_EE,5,Measurement and Instrumentation Laboratory,laboratory,2.0,2.0,,EE3P005,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L005,BTECH_EE,5,Control System Technology,lateral,3.0,3.0,,EE3L005,Lateral,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L006,BTECH_EE,5,Signals and Circuits,lateral,3.0,3.0,,EE3L006,Lateral,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L003,BTECH_EE,6,Control Systems,core,4.0,4.0,,EE3L003,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC3L003,BTECH_EE,6,Digital Signal Processing,core,4.0,4.0,,EC3L003,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L012,BTECH_EE,6,Power System Operation and Control,core,4.0,4.0,,EE3L012,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3P002,BTECH_EE,6,Control Systems Laboratory,laboratory,2.0,2.0,,EE3P002,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC3P002,BTECH_EE,6,Digital Signal Processing Laboratory,laboratory,2.0,2.0,,EC3P002,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3P006,BTECH_EE,6,Power Systems Laboratory,laboratory,2.0,2.0,,EE3P006,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L008,BTECH_EE,6,Soft Computing and Applications,lateral,3.0,3.0,,EE3L008,Lateral,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE3L009,BTECH_EE,6,Utilization of Electric Power,lateral,3.0,3.0,,EE3L009,Lateral,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4L005,BTECH_EE,7,Digital Control Systems,core,3.0,3.0,,EE4L005,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4L006,BTECH_EE,7,Renewable Energy Systems,core,3.0,3.0,,EE4L006,Vertical Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4T001,BTECH_EE,7,Industrial Training Defence,training,2.0,2.0,,EE4T001,Training,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4D001,BTECH_EE,7,Project – Part 1,project,4.0,4.0,,EE4D001,Project,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_CS4L003,BTECH_EE,7,Artificial Intelligence,elective,3.0,3.0,,CS4L003,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_CS6L001,BTECH_EE,7,Computational Intelligence,elective,3.0,3.0,,CS6L001,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC4L001,BTECH_EE,7,Semiconductor Devices,elective,3.0,3.0,,EC4L001,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC4L002,BTECH_EE,7,Opto-Electronics,elective,3.0,3.0,,EC4L002,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L002,BTECH_EE,7,Image and Video Processing,elective,4.0,4.0,,EC6L002,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L005,BTECH_EE,7,Statistical Signal Processing,elective,3.0,3.0,,EC6L005,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L012,BTECH_EE,7,Optical Communication,elective,3.0,3.0,,EC6L012,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L002,BTECH_EE,7,Electric Power Quality,elective,3.0,3.0,,EE6L002,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L007,BTECH_EE,7,Industrial Instrumentation,elective,3.0,3.0,,EE6L007,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L009,BTECH_EE,7,High Voltage Engineering,elective,3.0,3.0,,EE6L009,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L010,BTECH_EE,7,Advanced Power Electronics,elective,3.0,3.0,,EE6L010,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L011,BTECH_EE,7,Energy Storage Systems,elective,3.0,3.0,,EE6L011,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4P002,BTECH_EE,8,Renewable Energy Systems Laboratory,laboratory,2.0,2.0,,EE4P002,Laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4D002,BTECH_EE,8,Project – Part 2,project,6.0,6.0,,EE4D002,Project,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC4L003,BTECH_EE,8,VLSI Design,elective,3.0,3.0,,EC4L003,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L015,BTECH_EE,8,Biomedical Signal Processing,elective,3.0,3.0,,EC6L015,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L016,BTECH_EE,8,Computational Electromagnetics,elective,3.0,3.0,,EC6L016,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L017,BTECH_EE,8,Semiconductor Device Modelling,elective,3.0,3.0,,EC6L017,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L019,BTECH_EE,8,Fiber Optic Sensors,elective,3.0,3.0,,EC6L019,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L023,BTECH_EE,8,Adaptive Signal Processing,elective,3.0,3.0,,EC6L023,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L024,BTECH_EE,8,Array Signal Processing,elective,3.0,3.0,,EC6L024,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L027,BTECH_EE,8,Pattern Recognition,elective,3.0,3.0,,EC6L027,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L030,BTECH_EE,8,Embedded Systems,elective,3.0,3.0,,EC6L030,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L031,BTECH_EE,8,Computer Vision,elective,3.0,3.0,,EC6L031,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4L003,BTECH_EE,8,Electric Drives,elective,3.0,3.0,,EE4L003,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE4L004,BTECH_EE,8,Advanced Electric Machines,elective,3.0,3.0,,EE4L004,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L004,BTECH_EE,8,Power System Protection,elective,4.0,4.0,,EE6L004,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L005,BTECH_EE,8,HVDC and Flexible AC Transmission Systems,elective,3.0,3.0,,EE6L005,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L014,BTECH_EE,8,Smart Grid Technology,elective,3.0,3.0,,EE6L014,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L015,BTECH_EE,8,Advanced High Voltage Engineering,elective,3.0,3.0,,EE6L015,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L017,BTECH_EE,8,Distribution System Engineering,elective,3.0,3.0,,EE6L017,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EE6L018,BTECH_EE,8,Power System Planning,elective,3.0,3.0,,EE6L018,Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2L005,BTECH_EE,,Basic Electronics,common_core,4.0,4.0,,EC2L005,Common Core,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC6L004,BTECH_EE,,Advanced Digital Signal Processing,elective,3.0,3.0,,EC6L004,Vertical Elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_MM_EC2L005,BTECH_MM,3,Basic Electronics,common_core,4.0,4.0,,EC2L005,Common Core,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_BREADTH_1,BTECH_MM,3,Breadth – I,breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_BREADTH_2,BTECH_MM,4,Breadth – II,breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_LATERAL_1,BTECH_MM,4,Lateral – 1,lateral,3.0,4.0,mme_lateral_pool,,lateral,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_BREADTH_3,BTECH_MM,5,Breadth – III,breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_LATERAL_2,BTECH_MM,5,Lateral – II,lateral,3.0,4.0,mme_lateral_pool,,lateral,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_BREADTH_4,BTECH_MM,6,Breadth – IV,breadth,3.0,4.0,institute_breadth_pool,,breadth,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_LATERAL_3,BTECH_MM,6,Lateral – III,lateral,3.0,4.0,mme_lateral_pool,,lateral,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_ELECTIVE_1,BTECH_MM,7,Elective – I,elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_ELECTIVE_2,BTECH_MM,8,Elective – II,elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_ELECTIVE_3,BTECH_MM,8,Elective – III,elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_ELECTIVE_4,BTECH_MM,8,Elective – IV,elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
+MM_ELECTIVE_5,BTECH_MM,8,Elective – V,elective,3.0,3.0,mme_elective_pool,,elective,verified,IITBBS_MME_CURRICULUM_2016_17
+REQ_EE_MA1L001,BTECH_EE,1,Mathematics – 1,core,4.0,4.0,,MA1L001,common core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_ID1T001,BTECH_EE,1,Extra Academic Activity – 1,extra academic activity,1.0,1.0,,ID1T001,extra academic activity,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_MA1L002,BTECH_EE,2,Mathematics – 2,core,4.0,4.0,,MA1L002,common core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_ID1T002,BTECH_EE,2,Extra Academic Activity – 2,extra academic activity,1.0,1.0,,ID1T002,extra academic activity,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2L001,BTECH_EE,3,Introduction to Electronics,core,4.0,4.0,,EC2L001,common core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_ID2L001,BTECH_EE,3,Introduction to Material Science and Engineering,core,2.0,2.0,,ID2L001,institute core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_ID2L002,BTECH_EE,3,Introduction to Bio Science and Technology,core,2.0,2.0,,ID2L002,institute core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_MA2L003,BTECH_EE,3,Probability Statistics and Stochastic Processes,core,4.0,4.0,,MA2L003,institute core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2L002,BTECH_EE,3,Signals and Systems,core,4.0,4.0,,EC2L002,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2P001,BTECH_EE,3,Introduction to Electronics Laboratory,laboratory,2.0,2.0,,EC2P001,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2P002,BTECH_EE,3,Signals and Systems Laboratory,laboratory,2.0,2.0,,EC2P002,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE2S001,BTECH_EE,3,Seminar,seminar,2.0,2.0,,EE2S001,seminar,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_ID2L003,BTECH_EE,4,"Environmental Science, Technology and Management",core,2.0,2.0,,ID2L003,institute core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE2L001,BTECH_EE,4,Network Theory,core,4.0,4.0,,EE2L001,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE2L003,BTECH_EE,4,Electric Machines,core,4.0,4.0,,EE2L003,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2L006,BTECH_EE,4,Digital Electronics and Microprocessor,core,4.0,4.0,,EC2L006,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE2P003,BTECH_EE,4,Electric Machines Laboratory,laboratory,2.0,2.0,,EE2P003,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2P006,BTECH_EE,4,Digital Electronics and Microprocessor Laboratory,laboratory,2.0,2.0,,EC2P006,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE2L002,BTECH_EE,4,"Transducers, Sensors and Measurement",lateral,3.0,3.0,,EE2L002,lateral,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE2L004,BTECH_EE,4,Introduction to Electromagnetic Engineering,lateral,3.0,3.0,,EE2L004,lateral,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L004,BTECH_EE,5,Power Electronics,core,4.0,4.0,,EE3L004,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L007,BTECH_EE,5,Electrical Power Transmission and Distribution,core,4.0,4.0,,EE3L007,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L010,BTECH_EE,5,Measurement and Instrumentation,core,3.0,3.0,,EE3L010,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L011,BTECH_EE,5,Electromagnetic Field Theory,core,3.0,3.0,,EE3L011,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3P004,BTECH_EE,5,Power Electronics Laboratory,laboratory,2.0,2.0,,EE3P004,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3P005,BTECH_EE,5,Measurement and Instrumentation Laboratory,laboratory,2.0,2.0,,EE3P005,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L005,BTECH_EE,5,Control System Technology,lateral,3.0,3.0,,EE3L005,lateral,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L006,BTECH_EE,5,Signals and Circuits,lateral,3.0,3.0,,EE3L006,lateral,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L003,BTECH_EE,6,Control Systems,core,4.0,4.0,,EE3L003,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC3L003,BTECH_EE,6,Digital Signal Processing,core,4.0,4.0,,EC3L003,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L012,BTECH_EE,6,Power System Operation and Control,core,4.0,4.0,,EE3L012,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3P002,BTECH_EE,6,Control Systems Laboratory,laboratory,2.0,2.0,,EE3P002,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC3P002,BTECH_EE,6,Digital Signal Processing Laboratory,laboratory,2.0,2.0,,EC3P002,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3P006,BTECH_EE,6,Power Systems Laboratory,laboratory,2.0,2.0,,EE3P006,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L008,BTECH_EE,6,Soft Computing and Applications,lateral,3.0,3.0,,EE3L008,lateral,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE3L009,BTECH_EE,6,Utilization of Electric Power,lateral,3.0,3.0,,EE3L009,lateral,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4L005,BTECH_EE,7,Digital Control Systems,core,3.0,3.0,,EE4L005,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4L006,BTECH_EE,7,Renewable Energy Systems,core,3.0,3.0,,EE4L006,vertical core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4T001,BTECH_EE,7,Industrial Training Defence,training,2.0,2.0,,EE4T001,training,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4D001,BTECH_EE,7,Project – Part 1,project,4.0,4.0,,EE4D001,project,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_CS4L003,BTECH_EE,7,Artificial Intelligence,elective,3.0,3.0,,CS4L003,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_CS6L001,BTECH_EE,7,Computational Intelligence,elective,3.0,3.0,,CS6L001,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC4L001,BTECH_EE,7,Semiconductor Devices,elective,3.0,3.0,,EC4L001,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC4L002,BTECH_EE,7,Opto-Electronics,elective,3.0,3.0,,EC4L002,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L002,BTECH_EE,7,Image and Video Processing,elective,4.0,4.0,,EC6L002,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L005,BTECH_EE,7,Statistical Signal Processing,elective,3.0,3.0,,EC6L005,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L012,BTECH_EE,7,Optical Communication,elective,3.0,3.0,,EC6L012,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L002,BTECH_EE,7,Electric Power Quality,elective,3.0,3.0,,EE6L002,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L007,BTECH_EE,7,Industrial Instrumentation,elective,3.0,3.0,,EE6L007,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L009,BTECH_EE,7,High Voltage Engineering,elective,3.0,3.0,,EE6L009,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L010,BTECH_EE,7,Advanced Power Electronics,elective,3.0,3.0,,EE6L010,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L011,BTECH_EE,7,Energy Storage Systems,elective,3.0,3.0,,EE6L011,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4P002,BTECH_EE,8,Renewable Energy Systems Laboratory,laboratory,2.0,2.0,,EE4P002,laboratory,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4D002,BTECH_EE,8,Project – Part 2,project,6.0,6.0,,EE4D002,project,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC4L003,BTECH_EE,8,VLSI Design,elective,3.0,3.0,,EC4L003,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L015,BTECH_EE,8,Biomedical Signal Processing,elective,3.0,3.0,,EC6L015,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L016,BTECH_EE,8,Computational Electromagnetics,elective,3.0,3.0,,EC6L016,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L017,BTECH_EE,8,Semiconductor Device Modelling,elective,3.0,3.0,,EC6L017,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L019,BTECH_EE,8,Fiber Optic Sensors,elective,3.0,3.0,,EC6L019,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L023,BTECH_EE,8,Adaptive Signal Processing,elective,3.0,3.0,,EC6L023,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L024,BTECH_EE,8,Array Signal Processing,elective,3.0,3.0,,EC6L024,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L027,BTECH_EE,8,Pattern Recognition,elective,3.0,3.0,,EC6L027,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L030,BTECH_EE,8,Embedded Systems,elective,3.0,3.0,,EC6L030,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L031,BTECH_EE,8,Computer Vision,elective,3.0,3.0,,EC6L031,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4L003,BTECH_EE,8,Electric Drives,elective,3.0,3.0,,EE4L003,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE4L004,BTECH_EE,8,Advanced Electric Machines,elective,3.0,3.0,,EE4L004,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L004,BTECH_EE,8,Power System Protection,elective,4.0,4.0,,EE6L004,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L005,BTECH_EE,8,HVDC and Flexible AC Transmission Systems,elective,3.0,3.0,,EE6L005,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L014,BTECH_EE,8,Smart Grid Technology,elective,3.0,3.0,,EE6L014,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L015,BTECH_EE,8,Advanced High Voltage Engineering,elective,3.0,3.0,,EE6L015,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L017,BTECH_EE,8,Distribution System Engineering,elective,3.0,3.0,,EE6L017,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EE6L018,BTECH_EE,8,Power System Planning,elective,3.0,3.0,,EE6L018,elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2L005,BTECH_EE,3,Basic Electronics,common_core,4.0,4.0,,EC2L005,common core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC6L004,BTECH_EE,7,Advanced Digital Signal Processing,elective,3.0,3.0,,EC6L004,vertical elective,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_MM_EC2L005,BTECH_MM,3,Basic Electronics,common_core,4.0,4.0,,EC2L005,common core,verified,IITBBS_MME_CURRICULUM_2016_17
 REQ_MM_ML2L002,BTECH_MM,3,Thermodynamics of Materials,core,3.0,3.0,,ML2L002,core,verified,IITBBS_MME_CURRICULUM_2016_17
 REQ_MM_ML2L003,BTECH_MM,3,Materials Processing,core,3.0,3.0,,ML2L003,core,verified,IITBBS_MME_CURRICULUM_2016_17
 REQ_MM_ML2P001,BTECH_MM,3,Introduction to Materials Laboratory,core,2.0,2.0,,ML2P001,core,verified,IITBBS_MME_CURRICULUM_2016_17

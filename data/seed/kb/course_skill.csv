@@ -82,7 +82,6 @@ CS4L003,SKILL_AI_ML,80.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TE
 EC4L001,SKILL_ANALOG_ELECTRONICS,75.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EC4L002,SKILL_ANALOG_ELECTRONICS,70.0,0.9,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EC6L002,SKILL_DSP,85.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TEAM
-EC6L012,SKILL_EM_FIELDS,75.0,0.85,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EC6L015,SKILL_DSP,80.0,0.9,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EC6L016,SKILL_EM_FIELDS,80.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EC6L017,SKILL_ANALOG_ELECTRONICS,80.0,0.95,reviewed_title_inference,draft_for_review,DESIGN_TEAM
@@ -93,7 +92,6 @@ EC6L027,SKILL_AI_ML,85.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TE
 EC6L030,SKILL_EMBEDDED_SYSTEMS,90.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EC6L031,SKILL_AI_ML,85.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EE2L004,SKILL_EM_FIELDS,70.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TEAM
-EE3L006,SKILL_SIGNALS_SYSTEMS,75.0,0.9,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EE3L009,SKILL_POWER_SYSTEMS,70.0,0.85,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EE6L002,SKILL_POWER_SYSTEMS,80.0,0.95,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 EE6L004,SKILL_POWER_SYSTEMS,85.0,1.0,reviewed_title_inference,draft_for_review,DESIGN_TEAM
@@ -112,3 +110,18 @@ ML4L002_ELEC,SKILL_MATERIALS_PROCESSING,85.0,1.0,reviewed_title_inference,draft_
 ML4L003_ELEC,SKILL_CORROSION_SURFACE,75.0,0.9,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 ML4L008,SKILL_COMPOSITES_NANO,70.0,0.5,reviewed_title_inference,draft_for_review,DESIGN_TEAM
 ML4L009,SKILL_PHYSICAL_METALLURGY,75.0,0.9,reviewed_title_inference,draft_for_review,DESIGN_TEAM
+ID2L003,SKILL_UPSC_GS3_STI_ENV_SECURITY,70.0,1.0,inferred_from_curriculum,draft_for_review,DESIGN_TEAM
+EE2L001,SKILL_UPSC_OPTIONAL,75.0,1.0,inferred_from_curriculum,draft_for_review,DESIGN_TEAM
+EE2L002,SKILL_INSTRUMENTATION,70.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+ML4L015,SKILL_MINERAL_PROCESSING,80.0,0.9,inferred_from_course_title,draft_for_review,AI_DRAFT
+MA1L001,SKILL_ENGINEERING_MATH,60.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+MA1L002,SKILL_ENGINEERING_MATH,65.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+MA2L007,SKILL_ENGINEERING_MATH,70.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+CS1L001,SKILL_DATA_STRUCTURES_ALGO,75.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+CS1P001,SKILL_DATA_STRUCTURES_ALGO,70.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+EE4D001,SKILL_RESEARCH_WRITING,80.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+EE4D002,SKILL_RESEARCH_WRITING,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+EE2S001,SKILL_RESEARCH_WRITING,70.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+ML4D001,SKILL_RESEARCH_WRITING,80.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+ML4D002,SKILL_RESEARCH_WRITING,85.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT
+ML2S001,SKILL_RESEARCH_WRITING,70.0,1.0,inferred_from_course_title,draft_for_review,AI_DRAFT

@@ -9,6 +9,7 @@ pandas>=2.2.0
 pydantic>=2.6.0
 pydantic-settings>=2.2.0
 python-dotenv>=1.0.1
+openpyxl>=3.1.2
 
 # Database & ORM
 sqlalchemy>=2.0.28
@@ -16,7 +17,6 @@ psycopg[binary]>=3.1.18
 
 # LLM Gateway (LiteLLM strictly per Hard Rule 1)
 litellm>=1.35.0
-
 
 # Testing & Utilities
 pytest>=8.1.0

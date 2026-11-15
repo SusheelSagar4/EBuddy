@@ -10,7 +10,7 @@ class IntentRouter:
             f"Context: Student in sem {card.current_semester}, Goal: {card.goal_name}\n"
             f"Return JSON with key 'intent' from: [plan_query, domain_concept, goal_change, diagnostic_request, progress_check, clarification, off_topic]"
         )
-        res = llm_client.generate(prompt, schema={"type": "object", "properties": {"intent": {"type": "string"}}})
+        res = llm_client.generate(prompt, schema={"type": "object", "properties": {"intent": {"type": "string"}}}, purpose="intent_router")
         raw_intent = res.get("intent", "plan_query").lower()
         
         # Safe mapping to Intent enum

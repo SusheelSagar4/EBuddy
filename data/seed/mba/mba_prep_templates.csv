@@ -1,0 +1,8 @@
+id,exam_id,speed_months,weekly_hours,phases_summary,readiness_rule
+MBA-T-CAT12,MBA-EX-CAT,12,6,"Foundations, building, mocks, revision",Last 5 full mocks at or above the student's target band; no section below 60% accuracy in the last 3 mocks
+MBA-T-CAT6,MBA-EX-CAT,6,12,"Foundations, building, mocks, revision",Last 5 full mocks at or above the student's target band; no section below 60% accuracy in the last 3 mocks
+MBA-T-CAT3,MBA-EX-CAT,3,24,"Foundations, building, mocks, revision",Last 5 full mocks at or above the student's target band; no section below 60% accuracy in the last 3 mocks
+MBA-T-XAT1,MBA-EX-XAT,1,8,"Decision making practice, GK, XAT-pattern mocks (add-on to a CAT template)",Two XAT-pattern mocks at or above target band
+MBA-T-SNAP1,MBA-EX-SNAP,1,6,Speed drills and SNAP-pattern mocks (add-on to a CAT template),Two SNAP-pattern mocks at or above target band
+MBA-T-GMAT3,MBA-EX-GMAT,3,12,"Diagnostic, section review, Data Insights practice, official practice tests",Official practice test at or above target
+MBA-T-PI2,,2,8,Written ability test and personal interview preparation,Two mock interviews scored at least 3 of 4 on every rubric criterion

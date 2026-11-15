@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Academic Roadmap{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+  <div>
+    <h1>Academic Curriculum Roadmap</h1>
+    <p>Deterministic semester-by-semester plan produced and committed exclusively by Agent 1 (Roadmap Planner).</p>
+  </div>
+  <div id="roadmap-version-badge" style="display: flex; align-items: center;"></div>
+</div>
+
+<div id="roadmap-proposals"></div>
+<div id="roadmap-warnings"></div>
+
+<div id="roadmap-container">
+  <div style="color: var(--text-muted); padding: 40px 0; text-align: center;">Loading academic roadmap...</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    EBuddy.initRoadmap();
+  });
+</script>
+{% endblock %}

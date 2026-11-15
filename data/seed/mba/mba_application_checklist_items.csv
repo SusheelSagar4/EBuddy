@@ -1,0 +1,12 @@
+id,item,applies_to
+MBA-CL01,Entrance test scorecard,All Indian programmes
+MBA-CL02,Class 10 and 12 mark sheets,Most programmes
+MBA-CL03,Graduation transcripts or provisional certificate,All programmes
+MBA-CL04,Category or other reservation certificate,Only if claiming a category
+MBA-CL05,Work experience letters,Only if the student has work experience
+MBA-CL06,Government photo ID,All programmes
+MBA-CL07,Recent photographs,Most applications
+MBA-CL08,Application fee payment,All programmes
+MBA-CL09,Essays or statement of purpose,Only where the programme asks
+MBA-CL10,Recommendation letters,Only where the programme asks
+MBA-CL11,GMAT or GRE score report,Programmes abroad and those accepting these tests

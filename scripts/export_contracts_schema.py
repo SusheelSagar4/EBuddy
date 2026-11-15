@@ -10,7 +10,8 @@ from app.contracts import (
     Course, Module, Resource, Exercise, AcademicRule, ResearchProject, Skill,
     Plan, PlanItem, ValidationReport, PlanDiff,
     Intent, ContextCard, ChatTurn, Explanation,
-    PersonaSpec
+    PersonaSpec,
+    ChangeProposal, DailyTask, WeeklyRoadmap, RoadmapVersionRecord
 )
 
 def export_schemas():
@@ -23,7 +24,8 @@ def export_schemas():
         Course, Module, Resource, Exercise, AcademicRule, ResearchProject, Skill,
         Plan, PlanItem, ValidationReport, PlanDiff,
         ContextCard, ChatTurn, Explanation,
-        PersonaSpec
+        PersonaSpec,
+        ChangeProposal, DailyTask, WeeklyRoadmap, RoadmapVersionRecord
     ]
 
     for model in models:

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Adaptive Diagnostic Assessment{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Adaptive Diagnostic Assessment</h1>
+  <p>Computerized Adaptive Test (CAT) assessing your foundational skills (min 5, max 8 items). Shuffled at serve time.</p>
+</div>
+
+<div id="diagnostic-container">
+  <div style="color: var(--text-muted); padding: 40px 0; text-align: center;">Initializing adaptive diagnostic session...</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    EBuddy.initDiagnostic();
+  });
+</script>
+{% endblock %}

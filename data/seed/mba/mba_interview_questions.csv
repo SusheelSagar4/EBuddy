@@ -1,0 +1,16 @@
+id,category,question,what_good_looks_like,source_type
+MBA-IQ01,Introduction,Tell us about yourself.,"Clear 60 to 90 second story linking background, choices and goals",team_written
+MBA-IQ02,Motivation,Why do you want an MBA?,Specific goal; how the programme bridges current skills and the goal,team_written
+MBA-IQ03,Motivation,Why an MBA now rather than after work experience?,Honest trade-off; what the student gains by going now,team_written
+MBA-IQ04,Motivation,Why move from engineering to management?,Shows how engineering skills carry over; not framed as running away from engineering,team_written
+MBA-IQ05,Academics,Explain your final-year or major project to someone who is not an engineer.,"Plain language; problem, approach, result, own contribution",team_written
+MBA-IQ06,Academics,Explain a core concept from your branch in simple terms.,Correct and simple; handles follow-up questions,team_written
+MBA-IQ07,Self-awareness,What are your main strengths and one real weakness?,Evidence for strengths; weakness with a concrete improvement step,team_written
+MBA-IQ08,Experience,Describe a time you failed and what you learned.,Owns the failure; specific lesson; later evidence of change,team_written
+MBA-IQ09,Experience,Give an example of leading a team.,"Situation, action, result; credit shared fairly",team_written
+MBA-IQ10,Goals,Where do you see yourself five years after the MBA?,"Realistic, specific, consistent with the rest of the story",team_written
+MBA-IQ11,Fit,Why this school?,"Specific programme features, not rankings alone",team_written
+MBA-IQ12,Awareness,"Which business or economic issue have you followed recently, and what is your view?",Accurate facts; balanced view; own opinion with reasons,team_written
+MBA-IQ13,Ethics,You find a teammate fudging data before a deadline. What do you do?,Integrity first; practical steps; escalation if needed,team_written
+MBA-IQ14,WAT,Write 200 words: Should Indian companies adopt a four-day work week?,"Clear position, two arguments, one counter-argument, conclusion",team_written
+MBA-IQ15,WAT,Write 200 words: Is a degree still necessary for a successful career?,"Clear position, two arguments, one counter-argument, conclusion",team_written

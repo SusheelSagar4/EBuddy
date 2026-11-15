@@ -1,0 +1,15 @@
+id,route_id,name,typical_timing,depends_on,exam_id
+MBA-MS01,MBA-RT1,Start CAT preparation,"At least 3 to 12 months before the exam, by chosen template",,
+MBA-MS02,MBA-RT1,CAT registration,Aug to Sep (dates from exam_cycles),MBA-MS01,MBA-EX-CAT
+MBA-MS03,MBA-RT1,NMAT testing window,Nov to Dec (dates from exam_cycles),,MBA-EX-NMAT
+MBA-MS04,MBA-RT1,CAT exam,Late Nov (dates from exam_cycles),MBA-MS02,MBA-EX-CAT
+MBA-MS05,MBA-RT1,SNAP tests,Dec (dates from exam_cycles),,MBA-EX-SNAP
+MBA-MS06,MBA-RT1,XAT exam,Early Jan (dates from exam_cycles),,MBA-EX-XAT
+MBA-MS07,MBA-RT1,CAT result and institute shortlists,Dec to Feb,MBA-MS04,MBA-EX-CAT
+MBA-MS08,MBA-RT1,Written ability test and personal interview rounds,Feb to Apr,MBA-MS07,
+MBA-MS09,MBA-RT1,Final admission offers,Apr to May,MBA-MS08,
+MBA-MS10,MBA-RT1,Clash check: end-semester exams,Nov to Dec,,
+MBA-MS11,MBA-RT1,Clash check: campus placements,Dec to Jan (team sets exact window),,
+MBA-MS12,MBA-RT2,Decide target intake year and build work profile,During work years,,
+MBA-MS13,MBA-RT3,GMAT or GRE attempt,6 to 12 months before application rounds,,MBA-EX-GMAT
+MBA-MS14,MBA-RT3,"Essays, recommendations and applications",By each school's round deadline (from programmes),MBA-MS13,

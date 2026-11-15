@@ -1,0 +1,15 @@
+exam_id,section,questions,minutes,notes,source_url,source_type,retrieved_on,verified,verified_by
+MBA-EX-CAT,Verbal Ability and Reading Comprehension (VARC),24 (expected),40,,https://iimcat.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-CAT,Data Interpretation and Logical Reasoning (DILR),22 (expected),40,,https://iimcat.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-CAT,Quantitative Aptitude (QA),22 (expected),40,,https://iimcat.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-XAT,Verbal Ability and Logical Reasoning,About 26,,No sectional time limits,https://xatonline.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-XAT,Decision Making,About 21,,,https://xatonline.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-XAT,Quantitative Aptitude and Data Interpretation,About 28,,,https://xatonline.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-XAT,General Knowledge,About 20,,About 8 static and 12 current affairs,https://xatonline.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-SNAP,General English,10,,,https://www.snaptest.org,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-SNAP,Analytical and Logical Reasoning,20,,,https://www.snaptest.org,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-SNAP,"Quantitative, Data Interpretation and Data Sufficiency",20,,,https://www.snaptest.org,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-SNAP,"Ethics, Morality and Values",10,,,https://www.snaptest.org,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-GMAT,Quantitative Reasoning,21,45,Section score 60 to 90,https://www.mba.com/exams/gmat-exam/about/exam-structure,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-GMAT,Verbal Reasoning,23,45,Section score 60 to 90,https://www.mba.com/exams/gmat-exam/about/exam-structure,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-EX-GMAT,Data Insights,20,45,Section score 60 to 90,https://www.mba.com/exams/gmat-exam/about/exam-structure,official,2026-11-15,TRUE,Prof. R. Sengupta

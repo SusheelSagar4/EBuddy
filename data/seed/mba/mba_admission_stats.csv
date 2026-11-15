@@ -1,0 +1,10 @@
+programme_id,year,category,stage,cutoff_value,cutoff_type,source_url,source_type,retrieved_on,verified,verified_by
+MBA-PG-IIMA,2024,GEN,shortlist,99.0,percentile,https://www.iima.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-IIMA,2024,NC-OBC,shortlist,94.0,percentile,https://www.iima.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-IIMA,2024,SC,shortlist,85.0,percentile,https://www.iima.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-IIMA,2024,ST,shortlist,75.0,percentile,https://www.iima.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-IIMC,2024,GEN,shortlist,99.2,percentile,https://www.iimcal.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-FMS,2024,GEN,shortlist,98.5,percentile,https://fms.edu,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-XLRI,2024,GEN,shortlist,95.0,percentile,https://www.xlri.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-DMSIITD,2024,GEN,shortlist,96.0,percentile,https://dms.iitd.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-UNVERIFIED,2024,GEN,shortlist,70.0,percentile,https://example.com/draft,official,2026-11-15,FALSE,
