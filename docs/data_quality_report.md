@@ -38,7 +38,7 @@
 ## 7. Status & Placeholder Audit Across All Tables
 - **Flagged Placeholders (is_placeholder = true):** 0
 - **Unsourced Baselines (rules/credits/minors):** 7
-- **Draft for Review (skills/goals):** 1795
+- **Draft for Review (skills/goals):** 2067
   - `academic_rule`: {'unsourced_baseline': 4}
   - `course_skill`: {'draft_for_review': 91}
   - `exercise`: {'draft_for_review': 60}
@@ -48,5 +48,5 @@
   - `minor`: {'unsourced_baseline': 2}
   - `minor_course`: {'draft_for_review': 4}
   - `programme`: {'unsourced_baseline': 1}
-  - `relevance_tags`: {'draft_for_review': 1496}
+  - `relevance_tags`: {'draft_for_review': 1768}
   - `skill`: {'draft_for_review': 60}

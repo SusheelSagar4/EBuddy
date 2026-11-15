@@ -141,23 +141,25 @@ class TestStartupPlanAdjustments(unittest.TestCase):
         plan = self.planner.generate_plan(student, goal, gaps, [], [])
 
         expected_structure = [
-            ('course', 'EE1L001', ['SKILL_ELECTRIC_MACHINES']),
-            ('exercise', 'EE1L001', ['SKILL_ELECTRIC_MACHINES']),
-            ('course', 'EC2L001', ['SKILL_ANALOG_ELECTRONICS']),
-            ('course', 'EE3L004', ['SKILL_POWER_SYSTEMS']),
-            ('exercise', 'EE3L004', ['SKILL_POWER_SYSTEMS']),
-            ('course', 'EE1P001', ['SKILL_CIRCUIT_ANALYSIS']),
-            ('exercise', 'EE1P001', ['SKILL_CIRCUIT_ANALYSIS']),
-            ('course', 'EE3L008', ['SKILL_POWER_ELECTRONICS']),
-            ('exercise', 'EE3L008', ['SKILL_POWER_ELECTRONICS']),
-            ('course', 'MA1L001', ['SKILL_RENEWABLE_ENERGY']),
-            ('course', 'EC2L002', ['SKILL_SIGNALS_SYSTEMS']),
-            ('course', 'EE2L001', ['SKILL_CIRCUIT_ANALYSIS', 'SKILL_UPSC_OPTIONAL']),
-            ('course', 'EE3L007', ['SKILL_ELECTRIC_MACHINES']),
-            ('course', 'EE3L012', ['SKILL_RENEWABLE_ENERGY']),
-            ('course', 'EE4L006', ['SKILL_RENEWABLE_ENERGY']),
-            ('exercise', 'EE4L006', ['SKILL_RENEWABLE_ENERGY']),
-            ('milestone', None, ['SKILL_ELECTRIC_MACHINES', 'SKILL_POWER_SYSTEMS', 'SKILL_CIRCUIT_ANALYSIS'])
+            ('course', 'EE3L004', ['SKILL_POWER_ELECTRONICS']),
+            ('exercise', 'EE3L004', ['SKILL_POWER_ELECTRONICS']),
+            ('course', 'EE3L007', ['SKILL_POWER_SYSTEMS']),
+            ('exercise', 'EE3L007', ['SKILL_POWER_SYSTEMS']),
+            ('course', 'EE3L010', []),
+            ('exercise', 'EE3L010', []),
+            ('course', 'EE3L011', []),
+            ('exercise', 'EE3L011', []),
+            ('course', 'EE3P004', ['SKILL_POWER_ELECTRONICS']),
+            ('exercise', 'EE3P004', ['SKILL_POWER_ELECTRONICS']),
+            ('course', 'EE3P005', ['SKILL_INSTRUMENTATION']),
+            ('exercise', 'EE3P005', ['SKILL_INSTRUMENTATION']),
+            ('course', 'EE3L005', ['SKILL_CONTROL_SYSTEMS']),
+            ('exercise', 'EE3L005', ['SKILL_CONTROL_SYSTEMS']),
+            ('course', 'EE3L006', []),
+            ('exercise', 'EE3L006', []),
+            ('course', 'EC6L012', []),
+            ('exercise', 'EC6L012', []),
+            ('milestone', None, ['SKILL_ELECTRIC_MACHINES', 'SKILL_POWER_SYSTEMS', 'SKILL_CIRCUIT_ANALYSIS', 'SKILL_POWER_ELECTRONICS', 'SKILL_RENEWABLE_ENERGY'])
         ]
         actual_structure = [(it.item_type, it.course_id, it.reason.target_skills) for it in plan.items]
         self.assertEqual(actual_structure, expected_structure)
