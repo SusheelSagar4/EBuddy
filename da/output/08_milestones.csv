@@ -1,0 +1,7 @@
+﻿milestone_id,name,typical_timing,depends_on,mapped_phase_id,timing_position
+DA-MS1,Foundations complete,End of phase 1,,DA-PH1,END_OF_PHASE
+DA-MS2,SQL and Python core complete,End of phase 2,DA-MS1,DA-PH2,END_OF_PHASE
+DA-MS3,First portfolio project published on GitHub,End of phase 3,DA-MS2,DA-PH3,END_OF_PHASE
+DA-MS4,Dashboard project published,End of phase 4,DA-MS3,DA-PH4,END_OF_PHASE
+DA-MS5,Portfolio of 3 projects and resume ready,Mid phase 5,DA-MS4,DA-PH5,MID_PHASE
+DA-MS6,Applying to analyst internships and roles,From mid phase 5,DA-MS5,DA-PH5,FROM_MID_PHASE

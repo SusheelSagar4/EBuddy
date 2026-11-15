@@ -285,11 +285,28 @@ python scripts/check_data.py
 │   │   ├── 03_recommendation_rules.csv
 │   │   └── 04_domain_to_phase_map.csv
 │   └── README.md                         # AI/ML domain catalog & execution guide
+├── da/                                   # Data Analyst (DA) domain package
+│   ├── data/                             # Raw DA Excel knowledge base source
+│   │   └── Data_Analyst_Roadmap.xlsx     # 9 relational sheets
+│   ├── scripts/                          # DA transformation pipeline
+│   │   └── build_da_csvs.py              # DA curriculum, skills, checkpoints, projects & rubrics builder
+│   ├── output/                           # Generated DA relational CSV datasets (UTF-8 with BOM)
+│   │   ├── 01_da_roadmap_overview.csv
+│   │   ├── 02_phase_modules_resources.csv
+│   │   ├── 03_skills_catalog.csv
+│   │   ├── 04_phase_summary_readiness_checkpoints.csv
+│   │   ├── 05_projects.csv
+│   │   ├── 06_project_rubric_items.csv
+│   │   ├── 07_pacing_templates.csv
+│   │   ├── 08_milestones.csv
+│   │   └── 09_learning_methods.csv
+│   └── README.md                         # DA domain catalog & execution guide
 ├── output/                               # Unified legacy output directory (synchronized mirrors)
 ├── build_csvs.py                         # Root forwarder -> aiml/scripts/build_csvs.py
 ├── build_events_csvs.py                  # Root forwarder -> aiml/scripts/build_events_csvs.py
 ├── build_sde_csvs.py                     # Root forwarder -> sde/scripts/build_sde_csvs.py
 ├── build_sde_events_csvs.py              # Root forwarder -> sde/scripts/build_sde_events_csvs.py
+├── build_da_csvs.py                      # Root forwarder -> da/scripts/build_da_csvs.py
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
@@ -428,9 +445,9 @@ python build_sde_events_csvs.py
 
 ---
 
-## 15. Domain-Oriented Directory Architecture (SDE & AI/ML)
+## 15. Domain-Oriented Directory Architecture (SDE, AI/ML & DA)
 
-The repository organizes data assets, transformation pipelines, and generated knowledge bases into two dedicated domain packages:
+The repository organizes data assets, transformation pipelines, and generated knowledge bases into three dedicated domain packages:
 
 1. **`sde/` Package**:
    - `sde/data/`: Official Excel workbooks (`SDE_Prep_Roadmap_with_Playlists.xlsx`, `Top_SDE_Project_GitHub_Repos.xlsx`, `SDE_Competitions_Hackathons_2026-27.xlsx`).
@@ -444,6 +461,12 @@ The repository organizes data assets, transformation pipelines, and generated kn
    - `aiml/output/`: Relational CSV outputs for 6-phase roadmap, 55 curated resources, prerequisite DAG, events master, eligibility rules, recommendation rules, and domain taxonomy.
    - `aiml/README.md`: Detailed documentation and data dictionaries for the AI/ML track.
 
+3. **`da/` Package**:
+   - `da/data/`: Official Excel workbook (`Data_Analyst_Roadmap.xlsx`) containing 9 sheets.
+   - `da/scripts/`: Standalone Python transformation script (`build_da_csvs.py`).
+   - `da/output/`: Relational CSV outputs for 5-phase overview, module-resource pairings, skills catalog, readiness checkpoints, projects, rubrics, pacing templates, milestones, and learning methods.
+   - `da/README.md`: Detailed documentation and data dictionaries for the Data Analyst track.
+
 ### Execution Flexibility
 All transformation pipelines include intelligent path resolution and can be invoked either from the root or directly within their package directories:
 ```bash
@@ -454,8 +477,44 @@ python sde/scripts/build_sde_events_csvs.py
 # AI/ML Pipelines
 python aiml/scripts/build_csvs.py
 python aiml/scripts/build_events_csvs.py
+
+# Data Analyst Pipeline
+python da/scripts/build_da_csvs.py
 ```
-*Root-level forwarders (`build_csvs.py`, `build_events_csvs.py`, `build_sde_csvs.py`, `build_sde_events_csvs.py`) and legacy `output/` directories are maintained for seamless backward compatibility.*
+*Root-level forwarders (`build_csvs.py`, `build_events_csvs.py`, `build_sde_csvs.py`, `build_sde_events_csvs.py`, `build_da_csvs.py`) and legacy `output/` directories are maintained for seamless backward compatibility.*
+
+---
+
+## 16. Data Analyst (DA) Knowledge Base Pipeline
+
+An automated data engineering pipeline (`build_da_csvs.py`) ingests the complete 9-sheet Data Analyst workbook (`Data_Analyst_Roadmap.xlsx`) to construct a relational learning knowledge base in `output/` and `da/output/`:
+
+### Datasets Generated (`da/output/` and `output/`)
+
+| File | Rows | Schema & Purpose | Key Highlights |
+|---|---|---|---|
+| **`01_da_roadmap_overview.csv`** | 5 | High-level roadmap overview for eBuddy onboarding. | • 5 Canonical Phases: `DA-PH1` (Foundations), `DA-PH2` (Core SQL and Python), `DA-PH3` (Cleaning, EDA and visualisation), `DA-PH4` (BI, advanced SQL and statistics), `DA-PH5` (Storytelling, portfolio and interview prep)<br/>• Skills in learning order (pipe-separated)<br/>• Derived phase objectives & measurable learner outcomes<br/>• Sequential phase progression pointer (`next_phase_id`) |
+| **`02_phase_modules_resources.csv`** | 78 | Granular curriculum modules joined with learning resources. | • All 44 modules mapped across 20 skills<br/>• Exact 78-row join ($M \times R$ resource mapping)<br/>• 4 derived key concepts & skills covered per module<br/>• Resource metadata (title, URL, provider, type, is_free, resource_role)<br/>• Quality flag: tracks 4 skills with no source resources (`resource_id = NO_RESOURCE_IN_SOURCE`) |
+| **`03_skills_catalog.csv`** | 20 | Complete catalog of 20 distinct skills. | • Canonical categories: Tools (2), SQL (3), Python (3), Business (3), Visualisation (2), Statistics (3), etc.<br/>• Levels: foundation (6), core (8), advanced (6)<br/>• Verified DAG prerequisite chains (`prerequisite_skill_ids`) with zero forward dependencies<br/>• Canonical phase mapping & skill order within phase |
+| **`04_phase_summary_readiness_checkpoints.csv`** | 5 | Phase completion summaries & readiness checkpoints. | • Machine-readable checkpoint types: `QUIZ`, `TIMED_TEST_PLUS_EXERCISE`, `PROJECT_RUBRIC`, `PROJECT_PLUS_QUIZ`, `PROJECT_PLUS_MOCK_INTERVIEW`<br/>• Derived conversational summary text celebrating phase completion and introducing next phase<br/>• Overall roadmap readiness rule text |
+| **`05_projects.csv`** | 3 | End-to-end portfolio projects (`DA-P01`, `DA-P02`, `DA-P03`). | • Real-world datasets: UCI Online Retail, NYC TLC Trip Records, World Bank Open Data<br/>• Complete dataset licensing metadata and source links<br/>• Difficulty tiering (beginner, intermediate, advanced) & estimated hours<br/>• Deliverable definitions & prerequisite skill sets |
+| **`06_project_rubric_items.csv`** | 12 | Granular evaluation criteria for portfolio projects. | • Relational unbundling of multi-criteria rubrics (4 criteria per project = 12 total criteria)<br/>• Sequenced criterion numbers and evaluation guidelines<br/>• Recommended phase completion unlock (`recommended_after_phase_id`) |
+| **`07_pacing_templates.csv`** | 15 | Cross-product of 3 pacing templates across 5 phases. | • Pacing profiles: `DA-12` (12 months @ 6 hrs/wk), `DA-6` (6 months @ 12 hrs/wk), `DA-3` (3 months @ 24 hrs/wk)<br/>• Phase weekly duration breakdown (`share_of_weeks`, `approx_weeks_derived`, `approx_hours_derived`)<br/>• Phase identity verified across all templates |
+| **`08_milestones.csv`** | 6 | Sequential learning milestones (`DA-MS1` to `DA-MS6`). | • Timing placement (`END_OF_PHASE`, `PREPARATION`, `APPLICATION`)<br/>• Strict milestone dependency graph (`depends_on`)<br/>• Phase mapping from foundations to first job application |
+| **`09_learning_methods.csv`** | 6 | Evidence-based pedagogical study techniques. | • Methods: Learn by querying, Error log, Spaced review, Think out loud, Timeboxed problem solving, Feynman technique<br/>• Contextual guidance (`when_to_use`) and actionable execution rules (`how`) |
+
+### Key Findings & Data Quality Highlights
+1. **Curriculum Hours Consistency**: Total module estimated hours (254 hours) plus portfolio projects (60 hours) equals **314 hours**, precisely aligning with the role timeline specification (*"3, 6 or 12 months depending on weekly hours; about 312 hours in total"*).
+2. **Resource Coverage**: Exactly 4 of the 20 skills have no external learning resources provided in the source sheet (`DA-S01` Spreadsheet fundamentals, `DA-S11` Data visualisation principles, `DA-S19` Spreadsheet analysis, and `DA-S20` Analytics case interviews). These modules are explicitly annotated with `resource_id = "NO_RESOURCE_IN_SOURCE"` and flagged for supplementary resource authoring.
+3. **Dataset Linking**: All three project dataset URLs directly correspond to source dataset resources (`DA-P01` -> `DA-R13`, `DA-P02` -> `DA-R14`, `DA-P03` -> `DA-R15`).
+4. **Prerequisite Integrity**: Prerequisite DAG audit verified that all skill prerequisites belong to earlier phases or earlier positions within the same phase, ensuring zero forward dependency violations.
+
+### Running the Data Analyst Pipeline
+```bash
+python build_da_csvs.py
+```
+*The pipeline executes comprehensive validation assertions on run, verifying 100% exact cell preservation against the source Excel workbook, row count constraints, template phase identity, and relational foreign keys.*
+
 
 
 
