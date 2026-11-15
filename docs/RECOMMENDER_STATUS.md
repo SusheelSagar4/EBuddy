@@ -1,22 +1,23 @@
 # Course Recommender Status & Checklists
 
-Last Updated: 2026-11-15 (Phase G Skill-Mapping Coverage Fix & Proposal Complete)
+Last Updated: 2026-11-15 (Commits A & B Landed: Skill Mappings Applied, 10 Anomalies Corrected, Full 42-Test Suite Green)
 
 ## 1. Feature Checklist
 
 ### DONE (Verified Green)
+- [x] **Approved Skill Mappings Applied (`data/seed/kb/course_skill.csv`, Commit `c1b69d6`)**:
+  - Added approved skill mappings for 33 slot-candidate courses (34 total mappings, including dual skills for `EE6L011`).
+  - `ML4L012` (*Materials in archaeology*) skipped per instructions.
+  - Set `mapping_method="reviewed_title_inference"`, `status="draft_for_review"`, `source_id="DESIGN_TEAM"`.
+- [x] **Audit and 10 Corrections of Existing `course_skill.csv` Mappings (Commit `35949f6`)**:
+  - Corrected 10 anomalous seed mappings (e.g. `EE3L008 Soft Computing` -> `SKILL_AI_ML`, `EC6L005 Statistical Signal Processing` -> `SKILL_DSP`, `EE3L004 Power Electronics` -> `SKILL_POWER_ELECTRONICS`, etc.).
+  - Documented before/after details in `docs/course_skill_corrections.md`.
+  - Added 10 tracking entries in `data/seed/kb/data_issue.csv` (`ISSUE_SKILL_EC6L005` through `ISSUE_SKILL_ML4L003`) with status `resolved` and severity `medium`.
 - [x] **Skill-Mapping Coverage Fix (`app/recommender/retrieval.py`)**:
   - For courses without `course_skill` rows, final relevance score is computed as `0.85 * text_score` (instead of being penalized to 30%).
   - Courses with `course_skill` rows maintain `0.7 * skill + 0.3 * text`.
-  - Mapped and unmapped courses are now directly comparable. `CS4L003` (*Artificial Intelligence*) scores `0.5667 > 0.5` for goal *"Software engineering role"*.
+  - Mapped and unmapped courses are directly comparable. `CS4L003` (*Artificial Intelligence*) scores `0.90` for goal *"Software engineering role"*.
   - Verified with `test_unmapped_course_scoring_comparable`.
-- [x] **Proposed Skill Mapping Table (`docs/proposed_course_skill.csv`)**:
-  - Generated proposed mapping for the 34 slot-candidate courses missing from `course_skill.csv`.
-  - Strictly references valid `skill_id`s from `skill.csv`.
-  - Skipped unmatchable courses (e.g. `ML4L012 Materials in archaeology`) per instructions.
-  - Zero modifications made to `data/` seed files pending user approval.
-- [x] **Audit of Existing `course_skill.csv` Mappings**:
-  - Identified 11 anomalous or erroneous existing rows in `data/seed/kb/course_skill.csv` (e.g. `EC6L005 Statistical Signal Processing` -> `SKILL_EMBEDDED_SYSTEMS`, `EE3L008 Soft Computing` -> `SKILL_POWER_ELECTRONICS`).
 - [x] **Intent Determination & Topic Fallback (`app/recommender/retrieval.py` & `app/recommender/engine.py`)**:
   - Pure Python rule-based tokenizer, stopword filtering, and suffix stemming (`light_stem`).
   - Generic noise words (`system`, `systems`, `engineering`, `technology`, `design`, `analysis`, `introduction`, `advanced`) filtered from retrieval stoplist.
@@ -148,3 +149,58 @@ $body = @{
 $response = Invoke-RestMethod -Uri "http://127.0.0.1:8000/recommend" -Method Post -ContentType "application/json" -Body $body
 $response | ConvertTo-Json -Depth 5
 ```
+
+---
+
+## 5. Verified Sanity Case Rankings
+
+### 1. EE Semester 5 (Goal: "Software engineering role", Query: "what course should I take this semester")
+- **Intent**: Falls back to `profile_goal` (`query_had_topic: False`).
+- **Credit Budget**: Core 18.0, Limit 25.0, Headroom 7.0 (2 open slots, needs 6.0-7.0 credits, status: `sufficient`).
+- **Relevance Flag**: `weak_match: True`, `no_direct_match: True` (EE Sem 5 slots strictly offer `EE3L005` & `EE3L006`).
+- **Recommendations**:
+  - `EE3L005`: Control System Technology (3.0 cr, score: 0.00)
+  - `EE3L006`: Signals and Circuits (3.0 cr, score: 0.00)
+- **Honest Explanation**: Plainly reports no direct matches for the software goal, lists available slot electives, and highlights upcoming courses.
+- **Future Options**:
+  - `CS4L003`: Artificial Intelligence (Sem 7, 3.0 cr, score: 0.90)
+  - `EE3L008`: Soft Computing and Applications (Sem 6, 3.0 cr, score: 0.80)
+  - `CS6L001`: Computational Intelligence (Sem 7, 3.0 cr, score: 0.80)
+
+### 2. EE Semester 7 (Goal: "Software engineering role", Query: "what course should I take this semester")
+- **Intent**: Falls back to `profile_goal` (`query_had_topic: False`).
+- **Credit Budget**: Core 12.0, Limit 19.0, Headroom 7.0 (2 open slots, needs 6.0-7.0 credits, status: `sufficient`).
+- **Relevance Flag**: `weak_match: False`, `no_direct_match: False`.
+- **Top Recommendations**:
+  - `CS4L003`: Artificial Intelligence (3.0 cr, score: 0.90, skill: `SKILL_AI_ML`)
+  - `CS6L001`: Computational Intelligence (3.0 cr, score: 0.80, skill: `SKILL_AI_ML`)
+  - `EC4L001`: Semiconductor Devices (3.0 cr, score: 0.00)
+  - `EC4L002`: Opto-Electronics (3.0 cr, score: 0.00)
+  - `EC6L002`: Image and Video Processing (4.0 cr, score: 0.00)
+- **Future Options**:
+  - `EC6L027`: Pattern Recognition (Sem 8, 3.0 cr, score: 0.70)
+  - `EC6L031`: Computer Vision (Sem 8, 3.0 cr, score: 0.70, missing prereq: `EC6L002`)
+  - `EC6L030`: Embedded Systems (Sem 8, 3.0 cr, score: 0.57)
+
+### 3. MME Semester 6 (Goal: "Materials research", Query: "what course should I take this semester")
+- **Intent**: Falls back to `profile_goal` (`query_had_topic: False`).
+- **Credit Budget**: Core 16.0, Limit 24.0, Headroom 8.0 (2 open slots, needs 6.0-8.0 credits, status: `sufficient`).
+- **Relevance Flag**: `weak_match: False`, `no_direct_match: False`.
+- **Top Recommendations**:
+  - `ML3L011`: Recent advances in composite materials (3.0 cr, score: 0.62, skill: `SKILL_COMPOSITES_NANO`)
+  - `ML2L006`: Advances in nanoscience and nanotechnology (3.0 cr, score: 0.42, skill: `SKILL_COMPOSITES_NANO`)
+  - `ML3L012`: Mineral processing plant design (3.0 cr, score: 0.21, skill: `SKILL_EXTRACTIVE_MET`)
+- **Future Options**:
+  - `ML4L002_ELEC (ML4L002)`: Solidification of metals and alloys (Sem 7, 3.0 cr, score: 0.90)
+  - `ML4L001_ELEC (ML4L001)`: Joining of metals and alloys (Sem 7, 3.0 cr, score: 0.77)
+  - `ML4L010`: Science and technology of composite materials (Sem 7, 3.0 cr, score: 0.67)
+
+---
+
+## 6. Known Seed Data Quirks & Handling
+
+1. **MME Slot-Semester Mapping**: MME slot IDs (`SLOT_MME_ELEC_1`, `SLOT_MME_ELEC_2`, etc.) do not encode semester numbers. Mapped sequentially by curriculum occurrence order (Sem 6: slots 1-2, Sem 7: slots 3-4, Sem 8: slots 5-6).
+2. **Duplicate Course Codes in MME**: `ML4L001`, `ML4L002`, `ML4L003` appear twice in seed data (as both core courses and slot electives). Handled by mapping course IDs with `_CORE` and `_ELEC` suffixes and displaying clean base codes to students.
+3. **Sparse Skill Mappings**: Resolved via approved Commit A (34 mappings added) and Commit B (10 anomalies corrected and documented in `data_issue.csv`).
+4. **Credit Cap Rules**: Standard caps (24-25 regular, 28 overload, 18-20 probation) enforced deterministically per institute B.Tech ordinances.
+
