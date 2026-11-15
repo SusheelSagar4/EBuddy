@@ -9,20 +9,20 @@
 ## 2. Files Added or Moved
 - **Persona Package:** `app/personas/student_startup/` containing exactly the 8 standard files:
   - `persona.yaml` (Persona specification and planner weights)
-  - `requirements.yaml` (10 startup goal skills and target proficiency levels)
+  - `requirements.yaml` (11 startup goal skills and target proficiency levels, updated for v2 with `SKILL_STARTUP_PRODUCT_ANALYTICS`)
   - `mastery.yaml` (Mastery threshold criteria `MASTERY_STARTUP_FOUNDER`)
-  - `milestones.yaml` (8 progression milestones across Sem 2–8)
+  - `milestones.yaml` (8 progression milestones across Sem 2–8, updated with v2 PRD/wireframe, TAM/SAM/SOM, and North Star/AARRR metrics)
   - `diagnostic.yaml` (Diagnostic blueprint targeting 3 skills, 5 items each, difficulty 30.0–70.0)
   - `policy_rules.yaml` (Rules S1–S7 with tunable default parameters)
   - `policy.py` (Deterministic persona policy implementing S1–S7 and plan item adjustments)
   - `README.md` (Persona documentation, archetype profile, governance rules, and draft notices)
-- **Raw Startup Domain Data:** Placed in `data/raw/higher_studies/startup/` (`diagnostic_items.csv`, `milestones.csv`, `resources.csv`, `skills.csv`, `diagnostic.yaml`, `milestones.yaml`, `persona.yaml`, `policy_rules.yaml`).
+- **Raw Startup Domain Data:** Placed in `data/raw/higher_studies/startup/` (`diagnostic_items.csv`, `milestones.csv`, `resources.csv`, `skills.csv`, `diagnostic.yaml`, `milestones.yaml`, `persona.yaml`, `policy_rules.yaml`, `CHANGES.md`).
 - **Shared Institute Data:** Loaded once from `data/raw/institute/` (`institute_calendar.csv`, `institute_programmes.csv`, `institute_curriculum_slots.csv`) shared with `btech_upsc`. Zero duplicate tables or raw files.
 - **KB Seed Extensions:** Appended normalized rows into existing `data/seed/kb/` tables matching exact schemas:
   - `data/seed/kb/goal.csv` (`GOAL_STARTUP_FOUNDER`)
-  - `data/seed/kb/skill.csv` (10 startup skills)
-  - `data/seed/kb/goal_skill_requirement.csv` (10 goal-skill requirements)
-  - `data/seed/kb/resource.csv` (15 resources `SR01`–`SR15`, with `link_verified=False` for `SR12`, `SR14`, `SR15`)
+  - `data/seed/kb/skill.csv` (11 startup skills including `SKILL_STARTUP_PRODUCT_ANALYTICS`)
+  - `data/seed/kb/goal_skill_requirement.csv` (11 goal-skill requirements)
+  - `data/seed/kb/resource.csv` (42 resources `SR01`–`SR42`, with `link_verified=False` for `SR12`, `SR14`, `SR15`, and verified `SR16`–`SR42`)
   - `data/seed/kb/mastery_criteria.json` (`MASTERY_STARTUP_FOUNDER`)
 
 ## 3. Shared Code Changes
@@ -46,14 +46,22 @@
 - **Clean Raw Data Boundaries:** All raw CSV seed files reside strictly in `data/raw/higher_studies/startup/`. The persona directory `app/personas/student_startup/` retains only the 8 standard specification and policy files.
 - **No `facts.csv` Rule (Hard Rule 3):** No `facts.csv` was created for startup. The engine never quotes scheme grant amounts, subsidy figures, eligibility limits, or deadlines for Startup India, Startup Odisha, or IIT BBS REP; it only links official pages (`SR08`, `SR09`) and directs the student to "check the official page".
 - **Unverified Resources Safeguard (Hard Rule 2):** Resources `SR12` (Hisrich textbook), `SR14` (IIT BBS EE/MME textbooks), and `SR15` (Startup India team lessons) have `verified: FALSE` and are strictly forbidden from becoming `resource` plan items. Any mention in plan reasons or exercises explicitly displays `"not confirmed yet"`.
+- **v2 Resource and Metric Enhancements:**
+  - Expanded resources to 42 items (`SR01`–`SR42`). New resources `SR16`–`SR42` are all verified (`verified=TRUE`).
+  - `SKILL_STARTUP_TEAM_EXECUTION` gained verified resource `SR31` (*Atlassian Agile Coach & Figma Official Crash Courses*).
+  - Only `SKILL_STARTUP_TECH_DEPTH` remains without verified resources (only `SR14`, `verified=FALSE`), whose practice exercises explicitly state `"not confirmed yet"`.
+  - Updated Milestone Metrics:
+    - `startup_team_and_mvp`: 1-page PRD, wireframe flow, and MVP core feature list.
+    - `startup_business_model_economics`: Bottom-up TAM/SAM/SOM market sizing, CAC, and LTV estimates.
+    - `startup_summer_pilot`: North Star metric, AARRR funnel metrics, retention baseline, and prerequisite `SKILL_STARTUP_PRODUCT_ANALYTICS`.
 - **NPTEL Next-Run Notice (Hard Rule 5):** Because NPTEL course availability changes across semesters, all NPTEL resources display official enrollment links accompanied by `"check the course page for the next run"`.
 - **Zero Invented Course-Skill Overlaps (Extra Rule 8):** No artificial course-to-startup skill mappings were created in `data/seed/kb/course_skill.csv`. All startup skills are covered via verified resources and active practice exercises.
 - **Curriculum Track from Admission Year (Extra Rule 9):** Resolved dynamically via the helper: admitted 2025-26 or later $\rightarrow$ NEP track; admitted prior $\rightarrow$ 2016-17 (pre-NEP) track.
 
 ## 6. Known Gaps & Draft Defaults
-- **Draft Defaults:** All requirement levels (70.0–80.0) in `requirements.yaml` and mastery thresholds in `mastery.yaml` (min skill level 70.0, 2 project milestones, 2 timed assessments, 65.0 diagnostic score) are draft defaults pending formal validation by startup mentors and IIT BBS REP.
+- **Draft Defaults:** All requirement levels (70.0–80.0, including `SKILL_STARTUP_PRODUCT_ANALYTICS` at 75.0, importance 0.9) in `requirements.yaml` and mastery thresholds in `mastery.yaml` (min skill level 70.0, 2 project milestones, 2 timed assessments, 65.0 diagnostic score) are draft defaults pending formal validation by startup mentors and IIT BBS REP.
 - **Missing Fallback Graceful Handling:** For `BTECH_MM`, the fallback goal `GOAL_FALLBACK_MME_CORE` refers to an unfulfilled upstream stub (`persona_mme_core_stub.yaml`). The policy handles missing fallback packages gracefully without throwing exceptions.
-- **Diagnostic Bank:** 45 diagnostic items (15 per target skill across difficulties 30.0–58.0) are initial original drafts requiring validation by entrepreneurship educators.
+- **Diagnostic Bank:** 45 diagnostic items (15 per target skill across difficulties 30.0–58.0) are initial original drafts requiring validation by entrepreneurship educators. Diagnostic blueprint remains focused on 3 core skills (`SKILL_STARTUP_CUSTOMER_DISCOVERY`, `SKILL_STARTUP_UNIT_ECONOMICS_FINANCE`, `SKILL_STARTUP_IP_LEGAL_COMPLIANCE`).
 
 ## 7. Code Reuse Audit & Shared Module Proposal
 
@@ -71,7 +79,7 @@ To prevent logic drift across future personas, we propose introducing an `app/pe
 
 ## 8. Test Verification & Commit History
 
-### Test Counts (79 Tests Passing):
+### Test Counts (80 Tests Passing):
 - `tests/unit/test_startup_data_validation.py`: 6 passed
 - `tests/unit/test_startup_policy_rules.py`: 9 passed
 - `tests/unit/test_startup_curriculum_slot_wiring.py`: 5 passed
@@ -96,3 +104,5 @@ To prevent logic drift across future personas, we propose introducing an `app/pe
 4. `5f2988e` - feat(task4): wire curriculum slot analysis, heavy/light scheduling and project alignment prompt
 5. `146b7a3` - feat(task5): end-to-end student scenarios and full conformance verification
 6. `c89e449` - chore: update conformance report execution timestamp
+7. `8a62e17` - fix: clean raw seed redundancy, add unverified resource audit tests, and add startup summary handover
+8. `feat` - update student_startup with startup_v2 bundle, product analytics skill and SR16-SR42 resources

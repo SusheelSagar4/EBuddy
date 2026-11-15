@@ -9,15 +9,17 @@
 - semester_target: 4
   title: Team agreement and MVP v0
   description: Founder agreement signed by team; MVP v0 or prototype used by at least
-    10 target users
+    10 target users; 1-page PRD and a clickable wireframe before building
 - semester_target: 5
   title: Business model and unit economics
   description: Model canvas v2; spreadsheet with margin, CAC, break-even; at least
-    3 willingness-to-pay conversations
+    3 willingness-to-pay conversations; bottom-up market size (TAM/SAM/SOM) with stated
+    assumptions
 - semester_target: 6
   title: Summer pilot (post Sem 6)
   description: At least 8 weeks of pilot with 3 pilot users or 1 paying customer;
-    weekly metric log
+    weekly metric log; North Star metric and AARRR funnel defined before the pilot,
+    tracked weekly
 - semester_target: 7
   title: IP check and incubation application
   description: IP position checked against institute policy; application filed to

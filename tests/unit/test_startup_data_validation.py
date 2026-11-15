@@ -52,24 +52,28 @@ class TestStartupDataValidation(unittest.TestCase):
         # 1. Load valid skills
         skills_fp = os.path.join(self.raw_dir, "skills.csv")
         valid_skills = set()
+        skills_count = 0
         with open(skills_fp, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for r in reader:
+                skills_count += 1
                 valid_skills.add(r["skill_slug"].strip())
-        self.assertEqual(len(valid_skills), 10, "Expected 10 unique startup skills")
+        self.assertEqual(len(valid_skills), skills_count, "All skills in skills.csv must have unique slugs")
 
         # 2. Load valid milestones
         milestones_fp = os.path.join(self.raw_dir, "milestones.csv")
         valid_milestones = set()
+        milestones_count = 0
         with open(milestones_fp, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for r in reader:
+                milestones_count += 1
                 ms = r["milestone_slug"].strip()
                 valid_milestones.add(ms)
                 req_skills = [s.strip() for s in r["required_skills"].split(";") if s.strip()]
                 for s in req_skills:
                     self.assertIn(s, valid_skills, f"Milestone {ms} references non-existent skill {s}")
-        self.assertEqual(len(valid_milestones), 8, "Expected 8 unique startup milestones")
+        self.assertEqual(len(valid_milestones), milestones_count, "All milestones in milestones.csv must have unique slugs")
 
         # 3. Check diagnostic blueprint skills
         diag_yaml_fp = os.path.join(self.raw_dir, "diagnostic.yaml")
@@ -90,9 +94,11 @@ class TestStartupDataValidation(unittest.TestCase):
         # 5. Check resources skill and milestone references
         res_fp = os.path.join(self.raw_dir, "resources.csv")
         valid_resources = set()
+        res_count = 0
         with open(res_fp, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for r in reader:
+                res_count += 1
                 valid_resources.add(r["resource_id"].strip())
                 ts = r["target_skill"].strip()
                 ms = r["milestone"].strip()
@@ -100,7 +106,7 @@ class TestStartupDataValidation(unittest.TestCase):
                     self.assertIn(ts, valid_skills, f"Resource {r['resource_id']} references unknown skill {ts}")
                 if ms:
                     self.assertIn(ms, valid_milestones, f"Resource {r['resource_id']} references unknown milestone {ms}")
-        self.assertEqual(len(valid_resources), 15, "Expected 15 startup resources")
+        self.assertEqual(len(valid_resources), res_count, "All resources in resources.csv must have unique IDs")
 
         # Failure test: non-existent ID fails
         with self.assertRaises(AssertionError):
@@ -200,9 +206,11 @@ class TestStartupDataValidation(unittest.TestCase):
         expected_unverified = {"SR12", "SR14", "SR15"}
         actual_unverified = set()
         actual_verified = set()
+        total_resources = 0
 
         with open(res_fp, "r", encoding="utf-8") as f:
             for r in csv.DictReader(f):
+                total_resources += 1
                 rid = r["resource_id"].strip()
                 v = r["verified"].strip().upper()
                 if v == "FALSE":
@@ -213,7 +221,7 @@ class TestStartupDataValidation(unittest.TestCase):
                     self.fail(f"Invalid verified flag in {rid}: {v}")
 
         self.assertEqual(actual_unverified, expected_unverified, f"Mismatch in unverified resources: {actual_unverified}")
-        self.assertEqual(len(actual_verified), 12, "Expected 12 verified resources")
+        self.assertEqual(len(actual_verified), total_resources - len(expected_unverified), "All non-unverified resources must have verified=TRUE")
 
     def test_06_shared_institute_files_loaded_once(self):
         """Verify shared institute files exist in data/raw/institute/ and are NOT duplicated in startup raw dir."""

@@ -328,6 +328,25 @@ class TestStartupE2EStudentScenarios(unittest.TestCase):
         scheme_keywords = ["startup india", "startup odisha", "rep", "research and entrepreneurship park", "entrepreneurship park"]
         deadline_keywords = ["deadline", "due date", "last date", "by 31st", "by 15th"]
 
+        # Derive unverified skills from data: skills whose resources are ONLY verified=FALSE
+        skill_verified_counts = {}
+        for r in resources_map.values():
+            sid = r.get("target_skill", "").strip()
+            if not sid:
+                continue
+            is_v = (r.get("verified", "").strip().upper() == "TRUE")
+            if sid not in skill_verified_counts:
+                skill_verified_counts[sid] = {"verified": 0, "unverified": 0}
+            if is_v:
+                skill_verified_counts[sid]["verified"] += 1
+            else:
+                skill_verified_counts[sid]["unverified"] += 1
+
+        unverified_skills = [
+            sid for sid, counts in skill_verified_counts.items()
+            if counts["verified"] == 0 and counts["unverified"] > 0
+        ]
+
         for stu in students:
             gaps = self.gap_analyzer.analyze_gaps(self.goal, self.reqs, [])
             plan = self.planner.generate_plan(stu, self.goal, gaps, [], [])
@@ -354,8 +373,7 @@ class TestStartupE2EStudentScenarios(unittest.TestCase):
                 )
 
             # 2. Check unverified skills exercises carry 'not confirmed yet'
-            unv_skills = ["SKILL_STARTUP_TECH_DEPTH", "SKILL_STARTUP_TEAM_EXECUTION"]
-            for sid in unv_skills:
+            for sid in unverified_skills:
                 matching_ex = [
                     it for it in plan.items
                     if it.item_type == "exercise" and sid in it.reason.target_skills
@@ -367,6 +385,16 @@ class TestStartupE2EStudentScenarios(unittest.TestCase):
                         ex.reason.why_this.lower(),
                         f"Exercise for unverified skill {sid} must contain 'not confirmed yet' for {stu.student_id}"
                     )
+
+            # 3. Assert SR31 is assigned for SKILL_STARTUP_TEAM_EXECUTION
+            team_exec_sr31 = [
+                it for it in resource_items
+                if "SKILL_STARTUP_TEAM_EXECUTION" in it.reason.target_skills and it.resource_id == "SR31"
+            ]
+            self.assertGreater(
+                len(team_exec_sr31), 0,
+                f"SKILL_STARTUP_TEAM_EXECUTION must have verified resource SR31 assigned for {stu.student_id}"
+            )
 
             # 3. Check that ANY plan item mentioning unverified resources carries 'not confirmed yet'
             for it in plan.items:

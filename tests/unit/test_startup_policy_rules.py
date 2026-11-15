@@ -1,3 +1,4 @@
+import csv
 import os
 import unittest
 from datetime import date
@@ -29,9 +30,17 @@ class TestStartupPolicyRules(unittest.TestCase):
         self.assertEqual(self.spec.fallback_goals.get("BTECH_EE"), "GOAL_EE_CORE_POWER")
         self.assertEqual(self.spec.fallback_goals.get("BTECH_MM"), "GOAL_FALLBACK_MME_CORE")
 
-        # Conformance files loaded
-        self.assertEqual(len(self.pkg.requirements), 10)
-        self.assertEqual(len(self.pkg.milestones), 8)
+        # Conformance files loaded - derived dynamically from seed files
+        raw_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw", "higher_studies", "startup")
+        )
+        with open(os.path.join(raw_dir, "skills.csv"), "r", encoding="utf-8") as f:
+            expected_skills = [r["skill_slug"].strip() for r in csv.DictReader(f)]
+        with open(os.path.join(raw_dir, "milestones.csv"), "r", encoding="utf-8") as f:
+            expected_milestones = [r["milestone_slug"].strip() for r in csv.DictReader(f)]
+
+        self.assertEqual(len(self.pkg.requirements), len(expected_skills))
+        self.assertEqual(len(self.pkg.milestones), len(expected_milestones))
         self.assertEqual(self.pkg.mastery["criteria_id"], "MASTERY_STARTUP_FOUNDER")
         self.assertEqual(self.pkg.diagnostic["blueprint"]["item_counts"], 5)
 

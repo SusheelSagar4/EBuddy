@@ -53,3 +53,4 @@ SKILL_STARTUP_IP_LEGAL_COMPLIANCE,"IP, Legal and Compliance Basics",Legal,"Knows
 SKILL_STARTUP_PITCH_FUNDRAISING,Pitching and Fundraising,Funding,"Delivers a 10-slide pitch; knows grants, incubation and equity options",0-100,draft_for_review,DESIGN_TEAM
 SKILL_STARTUP_TEAM_EXECUTION,"Team, Founder Agreements and Execution",Execution,Splits roles and equity in writing; runs weekly sprints with measurable goals,0-100,draft_for_review,DESIGN_TEAM
 SKILL_STARTUP_ECOSYSTEM_SCHEMES,Incubators and Government Schemes,Funding,"Maps IIT BBS REP, Startup India and Startup Odisha support to the venture stage",0-100,draft_for_review,DESIGN_TEAM
+SKILL_STARTUP_PRODUCT_ANALYTICS,Product Metrics and Analytics,Growth,Defines a North Star metric and AARRR funnel for the venture; runs a basic SQL or Mixpanel query; diagnoses a metric drop (root-cause analysis) with data,0-100,draft_for_review,DESIGN_TEAM

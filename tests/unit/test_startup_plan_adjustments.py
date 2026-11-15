@@ -177,6 +177,25 @@ class TestStartupPlanAdjustments(unittest.TestCase):
         scheme_keywords = ["startup india", "startup odisha", "rep", "research and entrepreneurship park"]
         deadline_keywords = ["deadline", "due date", "last date", "by 31st", "by 15th"]
 
+        # Derive unverified-skill list from data: skills whose resources are ONLY verified=FALSE
+        skill_verified_counts = {}
+        for r in self.resources_map.values():
+            sid = r.get("target_skill", "").strip()
+            if not sid:
+                continue
+            is_v = (r.get("verified", "").strip().upper() == "TRUE")
+            if sid not in skill_verified_counts:
+                skill_verified_counts[sid] = {"verified": 0, "unverified": 0}
+            if is_v:
+                skill_verified_counts[sid]["verified"] += 1
+            else:
+                skill_verified_counts[sid]["unverified"] += 1
+
+        unverified_skills = [
+            sid for sid, counts in skill_verified_counts.items()
+            if counts["verified"] == 0 and counts["unverified"] > 0
+        ]
+
         for prog in ["BTECH_EE", "BTECH_MM"]:
             student = StudentProfile(
                 student_id=f"STU_VER_CHK_{prog}",
@@ -201,12 +220,22 @@ class TestStartupPlanAdjustments(unittest.TestCase):
                 rid = it.resource_id
                 self.assertEqual(self.resources_map[rid]["verified"].strip().upper(), "TRUE")
 
-            # Check exercise items for unverified skills
-            for sid in ["SKILL_STARTUP_TECH_DEPTH", "SKILL_STARTUP_TEAM_EXECUTION"]:
+            # Check exercise items for unverified skills (derived from data)
+            for sid in unverified_skills:
                 ex_items = [it for it in plan.items if it.item_type == "exercise" and sid in it.reason.target_skills]
-                self.assertGreater(len(ex_items), 0)
+                self.assertGreater(len(ex_items), 0, f"Missing exercise item for unverified skill {sid}")
                 for ex in ex_items:
                     self.assertIn("not confirmed yet", ex.reason.why_this.lower())
+
+            # Assert SR31 is assigned for SKILL_STARTUP_TEAM_EXECUTION
+            team_exec_items = [
+                it for it in resource_items
+                if "SKILL_STARTUP_TEAM_EXECUTION" in it.reason.target_skills and it.resource_id == "SR31"
+            ]
+            self.assertGreater(
+                len(team_exec_items), 0,
+                "SKILL_STARTUP_TEAM_EXECUTION must have verified resource SR31 assigned as a plan item"
+            )
 
             # Check text across all items
             for it in plan.items:

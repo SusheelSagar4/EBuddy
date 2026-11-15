@@ -15,6 +15,7 @@
   8. `SKILL_STARTUP_PITCH_FUNDRAISING`: Pitching and Fundraising
   9. `SKILL_STARTUP_TEAM_EXECUTION`: Team, Founder Agreements and Execution
   10. `SKILL_STARTUP_ECOSYSTEM_SCHEMES`: Incubators and Government Schemes
+  11. `SKILL_STARTUP_PRODUCT_ANALYTICS`: Product Metrics and Analytics (North Star metric, AARRR funnel, SQL/Mixpanel, metric-drop RCA)
 
 ## 2. Curricular Trade-Offs & Policy Rules (S1–S7)
 - **S1 (Exam Weeks Pause):** Pauses new build work when end-semester examination is within 14 days or mid-semester within 7 days (via shared `institute_calendar.csv`). Retains weekly customer calls and a 1-hour sprint review; shifts milestone windows by +1 week.
@@ -30,7 +31,7 @@
 ## 3. Draft Status of Requirements and Mastery Defaults
 > [!NOTE] Draft Defaults Notice
 > All threshold values, levels, and weights in `requirements.yaml` and `mastery.yaml` are **draft defaults** derived from domain skills (`skills.csv`), milestone targets (`milestones.csv`), and `ee_power_core`/`btech_upsc` conventions pending formal review by faculty mentors and the IIT BBS Research and Entrepreneurship Park (REP).
-> - Target skill requirement levels: Customer Discovery (80.0), Business Model (75.0), MVP Build (80.0), Tech Depth (75.0), Unit Economics (75.0), GTM Sales (75.0), IP/Legal (70.0), Pitching (75.0), Team Execution (75.0), Ecosystem Schemes (70.0).
+> - Target skill requirement levels: Customer Discovery (80.0), Business Model (75.0), MVP Build (80.0), Tech Depth (75.0), Unit Economics (75.0), GTM Sales (75.0), IP/Legal (70.0), Pitching (75.0), Team Execution (75.0), Ecosystem Schemes (70.0), Product Analytics (75.0).
 > - Mastery criteria: minimum skill level 70.0, 2 project milestones, 2 timed assessments, and 65.0 minimum diagnostic score.
 
 ## 4. Strict Seed Data & Knowledge Base Governance Rules
