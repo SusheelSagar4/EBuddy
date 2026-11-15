@@ -1,0 +1,7 @@
+blueprint:
+  target_skills:
+    - "SKILL_STARTUP_CUSTOMER_DISCOVERY"
+    - "SKILL_STARTUP_UNIT_ECONOMICS_FINANCE"
+    - "SKILL_STARTUP_IP_LEGAL_COMPLIANCE"
+  item_counts: 5
+  difficulty_range: [30.0, 70.0]

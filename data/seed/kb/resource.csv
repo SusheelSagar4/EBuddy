@@ -272,3 +272,18 @@ RS22,Indian Economy: Some Contemporary Perspectives,https://onlinecourses.nptel.
 RS23,"NCERT Mathematics textbooks, Classes 6-10 (CSAT numeracy base)",https://ncert.nic.in/textbook.php,NCERT,book,foundation,True,DESIGN_TEAM
 RS24,UPSC previous Essay papers (essay topic practice),https://www.upsc.gov.in/examinations/previous-question-papers,UPSC,portal,core,False,DESIGN_TEAM
 RS25,Energy Economics and Policy,https://onlinecourses.nptel.ac.in/noc21_hs77/preview,NPTEL / IIT Mandi (Prof. Shyamasree Dasgupta),course,advanced,True,DESIGN_TEAM
+SR01,Startup India Learning Program,https://www.startupindia.gov.in/content/sih/en/learning-and-development_v2.html,Startup India (DPIIT) / Invest India,course,foundation,True,DESIGN_TEAM
+SR02,Entrepreneurship,https://onlinecourses.nptel.ac.in/noc25_mg81/preview,NPTEL / IIT Madras (Prof. C. Bhaktavatsala Rao),course,foundation,True,DESIGN_TEAM
+SR03,Entrepreneurship Essentials,https://onlinecourses.nptel.ac.in/noc22_ge03/preview,NPTEL / IIT Kharagpur (Prof. Manoj Kumar Mondal),course,core,True,DESIGN_TEAM
+SR04,"Innovation, Business Models and Entrepreneurship",https://onlinecourses.nptel.ac.in/noc22_mg73/preview,"NPTEL / IIT Roorkee (Profs. Vinay Sharma, Rajat Agrawal)",course,core,True,DESIGN_TEAM
+SR05,Understanding Incubation and Entrepreneurship,https://onlinecourses.nptel.ac.in/noc23_de16/preview,NPTEL / IIT Bombay (Prof. B.K. Chakravarthy),course,core,True,DESIGN_TEAM
+SR06,Business Fundamentals for Entrepreneurs (Part 2: External Operations),https://onlinecourses.nptel.ac.in/noc24_mg67/preview,NPTEL / IIT Bombay (Prof. Devdip Purkayastha),course,core,True,DESIGN_TEAM
+SR07,Entrepreneurship and IP Strategy,https://onlinecourses.nptel.ac.in/noc25_hs213/preview,NPTEL / IIT Kharagpur (Prof. Gouri Gargate),course,core,True,DESIGN_TEAM
+SR08,IIT Bhubaneswar Research and Entrepreneurship Park (REP),https://rep.iitbbs.ac.in/,IIT Bhubaneswar,portal,core,True,DESIGN_TEAM
+SR09,"Startup India portal (recognition, schemes, funding guide)",https://www.startupindia.gov.in/,Startup India (DPIIT),portal,core,True,DESIGN_TEAM
+SR10,IIT Bhubaneswar breadth and minor course lists,https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,IIT Bhubaneswar,portal,core,True,DESIGN_TEAM
+SR11,Minor programmes (Financial Economics; Innovation and Product Development),https://www.iitbbs.ac.in/index.php/home/academics/minor-programme/,IIT Bhubaneswar,portal,core,True,DESIGN_TEAM
+SR12,"Entrepreneurship (textbook, 9th ed.)",,Robert D. Hisrich,book,advanced,False,DESIGN_TEAM
+SR13,Minor in Innovation and Product Development,https://www.iitbbs.ac.in/index.php/home/academics/minor-programme/,IIT Bhubaneswar,course,core,True,DESIGN_TEAM
+SR14,IIT BBS EE and MME curriculum course textbooks and NPTEL equivalents,https://nptel.ac.in/courses,IIT Bhubaneswar / NPTEL,course,core,False,DESIGN_TEAM
+SR15,"Startup India Learning Program (team, planning and execution lessons)",https://www.startupindia.gov.in/content/sih/en/learning-and-development_v2.html,Startup India (DPIIT),course,foundation,False,DESIGN_TEAM
