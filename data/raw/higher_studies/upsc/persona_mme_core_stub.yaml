@@ -1,0 +1,17 @@
+# STUB. Not usable until data requests D09 and D10 are answered.
+persona_id: "mme_core"
+goal_id: "GOAL_FALLBACK_MME_CORE"
+description: "Undergraduate Metallurgical and Materials Engineering student aiming for core metallurgy/materials careers (steel, non-ferrous, mining and minerals sector, PSUs), GATE (MT) and M.Tech. Fallback persona for btech_upsc."
+applicable_programmes:
+  - "BTECH_MME"
+target_semester_range: [3, 8]
+eligibility_notes: "Open to B.Tech MME students in regular academic standing."
+planner_weights:
+  cgpa_protection: 0.6
+  skill_acceleration: 0.8
+  workload_smoothing: 0.7
+status: "stub_needs_data"
+needs:
+  - "MME skill list and milestone list (not drafted: no source data collected)"
+  - "GATE MT syllabus/exam facts (facts.csv rows with source_url, retrieved_on, verified)"
+  - "PSU / core-sector hiring facts for MME"

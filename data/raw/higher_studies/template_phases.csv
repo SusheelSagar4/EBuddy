@@ -45,3 +45,18 @@ APP-6,5,Submit applications,0.25,Submitted
 RES-12,1,Internship applications,0.25,Applications sent
 RES-12,2,Project with a professor,0.55,Progress report
 RES-12,3,Paper or report,0.2,Draft written
+UPSC-24,1,NCERT baseline + newspaper habit,0.15,NCERT baseline + newspaper habit checkpoint
+UPSC-24,2,Static pass 1,0.25,Static pass 1 checkpoint
+UPSC-24,3,Optional + current affairs system,0.15,Optional + current affairs system checkpoint
+UPSC-24,4,Answer writing,0.2,Answer writing checkpoint
+UPSC-24,5,Revision pass 2 + sectionals,0.1,Revision pass 2 + sectionals checkpoint
+UPSC-24,6,Prelims mocks,0.15,Prelims mocks checkpoint
+UPSC-12,1,Static basics + pass 1 (compressed),0.3,Static basics + pass 1 (compressed) checkpoint
+UPSC-12,2,Current affairs + optional start,0.1,Current affairs + optional start checkpoint
+UPSC-12,3,Revision pass 2 + sectionals,0.25,Revision pass 2 + sectionals checkpoint
+UPSC-12,4,Answer writing,0.1,Answer writing checkpoint
+UPSC-12,5,Prelims mocks,0.25,Prelims mocks checkpoint
+UPSC-6,1,Static sprint,0.4,Static sprint checkpoint
+UPSC-6,2,Revision + sectionals,0.2,Revision + sectionals checkpoint
+UPSC-6,3,Prelims mocks,0.3,Prelims mocks checkpoint
+UPSC-6,4,Exam-clash taper + final revision,0.1,Exam-clash taper + final revision checkpoint

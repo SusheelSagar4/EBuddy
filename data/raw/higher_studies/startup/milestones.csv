@@ -1,0 +1,9 @@
+milestone_slug,semester_target,window,required_skills,metric
+startup_orientation_log,2,Sem 1 to Sem 2,SKILL_STARTUP_ECOSYSTEM_SCHEMES,Complete the free Startup India Learning Program; keep an idea log of at least 10 problems from own campus/branch
+startup_problem_validation,3,Sem 3,SKILL_STARTUP_CUSTOMER_DISCOVERY,At least 20 customer interviews logged for one problem; written go/kill decision with evidence
+startup_team_and_mvp,4,Sem 4,SKILL_STARTUP_TEAM_EXECUTION;SKILL_STARTUP_MVP_BUILD,Founder agreement signed by team; MVP v0 or prototype used by at least 10 target users; 1-page PRD and a clickable wireframe before building
+startup_business_model_economics,5,Sem 5,SKILL_STARTUP_BUSINESS_MODEL;SKILL_STARTUP_UNIT_ECONOMICS_FINANCE,"Model canvas v2; spreadsheet with margin, CAC, break-even; at least 3 willingness-to-pay conversations; bottom-up market size (TAM/SAM/SOM) with stated assumptions"
+startup_summer_pilot,6,Break after Sem 6,SKILL_STARTUP_GTM_SALES;SKILL_STARTUP_MVP_BUILD;SKILL_STARTUP_PRODUCT_ANALYTICS,"At least 8 weeks of pilot with 3 pilot users or 1 paying customer; weekly metric log; North Star metric and AARRR funnel defined before the pilot, tracked weekly"
+startup_ip_incubation_application,7,Sem 7,SKILL_STARTUP_IP_LEGAL_COMPLIANCE;SKILL_STARTUP_ECOSYSTEM_SCHEMES,IP position checked against institute policy; application filed to IIT BBS REP or another incubator
+startup_pitch_funding_ready,7,Sem 7,SKILL_STARTUP_PITCH_FUNDRAISING,"10-slide deck, 12-month plan, and 3 pitch rehearsals with external feedback"
+startup_traction_decision,8,Sem 8,SKILL_STARTUP_GTM_SALES;SKILL_STARTUP_TEAM_EXECUTION,"Written continue / pause / job-first decision using traction data, runway and placement status"

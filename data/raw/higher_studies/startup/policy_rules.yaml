@@ -1,0 +1,36 @@
+# Defaults are tunable parameters, not verified facts. Dates come from institute_calendar.csv in the UPSC bundle.
+rules:
+  - id: S1
+    name: exam_weeks_pause
+    if: "end_sem_within_14d OR mid_sem_within_7d"
+    then: "Pause new build work; keep weekly customer call and a 1-hour sprint review; shift milestone windows +1 week"
+    params: {end_sem_days: 14, mid_sem_days: 7}
+  - id: S2
+    name: cgpa_guard
+    if: "cgpa < floor_hard OR cgpa_drop_last_sem >= 0.3 OR active_backlog"
+    then: "Cap venture hours (6/wk; 3/wk in Sem 1-2); freeze spending; show fallback card"
+    params: {floor_hard: 6.5, floor_soft: 7.0, cap_hours: 6, cap_hours_sem12: 3}
+    note: "Default values; set from the institute placement policy when available"
+  - id: S3
+    name: validation_gate
+    if: "interviews_logged < 10 AND milestone == startup_team_and_mvp"
+    then: "Block MVP spend and feature work; force startup_problem_validation tasks"
+    params: {min_interviews: 10}
+  - id: S4
+    name: runway_guard
+    if: "runway_months < 3 AND monthly_burn > 0"
+    then: "Block new spend; show options: cut cost, pause, or seek grant/incubation (SR08, SR09)"
+    params: {min_runway_months: 3}
+  - id: S5
+    name: ip_before_disclosure
+    if: "public_demo_planned AND ip_status == unchecked"
+    then: "Insert IP check task (SR07) and institute IP policy review before the demo date"
+  - id: S6
+    name: placement_interplay
+    if: "sem == 7 AND placement_registered"
+    then: "Keep a 5 hr/wk venture floor during placements; require a written continue/pause/job-first decision in Sem 8 (milestone startup_traction_decision)"
+    params: {floor_hours: 5}
+  - id: S7
+    name: project_alignment
+    if: "sem >= 7 AND project_topic_unrelated_to_venture"
+    then: "Prompt student to discuss aligning the B.Tech project with the venture prototype with the project guide"

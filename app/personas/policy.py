@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from app.contracts.student import StudentProfile
 from app.contracts.plan import PlanItem
 
@@ -7,6 +7,8 @@ class PersonaPolicy:
     Default persona policy providing pluggable planner weights,
     conflict resolution rules, and advisory hooks.
     """
+    enable_plan_adjustment: bool = False
+
     def __init__(self, spec: Dict[str, Any]):
         self.spec = spec
         self.weights = spec.get("planner_weights", {
@@ -15,7 +17,12 @@ class PersonaPolicy:
             "workload_smoothing": 0.7
         })
 
-    def adjust_plan_items(self, student: StudentProfile, items: List[PlanItem]) -> List[PlanItem]:
+    def adjust_plan_items(
+        self,
+        student: StudentProfile,
+        items: List[PlanItem],
+        gaps: Optional[List[Dict[str, Any]]] = None
+    ) -> List[PlanItem]:
         """Hook to filter, reorder, or annotate plan items specifically for this persona."""
         return items
 

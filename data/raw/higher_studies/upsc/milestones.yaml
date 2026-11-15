@@ -1,0 +1,32 @@
+# Same shape as ee_power_core milestones.yaml (semester_target, title, description).
+# Full metrics, windows and skill links: milestones.csv.
+- semester_target: 2
+  title: "Orientation and newspaper habit"
+  description: "One-page syllabus and pattern map from the official UPSC notice; 60-day newspaper streak; 10-year Prelims PYQ topic count."
+- semester_target: 3
+  title: "NCERT baseline"
+  description: "Finish the mentor-approved NCERT list (at least 90% of chapters) with one-page notes per chapter."
+- semester_target: 4
+  title: "Static pass 1"
+  description: "First read of Polity, Modern History, Culture, Economy, Geography and Environment books with subject-wise PYQ accuracy of at least 60%."
+- semester_target: 5
+  title: "Optional subject lock-in"
+  description: "Compare up to 3 optionals against the official syllabus and the IIT Bhubaneswar course overlap; log one final choice."
+- semester_target: 5
+  title: "Current affairs system"
+  description: "90-day streak of 45 minutes daily; three monthly compilations mapped to syllabus topics."
+- semester_target: 6
+  title: "Answer writing foundation"
+  description: "30 timed answers, 5 ethics case studies and 2 essays, rated by a mentor or peer on a 5-point rubric."
+- semester_target: 6
+  title: "Summer intensive (post Sem 6)"
+  description: "At least 200 logged hours (120 if on internship); 10 timed CSAT papers; optional Paper 1 first pass."
+- semester_target: 7
+  title: "Revision pass 2 and sectional tests"
+  description: "Second pass of core static subjects; 20 sectional tests at 60% average; 60 cumulative answers."
+- semester_target: 8
+  title: "Prelims mock phase and attempt decision"
+  description: "25 full GS mocks and 10 CSAT mocks with error logs, front-loaded before end-semester exams and the B.Tech project viva; confirm attempt decision."
+- semester_target: 8
+  title: "Compressed static sprint (late starters only)"
+  description: "Conditional: 12-week sprint on Polity, Economy, Geography, Environment and Modern History for students who start in Sem 7-8 with at least 15 hours per week."

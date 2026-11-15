@@ -20,10 +20,10 @@
 - **Plannable Course Credits (> 0):** PASSED (100% valid)
 
 ## 4. Learning Resources & Playlists Coverage
-- **Total Stored Resources:** 252
-- **Verified Links:** 0 (0% - Defaults to False per data hygiene)
-- **Official NPTEL / MIT OCW:** 231 (91.7%)
-- **Full Playlist Coverage:** 89 (35.3%)
+- **Total Stored Resources:** 319
+- **Verified Links:** 52 (0% - Defaults to False per data hygiene)
+- **Official NPTEL / MIT OCW:** 231 (72.4%)
+- **Full Playlist Coverage:** 89 (27.9%)
 
 ## 5. Research Projects & Faculty Directory
 - **Faculty Isolation Rule:** PASSED (0 group terms in persons)
@@ -38,15 +38,15 @@
 ## 7. Status & Placeholder Audit Across All Tables
 - **Flagged Placeholders (is_placeholder = true):** 0
 - **Unsourced Baselines (rules/credits/minors):** 7
-- **Draft for Review (skills/goals):** 1743
+- **Draft for Review (skills/goals):** 1795
   - `academic_rule`: {'unsourced_baseline': 4}
-  - `course_skill`: {'draft_for_review': 89}
+  - `course_skill`: {'draft_for_review': 91}
   - `exercise`: {'draft_for_review': 60}
-  - `goal`: {'draft_for_review': 11}
-  - `goal_skill_requirement`: {'draft_for_review': 43}
-  - `mastery_criteria`: {'draft_for_review': 3}
+  - `goal`: {'draft_for_review': 13}
+  - `goal_skill_requirement`: {'draft_for_review': 66}
+  - `mastery_criteria`: {'draft_for_review': 5}
   - `minor`: {'unsourced_baseline': 2}
   - `minor_course`: {'draft_for_review': 4}
   - `programme`: {'unsourced_baseline': 1}
   - `relevance_tags`: {'draft_for_review': 1496}
-  - `skill`: {'draft_for_review': 37}
+  - `skill`: {'draft_for_review': 60}

@@ -1,0 +1,63 @@
+# Deterministic rules for policy.py. All dates come from institute_calendar.csv and facts.csv; nothing is hard-coded.
+# A rule that depends on a fact with verified=FALSE must output "not confirmed yet" for that fact (README rule).
+rules:
+  - id: R1
+    name: workload_overload
+    if: "sem in {6,7} AND (placement_season_active OR btp_deadline_within_21d OR end_sem_within_14d OR weekly_hours_available < 10)"
+    then: "Pause SKILL_UPSC_OPTIONAL and new static reading; keep daily 45-min current affairs plus 2 answers/day (1/day if hours < 6); shift milestone windows +1 week, never mark failed"
+    params: {hours_threshold: 10, ca_min: 45, answers_per_day: 2, answers_per_day_low_hours: 1}
+    reads: [institute_calendar:end_sem, institute_calendar:btp_deadline]
+  - id: R2
+    name: cgpa_guard
+    if: "cgpa < floor_hard OR cgpa_drop_last_sem >= 0.3 OR active_backlog"
+    then: "Cap UPSC hours (6/wk; 3/wk in Sem 1-2); block upsc_summer_intensive_y3 and upsc_prelims_mock_phase until recovered; show the programme fallback card (fallback_goals in persona.yaml)"
+    params: {floor_hard: 6.5, floor_soft: 7.0, cap_hours: 6, cap_hours_sem12: 3}
+    note: "floor values are PLACEHOLDERS until IIT BBS placement cut-offs are supplied (data request D01)"
+  - id: R3
+    name: optional_gate
+    if: "sem >= 5 AND optional == undecided"
+    then: "Block SKILL_UPSC_OPTIONAL tasks; force upsc_optional_lock_in; show optional_catalog.csv rows for the student's programme (EE: Electrical Engineering is the strongest overlap; MME: show PARTIAL/UNKNOWN rows with the SME-pending warning)"
+    params: {deadline_sem_EE: 5, deadline_sem_MME: 6}
+  - id: R4
+    name: baseline_gate
+    if: "sem >= 3 AND ncert_completion < 0.8"
+    then: "Block upsc_static_pass1 and later milestones; force upsc_ncert_baseline"
+    params: {min_completion: 0.8}
+  - id: R5
+    name: csat_remediation
+    if: "csat_avg_last3 < 80 AND weeks_to_prelims <= 16"
+    then: "Add 4 hrs/wk CSAT block; cut answer writing to 2 per week"
+    params: {csat_target: 90, remediation_hrs: 4}
+    reads: [facts:F05]
+  - id: R6
+    name: placement_interplay
+    if: "sem == 7 AND placement_registered"
+    then: "Keep only current-affairs streak plus 1 answer/day until placement outcome. After outcome: offer AND cgpa >= floor_hard -> Sem 8 target hours 20 and Sem 8 allowed as attempt year; no offer -> Sem 8 target hours 25"
+    params: {sem7_floor_hours: 6, sem8_hours_offer: 20, sem8_hours_no_offer: 25}
+    note: "placement season dates unknown (data request D01); rule takes placement_season_active as an input flag"
+  - id: R7
+    name: attempt_decision
+    if: "sem == 8 AND (static_pass1_completion < 0.8 OR gs_mock_avg < cutoff_plus_buffer - 15 after 8 mocks)"
+    then: "Recommend deferring the first attempt (student confirms); run fallback planning in parallel. Always tell the student that an attempt is counted if they appear in any one Prelims paper (facts F04)"
+    params: {buffer_marks: 20, cutoff_rule: "max of last 3 verified General GS-I cut-offs in cutoffs.csv (needs at least 2 verified rows, else show 'not confirmed yet')"}
+    reads: [cutoffs, facts:F04]
+  - id: R8
+    name: late_start
+    if: "sem >= 6 AND static_pass1_completion < 0.5"
+    then: "Default recommendation: attempt after graduation (student confirms). If student insists on Sem 8 AND hours >= 15, insert upsc_compressed_static_sprint; if hours < 15 block it and show the deferral recommendation"
+    params: {min_completion: 0.5, sprint_hours_min: 15, sprint_weeks: 12}
+  - id: R9
+    name: age_eligibility
+    if: "age_on_1_aug(target_year) < min_age"
+    then: "Block that target year; set earliest_attempt_year to the first year the student is at least min_age on 1 August"
+    params: {min_age_source: "facts:F01", max_age_source: "facts:F02"}
+    note: "Uses CSE-2026 notice values until the CSE-2027 notice (due 2027-01-13) is read and facts are refreshed"
+  - id: R10
+    name: sem8_exam_clash
+    if: "sem == 8 AND target_attempt_year == current_year"
+    then: >
+      Front-load all new-topic study to finish before (spring end-sem start - 14 days). From (end-sem start - 14 days) to B.Tech project viva:
+      cap UPSC at 10 hrs/wk (daily CA, 1 timed paper/week, revision only). From the day after the viva to the day before Prelims: revision only, no new topics.
+    params: {pre_end_sem_days: 14, clash_cap_hours: 10}
+    reads: [institute_calendar:spring_end_sem_start, institute_calendar:btp_viva, facts:F11]
+    worked_example_2027: "end-sem starts 2027-05-06 -> new topics end 2027-04-22; viva 2027-05-19; Prelims 2027-05-23 (4 days after viva); Spring result 2027-05-25 is 2 days AFTER Prelims"
