@@ -34,7 +34,13 @@ sys.exit(1)
 
 if [ "$STATUS" = "10" ]; then
     echo "Running database seed loader..."
-    python scripts/seed_loader.py --reset
+    if ! python scripts/seed_loader.py --reset; then
+        echo "[FAILED] Database seed loader failed!"
+        exit 1
+    fi
+elif [ -n "$STATUS" ] && [ "$STATUS" != "0" ]; then
+    echo "[FAILED] Database readiness check failed with status $STATUS!"
+    exit 1
 fi
 
 echo "Starting Uvicorn HTTP server on 0.0.0.0:8000..."

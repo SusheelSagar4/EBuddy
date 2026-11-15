@@ -134,7 +134,7 @@ class TestDBFree(unittest.TestCase):
 
         with open(os.path.join(seed_kb, "course.csv"), encoding="utf-8") as f:
             courses = [r for r in csv.reader(f) if r]
-        self.assertEqual(len(courses) - 1, 136, "Expected exactly 136 courses across EE and MME")
+        self.assertEqual(len(courses) - 1, 137, "Expected exactly 137 courses across EE and MME")
 
         with open(os.path.join(seed_kb, "programme_requirement.csv"), encoding="utf-8") as f:
             reqs = list(csv.DictReader(f))

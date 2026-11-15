@@ -20,7 +20,7 @@ COPY data /app/data
 COPY scripts /app/scripts
 COPY docker /app/docker
 
-RUN chmod +x /app/docker/entrypoint.sh
+RUN sed -i 's/\r$//' /app/docker/entrypoint.sh && chmod +x /app/docker/entrypoint.sh
 
 EXPOSE 8000
 

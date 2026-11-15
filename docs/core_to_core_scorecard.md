@@ -1,6 +1,6 @@
 # Core to Core Evaluation Scorecard
 
-*Evaluated on 2026-11-15 20:22:25 across 32 synthetic student profiles.*
+*Evaluated on 2026-11-15 21:07:49 across 32 synthetic student profiles.*
 
 ## 1. Summary Metrics
 

@@ -283,7 +283,7 @@ SR08,IIT Bhubaneswar Research and Entrepreneurship Park (REP),https://rep.iitbbs
 SR09,"Startup India portal (recognition, schemes, funding guide)",https://www.startupindia.gov.in/,Startup India (DPIIT),portal,core,True,DESIGN_TEAM,
 SR10,IIT Bhubaneswar breadth and minor course lists,https://www.iitbbs.ac.in/index.php/home/academics/list-of-breadth-courses-offered/,IIT Bhubaneswar,portal,core,True,DESIGN_TEAM,
 SR11,Minor programmes (Financial Economics; Innovation and Product Development),https://www.iitbbs.ac.in/index.php/home/academics/minor-programme/,IIT Bhubaneswar,portal,core,True,DESIGN_TEAM,
-SR12,"Entrepreneurship (textbook, 9th ed.)",,Robert D. Hisrich,book,advanced,False,DESIGN_TEAM,
+SR12,"Entrepreneurship (textbook, 9th ed.)",https://onlinecourses.nptel.ac.in/noc25_mg81/preview,Robert D. Hisrich,book,advanced,False,DESIGN_TEAM,
 SR13,Minor in Innovation and Product Development,https://www.iitbbs.ac.in/index.php/home/academics/minor-programme/,IIT Bhubaneswar,course,core,True,DESIGN_TEAM,
 SR14,IIT BBS EE and MME curriculum course textbooks and NPTEL equivalents,https://nptel.ac.in/courses,IIT Bhubaneswar / NPTEL,course,core,False,DESIGN_TEAM,
 SR15,"Startup India Learning Program (team, planning and execution lessons)",https://www.startupindia.gov.in/content/sih/en/learning-and-development_v2.html,Startup India (DPIIT),course,foundation,False,DESIGN_TEAM,

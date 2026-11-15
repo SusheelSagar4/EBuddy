@@ -1,2 +1,1 @@
 student_id,kind,version,text,rubric_scores_json,feedback,created_at
-SAMPLE-STU-01,why_mba,1,SAMPLE-I want an MBA to switch from lab circuits to managing tech supply chains.,"{""Structure"": 3, ""Content"": 3, ""Self-awareness"": 3, ""Communication"": 3, ""Handling follow-ups"": 3}",Good start. Add specific operational metrics and long-term sector vision.,2026-11-15 10:00:00

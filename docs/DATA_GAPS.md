@@ -17,6 +17,8 @@
 | `ISSUE_MME_PULSATOR_CONFLICT` | `kb.research_project`<br>(`PROJ_MM_SPON_01`) | Conflict on pulsator thickener project: Catalog lists duration and agency as '—'; Faculty profile lists *Ministry of Mines, ₹45 L, 2026–28*. | Alternate values stored in `alt_value` column. | **UNRESOLVED** |
 | `ISSUE_MME_WATERMARK_LEGIBILITY` | `kb.research_project`<br>(`PROJ_MM_SPON_02`) | Project title contains watermark bracket artifact: `[Development] of Design...` | Flagged `legibility = 'partial'`. | **ACKNOWLEDGED** |
 | `ISSUE_FACULTY_NAME_VARIANTS` | `kb.faculty`<br>(SMMME Faculty) | Name variants between catalog and profiles (e.g. *Partha Sarathi De* vs *Partha S. De*, *Rama Krushna Sabat* vs *R. K. Sabat*). | Profiles used as canonical; variants cataloged. | **ACKNOWLEDGED** |
+| `ISSUE_MOD_EE3L002` | `kb.module`<br>(`EE3L002`) | Course code `EE3L002` referenced by `MOD_EE3L002_01` and `02` not found in IIT BBS curriculum or raw catalogs. | Dropped orphan module rows from `kb.module.csv` per FK integrity rules. Flagged as unverified course code gap. | **RESOLVED & DROPPED** |
+| `ISSUE_MBA_SAMPLE_STU` | `student.student`<br>(`SAMPLE-STU-01`) | Synthetic placeholder `student_id` `SAMPLE-STU-01` in `story_drafts.csv` and `decision_options.csv` without corresponding `student.student` row. | Dropped orphan rows from `core_to_mba` seed files to enforce strict foreign key integrity with `student.student`. | **RESOLVED & DROPPED** |
 
 ---
 

@@ -47,6 +47,10 @@ switch ($Command) {
     "reset" {
         Write-Host ">>> Resetting database schemas and reloading seed data..." -ForegroundColor Cyan
         python scripts/seed_loader.py --reset
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[FAILED] Database reset and seed load failed (exit code $LASTEXITCODE)." -ForegroundColor Red
+            exit $LASTEXITCODE
+        }
         Write-Host "Database reset complete." -ForegroundColor Green
     }
 

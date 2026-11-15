@@ -63,13 +63,13 @@ class TestDBDependent(unittest.TestCase):
     def test_03_table_row_counts(self):
         """Verify that seed loader populated expected canonical rows in Postgres."""
         expected_counts = {
-            "kb.course": 136,
+            "kb.course": 137,
             "kb.programme_requirement": 141,
             "kb.research_project": 196,
             "kb.consultancy_engagement": 17,
             "kb.publication": 102,
             "kb.faculty": 51,
-            "kb.data_issue": 38
+            "kb.data_issue": 40
         }
         with self.conn.cursor() as cur:
             for table_name, expected in expected_counts.items():

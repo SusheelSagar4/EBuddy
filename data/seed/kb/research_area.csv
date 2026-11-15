@@ -11,3 +11,19 @@ AREA_MM_MECH,Mechanical Metallurgy & Additive Manufacturing
 AREA_MM_BIO,Biomaterials & Tissue Scaffold Engineering
 AREA_MM_ENG,"Energy Materials, Batteries & Thermoelectrics"
 AREA_MM_MIN,"Mineral Processing, Recycling & Corrosion"
+AREA_EE_POWER_SYS,Smart Grid & Power System Stability
+AREA_EE_POWER_ELEC,Power Electronic Converters & EV Drives
+AREA_EE_RENEWABLES,Microgrids & Clean Energy Systems
+AREA_EE_CONTROL,Nonlinear & Adaptive Control Systems
+AREA_EE_VLSI,CMOS Analog/Digital VLSI & Edge AI Hardware
+AREA_EE_HIGH_VOLTAGE,High Voltage Engineering & Dielectrics
+AREA_EE_SIGNAL_PROC,Biomedical & Multirate Signal Processing
+AREA_MM_PHYSICAL_MET,Physical Metallurgy & Phase Transformations
+AREA_MM_ALLOY_DESIGN,High-Entropy & Aerospace Structural Alloys
+AREA_MM_THERMO_EXTR,High-Temperature Process Metallurgy & Thermodynamics
+AREA_MM_MECHANICAL,"Fracture Mechanics, Creep & Fatigue"
+AREA_MM_CORROSION,Electrochemical Corrosion & Surface Engineering
+AREA_MM_SOLIDIFICATION,Solidification Kinetics & Advanced Casting
+AREA_MM_COMPUTATIONAL,Computational Materials Modeling & Phase-Field
+AREA_MM_ENERGY_MAT,Electrochemical Energy Storage Materials
+AREA_MM_MINERAL_PROC,Mineral Beneficiation & Sustainable Extraction

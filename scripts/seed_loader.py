@@ -16,6 +16,14 @@ except ImportError:
     psycopg = None
 
 try:
+    from scripts.check_fk_orphans import check_all_foreign_keys
+except ImportError:
+    try:
+        from check_fk_orphans import check_all_foreign_keys
+    except ImportError:
+        check_all_foreign_keys = None
+
+try:
     from dotenv import load_dotenv
     env_file = os.path.join(os.path.dirname(__file__), "..", ".env")
     if os.path.exists(env_file):
@@ -94,18 +102,18 @@ def validate_integrity_rules(file_path: str, headers: List[str], rows: List[List
                 f"PS Rule: The import script must refuse to load a file that mixes SAMPLE- rows with real rows."
             )
 
-        if v_idx is not None and v_idx < len(row):
+        if v_idx is not None and (vby_idx is not None or stype_idx is not None) and v_idx < len(row):
             val_v = str(row[v_idx]).strip().lower()
             if val_v in ["true", "t", "1"]:
                 verified_by = str(row[vby_idx]).strip() if (vby_idx is not None and vby_idx < len(row)) else ""
                 source_type = str(row[stype_idx]).strip().lower() if (stype_idx is not None and stype_idx < len(row)) else ""
 
-                if not verified_by:
+                if vby_idx is not None and not verified_by:
                     raise ValueError(
                         f"[DATA INTEGRITY VIOLATION] File '{fname}' line {r_num} has verified=TRUE without verified_by! "
                         f"PS Rule: verified can be TRUE only when verified_by holds a person's name."
                     )
-                if source_type != "official":
+                if stype_idx is not None and source_type != "official":
                     raise ValueError(
                         f"[DATA INTEGRITY VIOLATION] File '{fname}' line {r_num} has verified=TRUE with non-official source_type='{source_type}'! "
                         f"PS Rule: verified can be TRUE only when source_type = official."
@@ -130,7 +138,7 @@ def load_csv(conn, file_path: str, table_name: str) -> int:
         validate_integrity_rules(file_path, headers, rows)
 
         placeholders = ", ".join(["%s"] * len(headers))
-        cols = ", ".join(headers)
+        cols = ", ".join([f'"{h.strip()}"' for h in headers])
         query = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders});"
 
         # Field index lookups for table-specific data fixes
@@ -170,7 +178,6 @@ def load_csv(conn, file_path: str, table_name: str) -> int:
 
                 cleaned_rows.append(row_vals)
             cur.executemany(query, cleaned_rows)
-            conn.commit()
             return len(rows)
 
 def load_json(conn, file_path: str, table_name: str, cols: List[str]) -> int:
@@ -184,7 +191,7 @@ def load_json(conn, file_path: str, table_name: str, cols: List[str]) -> int:
         return 0
 
     placeholders = ", ".join(["%s"] * len(cols))
-    col_str = ", ".join(cols)
+    col_str = ", ".join([f'"{c.strip()}"' for c in cols])
     query = f"INSERT INTO {table_name} ({col_str}) VALUES ({placeholders});"
 
     rows = []
@@ -200,7 +207,6 @@ def load_json(conn, file_path: str, table_name: str, cols: List[str]) -> int:
 
     with conn.cursor() as cur:
         cur.executemany(query, rows)
-        conn.commit()
     return len(rows)
 
 def load_all_seeds(conn):
@@ -317,20 +323,26 @@ def load_all_seeds(conn):
 
     total_loaded = 0
     print("\n--- Seed Insertion Summary ---")
-    for loader_func, fpath, tname in table_load_order:
-        if os.path.exists(fpath):
-            count = loader_func(conn, fpath, tname)
-            print(f"  {tname:35s}: {count:5d} rows loaded from {os.path.basename(fpath)}")
-            total_loaded += count
-        else:
-            # Table seed file does not exist yet (e.g. Phase 3 student seeds)
-            pass
+    try:
+        with conn.transaction():
+            for loader_func, fpath, tname in table_load_order:
+                if os.path.exists(fpath):
+                    count = loader_func(conn, fpath, tname)
+                    print(f"  {tname:35s}: {count:5d} rows loaded from {os.path.basename(fpath)}")
+                    total_loaded += count
+                else:
+                    # Table seed file does not exist yet (e.g. Phase 3 student seeds)
+                    pass
 
-    # Clear ops.reprocess_queue so initial seed insertions don't leave spurious pending events
-    with conn.cursor() as cur:
-        cur.execute("TRUNCATE TABLE ops.reprocess_queue;")
-        conn.commit()
-    print("  ops.reprocess_queue: Truncated to 0 (clean state after initial seed load)")
+            # Clear ops.reprocess_queue so initial seed insertions don't leave spurious pending events
+            with conn.cursor() as cur:
+                cur.execute("TRUNCATE TABLE ops.reprocess_queue;")
+            print("  ops.reprocess_queue: Truncated to 0 (clean state after initial seed load)")
+        print("\n[OK] Entire seed dataset loaded and committed in single transaction.")
+    except Exception as e:
+        print(f"\n[FAILED] Error during seed load: {e}. Transaction rolled back.")
+        conn.rollback()
+        raise
 
     print(f"\nTotal rows loaded: {total_loaded}")
     
@@ -615,12 +627,24 @@ def main():
     parser.add_argument("--reset", action="store_true", help="Drop and recreate schemas before loading seeds.")
     args = parser.parse_args()
 
+    # Pre-load foreign key orphan check
+    if check_all_foreign_keys:
+        print("Checking foreign key integrity across seed files...")
+        orphans = check_all_foreign_keys()
+        if orphans:
+            print(f"\n[FAILED] Pre-load check detected {len(orphans)} foreign key orphan violation(s):")
+            for o in orphans:
+                print(f"  {o['file']}:{o['row']} {o['column']}='{o['value']}' -> {o['referenced_table']}({o['referenced_column']})")
+            print("\nAborting database seed loader: database state left unchanged.")
+            sys.exit(1)
+        print("[OK] Foreign key pre-check passed with 0 orphans.")
+
     # Always generate data quality report on run
     generate_mba_data_quality_report()
 
     conn = get_connection()
     if not conn:
-        print("[FAIL] Database unavailable. Exiting.")
+        print("[FAILED] Database unavailable. Exiting.")
         sys.exit(1)
 
     try:
@@ -628,6 +652,9 @@ def main():
             reset_database(conn)
         load_all_seeds(conn)
         print("Database operation complete.")
+    except Exception as e:
+        print(f"\n[FAILED] Database seed loader failed: {e}")
+        sys.exit(1)
     finally:
         conn.close()
 

@@ -5,9 +5,9 @@
 **Curriculum Batch Currency:** `2016-17` (Warning: Confirm applicability to current target batch)
 
 ## 1. Course Code & Identity Verification
-- **Total Unique Courses (course_id PK):** 136
+- **Total Unique Courses (course_id PK):** 137
 - **Syntax Check on display_code (`^[A-Z]{2}\d[A-Z]\d{3}$`):** PASSED (0 violations)
-- **Courses Flagged with code_conflict = true:** 6 (Expected 6: ML4L001/002/003 core vs electives)
+- **Courses Flagged with code_conflict = true:** 7 (Expected 6: ML4L001/002/003 core vs electives)
 
 ## 2. Prerequisite Graph & DAG Verification
 - **Total Directed Edges:** 64
@@ -30,10 +30,11 @@
 - **Total Research Projects:** 12 areas, 196 projects
 
 ## 6. Open Data Issues Register
-- **Total Cataloged Issues:** 38
-- **High-Severity Blockers:** 2
+- **Total Cataloged Issues:** 40
+- **High-Severity Blockers:** 3
   - **ISSUE_PREREQ_EE6L007** [UNRESOLVED] `EE6L007`: Prerequisite 'Measurement and Electronic Instruments' matches no course name in curriculum semester table.
   - **ISSUE_MME_CURR_03** [ACKNOWLEDGED] `Duplicate codes ML4L001–ML4L003`: Sem VII core courses (Light metals and alloys, Elements of electroceramics, Polymers and nanocomposites) use the same codes as three Metallurgical electives (Joining of metals and alloys, Solidification of metals and alloys, Electrochemical methods in metallurgy).
+  - **ISSUE_MOD_EE3L002** [ACKNOWLEDGED] `EE3L002`: Course code EE3L002 referenced by modules MOD_EE3L002_01 and MOD_EE3L002_02 not found in IIT BBS curriculum or raw catalogs.
 
 ## 7. Status & Placeholder Audit Across All Tables
 - **Flagged Placeholders (is_placeholder = true):** 0

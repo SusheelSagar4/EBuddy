@@ -1,2 +1,1 @@
 student_id,option,timeline_json,tradeoffs_text,chosen,decided_at
-SAMPLE-STU-01,mba_now,"{""exam"": ""CAT 2026"", ""prep_start"": ""May 2026"", ""intake"": ""July 2027""}",Faster transition to management; lacks corporate work experience points for top IIMs.,TRUE,2026-11-15 10:00:00

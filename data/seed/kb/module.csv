@@ -5,8 +5,6 @@ MOD_EE2L003_01,EE2L003,RES_NPTEL_EE2L003_01,Magnetic Circuits and Transformers,1
 MOD_EE2L003_02,EE2L003,RES_NPTEL_EE2L003_01,Induction and Synchronous Machines,2,240,"Rotating magnetic fields, torque-slip dynamics, V-curves, synchronous reactance.",false
 MOD_EE3L001_01,EE3L001,RES_NPTEL_EE3L001_01,Power Semiconductor Switches and DC-DC Converters,1,240,"IGBT/MOSFET switching dynamics, Buck, Boost, Buck-Boost converters in CCM/DCM.",false
 MOD_EE3L001_02,EE3L001,RES_NPTEL_EE3L001_01,Inverters and Pulse Width Modulation,2,240,"Single-phase and three-phase voltage source inverters, sinusoidal PWM, harmonic mitigation.",false
-MOD_EE3L002_01,EE3L002,RES_NPTEL_EE3L002_01,Transmission Line Modeling and Per-Unit System,1,240,"Line inductance and capacitance, ABCD parameters, surge impedance loading, per-unit normalization.",false
-MOD_EE3L002_02,EE3L002,RES_NPTEL_EE3L002_01,Fault Analysis and Load Flow Studies,2,240,"Symmetrical components, SLG/LL/LLG fault calculations, Gauss-Seidel and Newton-Raphson power flow.",false
 MOD_ML2L002_01,ML2L002,RES_NPTEL_ML2L002_01,First and Second Laws Applied to Metallurgical Systems,1,240,"Enthalpy, entropy, Gibbs free energy of reactions, Ellingham diagrams for oxides.",false
 MOD_ML2L002_02,ML2L002,RES_NPTEL_ML2L002_01,Solution Thermodynamics and Phase Equilibria,2,240,"Activity, partial molar properties, Raoult and Henry laws, regular solution models, binary phase diagrams.",false
 MOD_ML2L005_01,ML2L005,RES_NPTEL_ML2L005_01,Crystal Imperfections and Diffusion Kinetics,1,240,"Point defects, dislocation slip systems, Fick's first and second laws of diffusion, Kirkendall effect.",false
