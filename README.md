@@ -556,3 +556,53 @@ python build_da_events_csvs.py
 
 
 
+
+
+---
+
+## 18. SDE Quiz Assessment Knowledge Base Pipeline (LeetCode Practice Bank & Topic Mapping)
+
+An automated data engineering pipeline (`build_sde_quiz_csvs.py` located in root and `sde/scripts/build_sde_quiz_csvs.py`) transforms 3 curated LeetCode DSA practice bank workbooks (`LeetCode_DSA_Easy.xlsx`, `LeetCode_DSA_Medium.xlsx`, `LeetCode_DSA_Hard.xlsx`) into relational CSV datasets for eBuddy's diagnostic onboarding quiz, per-step topic assessments, and spaced repetition engine.
+
+### Datasets Generated (`sde/output/` and mirrored in `output/`)
+
+| File | Rows | Schema & Purpose | Key Highlights |
+|---|---|---|---|
+| **`01_problem_bank_raw.csv`**<br/>*(alias: `01_sde_problem_bank_raw.csv`)* | 1,519 | Complete raw problem bank combining Easy (259), Medium (684), and Hard (576) workbooks. | • Primary bank IDs: `EASY-0001..0259`, `MED-0001..0684`, `HARD-0001..0576`<br/>• 100% hyperlink resolution via OpenPyXL `cell.hyperlink.target`<br/>• Exact source preservation of problem titles, raw topic names, and original file row indices<br/>• Harmonised `topic_canonical` (15 canonical topics) and `topic_subgroup` tracking for Math vs Bit Manipulation<br/>• Standardized difficulty level numbers (`1` = Easy, `2` = Medium, `3` = Hard)<br/>• Integrity caveat: `link_verified = FALSE` carried forward |
+| **`02_problems_unique.csv`**<br/>*(alias: `02_sde_problems_unique.csv`)* | 1,193 | Deduplicated LeetCode problem master catalog with conflict detection and eligibility flags. | • Primary key: `leetcode_number` (1,193 unique problems)<br/>• Appearance count and source file tracking (`appearance_count`, `source_files_seen`)<br/>• Difficulty conflict detection: 320 cross-file conflicts resolved to `difficulty_for_quiz = AMBIGUOUS` and `quiz_eligible_calibrated = FALSE`<br/>• 873 clean problems safe for calibrated assessment (`quiz_eligible_calibrated = TRUE`)<br/>• Topic conflict detection: 66 problems tagged under multiple canonical topics across files<br/>• Primary topic resolution prioritizing highest-difficulty source file<br/>• Direct linkage to primary SDE roadmap step IDs (`roadmap_step_ids`) and phase (`roadmap_phase_id`)<br/>• Universal topic practice eligibility (`quiz_eligible_topic_only = TRUE`) |
+| **`03_topics_roadmap_map.csv`**<br/>*(alias: `03_sde_topics_roadmap_map.csv`)* | 15 | Canonical 15-topic taxonomy mapped to SDE roadmap steps (Steps 4 to 26; Phases P2 to P5). | • 15 canonical topics (`T01` to `T15`) covering linear, hierarchical, dynamic programming, and mathematical paradigms<br/>• SDE roadmap step linkages (`roadmap_step_ids`, `roadmap_step_names`, `roadmap_phase_ids`, `latest_phase_id`)<br/>• Mapping strength: 13 `FULL` roadmap steps, 2 `PARTIAL` sub-topic mappings (`Matrix` under Arrays Step 4, `Math & Bit Manipulation` under Bit Manipulation Step 16)<br/>• Prerequisite topic dependency graph (`prerequisite_topics`)<br/>• Granular problem inventory breakdown (raw counts, unique problems, calibrated counts by difficulty, ambiguous counts)<br/>• Automated quiz readiness evaluation (`READY`, `LIMITED`, `INSUFFICIENT` against 15 calibrated medium pool threshold) |
+
+### Canonical Topics & Quiz Engine Readiness Summary
+
+| Topic ID | Canonical Topic | SDE Steps | SDE Phase | Unique Problems | Calibrated Easy | Calibrated Medium | Calibrated Hard | Ambiguous (Conflicts) | Quiz Readiness |
+|---|---|---|---|---|---|---|---|---|---|
+| **T01** | Arrays & Hashing | 4 \| 6 | P2_DSA_Foundations | 200 | 54 | 76 | 63 | 7 | **READY** |
+| **T02** | Strings | 5 | P2_DSA_Foundations | 169 | 52 | 51 | 48 | 18 | **READY** |
+| **T03** | Two Pointers & Sliding Window | 9 \| 10 | P3_DSA_Core_Techniques | 60 | 11 | 29 | 9 | 11 | **READY** |
+| **T04** | Binary Search & Sorting | 7 \| 8 | P2_DSA_Foundations | 58 | 8 | 16 | 6 | 28 | **READY** |
+| **T05** | Linked List | 11 | P3_DSA_Core_Techniques | 27 | 9 | 6 | 5 | 7 | **LIMITED** |
+| **T06** | Stack & Queue | 12 \| 13 | P3_DSA_Core_Techniques | 46 | 6 | 9 | 11 | 20 | **LIMITED** |
+| **T07** | Trees & BST | 18 \| 19 | P4_Trees_and_Graphs | 92 | 28 | 37 | 14 | 13 | **READY** |
+| **T08** | Heap & Priority Queue | 20 | P4_Trees_and_Graphs | 25 | 1 | 3 | 2 | 19 | **INSUFFICIENT** |
+| **T09** | Dynamic Programming | 25 \| 26 | P5_Dynamic_Programming_and_Practice | 149 | 11 | 34 | 55 | 49 | **READY** |
+| **T10** | Graphs | 22 \| 23 \| 24 | P4_Trees_and_Graphs | 101 | 2 | 22 | 42 | 35 | **READY** |
+| **T11** | Greedy & Intervals | 17 | P3_DSA_Core_Techniques | 75 | 4 | 8 | 17 | 46 | **LIMITED** |
+| **T12** | Backtracking | 14 \| 15 | P3_DSA_Core_Techniques | 43 | 0 | 17 | 4 | 22 | **READY** |
+| **T13** | Trie | 21 | P4_Trees_and_Graphs | 15 | 1 | 4 | 2 | 8 | **INSUFFICIENT** |
+| **T14** | Matrix | 4 | P2_DSA_Foundations | 18 | 2 | 13 | 0 | 3 | **LIMITED** |
+| **T15** | Math & Bit Manipulation | 16 | P3_DSA_Core_Techniques | 115 | 29 | 39 | 13 | 34 | **READY** |
+| **Total** | *15 Canonical Topics* | *Steps 4–26* | *Phases P2–P5* | **1,193** | **218** | **374** | **281** | **320** | **9 READY / 4 LIMITED / 2 INSUFFICIENT** |
+
+### Key Data Architecture & Quality Highlights
+1. **Source Topic Sheet Invariant Verification**: All three source workbooks strictly satisfy the invariant that individual topic sheet row counts sum up exactly to the primary `Question Index` sheet row count (Easy: 259 rows across 15 topic sheets; Medium: 684 rows across 16 topic sheets; Hard: 576 rows across 14 topic sheets).
+2. **Deterministic Conflict Resolution**: Cross-file overlaps (320 problems appearing in multiple workbooks) are detected in code. Because each source workbook possesses a single difficulty, any multi-file appearance represents a difficulty discrepancy (e.g., LeetCode #268 labelled Easy in one file and Medium in another). Rather than discarding these valuable practice questions, eBuddy cleanly partitions problems into:
+   - *Calibrated Assessment Pool (`quiz_eligible_calibrated = TRUE`)*: 873 unambiguous problems safely used for difficulty-calibrated scoring.
+   - *Topic Practice Pool (`quiz_eligible_topic_only = TRUE`)*: All 1,193 problems safely eligible for qualitative topic practice, homework, and mock exercises.
+3. **Canonical Topic Hierarchy**: The 16 raw topic strings found across workbooks are harmonized into 15 canonical topics, merging raw "Math" and "Bit Manipulation" while recording the precise subgroup in `topic_subgroup`.
+4. **Roadmap Step & Phase Alignment**: Every canonical topic directly maps to the corresponding SDE roadmap phase (`P2_DSA_Foundations`, `P3_DSA_Core_Techniques`, `P4_Trees_and_Graphs`, or `P5_Dynamic_Programming_and_Practice`) and step numbers (Steps 4 through 26), ensuring topic quizzes are automatically unlocked as the learner progresses through the roadmap.
+
+### Running the SDE Quiz Assessment Pipeline
+```bash
+python build_sde_quiz_csvs.py
+```
+*The pipeline executes end-to-end data extraction, hyperlink resolution, cross-file conflict classification, roadmap mapping, and validation assertions upon execution.*
