@@ -16,8 +16,10 @@ except ImportError:
     psycopg = None
 try:
     from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
+    env_file = os.path.join(os.path.dirname(__file__), "..", ".env")
+    if os.path.exists(env_file):
+        load_dotenv(dotenv_path=env_file)
+except Exception:
     pass
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy")
