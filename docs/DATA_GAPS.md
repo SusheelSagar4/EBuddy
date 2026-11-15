@@ -64,3 +64,17 @@
 | 10 | Totals | Semester totals verified against rows. Total programme credit not stated. | Baseline set to 180 credits. |
 | 11 | Course Type column | Elective groups given as headings. | Mapped to core, lateral, elective. |
 | 12 | Legend | "—" indicates missing in source. | Handled as NULL / unverified. |
+
+---
+
+## 4. Academic Calendar & Planning Assumptions (Roadmap v2)
+
+Formally registered assumptions configured in `app/config.py` under `PLANNER_ASSUMPTIONS` with `assumption=true` flag, surfaced with `indicative` warning badges across the UI and API:
+
+| Parameter / Gap | Value / Default | Reason & Assumption Rationale | UI / Engine Treatment |
+|---|---|---|---|
+| `exam_week_factor` | `0.4` | Students undergo intensive examinations during midsem (Week 8) and endsem (Weeks 15–16). Stated extra study load is capped at 40% of normal capacity. | Labelled `indicative` in UI. Midsem month capped at ≤20.0h; endsem month capped at ≤10.0h. |
+| `hours_per_credit` | `1.0` | Official IIT BBS ordinances do not specify exact hours-per-credit weekly study multipliers for out-of-class study. | Labelled `indicative` in UI. 1 credit = 1 hr/week estimated load. |
+| `default_autumn_start` / `default_spring_start` | `2026-08-03` / `2027-01-04` | Academic calendar entries in `kb.academic_calendar` only cover Autumn 2026 and Spring 2027. Future semesters use 16-week relative windows. | Labelled with `indicative dates` warning badge in UI semester block headers. |
+| `mme_pool_selection_rules` | `pool rule unknown` | SMMME curriculum PDF lists elective pools without specifying selection constraints, prerequisites, or basket distribution. | Tagged as `pool rule unknown` in recommendations; no artificial rule invented. |
+
