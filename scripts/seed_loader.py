@@ -71,13 +71,44 @@ def load_csv(conn, file_path: str, table_name: str) -> int:
 
         placeholders = ", ".join(["%s"] * len(headers))
         cols = ", ".join(headers)
-        query = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders}) ON CONFLICT DO NOTHING;"
+        query = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders});"
+
+        # Field index lookups for table-specific data fixes
+        header_map = {h: i for i, h in enumerate(headers)}
 
         with conn.cursor() as cur:
-            # Clean empty strings to None for nullable columns
+            # Clean empty strings to None and apply normalization
             cleaned_rows = []
             for r in rows:
-                cleaned_rows.append([None if val == "" else val for val in r])
+                row_vals = [None if (val == "" or str(val).lower() == "nan") else val for val in r]
+
+                # Normalizations for programme_requirement
+                if table_name == "kb.programme_requirement":
+                    if "slot_type" in header_map:
+                        st_idx = header_map["slot_type"]
+                        if row_vals[st_idx]:
+                            row_vals[st_idx] = str(row_vals[st_idx]).lower().strip()
+                    if "course_type" in header_map:
+                        ct_idx = header_map["course_type"]
+                        if row_vals[ct_idx]:
+                            row_vals[ct_idx] = str(row_vals[ct_idx]).lower().strip()
+                    if "semester_number" in header_map:
+                        sem_idx = header_map["semester_number"]
+                        cid_idx = header_map.get("course_id")
+                        cid_val = row_vals[cid_idx] if cid_idx is not None else None
+                        sem_val = row_vals[sem_idx]
+                        # Null semester patches
+                        if (sem_val is None or str(sem_val).strip() == "") and cid_val == "EC2L005":
+                            row_vals[sem_idx] = 3
+                        elif (sem_val is None or str(sem_val).strip() == "") and cid_val == "EC6L004":
+                            row_vals[sem_idx] = 7
+                        elif sem_val is not None and str(sem_val).strip() != "":
+                            try:
+                                row_vals[sem_idx] = int(float(str(sem_val).strip()))
+                            except (ValueError, TypeError):
+                                pass
+
+                cleaned_rows.append(row_vals)
             cur.executemany(query, cleaned_rows)
             conn.commit()
             return len(rows)
@@ -94,7 +125,7 @@ def load_json(conn, file_path: str, table_name: str, cols: List[str]) -> int:
 
     placeholders = ", ".join(["%s"] * len(cols))
     col_str = ", ".join(cols)
-    query = f"INSERT INTO {table_name} ({col_str}) VALUES ({placeholders}) ON CONFLICT DO NOTHING;"
+    query = f"INSERT INTO {table_name} ({col_str}) VALUES ({placeholders});"
 
     rows = []
     for item in items:

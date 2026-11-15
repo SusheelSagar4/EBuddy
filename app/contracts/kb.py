@@ -58,7 +58,9 @@ class Exercise(BaseContract):
     correct_answer: Optional[str] = None
     difficulty_0_100: float = 50.0
     status: str = 'draft_for_review'
-    source_id: str = 'SYNTHETIC_EXERCISE'
+    source_id: str = 'AI_DRAFT'
+    licence: Optional[str] = 'CC-BY-4.0'
+    source_url: Optional[str] = 'https://ebuddy.internal/exercises/original_synthetic'
     verified: bool = False
 
 class AcademicRule(BaseContract):

@@ -1,0 +1,112 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "proposal_id": {
+      "title": "Proposal Id",
+      "type": "string"
+    },
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "proposer_agent": {
+      "title": "Proposer Agent",
+      "type": "string"
+    },
+    "proposal_type": {
+      "title": "Proposal Type",
+      "type": "string"
+    },
+    "status": {
+      "default": "pending_student_approval",
+      "enum": [
+        "pending_student_approval",
+        "approved",
+        "rejected",
+        "committed",
+        "validation_failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "reasoning": {
+      "title": "Reasoning",
+      "type": "string"
+    },
+    "target_week": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Target Week"
+    },
+    "target_semester": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Target Semester"
+    },
+    "proposed_modifications": {
+      "additionalProperties": true,
+      "title": "Proposed Modifications",
+      "type": "object"
+    },
+    "impact_summary": {
+      "title": "Impact Summary",
+      "type": "string"
+    },
+    "student_feedback": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Student Feedback"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "resolved_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolved At"
+    }
+  },
+  "required": [
+    "proposal_id",
+    "student_id",
+    "proposer_agent",
+    "proposal_type",
+    "reasoning",
+    "proposed_modifications",
+    "impact_summary",
+    "created_at"
+  ],
+  "title": "ChangeProposal",
+  "type": "object"
+}

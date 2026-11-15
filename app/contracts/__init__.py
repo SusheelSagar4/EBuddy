@@ -4,6 +4,8 @@ from app.contracts.kb import Course, Module, Resource, Exercise, AcademicRule, R
 from app.contracts.plan import StructuredReason, PlanItem, ValidationCheck, ValidationReport, PlanDiff, Plan
 from app.contracts.chat import Intent, ContextCard, ChatTurn, Explanation
 from app.contracts.persona import PersonaSpec
+from app.contracts.proposal import ChangeProposal
+from app.contracts.roadmap import DailyTask, WeeklyRoadmap, RoadmapVersionRecord
 
 __all__ = [
     "StudentProfile", "EvidenceItem", "SkillState", "Constraint", "Preference",
@@ -11,6 +13,6 @@ __all__ = [
     "Course", "Module", "Resource", "Exercise", "AcademicRule", "ResearchProject", "Skill",
     "StructuredReason", "PlanItem", "ValidationCheck", "ValidationReport", "PlanDiff", "Plan",
     "Intent", "ContextCard", "ChatTurn", "Explanation",
-    "PersonaSpec"
+    "PersonaSpec",
+    "ChangeProposal", "DailyTask", "WeeklyRoadmap", "RoadmapVersionRecord"
 ]
-

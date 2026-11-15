@@ -1,0 +1,206 @@
+{
+  "$defs": {
+    "DailyTask": {
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "day_number": {
+          "title": "Day Number",
+          "type": "integer"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "estimated_minutes": {
+          "default": 45,
+          "title": "Estimated Minutes",
+          "type": "integer"
+        },
+        "task_type": {
+          "default": "video_lecture",
+          "enum": [
+            "video_lecture",
+            "reading",
+            "practice_exercise",
+            "quiz",
+            "project",
+            "revision"
+          ],
+          "title": "Task Type",
+          "type": "string"
+        },
+        "skill_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Skill Id"
+        },
+        "course_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Course Id"
+        },
+        "resource_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resource Id"
+        },
+        "resource_title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resource Title"
+        },
+        "resource_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resource Url"
+        },
+        "exercise_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exercise Id"
+        },
+        "is_completed": {
+          "default": false,
+          "title": "Is Completed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "task_id",
+        "day_number",
+        "title"
+      ],
+      "title": "DailyTask",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "week_number": {
+      "title": "Week Number",
+      "type": "integer"
+    },
+    "semester_number": {
+      "title": "Semester Number",
+      "type": "integer"
+    },
+    "weekly_objective": {
+      "title": "Weekly Objective",
+      "type": "string"
+    },
+    "focus_skills": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Focus Skills",
+      "type": "array"
+    },
+    "target_courses": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Target Courses",
+      "type": "array"
+    },
+    "daily_tasks": {
+      "items": {
+        "$ref": "#/$defs/DailyTask"
+      },
+      "title": "Daily Tasks",
+      "type": "array"
+    },
+    "milestone_checkpoint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Milestone Checkpoint"
+    },
+    "total_estimated_hours": {
+      "default": 0.0,
+      "title": "Total Estimated Hours",
+      "type": "number"
+    },
+    "weekly_hours_budget": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Weekly Hours Budget"
+    },
+    "deferred_tasks": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Deferred Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "week_number",
+    "semester_number",
+    "weekly_objective",
+    "focus_skills",
+    "target_courses",
+    "daily_tasks"
+  ],
+  "title": "WeeklyRoadmap",
+  "type": "object"
+}

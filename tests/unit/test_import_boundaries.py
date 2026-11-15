@@ -94,3 +94,19 @@ def test_contracts_isolation():
                 
     assert not violators, f"Contracts must be pure data definitions without business logic: {violators}"
 
+def test_agents_import_boundaries():
+    """Verify that app/agents/ never imports litellm directly or app/api/."""
+    agents_dir = os.path.join(APP_DIR, "agents")
+    if not os.path.exists(agents_dir):
+        pytest.skip("agents directory not found")
+        
+    agents_files = get_python_files(agents_dir)
+    violators = []
+    for f in agents_files:
+        imports = extract_imports(f)
+        for imp in imports:
+            if imp == "litellm" or imp.startswith("litellm.") or imp.startswith("app.api"):
+                violators.append((f, imp))
+                
+    assert not violators, f"Agent modules violated clean boundaries by importing: {violators}"
+

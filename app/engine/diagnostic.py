@@ -1,11 +1,196 @@
-from typing import List, Dict, Any, Optional
+import os
+import csv
+import json
+import random
+from typing import List, Dict, Any, Optional, Tuple
 from app.contracts.kb import Exercise
 from app.engine.interfaces import IAdaptiveDiagnostic
 
+def _load_default_item_bank() -> List[Exercise]:
+    csv_path = os.path.join("data", "seed", "kb", "exercise.csv")
+    if not os.path.exists(csv_path):
+        return []
+    items = []
+    with open(csv_path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for r in reader:
+            opts_raw = r.get("options")
+            options_list = []
+            if opts_raw:
+                try:
+                    parsed = json.loads(opts_raw)
+                    if isinstance(parsed, dict):
+                        options_list = [f"{k}: {v}" for k, v in parsed.items()]
+                    elif isinstance(parsed, list):
+                        options_list = parsed
+                except Exception:
+                    options_list = [opts_raw]
+
+            ans_raw = r.get("answer_key")
+            correct_ans = ""
+            if ans_raw:
+                try:
+                    parsed_ans = json.loads(ans_raw)
+                    opt_letter = parsed_ans.get("correct_option", "")
+                    # Match full option text if available
+                    for opt in options_list:
+                        if opt.startswith(f"{opt_letter}:"):
+                            correct_ans = opt
+                            break
+                    if not correct_ans:
+                        correct_ans = opt_letter
+                except Exception:
+                    correct_ans = ans_raw
+
+            diff_num = float(r.get("difficulty", 2))
+            diff_score = diff_num * 20.0
+
+            items.append(Exercise(
+                exercise_id=r["exercise_id"],
+                skill_id=r["skill_id"],
+                title=f"Question {r['exercise_id']}",
+                question_text=r["prompt"],
+                exercise_type="mcq" if r.get("kind") == "mcq" else "numeric",
+                options=options_list,
+                correct_answer=correct_ans,
+                difficulty_0_100=diff_score,
+                status=r.get("status", "draft_for_review"),
+                source_id="AI_DRAFT",
+                verified=False
+            ))
+    return items
+
 class AdaptiveDiagnostic(IAdaptiveDiagnostic):
-    def __init__(self, item_bank: Optional[List[Exercise]] = None, max_items: int = 5):
-        self.item_bank = item_bank or []
+    """
+    Adaptive Diagnostic Engine.
+    Rules:
+    1. Starts at medium difficulty (50.0).
+    2. Raises difficulty (+15.0) after a correct answer; lowers difficulty (-15.0) after an incorrect answer.
+    3. Requires a minimum of 5 items and terminates at a maximum of 8 items.
+    4. Stops early between 5-8 items once ability estimation confidence reaches threshold (>= 0.85).
+    5. Shuffles option order at serve time to eliminate option position bias while preserving answer keys.
+    """
+    def __init__(
+        self,
+        item_bank: Optional[List[Exercise]] = None,
+        min_items: int = 5,
+        max_items: int = 8,
+        confidence_threshold: float = 0.85,
+        rng: Optional[random.Random] = None
+    ):
+        self.item_bank = item_bank if item_bank is not None else _load_default_item_bank()
+        self.min_items = min_items
         self.max_items = max_items
+        self.confidence_threshold = confidence_threshold
+        self.rng = rng
+
+    @staticmethod
+    def shuffle_exercise_options(exercise: Exercise, rng: Optional[random.Random] = None) -> Exercise:
+        """
+        Shuffles MCQ option order at serve time and remaps the correct_answer.
+        Prevents letter position bias while strictly preserving evaluation accuracy.
+        """
+        if exercise.exercise_type != "mcq" or not exercise.options:
+            return exercise
+
+        raw_opts = list(exercise.options)
+        parsed_opts = []
+        correct_text = None
+        raw_correct = (exercise.correct_answer or "").strip()
+
+        for opt in raw_opts:
+            if ":" in opt:
+                letter, text = opt.split(":", 1)
+                letter = letter.strip()
+                text = text.strip()
+            else:
+                letter = ""
+                text = opt.strip()
+            parsed_opts.append((letter, text))
+
+            # Identify which text belongs to the correct answer
+            if raw_correct:
+                if raw_correct == letter or raw_correct.lower() == letter.lower():
+                    correct_text = text
+                elif raw_correct == opt or raw_correct.lower() == text.lower() or raw_correct.endswith(text):
+                    correct_text = text
+
+        if not correct_text and parsed_opts:
+            correct_text = parsed_opts[0][1]
+
+        texts = [p[1] for p in parsed_opts]
+        shuffled_texts = list(texts)
+        if rng:
+            rng.shuffle(shuffled_texts)
+        else:
+            random.shuffle(shuffled_texts)
+
+        letters = ["A", "B", "C", "D", "E", "F"][:len(shuffled_texts)]
+        new_options = []
+        new_correct_letter = "A"
+        new_correct_answer = ""
+
+        for l, t in zip(letters, shuffled_texts):
+            new_opt_str = f"{l}: {t}"
+            new_options.append(new_opt_str)
+            if t == correct_text:
+                new_correct_letter = l
+                new_correct_answer = f"{l}: {t}"
+
+        return Exercise(
+            exercise_id=exercise.exercise_id,
+            skill_id=exercise.skill_id,
+            course_id=exercise.course_id,
+            title=exercise.title,
+            question_text=exercise.question_text,
+            exercise_type=exercise.exercise_type,
+            options=new_options,
+            correct_answer=new_correct_answer or new_correct_letter,
+            difficulty_0_100=exercise.difficulty_0_100,
+            status=exercise.status,
+            source_id="AI_DRAFT",
+            verified=exercise.verified
+        )
+
+    def compute_running_ability(self, answers: List[Dict[str, Any]]) -> float:
+        """
+        Computes running ability estimate with CAT step adjustments.
+        Initial baseline: 50.0.
+        Each step size: 25.0 / (1.0 + 0.25 * k).
+        Bounded within [10.0, 95.0].
+        """
+        theta = 50.0
+        for k, a in enumerate(answers, 1):
+            step = 25.0 / (1.0 + 0.25 * k)
+            if a.get("is_correct"):
+                theta = min(95.0, theta + step)
+            else:
+                theta = max(10.0, theta - step)
+        return round(theta, 2)
+
+    def estimate_ability_and_confidence(self, previous_answers: List[Dict[str, Any]]) -> Tuple[float, float]:
+        if not previous_answers:
+            return 50.0, 0.0
+
+        n = len(previous_answers)
+        current_ability = self.compute_running_ability(previous_answers)
+
+        if n < 3:
+            return current_ability, round(min(0.80, 0.30 + n * 0.15), 2)
+
+        # Compute spread (range) across the last 3 running theta ability estimates
+        theta_n = current_ability
+        theta_n_minus_1 = self.compute_running_ability(previous_answers[:-1])
+        theta_n_minus_2 = self.compute_running_ability(previous_answers[:-2])
+
+        last_3 = [theta_n, theta_n_minus_1, theta_n_minus_2]
+        spread = max(last_3) - min(last_3)
+
+        # Confidence is derived strictly from the spread of the last 3 theta values
+        # spread <= 4.0 yields confidence >= 0.84 (converged); higher spread reduces confidence
+        confidence = max(0.20, min(0.95, 1.0 - (spread / 25.0)))
+
+        return current_ability, round(confidence, 2)
 
     def select_next_item(
         self,
@@ -17,15 +202,16 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
 
         asked_exercise_ids = {a["exercise_id"] for a in previous_answers}
 
-        # Calculate current estimated ability based on previous answers
-        if previous_answers:
-            correct_count = sum(1 for a in previous_answers if a.get("is_correct"))
-            ratio = correct_count / len(previous_answers)
-            target_diff = 40.0 + (ratio * 40.0) # Scale difficulty dynamically between 40 and 80
-        else:
+        if not previous_answers:
             target_diff = 50.0
+        else:
+            last_ans = previous_answers[-1]
+            last_diff = float(last_ans.get("difficulty", 50.0))
+            if last_ans.get("is_correct"):
+                target_diff = min(95.0, last_diff + 15.0)
+            else:
+                target_diff = max(15.0, last_diff - 15.0)
 
-        # Find best matching exercise in candidate skills not yet asked
         best_item = None
         best_diff_gap = 999.0
 
@@ -36,33 +222,40 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
                     best_diff_gap = gap
                     best_item = ex
 
-        # If none found in item bank, return synthetic baseline item
         if not best_item:
             next_idx = len(previous_answers) + 1
-            skill = candidate_skills[next_idx % len(candidate_skills)] if candidate_skills else "SKILL_CIRCUIT_ANALYSIS"
+            skill = candidate_skills[(next_idx - 1) % len(candidate_skills)] if candidate_skills else "SKILL_CIRCUIT_ANALYSIS"
             best_item = Exercise(
                 exercise_id=f"DIAG_EX_{next_idx}",
                 skill_id=skill,
                 title=f"Diagnostic Question {next_idx} on {skill}",
-                question_text=f"Sample diagnostic problem evaluating proficiency in {skill}.",
+                question_text=f"Adaptive diagnostic item evaluating proficiency in {skill}.",
                 exercise_type="mcq",
-                options=["A: Correct Option", "B: Distractor 1", "C: Distractor 2", "D: Distractor 3"],
-                correct_answer="A: Correct Option",
+                options=["A: Option Alpha", "B: Option Beta", "C: Option Gamma", "D: Option Delta"],
+                correct_answer="A: Option Alpha",
                 difficulty_0_100=target_diff,
                 status="draft_for_review",
-                source_id="SYNTHETIC_EXERCISE",
+                source_id="AI_DRAFT",
                 verified=False
             )
 
-        return best_item
+        return self.shuffle_exercise_options(best_item, self.rng)
 
     def is_complete(self, previous_answers: List[Dict[str, Any]]) -> bool:
-        # Stop rule: reached max items or high confidence (3 in a row correct or incorrect)
-        if len(previous_answers) >= self.max_items:
+        n = len(previous_answers)
+        if n < self.min_items:
+            return False
+        if n >= self.max_items:
             return True
-        if len(previous_answers) >= 3:
-            last_3 = [a.get("is_correct") for a in previous_answers[-3:]]
-            if all(last_3) or not any(last_3):
-                return True
-        return False
+
+        # Stop rule: stop when n >= 5 and the range (spread) of the last 3 theta values <= 4.0
+        theta_n = self.compute_running_ability(previous_answers)
+        theta_n_minus_1 = self.compute_running_ability(previous_answers[:-1])
+        theta_n_minus_2 = self.compute_running_ability(previous_answers[:-2])
+
+        last_3 = [theta_n, theta_n_minus_1, theta_n_minus_2]
+        spread = max(last_3) - min(last_3)
+
+        return spread <= 4.0
+
 

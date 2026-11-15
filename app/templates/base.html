@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Personalised Learning Buddy{% endblock %} | IIT Bhubaneswar</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <!-- Persistent Evaluation Banner -->
+  <aside class="synthetic-banner" role="alert">
+    <span>⚠️</span>
+    <span>SYNTHETIC PROFILE • DRAFT DATA — INDIAN INSTITUTE OF TECHNOLOGY BHUBANESWAR (FOR EVALUATION ONLY)</span>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <a href="/" class="brand-title">Ebuddy • IIT BBS</a>
+        <span class="brand-subtitle">Personalised Learning Buddy</span>
+      </div>
+
+      <div class="student-selector-group">
+        <label for="nav-student-select" style="font-weight: 700; color: var(--text-secondary);">Active Profile:</label>
+        <select id="nav-student-select" aria-label="Select Synthetic Student Profile">
+          <option value="CONF_STU_EE_POWER_01">Loading profiles...</option>
+        </select>
+      </div>
+    </div>
+
+    <nav class="main-nav" aria-label="Main Navigation">
+      <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">🏠 Home</a>
+      <a href="/goals" class="nav-link {% if active_page == 'goals' %}active{% endif %}">🎯 Goals</a>
+      <a href="/roadmap" class="nav-link {% if active_page == 'roadmap' %}active{% endif %}">🗺 Roadmap</a>
+      <a href="/diagnostic" class="nav-link {% if active_page == 'diagnostic' %}active{% endif %}">📝 Diagnostic</a>
+      <a href="/chat" class="nav-link {% if active_page == 'chat' %}active{% endif %}">💬 Tutor Chat</a>
+      <a href="/approvals" class="nav-link {% if active_page == 'approvals' %}active{% endif %}">⚖ Approvals</a>
+      <a href="/admin" class="nav-link {% if active_page == 'admin' %}active{% endif %}">⚙ Admin</a>
+      <a href="/docs" class="nav-link" target="_blank">📚 API Docs</a>
+    </nav>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="page-container" id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div>Indian Institute of Technology Bhubaneswar — B.Tech EE & Metallurgical and Materials Engineering</div>
+    <div style="margin-top: 4px; font-size: 0.8rem; color: var(--text-muted);">
+      Zero-Outbound Air-Gapped Architecture • Four Autonomous Agents • Deterministic Single-Writer Planner
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
