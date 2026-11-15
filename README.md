@@ -285,7 +285,7 @@ python scripts/check_data.py
 │   │   ├── 03_recommendation_rules.csv
 │   │   └── 04_domain_to_phase_map.csv
 │   └── README.md                         # AI/ML domain catalog & execution guide
-├── da/                                   # Data Analyst (DA) domain package
+├── data_analyst/                         # Data Analyst (DA) domain package
 │   ├── data/                             # Raw DA Excel knowledge base source
 │   │   └── Data_Analyst_Roadmap.xlsx     # 9 relational sheets
 │   ├── scripts/                          # DA transformation pipeline
@@ -301,12 +301,18 @@ python scripts/check_data.py
 │   │   ├── 08_milestones.csv
 │   │   └── 09_learning_methods.csv
 │   └── README.md                         # DA domain catalog & execution guide
+├── da/                                   # Shorthand alias package for Data Analyst
+│   ├── data/                             # Raw DA Excel knowledge base source
+│   ├── scripts/                          # DA transformation pipeline
+│   ├── output/                           # Mirrored DA relational CSV datasets
+│   └── README.md                         # DA package documentation
 ├── output/                               # Unified legacy output directory (synchronized mirrors)
 ├── build_csvs.py                         # Root forwarder -> aiml/scripts/build_csvs.py
 ├── build_events_csvs.py                  # Root forwarder -> aiml/scripts/build_events_csvs.py
 ├── build_sde_csvs.py                     # Root forwarder -> sde/scripts/build_sde_csvs.py
 ├── build_sde_events_csvs.py              # Root forwarder -> sde/scripts/build_sde_events_csvs.py
-├── build_da_csvs.py                      # Root forwarder -> da/scripts/build_da_csvs.py
+├── build_data_analyst_csvs.py            # Root forwarder -> data_analyst/scripts/build_da_csvs.py
+├── build_da_csvs.py                      # Root forwarder -> data_analyst/scripts/build_da_csvs.py
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
@@ -461,11 +467,11 @@ The repository organizes data assets, transformation pipelines, and generated kn
    - `aiml/output/`: Relational CSV outputs for 6-phase roadmap, 55 curated resources, prerequisite DAG, events master, eligibility rules, recommendation rules, and domain taxonomy.
    - `aiml/README.md`: Detailed documentation and data dictionaries for the AI/ML track.
 
-3. **`da/` Package**:
-   - `da/data/`: Official Excel workbook (`Data_Analyst_Roadmap.xlsx`) containing 9 sheets.
-   - `da/scripts/`: Standalone Python transformation script (`build_da_csvs.py`).
-   - `da/output/`: Relational CSV outputs for 5-phase overview, module-resource pairings, skills catalog, readiness checkpoints, projects, rubrics, pacing templates, milestones, and learning methods.
-   - `da/README.md`: Detailed documentation and data dictionaries for the Data Analyst track.
+3. **`data_analyst/` Package** *(alias: `da/`)*:
+   - `data_analyst/data/`: Official Excel workbook (`Data_Analyst_Roadmap.xlsx`) containing 9 sheets.
+   - `data_analyst/scripts/`: Standalone Python transformation script (`build_da_csvs.py`).
+   - `data_analyst/output/`: Relational CSV outputs for 5-phase overview, module-resource pairings, skills catalog, readiness checkpoints, projects, rubrics, pacing templates, milestones, and learning methods.
+   - `data_analyst/README.md`: Detailed documentation and data dictionaries for the Data Analyst track.
 
 ### Execution Flexibility
 All transformation pipelines include intelligent path resolution and can be invoked either from the root or directly within their package directories:
@@ -479,17 +485,19 @@ python aiml/scripts/build_csvs.py
 python aiml/scripts/build_events_csvs.py
 
 # Data Analyst Pipeline
+python data_analyst/scripts/build_da_csvs.py
+# or
 python da/scripts/build_da_csvs.py
 ```
-*Root-level forwarders (`build_csvs.py`, `build_events_csvs.py`, `build_sde_csvs.py`, `build_sde_events_csvs.py`, `build_da_csvs.py`) and legacy `output/` directories are maintained for seamless backward compatibility.*
+*Root-level forwarders (`build_csvs.py`, `build_events_csvs.py`, `build_sde_csvs.py`, `build_sde_events_csvs.py`, `build_data_analyst_csvs.py`, `build_da_csvs.py`) and legacy `output/` directories are maintained for seamless backward compatibility.*
 
 ---
 
 ## 16. Data Analyst (DA) Knowledge Base Pipeline
 
-An automated data engineering pipeline (`build_da_csvs.py`) ingests the complete 9-sheet Data Analyst workbook (`Data_Analyst_Roadmap.xlsx`) to construct a relational learning knowledge base in `output/` and `da/output/`:
+An automated data engineering pipeline (`build_da_csvs.py` / `build_data_analyst_csvs.py`) ingests the complete 9-sheet Data Analyst workbook (`Data_Analyst_Roadmap.xlsx`) to construct a relational learning knowledge base in `data_analyst/output/`, `da/output/`, and `output/`:
 
-### Datasets Generated (`da/output/` and `output/`)
+### Datasets Generated (`data_analyst/output/`, `da/output/`, and `output/`)
 
 | File | Rows | Schema & Purpose | Key Highlights |
 |---|---|---|---|

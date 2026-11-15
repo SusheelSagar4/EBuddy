@@ -125,7 +125,10 @@ def resolve_file(filename):
         os.path.join(script_dir, "data", filename),
         os.path.join(os.getcwd(), filename),
         os.path.join(os.getcwd(), "data", filename),
+        os.path.join(os.getcwd(), "data_analyst", "data", filename),
         os.path.join(os.getcwd(), "da", "data", filename),
+        os.path.join(os.path.dirname(script_dir), "data_analyst", "data", filename),
+        os.path.join(os.path.dirname(script_dir), "da", "data", filename),
     ]
     for c in candidates:
         if os.path.exists(c):
@@ -661,17 +664,21 @@ def build():
         repo_root = os.path.dirname(pkg_root)
         candidate_dirs.extend([
             os.path.join(pkg_root, "output"),
-            os.path.join(repo_root, "output")
+            os.path.join(repo_root, "output"),
+            os.path.join(repo_root, "da", "output"),
+            os.path.join(repo_root, "data_analyst", "output"),
         ])
     else:
         candidate_dirs.extend([
             os.path.join(script_dir, "output"),
-            os.path.join(script_dir, "da", "output")
+            os.path.join(script_dir, "da", "output"),
+            os.path.join(script_dir, "data_analyst", "output"),
         ])
 
     candidate_dirs.extend([
         os.path.join(os.getcwd(), "output"),
-        os.path.join(os.getcwd(), "da", "output")
+        os.path.join(os.getcwd(), "da", "output"),
+        os.path.join(os.getcwd(), "data_analyst", "output"),
     ])
 
     # Deduplicate and filter out any invalid paths
@@ -819,3 +826,4 @@ def build():
 
 if __name__ == "__main__":
     build()
+
