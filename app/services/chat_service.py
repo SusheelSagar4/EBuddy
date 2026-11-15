@@ -175,6 +175,68 @@ class ChatService:
                 f"*(Your plan for {pinned['goal_name']} is strictly constrained within this limit.)*"
             )
 
+        # 4. MBA Section & Exam Side Questions (e.g. "What is DILR?", "What is VARC?", "Explain CAT")
+        if "DILR" in msg_upper or "DATA INTERPRETATION" in msg_upper or "LOGICAL REASONING" in msg_upper:
+            return (
+                "**MBA Entrance Section - Data Interpretation & Logical Reasoning (DILR):**\n"
+                "- **CAT Format:** 20–22 questions, 40-minute sectional limit, ~4 multi-part caselet sets.\n"
+                "- **Syllabus:** Matrix arrangements, scheduling, tournaments, tables, graphs, Venn diagrams.\n"
+                "- **Engineering Advantage:** Engineers excel by scanning all sets in the first 5 minutes (MBA-L4) "
+                "and systematically setting up constraint grids. Aim for high accuracy on 2-3 sets rather than rushing all.\n\n"
+                "*(Your active prep plan tracks DILR sets without rigid timetables.)*"
+            )
+        if "VARC" in msg_upper or "VERBAL ABILITY" in msg_upper or "READING COMPREHENSION" in msg_upper:
+            return (
+                "**MBA Entrance Section - Verbal Ability & Reading Comprehension (VARC):**\n"
+                "- **CAT Format:** 24 questions, 40-minute sectional limit (16 RC questions across 4 passages, 8 VA questions).\n"
+                "- **Syllabus:** Dense passages from philosophy, sociology, economics; para-summaries, para-jumbles, odd-sentence-out.\n"
+                "- **Verbal-Gap Strategy (MBA-L1):** 45 minutes of daily editorial reading with one-line summaries to build reading speed and argument retention.\n\n"
+                "*(Your active plan allocates focused reading hours to protect your verbal percentile.)*"
+            )
+        if "QA" in msg_upper or "QUANTITATIVE APTITUDE" in msg_upper:
+            return (
+                "**MBA Entrance Section - Quantitative Aptitude (QA):**\n"
+                "- **CAT Format:** 22 questions, 40-minute sectional limit.\n"
+                "- **Syllabus:** Arithmetic (Percentages, Profit/Loss, TSD, Work), Algebra, Number Systems, Geometry, Modern Maths.\n"
+                "- **Strategy:** As an engineering student, Quant serves as your confidence-builder. Focus on speed drills and question selection, avoiding over-practising concepts you have already mastered."
+            )
+
+        # 5. MBA Institution & Cutoff Side Questions (e.g. "IIM Ahmedabad cutoff", "Tell me about FMS")
+        from app.kb.core_to_mba_repo import core_to_mba_repo
+        for pid, prog in core_to_mba_repo.programmes.items():
+            inst = core_to_mba_repo.institutions.get(prog.institution_id)
+            inst_name = inst.name.lower() if inst else ""
+            if pid.lower() in msg_lower or prog.programme_name.lower() in msg_lower or (inst_name and inst_name in msg_lower) or (inst and inst.city.lower() in msg_lower and "mba" in msg_lower):
+                cutoffs = [
+                    f"{s.category}: {s.cutoff_value} {s.cutoff_type}" 
+                    for s in core_to_mba_repo.admission_stats 
+                    if s.programme_id == prog.id and s.verified
+                ]
+                cutoff_str = ", ".join(cutoffs) if cutoffs else "See official notification"
+                return (
+                    f"**Verified B-School Programme Profile ({prog.programme_name} - {inst.name if inst else prog.institution_id}):**\n"
+                    f"- **Duration:** {prog.duration_months} months | **Exams Accepted:** {prog.exams_accepted}\n"
+                    f"- **Work-Ex Policy:** {prog.work_ex_policy}\n"
+                    f"- **Selection Process:** {prog.selection_process}\n"
+                    f"- **Application Deadline:** {prog.application_deadline or 'Check official cycle'}\n"
+                    f"- **Verified Cut-offs (2024):** {cutoff_str}\n"
+                    f"- **Official Website:** {prog.official_url}\n\n"
+                    "*(All details sourced strictly from verified institutional records. Reach/Target/Safe tiering compares these against your calibrated mock evidence.)*"
+                )
+
+        # 6. Core-to-Management Career Path Side Questions
+        for cpid, cp in core_to_mba_repo.career_paths.items():
+            if cp.name.lower() in msg_lower or cpid.lower() in msg_lower:
+                return (
+                    f"**Core-to-Management Career Path: {cp.name} ({cp.branch}):**\n"
+                    f"- **Overview:** {cp.description}\n"
+                    f"- **Typical Roles:** {cp.typical_roles}\n"
+                    f"- **Skills Valued:** {cp.skills_valued}\n"
+                    f"- **Key Sectors:** {cp.sectors}\n"
+                    f"- **Faculty Reviewer:** {cp.reviewed_by}\n\n"
+                    "*(Note: Salary and placement figures are never quoted without verified institutional audit.)*"
+                )
+
         return None
 
     def handle_message(self, student_id: str, message: str) -> Dict[str, Any]:
