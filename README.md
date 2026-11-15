@@ -256,33 +256,131 @@ The system provides documented simulation hooks to test adaptive behaviors in re
 
 ---
 
-## 9. Testing & Quality Assurance
+## 9. Core to M.Tech (Higher Studies in India Track)
+
+The **Core to M.Tech** feature serves core-branch undergraduate students (**Electrical Engineering** and **Metallurgical & Materials Engineering**) at IIT Bhubaneswar who intend to pursue advanced academic degrees or PSU technical careers in India. It implements the complete Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
+
+Supported routes:
+1. **Route 1 (GATE → M.Tech/ME):** Primary track targeting premier master's programmes at IISc Bangalore, IIT Bombay, IIT Madras, IIT Kharagpur, and IIT Bhubaneswar via the Common Offer Acceptance Portal (COAP), and NITs via CCMT.
+2. **Route 2 (MS by Research & Direct PhD):** Research-oriented track targeting MS(R) and direct PhD opportunities for CFTI graduates with specialized interview and technical test preparation.
+3. **Route 3 (PSU Technical Recruitment via GATE):** Targeted preparation for Maharatna and Navratna PSU notifications (IOCL, NTPC, PGCIL, BHEL, SAIL, NALCO) aligned with branch-specific vacancy cycles.
+4. **Route 4 (Core Industry Fallback):** Safe lateral pivot to design/simulation tool mastery and core industrial internships if higher-studies timelines shift, preserving 100% of accumulated technical skill evidence.
+
+```mermaid
+flowchart TD
+    Onboard["1. Onboarding & Eligibility<br/>(Year, CGPA, Backlogs, Primary/Secondary Paper)"] --> Rules["2. Deterministic Rule Engine<br/>(Year Gating, Allowed 2-Paper Matrix, Programme Eligibility)"]
+    Rules --> Diag["3. Adaptive GATE Diagnostic<br/>(IRT Selection, Course Grade Skipping, 15-Item Cap)"]
+    Diag --> Pacing["4. Dynamic Pacing & Free-Hours Budget<br/>(Weeks-to-Exam Scaling, Never Timetable, CGPA Protection)"]
+    Pacing --> Mocks["5. Mocks & Calibrated Score Band<br/>(Requires >= 2 Mocks, Past Difficulty Normalization)"]
+    Mocks --> Tiering["6. Realistic Shortlist<br/>(Reach / Target / Safe Tiers, Non-Guarantee Disclosure)"]
+    Tiering --> Tracker["7. Application & Conflict Tracker<br/>(COAP / CCMT / PSU Milestones, Placement & Exam Clash Alerts)"]
+    Tracker --> Interview["8. Technical Interview & SOP Rubrics<br/>(Mock Written/Oral Viva, Non-Ghostwriting Review)"]
+    Interview --> Replan["9. Post-Result Re-Planning<br/>(Actual Score Re-Tiering, Realistic Alternatives, Pivot Diff)"]
+```
+
+### A. Non-Negotiable Hard Constraints & PS Compliance
+- **Zero Rigid Timetables:** The buddy **NEVER** outputs hourly schedules or calendar slot bookings. It computes weekly focus goals, recommended activities, and an hours budget scaled by academic calendar phases. The student retains autonomous execution control.
+- **Strictly Grounded Deterministic Core:** All decisions regarding GATE exam year eligibility, paper combinations, syllabus topic priority ($Priority = Weightage \times (1 - Mastery) \times PrerequisiteFactor$), template phase durations, score band estimation, Reach/Target/Safe tiering, and application deadlines are executed in deterministic Python and SQL. LiteLLM is utilized solely for conversational delivery, side-question synthesis, and non-ghostwriting feedback.
+- **Air-Gapped Operation & Zero Outbound Calls:** Zero runtime scraping, zero Google Scholar / GATE portal HTTP calls, and zero external web fonts/scripts. All syllabus topics, exam dates, cut-offs, and PYQ items are loaded from local CSV seed files.
+- **Air-Gapped LiteLLM Gateway:** Configured via `LLM_MODEL`, `LLM_API_KEY`, `LLM_API_BASE` (optional), and `EMBEDDING_MODEL`. Tested and tuned on `openai/gpt-4o-mini` with `LITELLM_LOCAL_MODEL_COST_MAP=True` and `LITELLM_TELEMETRY=False`.
+- **Data Integrity & Traceability Protocol:** Every fact row stored in `data/seed/core_to_mtech/` carries `source_url, source_type, retrieved_on, cycle, verified, verified_by`. Any row marked `verified=TRUE` without a human verifier name and official source is rejected at startup. Currently, all generated seed rows are explicitly flagged with `verified=FALSE` and prefixed `SAMPLE-`.
+- **CGPA Protection Priority:** When academic stress rises (midsem/endsem exam weeks with calendar factors 0.4 / 0.2, or active backlogs > 0), the buddy curtails pure GATE preparation and reallocates study hours to semester courses, emphasizing "double-benefit" subjects that serve both semester grades and GATE syllabus coverage.
+
+### B. LLM vs. Deterministic Split
+
+| Component | Deterministic Core (Python / SQL) | LiteLLM Model (`gpt-4o-mini` @ Temp 0.0) |
+|---|---|---|
+| **GATE Eligibility & Cycle** | Resolves target cycle (2027 for 3rd year, 2026 for 4th year, `eligible_later` for 2nd year) and validates allowed 2-paper combinations (EE+IN, MT+XE). | Conversational explanation of eligibility rules with source citations. |
+| **Adaptive Diagnostic** | IRT item selection, topic mastery updating ($P(\text{known} \mid \text{score})$), and mapped course grade skipping ($\ge 8.5 \implies$ skip). | Delivers problem statements and structured explanations. |
+| **Pacing & Phase Scaling** | Enforces $\sum \text{phase\_shares} = 1.0$; switches to 3-Month Fast-Track if weeks remaining are insufficient. | Generates weekly focus summaries and study technique advice. |
+| **Score Band & Tiering** | Computes confidence intervals ($[\mu - z\sigma, \mu + z\sigma]$) from $\ge 2$ full mocks; classifies programmes into Reach / Target / Safe. | Explains trade-offs between specialisations and institute tiers. |
+| **Conflict Detection** | Flags placement season (Weeks 6–10) and exam periods (Weeks 8 & 14–16); computes 3 balanced options with explicit trade-offs. | Formulates supportive balancing strategies. |
+| **Interview & SOP Prep** | Evaluates technical mock responses against 4-point rubrics; checks SOPs for evidence-grounded formatting. | Conducts simulated viva voce and provides non-ghostwriting structural critique. |
+| **Post-Result Re-Planning** | Identifies below-target results; computes viable alternatives (MS(R), retake, core industry); generates plan diffs. | Provides realistic counseling and empathetic guidance. |
+
+### C. Seed Data Storage Map (`data/seed/core_to_mtech/`)
+
+The feature introduces 17 relational seed tables fully restored by `scripts/seed_loader.py --reset`:
+
+| Table Name | Seed File Path | Initial Rows | Key Schema Attributes & Purpose |
+|---|---|---|---|
+| `kb.route` | `data/seed/core_to_mtech/route.csv` | 4 | Higher studies routes: `ROUTE_MTECH_INDIA`, `ROUTE_MSR_PHD_INDIA`, `ROUTE_PSU_GATE`, `ROUTE_CORE_INDUSTRY`. |
+| `kb.exam` | `data/seed/core_to_mtech/exam.csv` | 1 | Master examination record for Graduate Aptitude Test in Engineering (`EXAM_GATE`). |
+| `kb.exam_cycle` | `data/seed/core_to_mtech/exam_cycle.csv` | 2 | Official exam cycles (GATE 2026, GATE 2027) with registration, exam, and result date windows. |
+| `kb.exam_paper` | `data/seed/core_to_mtech/exam_paper.csv` | 4 | Primary papers (EE, MT) and secondary papers (IN, XE) with allowed two-paper matrix. |
+| `kb.syllabus_topic` | `data/seed/core_to_mtech/syllabus_topic.csv` | 33 | Granular topic syllabus covering EE, MT, Engineering Mathematics, and General Aptitude. |
+| `kb.topic_weightage` | `data/seed/core_to_mtech/topic_weightage.csv` | 33 | Historical mark weightages (min, max, average marks) across 5 recent GATE cycles. |
+| `kb.course_topic_map` | `data/seed/core_to_mtech/course_topic_map.csv` | 25 | Institute curriculum mapping (`EE2L001`, `ML2L002`, etc.) linking courses to GATE topics with coverage tags. |
+| `kb.pyq_item` | `data/seed/core_to_mtech/pyq_item.csv` | 5 | Official previous-year questions with year, marks, negative marking, and verified keys. |
+| — | `data/seed/core_to_mtech/practice_questions.csv` | 40 | Practice question bank for adaptive diagnostic and topic check-ins. |
+| `kb.institution` | `data/seed/core_to_mtech/institution.csv` | 8 | Target institutions: IISc Bangalore, IIT Bombay, IIT Madras, IIT Kharagpur, IIT Bhubaneswar, NITs. |
+| `kb.higher_programme` | `data/seed/core_to_mtech/higher_programme.csv` | 24 | M.Tech, MS(R), and Direct PhD programmes across EE and MT with qualifying criteria and portals. |
+| `kb.admission_stat` | `data/seed/core_to_mtech/admission_stat.csv` | 48 | Historical category-wise closing GATE score cut-offs (GEN, OBC, SC, ST) across 2024 and 2023. |
+| `kb.psu` | `data/seed/core_to_mtech/psu.csv` | 6 | Maharatna/Navratna PSUs recruiting via GATE: IOCL, NTPC, PGCIL, BHEL, SAIL, NALCO. |
+| `kb.psu_cycle` | `data/seed/core_to_mtech/psu_cycle.csv` | 6 | Annual PSU notification cycles with application deadlines, cutoff ranges, and CTC details. |
+| `kb.counselling_cycle` | `data/seed/core_to_mtech/counselling_cycle.csv` | 4 | Centralized counselling schedules for COAP (IITs) and CCMT (NITs) with round dates. |
+| `kb.prep_template` | `data/seed/core_to_mtech/prep_template.csv` | 4 | Preparation templates: 12-Month Comprehensive, 6-Month Accelerated, 3-Month Fast-Track, Retake Revision. |
+| `kb.template_phase` | `data/seed/core_to_mtech/template_phase.csv` | 15 | Phased breakdown per template with exact week shares strictly summing to 1.0. |
+
+Student State Tables (`docker/init.sql`):
+- `student.mock_result`: Log of full and sectional mock tests with scores, AIR estimates, and percentiles.
+- `student.error_log`: Diagnostic error tracking classified by mistake type (conceptual, calculation, misread, time).
+- `student.application`: Student application milestones across COAP, CCMT, direct institutes, and PSUs.
+- `student.interview_session`: Simulated viva records with rubric evaluations across conceptual and problem-solving metrics.
+- `student.gate_result`: Official scorecard recording triggering post-result re-planning and plan diff generation.
+
+### D. Data Traceability & Mandatory Human Verification List
+Before final submission to the Adobe evaluation panel, the team must replace sample records with verified data in compliance with §3 and §17:
+1. **GATE 2027 Official Notification & Syllabus:** Verify IIT Madras organising institute URLs, application deadlines, and topic descriptions for EE and MT papers.
+2. **Institute Admission Cut-Offs:** Update `kb.admission_stat` with official COAP/CCMT closing rounds from institutional websites.
+3. **PSU Recruitment Rows:** Confirm upcoming notification dates and eligible paper codes for IOCL, NTPC, PGCIL, SAIL, and NALCO.
+4. **Human Verifier Sign-off:** For each confirmed row, set `verified = TRUE`, record the student researcher's name in `verified_by`, and ensure `source_type = 'official'`.
+5. **Data Quality Report:** Ingestion integrity and missing field audits are tracked in [docs/core_to_mtech_data_quality_report.md](file:///c:/Users/panda/OneDrive/Desktop/EBuddy_main/docs/core_to_mtech_data_quality_report.md).
+
+### E. Simulation & Verification Endpoints (`/api/sim`)
+Four dedicated endpoints allow instant end-to-end testing of dynamic adaptation behaviors:
+- **`POST /api/sim/{student_id}/scenario/strong-vs-weak-mock`:** Evaluates score band estimation and tiering adjustments under rising vs. falling mock score trends.
+- **`POST /api/sim/{student_id}/scenario/placement-clash`:** Simulates campus placement drive collision with peak mock season, surfacing options with explicit trade-offs.
+- **`POST /api/sim/{student_id}/scenario/result-below-target`:** Simulates an actual GATE score below all target programmes, triggering alternative re-planning (MS(R), retake, core industry).
+- **`POST /api/sim/{student_id}/scenario/route-switch-psu`:** Simulates switching target route from M.Tech to PSU recruitment, preserving 100% of technical evidence and generating a plan version diff.
+
+---
+
+## 10. Testing & Quality Assurance
 
 ```bash
-# 1. Run Core-to-Core comprehensive tests (15 tests: budget, readiness, matching, papers, prompt injection)
-python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_core_to_core.py
+# 1. Run Core to M.Tech comprehensive test suite (16 tests: rules, budget, mocks, tiering, replan, injection, admin)
+python -m uv run --offline --no-project --with pydantic --with pydantic-settings --with fastapi python tests/test_core_to_mtech.py
 
-# 2. Run DB-free unit tests (9 tests: offline configuration & schema checks)
-python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_db_free.py
+# 2. Run Core to M.Tech evaluation scorecard harness (32 synthetic profiles, 6 core dimensions)
+python -m uv run --offline --no-project --with pydantic --with pydantic-settings --with fastapi python tests/test_mtech_evaluation_scorecard.py
 
-# 3. Run Evaluation Scorecard over 32 synthetic student profiles
-python -m uv run --no-project --with pydantic --with pydantic-settings python tests/test_evaluation_scorecard.py
+# 3. Run Core to Core feature test suite (15 tests: budget, readiness, matching, papers, prompt injection)
+python -m uv run --offline --no-project --with pydantic --with pydantic-settings --with fastapi python tests/test_core_to_core.py
 
-# 4. Run all tests simultaneously in Docker environment
+# 4. Run DB-free unit tests (9 tests: offline configuration & schema checks)
+python -m uv run --offline --no-project --with pydantic --with pydantic-settings --with fastapi python tests/test_db_free.py
+
+# 5. Run full evaluation scorecard generator (creates both Core to Core and Core to M.Tech scorecards)
+python -m uv run --offline --no-project --with pydantic --with pydantic-settings --with fastapi python scripts/evaluate_scorecard.py
+
+# 6. Run all tests simultaneously in Docker environment
 docker compose exec app pytest tests -q
 ```
 
 **Current Test Suite Status:**
-- `test_core_to_core.py`: 15 passed, 0 failed, 0 skipped.
-- `test_db_free.py`: 9 passed, 0 failed, 0 skipped.
-- `test_evaluation_scorecard.py`: 1 passed (32 synthetic profiles evaluated at 100.0% accuracy), 0 failed, 0 skipped.
-- `test_db_dependent.py`: 4 passed, 0 failed, 0 skipped.
-- **Total:** **29 passed, 0 failed, 0 skipped** (100% pass rate).
+- `test_core_to_mtech.py`: **16 passed, 0 failed, 0 skipped** (100% pass rate).
+- `test_mtech_evaluation_scorecard.py`: **5 passed, 0 failed, 0 skipped** (100% pass rate).
+- `test_core_to_core.py`: **15 passed, 0 failed, 0 skipped** (100% pass rate).
+- `test_db_free.py`: **9 passed, 0 failed, 0 skipped** (100% pass rate).
+- **Total Unit & Integration Suite:** **45 passed, 0 failed, 0 skipped** (100% pass rate).
+- **Evaluation Scorecards:**
+  - [docs/core_to_core_scorecard.md](file:///c:/Users/panda/OneDrive/Desktop/EBuddy_main/docs/core_to_core_scorecard.md): 32/32 synthetic profiles passed (100%).
+  - [docs/core_to_mtech_scorecard.md](file:///c:/Users/panda/OneDrive/Desktop/EBuddy_main/docs/core_to_mtech_scorecard.md): 32/32 synthetic profiles passed (100%).
 
 ---
 
-
-## 9. Compliance Checklist
+## 11. Compliance Checklist
 
 | Rule # | Requirement | Implementation & Verification |
 |---|---|---|
@@ -301,52 +399,63 @@ docker compose exec app pytest tests -q
 
 ---
 
-## 10. Project Directory Layout
+## 12. Project Directory Layout
 
 ```
 .
 ├── app/
-│   ├── api/health.py                     # System health and table counts
+│   ├── api/                              # REST API routers (admin, chat, goals, health, plans, sim)
+│   ├── contracts/                        # Pydantic data contracts (core_to_core, core_to_mtech, student, goal)
+│   ├── engine/                           # Deterministic core engines
+│   │   ├── budget.py                     # Free-hours budget & academic calendar engine
+│   │   ├── eligibility.py                # GATE eligibility, paper mapping, and rule checking
+│   │   ├── gate_diagnostic.py            # IRT adaptive diagnostic & Bayesian mastery
+│   │   ├── gate_planner.py               # Syllabus priority scoring & template pacing
+│   │   ├── gate_readiness_shortlist.py   # Calibrated score band & Reach/Target/Safe tiering
+│   │   ├── gate_conflicts_and_tracker.py # Placement/exam clashes & counselling trackers
+│   │   ├── gate_interview_and_replan.py  # Viva rubrics, SOP review, and post-result replanning
+│   │   ├── faculty_matcher.py            # Core to Core 44 faculty matching engine
+│   │   ├── readiness_gate.py             # Objective readiness gating engine
+│   │   └── validator.py                  # Deterministic plan compliance validator
+│   ├── kb/                               # In-memory repositories (core_to_core_repo, core_to_mtech_repo)
+│   ├── services/                         # Business & chat services (chat_service, approach_service)
 │   ├── config.py                         # Pydantic environment configuration & LiteLLM flags
-│   ├── db/session.py                     # SQLAlchemy engine with connection timeouts
 │   └── main.py                           # FastAPI application entrypoint
 ├── data/
-│   ├── raw/                              # Canonical institutional data sources
-│   │   ├── ee/                           # Electrical Engineering curriculum, videos, research
-│   │   ├── mme/                          # Metallurgical Engineering curriculum, videos, faculty, projects
-│   │   ├── library/                      # Central Library catalog (3,000 publications)
-│   │   └── higher_studies/               # Higher Studies pathways (GATE, CAT, GRE, GMAT, TOEFL, IELTS)
+│   ├── raw/                              # Canonical institutional data sources (ee, mme, library, higher_studies)
 │   └── seed/                             # Structured relational seed data
+│       ├── core_to_core/                 # 11 verified seed files (faculty, papers, areas, calendar, taster tasks)
+│       ├── core_to_mtech/                # 17 air-gapped seed files (exams, topics, programmes, cut-offs, PSUs)
 │       ├── kb/                           # Knowledge Base CSVs/JSONs (136 courses, 248 resources, 213 projects)
-│       ├── higher_studies/               # 14 relational tables for higher studies pathways
-│       ├── student/                      # Student profiles, completed courses, and goals
-│       └── survey/                       # Baseline survey instrument & diagnostic rubrics
+│       └── student/                      # Student profiles, completed courses, and goals
 ├── docker/
-│   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
-│   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
+│   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64, < 1.5 GB)
+│   └── init.sql                          # Comprehensive DDL creating schemas kb, student, plan, ops + triggers
 ├── docs/
-│   ├── architecture/overview.md          # System architecture & data flows
-│   ├── decisions/ADR-001-...             # Architectural decision records
+│   ├── core_to_mtech_architecture.md     # Full architectural summary of Core to M.Tech
+│   ├── core_to_mtech_data_quality_report.md # Automated data integrity report for M.Tech seeds
+│   ├── core_to_mtech_scorecard.md        # Evaluation scorecard across 32 synthetic profiles (100% pass)
+│   ├── core_to_core_scorecard.md         # Core to Core evaluation scorecard (100% pass)
 │   ├── DATA_DICTIONARY.md                # Complete schema & column dictionary
-│   ├── DATA_GAPS.md                      # Documented omissions and discrepancies
-│   ├── data_quality_report.md            # Automated curriculum & prerequisite DAG report
-│   └── CHANGELOG.md                      # Phase-by-phase project changelog
+│   └── DATA_GAPS.md                      # Documented omissions and discrepancies
 ├── scripts/
 │   ├── dev.ps1                           # Windows automation (up, down, reset, test, check-data)
-│   ├── ingest_ee_curriculum.py           # Ingestion script for Electrical Engineering
-│   ├── ingest_mme_curriculum.py          # Ingestion script for Metallurgy & Materials Engg
-│   ├── ingest_library_and_higher_studies.py # Ingestion for Library & Higher Studies datasets
-│   ├── generate_skills_and_goals.py      # Skill taxonomy & goal mapping generator
-│   ├── seed_loader.py                    # Database seed loader and reset engine
-│   ├── check_data.py                     # Curriculum integrity & DAG audit runner
-│   └── verify_raw_db.py                  # Direct SQL verification test script
+│   ├── generate_core_to_mtech_seeds.py   # Air-gapped generator for 17 Core to M.Tech CSVs
+│   ├── seed_loader.py                    # Multi-schema database seed loader and reset engine
+│   └── evaluate_scorecard.py             # Synthetic cohort evaluation scorecard runner
 ├── tests/
-│   ├── test_db_free.py                   # Offline compliance & syntax unit tests (9 tests)
-│   └── test_db_dependent.py              # PostgreSQL integration tests with connection timeouts (4 tests)
-├── .env.example                          # Committed environment variable template
+│   ├── test_core_to_mtech.py             # Core to M.Tech unit & integration test suite (16 tests)
+│   ├── test_mtech_evaluation_scorecard.py# M.Tech evaluation scorecard automated test (5 tests)
+│   ├── test_core_to_core.py              # Core to Core comprehensive tests (15 tests)
+│   └── test_db_free.py                   # Offline compliance & syntax unit tests (9 tests)
+├── web/                                  # Zero-CDN fast frontend UI
+│   ├── index.html                        # Single-page application entrypoint
+│   └── src/
+│       ├── app.js                        # Client-side router (#home, #chat, #c2c, #mtech)
+│       └── screens/                      # Screens (chat.js, c2c.js, mtech.js, admin.js)
+├── .env.example                          # Committed environment variable template (tuned on gpt-4o-mini)
 ├── .gitignore                            # Ignores .env and scratch files
 ├── .dockerignore                          # Excludes secrets from container build context
 ├── docker-compose.yml                    # Multi-container orchestration (app, db, adminer)
-├── Makefile                              # Make commands for Linux/macOS
 └── requirements.txt                      # Project Python dependencies
 ```
