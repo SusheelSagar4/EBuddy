@@ -361,7 +361,7 @@ def generate_all_seeds():
         writer.writerow(["ACT-01", "any", "Lead a technical team submodule or society project budget", "Leadership", "4", "Semester 5-6", "", "TRUE", "Prof. R. Sengupta"])
         writer.writerow(["ACT-02", "any", "Complete a core internship framed with quantified business and cost outcomes", "Internships", "8", "Summer Break", "", "TRUE", "Prof. R. Sengupta"])
         writer.writerow(["ACT-03", "any", "Participate in national collegiate business case competition or product hackathon", "Projects", "6", "Semester 6-7", "", "TRUE", "Prof. R. Sengupta"])
-        writer.writerow(["ACT-04", "any", "Enrol in institute open elective in Engineering Economics or Cost Management", "Academics", "3", "Semester 5-7", "HS3L001", "TRUE", "Prof. R. Sengupta"])
+        writer.writerow(["ACT-04", "any", "Enrol in institute open elective in English for Communications or Humanities", "Academics", "4", "Semester 5-7", "HS1L001", "TRUE", "Prof. R. Sengupta"])
         writer.writerow(["ACT-05", "EE", "Build an automated energy monitoring or tariff optimization capstone project", "Projects", "6", "Semester 6-8", "", "TRUE", "Prof. S. R. Samantaray"])
         writer.writerow(["ACT-06", "MM", "Conduct a manufacturing scrap reduction or quality audit case study", "Projects", "6", "Semester 6-8", "", "TRUE", "Prof. P. Bhargava"])
         writer.writerow(["ACT-07", "any", "Volunteer as student coordinator for institute placement or corporate relations cell", "Leadership", "5", "Semester 5-7", "", "TRUE", "Prof. R. Sengupta"])
