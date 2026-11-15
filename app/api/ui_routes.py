@@ -11,7 +11,7 @@ from sqlalchemy import text
 from app.config import settings
 from app.db.session import get_db
 from app.contracts.student import StudentProfile
-from app.contracts.goal import Goal
+from app.contracts.goal import Goal, GOAL_ALIASES, canonicalize_goal_id
 from app.contracts.kb import Exercise
 from app.contracts.proposal import ChangeProposal
 from app.kb.repositories import CourseRepo, GoalRepo, SkillRepo, ResourceRepo
@@ -162,26 +162,37 @@ def get_student_details(student_id: str):
 def list_goals(programme_id: Optional[str] = Query(None)):
     """
     Returns goals filtered by student's branch plus cross-branch goals.
-    Cross-branch goals: GOAL_CROSS_SDE_DATA, GOAL_UPSC_COMPETITIVE, GOAL_TECH_STARTUP.
+    Cross-branch goals: GOAL_CROSS_SDE_DATA, GOAL_UPSC_CSE, GOAL_STARTUP_FOUNDER, GOAL_CORE_TO_MBA.
+    Resolves aliases to canonical goals.
     """
     all_goals = goal_repo.list_all()
     filtered = []
-    
+    seen_canonical = set()
+    cross_branch_goals = ["GOAL_CROSS_SDE_DATA", "GOAL_UPSC_CSE", "GOAL_STARTUP_FOUNDER", "GOAL_CORE_TO_MBA"]
+
     for g in all_goals:
-        gid = g.goal_id
-        is_cross = gid in ["GOAL_CROSS_SDE_DATA", "GOAL_UPSC_COMPETITIVE", "GOAL_TECH_STARTUP"]
+        gid = canonicalize_goal_id(g.goal_id)
+        # Avoid presenting duplicate alias rows
+        if gid in seen_canonical or g.goal_id in GOAL_ALIASES:
+            continue
+        
+        is_cross = gid in cross_branch_goals
         
         if not programme_id:
             filtered.append(g)
+            seen_canonical.add(gid)
         elif programme_id == "BTECH_EE":
             if gid.startswith("GOAL_EE_") or is_cross:
                 filtered.append(g)
+                seen_canonical.add(gid)
         elif programme_id in ["BTECH_MM", "BTECH_MME"]:
             if gid.startswith("GOAL_MM_") or is_cross:
                 filtered.append(g)
+                seen_canonical.add(gid)
         else:
             if is_cross:
                 filtered.append(g)
+                seen_canonical.add(gid)
 
     # Enrich with skill requirements count
     result = []

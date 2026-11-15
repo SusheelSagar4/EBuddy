@@ -38,3 +38,14 @@ class Milestone(BaseContract):
     source_id: str
     verified: bool = True
 
+GOAL_ALIASES: Dict[str, str] = {
+    "GOAL_UPSC_COMPETITIVE": "GOAL_UPSC_CSE",
+    "GOAL_TECH_STARTUP": "GOAL_STARTUP_FOUNDER",
+}
+
+def canonicalize_goal_id(goal_id: Optional[str]) -> Optional[str]:
+    """Returns canonical goal ID for known duplicates or aliases."""
+    if not goal_id:
+        return goal_id
+    return GOAL_ALIASES.get(goal_id, goal_id)
+
