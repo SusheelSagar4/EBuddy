@@ -1,4 +1,4 @@
-﻿from typing import Optional
+from typing import Optional
 from app.personas.policy import PersonaPolicy
 from app.contracts.student import StudentProfile
 
