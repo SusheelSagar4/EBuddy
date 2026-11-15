@@ -67,6 +67,22 @@ export function renderOnboarding(container, state, navigate) {
         </div>
 
         <div class="form-group">
+          <label for="field-of-interest">Field of Interest *</label>
+          <select id="field-of-interest">
+            <option value="FIELD_SDE" selected>Software Development Engineering (SDE)</option>
+            <option value="FIELD_AIML">AI & Machine Learning (AI/ML)</option>
+            <option value="FIELD_DA">Data Analytics (DA)</option>
+            <option value="FIELD_GATE_MTECH">Higher Studies (GATE → M.Tech / MS / PSU)</option>
+            <option value="FIELD_CAT_MBA">Core to MBA (CAT Fresher / Executive)</option>
+            <option value="FIELD_UPSC">Civil Services (UPSC CSE / ESE)</option>
+            <option value="FIELD_CORE_RESEARCH">Core Engineering Research Track</option>
+            <option value="FIELD_CORE_INDUSTRY">Core Engineering Industry & PSUs</option>
+            <option value="FIELD_STARTUP">Student Entrepreneurship & Startup</option>
+          </select>
+          <span class="field-hint">Your primary career & academic focus track</span>
+        </div>
+
+        <div class="form-group">
           <label for="cgpa">Current Cumulative CGPA</label>
           <input type="number" id="cgpa" step="0.01" min="0" max="10" value="8.40" />
         </div>
@@ -132,6 +148,7 @@ export function renderOnboarding(container, state, navigate) {
       target_goal_id: document.getElementById('target-goal').value,
       aims_and_aspirations: document.getElementById('aims-aspirations').value,
       target_timeline: document.getElementById('target-timeline').value,
+      field_of_interest: document.getElementById('field-of-interest').value,
       completed_course_ids: completedList,
       constraints: [
         { type: "weekly_study_hours", value: parseInt(document.getElementById('study-hours').value, 10) },
@@ -148,6 +165,39 @@ export function renderOnboarding(container, state, navigate) {
       state.studentId = payload.student_id;
       state.profile = res.student || payload;
       localStorage.setItem('ebuddy_student_id', payload.student_id);
+
+      if (res.brief_roadmap) {
+        state.briefRoadmap = res.brief_roadmap;
+        const b = res.brief_roadmap;
+        container.innerHTML = `
+          <div class="screen-card">
+            <div class="screen-header">
+              <h2>Career Field Selected: ${b.field_name}</h2>
+              <p class="subtitle">${b.description || 'Structured academic roadmap grounded in verified IIT Bhubaneswar curriculum and industry milestones.'}</p>
+            </div>
+            <div class="metric-row" style="display:flex; gap:1.5rem; margin-bottom:1.5rem;">
+              <div class="metric-box"><strong>Total Phases:</strong> ${b.total_phases}</div>
+              <div class="metric-box"><strong>Est. Effort:</strong> ${b.total_estimated_hours} Hours</div>
+            </div>
+            <h3>Curriculum Phases</h3>
+            <div class="phases-list" style="margin-bottom:2rem;">
+              ${(b.phases || []).map(p => `
+                <div class="card" style="margin-bottom:0.75rem; padding:1rem; border:1px solid #e2e8f0; border-radius:6px;">
+                  <h4 style="margin:0 0 0.25rem 0;">Phase ${p.phase_order}: ${p.phase_name}</h4>
+                  <p style="margin:0; font-size:0.9rem; color:#4a5568;">${p.phase_objective || ''} (Est. ${p.estimated_hours}h)</p>
+                </div>
+              `).join('')}
+            </div>
+            <div class="form-actions" style="display:flex; gap:1rem;">
+              <button id="btn-pk-test" class="btn btn-primary">Take Prior-Knowledge Test (Skip Topics) →</button>
+              <button id="btn-view-plan" class="btn btn-secondary">Go Directly to Weekly Schedule →</button>
+            </div>
+          </div>
+        `;
+        document.getElementById('btn-pk-test').addEventListener('click', () => navigate('#diagnostic'));
+        document.getElementById('btn-view-plan').addEventListener('click', () => navigate('#plan'));
+        return;
+      }
       navigate('#diagnostic');
     } catch (err) {
       alert(`Onboarding failed: ${err.message}`);

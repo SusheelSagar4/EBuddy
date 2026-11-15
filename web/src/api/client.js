@@ -102,6 +102,74 @@ class ApiClient {
     });
   }
 
+  // Unified Product Flow Endpoints
+  async getFieldRoadmaps() {
+    return this._request('/api/field-roadmaps');
+  }
+
+  async getFieldRoadmap(fieldId) {
+    return this._request(`/api/field-roadmap/${fieldId}`);
+  }
+
+  async getFieldTopics(fieldId, phaseId = null) {
+    const q = phaseId ? `?phase_id=${encodeURIComponent(phaseId)}` : '';
+    return this._request(`/api/field-roadmap/${fieldId}/topics${q}`);
+  }
+
+  async getFieldWeeklyPlan(studentId, week = 1, fieldId = null) {
+    const q = fieldId ? `?field_id=${encodeURIComponent(fieldId)}` : '';
+    return this._request(`/api/student/${studentId}/field-plan/week/${week}${q}`);
+  }
+
+  async getRecommendedCourses(studentId, targetSemester = null, fieldId = null) {
+    const params = new URLSearchParams();
+    if (targetSemester) params.append('target_semester', targetSemester);
+    if (fieldId) params.append('field_id', fieldId);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this._request(`/api/student/${studentId}/recommended-courses${qs}`);
+  }
+
+  async getPriorKnowledgeTest(studentId, fieldId = null, numItems = 10) {
+    const params = new URLSearchParams();
+    if (fieldId) params.append('field_id', fieldId);
+    if (numItems) params.append('num_items', numItems);
+    return this._request(`/api/student/${studentId}/prior-knowledge-test?${params.toString()}`);
+  }
+
+  async submitPriorKnowledgeTest(studentId, payload) {
+    return this._request(`/api/student/${studentId}/prior-knowledge-test/submit`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
+  async completeTopic(studentId, payload) {
+    return this._request(`/api/student/${studentId}/topic/complete`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
+  async getRetentionQuiz(studentId, fieldId = null) {
+    const q = fieldId ? `?field_id=${encodeURIComponent(fieldId)}` : '';
+    return this._request(`/api/student/${studentId}/retention-quiz${q}`);
+  }
+
+  async submitRetentionQuiz(studentId, payload) {
+    return this._request(`/api/student/${studentId}/retention-quiz/submit`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
+  async getHigherStudiesGuidance(studentId, trackType = 'gate', targetCgpa = 8.0) {
+    return this._request(`/api/student/${studentId}/higher-studies-guidance?track_type=${encodeURIComponent(trackType)}&target_cgpa=${encodeURIComponent(targetCgpa)}`);
+  }
+
+  async getCgpaCalculator(studentId, targetCgpa = 8.0) {
+    return this._request(`/api/student/${studentId}/cgpa-calculator?target_cgpa=${encodeURIComponent(targetCgpa)}`);
+  }
+
   // Simulation Endpoints
   async simulateQuiz(studentId, quizData) {
     return this._request(`/api/sim/${studentId}/quiz`, {

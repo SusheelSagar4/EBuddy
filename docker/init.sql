@@ -1501,3 +1501,71 @@ DROP TRIGGER IF EXISTS trg_student_gate_result ON student.gate_result;
 CREATE TRIGGER trg_student_gate_result
 AFTER INSERT OR UPDATE OR DELETE ON student.gate_result
 FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+-- =============================================================================
+-- FIELD ROADMAPS, TOPIC PROGRESS & COURSE ELIGIBILITY (Target Flow F1-F11)
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS kb.field_roadmap (
+    field_id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    description TEXT,
+    total_phases INT DEFAULT 0,
+    total_estimated_hours NUMERIC(7, 1) DEFAULT 0.0,
+    source_id VARCHAR(100) DEFAULT 'OFFICIAL'
+);
+
+CREATE TABLE IF NOT EXISTS kb.field_phase (
+    phase_id VARCHAR(100) PRIMARY KEY,
+    field_id VARCHAR(50) REFERENCES kb.field_roadmap(field_id) ON DELETE CASCADE,
+    phase_order INT NOT NULL,
+    phase_name VARCHAR(255) NOT NULL,
+    phase_objective TEXT,
+    learner_outcome TEXT,
+    estimated_hours NUMERIC(7, 1) DEFAULT 0.0
+);
+
+CREATE TABLE IF NOT EXISTS kb.field_topic (
+    topic_id VARCHAR(100) PRIMARY KEY,
+    field_id VARCHAR(50) REFERENCES kb.field_roadmap(field_id) ON DELETE CASCADE,
+    phase_id VARCHAR(100) REFERENCES kb.field_phase(phase_id) ON DELETE CASCADE,
+    topic_order INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    key_concepts TEXT,
+    est_hours NUMERIC(5, 1) DEFAULT 6.0,
+    skill_id VARCHAR(100),
+    prerequisite_topic_ids TEXT,
+    resource_title TEXT,
+    resource_url TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kb.course_eligibility (
+    id VARCHAR(100) PRIMARY KEY,
+    course_id VARCHAR(50) REFERENCES kb.course(course_id) ON DELETE CASCADE,
+    min_cgpa NUMERIC(3, 2) DEFAULT 0.0,
+    min_semester INT DEFAULT 1,
+    max_backlogs INT DEFAULT 99,
+    allowed_programmes VARCHAR(255) DEFAULT 'ANY',
+    rule_name VARCHAR(255),
+    source_url TEXT,
+    verified BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS student.topic_progress (
+    id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    topic_id VARCHAR(100) NOT NULL,
+    field_id VARCHAR(50) NOT NULL,
+    status VARCHAR(50) DEFAULT 'in_progress', -- 'in_progress', 'completed', 'skipped'
+    completed_at TIMESTAMP WITH TIME ZONE,
+    quiz_score NUMERIC(5, 2),
+    mastery_tag VARCHAR(50), -- 'strong', 'weak', 'neutral'
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TRIGGER IF EXISTS trg_student_topic_progress ON student.topic_progress;
+CREATE TRIGGER trg_student_topic_progress
+AFTER INSERT OR UPDATE OR DELETE ON student.topic_progress
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+

@@ -1,0 +1,10 @@
+field_id,name,category,description,total_phases,total_estimated_hours,source_id
+FIELD_SDE,Software Development Engineering (SDE),software_engineering,Comprehensive pathway from programming fundamentals and LeetCode DSA to system design and portfolio projects.,8,480.0,OFFICIAL
+FIELD_AIML,AI & Machine Learning (AI/ML),artificial_intelligence,"Mathematical foundations, classical ML algorithms, deep learning architectures, computer vision, NLP, and LLM applications.",6,1624.0,OFFICIAL
+FIELD_DA,Data Analytics (DA),data_analytics,"End-to-end data analytics curriculum: SQL databases, Excel, Python data stack, BI visualization, and real-world portfolio analytics.",5,314.0,OFFICIAL
+FIELD_GATE_MTECH,Core Higher Studies (GATE → M.Tech / MS / PSU),higher_studies,Postgraduate technical admissions at IISc/IITs via GATE (EE / MT papers) and Maharatna/Navratna PSU recruitment.,4,500.0,OFFICIAL
+FIELD_CAT_MBA,Core to MBA (CAT Fresher / Executive),management,"Strategic management career transition for engineers: CAT QA/DILR/VARC preparation, profile audits, and technical viva coaching.",4,320.0,OFFICIAL
+FIELD_UPSC,Civil Services (UPSC CSE / ESE),civil_services,"Structured preparation for Civil Services Examination (General Studies, CSAT, Essay, and Engineering Optional).",4,800.0,OFFICIAL
+FIELD_CORE_RESEARCH,Core Engineering Research Track,research,"Undergraduate research mentorship under 44 verified IIT Bhubaneswar faculty, paper insights, and international research internships.",4,400.0,OFFICIAL
+FIELD_CORE_INDUSTRY,Core Engineering Industry & PSUs,core_industry,"Engineering domain depth, industrial simulation tools (MATLAB, PSCAD, ANSYS), project societies (SAE BAJA), and PSU tests.",4,350.0,OFFICIAL
+FIELD_STARTUP,Student Entrepreneurship & Startup Incubation,entrepreneurship,"Customer discovery, prototype MVP engineering, unit economics, IP protection, and incubation grant pitch preparation.",4,300.0,OFFICIAL

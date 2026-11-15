@@ -15,6 +15,7 @@ from app.contracts.goal import Goal
 from app.contracts.kb import Exercise
 from app.contracts.proposal import ChangeProposal
 from app.kb.repositories import CourseRepo, GoalRepo, SkillRepo, ResourceRepo
+from app.kb.field_repo import field_repo
 from app.services.onboarding_service import onboarding_service
 from app.services.diagnostic_service import diagnostic_service
 from app.services.plan_service import plan_service
@@ -127,6 +128,41 @@ def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]
 # -----------------------------------------------------------------------------
 # 1. Students Endpoint (Page 1)
 # -----------------------------------------------------------------------------
+@router.get("/field-roadmaps")
+def list_field_roadmaps():
+    """Requirement F2: List all available field roadmaps."""
+    return {"roadmaps": field_repo.list_roadmaps()}
+
+@router.get("/field-roadmap/{field_id}")
+def get_field_roadmap(field_id: str):
+    """Requirement F2: Get brief field roadmap with phase breakdown from DB data."""
+    rm = field_repo.get_roadmap(field_id)
+    if not rm:
+        for f in field_repo.list_roadmaps():
+            if field_id.lower() in f["field_id"].lower() or f["field_id"].lower() in field_id.lower():
+                rm = f
+                field_id = f["field_id"]
+                break
+    if not rm:
+        raise HTTPException(status_code=404, detail=f"Field roadmap '{field_id}' not found.")
+    phases = field_repo.get_phases(field_id)
+    topics = field_repo.get_topics(field_id)
+    return {
+        "field_id": field_id,
+        "name": rm["name"],
+        "category": rm["category"],
+        "description": rm["description"],
+        "total_phases": len(phases),
+        "total_estimated_hours": rm["total_estimated_hours"],
+        "phases": phases,
+        "topics_count": len(topics)
+    }
+
+@router.get("/field-roadmap/{field_id}/topics")
+def get_field_topics(field_id: str, phase_id: Optional[str] = None):
+    topics = field_repo.get_topics(field_id, phase_id)
+    return {"field_id": field_id, "topics": topics}
+
 @router.get("/students")
 def list_synthetic_students():
     """Lists all synthetic student profiles from data/seed/personas/*/students.csv."""

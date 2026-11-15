@@ -313,6 +313,12 @@ def load_all_seeds(conn):
         (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mtech", "counselling_cycles.csv"), "kb.counselling_cycle"),
         (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mtech", "prep_templates.csv"), "kb.prep_template"),
         (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mtech", "template_phases.csv"), "kb.template_phase"),
+
+        # Field Roadmaps & Course Eligibility (Target Flow F1-F11)
+        (load_csv, os.path.join(seed_kb, "field_roadmap.csv"), "kb.field_roadmap"),
+        (load_csv, os.path.join(seed_kb, "field_phase.csv"), "kb.field_phase"),
+        (load_csv, os.path.join(seed_kb, "field_topic.csv"), "kb.field_topic"),
+        (load_csv, os.path.join(seed_kb, "course_eligibility.csv"), "kb.course_eligibility"),
     ]
 
     total_loaded = 0
@@ -346,7 +352,8 @@ def load_all_seeds(conn):
         "kb.project_faculty", "kb.project_keyword", "kb.data_issue",
         "kb.academic_calendar", "kb.area_skill", "kb.faculty_area",
         "kb.paper", "kb.paper_author", "kb.paper_chunk", "kb.paper_skill",
-        "kb.taster_task", "kb.industry_milestone"
+        "kb.taster_task", "kb.industry_milestone",
+        "kb.field_roadmap", "kb.field_phase", "kb.field_topic", "kb.course_eligibility"
     ]
     with conn.cursor() as cur:
         for t in verified_tables:

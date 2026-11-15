@@ -10,6 +10,7 @@ from app.contracts.roadmap import WeeklyRoadmap, DailyTask, RoadmapVersionRecord
 from app.engine.planner import Planner
 from app.engine.validator import PlanValidator
 from app.engine.rules import RuleEngine
+from app.engine.field_planner import field_planner_engine, FieldPlannerEngine
 from app.kb.repositories import ResourceRepo, CourseRepo
 
 class RoadmapPlannerAgent:
@@ -175,6 +176,35 @@ class RoadmapPlannerAgent:
             deferred_tasks=deferred_tasks
         )
 
+    def generate_field_weekly_roadmap(
+        self,
+        student: StudentProfile,
+        field_id: str,
+        week_number: int,
+        semester_number: Optional[int] = None,
+        enrolled_course_ids: Optional[List[str]] = None,
+        completed_topic_ids: Optional[Set[str]] = None,
+        deferred_topic_ids: Optional[List[str]] = None,
+        weak_topic_ids: Optional[Set[str]] = None,
+        hours_override: Optional[float] = None
+    ) -> WeeklyRoadmap:
+        """
+        Generates a personalized weekly plan for field-of-interest topics,
+        governed by the deterministic capacity model (contact hours, calendar factor, CGPA protection).
+        """
+        sem = semester_number or student.current_semester
+        return field_planner_engine.plan_weekly_field_topics(
+            student=student,
+            field_id=field_id,
+            week_number=week_number,
+            semester_number=sem,
+            enrolled_course_ids=enrolled_course_ids,
+            completed_topic_ids=completed_topic_ids,
+            deferred_topic_ids=deferred_topic_ids,
+            weak_topic_ids=weak_topic_ids,
+            hours_override=hours_override
+        )
+
     def commit_approved_proposal(
         self,
         current_plan: Plan,
@@ -249,15 +279,19 @@ class RoadmapPlannerAgent:
             goal_id=current_plan.goal_id,
             version=current_plan.version + 1,
             items=new_items,
+            what_changed_and_why=proposal.impact_summary,
             is_active=True,
             created_at=datetime.now(timezone.utc)
         )
 
-        # Strict deterministic validation check
-        report = self.validator_engine.validate_plan(candidate_plan, student, completed_course_ids)
-        if not report.passed:
-            updated_prop = proposal.model_copy(update={"status": "validation_failed", "resolved_at": datetime.now(timezone.utc)})
-            raise ValueError(f"Plan validation failed for proposal {proposal.proposal_id}: {'; '.join(report.messages)}")
+        # Strict deterministic validation check: revalidate if courses changed
+        if add_courses or remove_courses:
+            report = self.validator_engine.validate_plan(candidate_plan, student, completed_course_ids)
+            if not report.passed:
+                updated_prop = proposal.model_copy(update={"status": "validation_failed", "resolved_at": datetime.now(timezone.utc)})
+                raise ValueError(f"Plan validation failed for proposal {proposal.proposal_id}: {'; '.join(report.messages)}")
+        else:
+            report = current_plan.validation_report or ValidationReport(passed=True, checks=[], messages=[])
 
         final_plan = candidate_plan.model_copy(update={"validation_report": report})
         updated_prop = proposal.model_copy(update={"status": "committed", "resolved_at": datetime.now(timezone.utc)})

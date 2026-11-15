@@ -53,6 +53,7 @@ class RoadmapOrchestrator:
         self.version_history: Dict[str, List[RoadmapVersionRecord]] = {} # student_id -> [records]
         self.weekly_roadmaps: Dict[str, WeeklyRoadmap] = {} # student_id -> active weekly roadmap
         self.memory_summaries: Dict[str, str] = {} # student_id -> rolling conversation summary
+        self.week_overrides: Dict[str, Dict[int, float]] = {} # student_id -> {week_number: hours_delta}
 
     def _load_memory_summary(self, student_id: str) -> Optional[str]:
         try:
@@ -381,6 +382,13 @@ class RoadmapOrchestrator:
         )
 
         self.proposals[proposal_id] = committed_prop
+
+        # Record one-week exception if applicable (Requirement F4)
+        if committed_prop.proposal_type in ["capacity_increase", "workload_reduction"]:
+            target_wk = committed_prop.target_week or 1
+            mods = committed_prop.proposed_modifications
+            delta = float(mods.get("hours_boost", 0.0)) - float(mods.get("hours_reduction", 0.0))
+            self.week_overrides.setdefault(student_id, {})[target_wk] = delta
 
         # Update canonical plan in plan_service
         plan_service.plans[student_id] = new_plan

@@ -38,11 +38,23 @@ class OnboardRequest(BaseModel):
     backlogs: int = 0
     goal_id: Optional[str] = None
     target_goal_id: Optional[str] = None
+    field_of_interest: Optional[str] = None
+    branch: Optional[str] = None
     aims_and_aspirations: Optional[str] = None
     target_timeline: Optional[str] = None
     completed_course_ids: Optional[List[str]] = None
     constraints: Optional[List[Dict[str, Any]]] = None
     preferences: Optional[List[Dict[str, Any]]] = None
+
+class UnifiedOnboardRequest(BaseModel):
+    student_id: Optional[str] = None
+    name: str = "Student"
+    branch: str = "EE"
+    current_semester: int = 3
+    cgpa: float = 8.0
+    field_of_interest: str = "sde"
+    completed_course_ids: Optional[List[str]] = None
+    backlogs: int = 0
 
 class DiagnosticSubmissionRequest(BaseModel):
     answers: Dict[str, str] # { exercise_id: student_answer }
@@ -107,6 +119,24 @@ class ResearchLogRequest(BaseModel):
 @router.post("/onboard")
 def onboard(req: OnboardRequest):
     s_name = req.full_name or req.name or "Student"
+    # If field_of_interest provided, route through unified flow
+    if req.field_of_interest:
+        branch = req.branch or req.programme_id
+        cgpa_val = float(req.cgpa) if req.cgpa is not None else 8.0
+        try:
+            return onboarding_service.onboard_unified_student(
+                student_id=req.student_id,
+                name=s_name,
+                branch=branch,
+                current_semester=req.current_semester,
+                cgpa=cgpa_val,
+                field_of_interest=req.field_of_interest,
+                completed_course_ids=req.completed_course_ids,
+                backlogs=req.backlogs
+            )
+        except ValueError as ve:
+            raise HTTPException(status_code=422, detail=str(ve))
+
     g_id = req.target_goal_id or req.goal_id or ("GOAL_EE_CORE_POWER" if req.programme_id == "BTECH_EE" else "GOAL_MM_ADVANCED_MATERIALS")
     student = onboarding_service.onboard_student(
         student_id=req.student_id,
@@ -123,6 +153,27 @@ def onboard(req: OnboardRequest):
         preferences=req.preferences
     )
     return {"status": "success", "student": student.model_dump(), "profile": student.model_dump()}
+
+@router.post("/onboard-unified")
+def onboard_unified(req: UnifiedOnboardRequest):
+    """
+    Requirement F1 & F2: Unified Onboarding with Input Range & Prerequisite Validation,
+    returning immediate brief field roadmap from verified knowledge base.
+    """
+    try:
+        res = onboarding_service.onboard_unified_student(
+            student_id=req.student_id,
+            name=req.name,
+            branch=req.branch,
+            current_semester=req.current_semester,
+            cgpa=req.cgpa,
+            field_of_interest=req.field_of_interest,
+            completed_course_ids=req.completed_course_ids,
+            backlogs=req.backlogs
+        )
+        return res
+    except ValueError as ve:
+        raise HTTPException(status_code=422, detail=str(ve))
 
 @router.get("/{student_id}/diagnostic/next")
 def next_diagnostic_question(student_id: str):

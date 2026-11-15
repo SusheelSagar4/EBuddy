@@ -147,3 +147,5 @@ id,course_id,semester_number,parity,track,offering_basis
 146,ML4L014,5,odd,A,inferred_from_semester_table
 147,ML4L015,5,odd,A,inferred_from_semester_table
 148,ML4D002,5,odd,A,inferred_from_semester_table
+149,CS4L005,6,even,ALL,inferred_from_semester_table
+150,CS4L005,5,odd,ALL,inferred_from_semester_table

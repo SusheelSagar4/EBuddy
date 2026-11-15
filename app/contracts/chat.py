@@ -5,6 +5,8 @@ from app.contracts.base import BaseContract
 
 class Intent(str, Enum):
     PLAN_QUERY = "plan_query"
+    PLAN_EDIT = "plan_edit"
+    WEEK_EXCEPTION = "week_exception"
     DOMAIN_CONCEPT = "domain_concept"
     GOAL_CHANGE = "goal_change"
     DIAGNOSTIC_REQUEST = "diagnostic_request"

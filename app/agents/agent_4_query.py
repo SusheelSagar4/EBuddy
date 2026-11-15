@@ -50,29 +50,76 @@ class QueryAdaptationAgent:
                 "disclaimer": context_card.disclaimer
             }
 
-        # 2. Workload / Exam Week Reduction Request -> Propose Schedule Adjustment
-        if any(kw in msg_lower for kw in ["exam", "mid-sem", "midsem", "busy", "reduce workload", "less time", "30 min", "1 hour", "no time", "hackathon", "competition"]):
-            intent = Intent.PLAN_QUERY
+        # Helper: Extract target week from query
+        target_wk = 1
+        import re
+        wk_match = re.search(r"week\s*(\d+)", msg_lower)
+        if wk_match:
+            target_wk = int(wk_match.group(1))
+        elif "next week" in msg_lower:
+            target_wk = 2
+        elif "this week" in msg_lower:
+            target_wk = 1
+
+        # 2a. Classes Cancelled / Free Time Increase -> Propose One-Week Capacity Increase (Requirement F4)
+        if any(kw in msg_lower for kw in ["cancelled", "canceled", "classes off", "no classes", "holiday", "free week", "more time", "extra time", "classes are cancelled"]):
+            intent = Intent.WEEK_EXCEPTION
+            proposal = ChangeProposal(
+                proposal_id=f"PROP_CAPACITY_{uuid.uuid4().hex[:8]}",
+                student_id=student_id,
+                proposer_agent="agent_4_query",
+                proposal_type="capacity_increase",
+                status="pending_student_approval",
+                reasoning=f"Student reported classes cancelled/free time for Week {target_wk} ('{message}').",
+                target_week=target_wk,
+                proposed_modifications={
+                    "hours_boost": 8.0,
+                    "target_week": target_wk,
+                    "scope": "one_week_exception",
+                    "action": "increase_field_topic_allocation"
+                },
+                impact_summary=f"Scoped one-week capacity increase (+8.0 free hours) for Week {target_wk} only, allowing extra field topics without affecting subsequent weeks.",
+                created_at=datetime.now(timezone.utc)
+            )
+            resp_text = (
+                f"Great news that your classes are cancelled for Week {target_wk}! "
+                f"I have prepared a **Capacity Increase Proposal** (+8.0 hours for Week {target_wk} only). "
+                "This allows you to complete more field topics this week, while subsequent weeks revert to your regular schedule.\n\n"
+                "👉 *Please review and approve the proposal above to apply this one-week schedule adjustment.*"
+            )
+            return {
+                "inferred_intent": intent.value,
+                "response": resp_text,
+                "proposal": proposal.model_dump(),
+                "disclaimer": context_card.disclaimer
+            }
+
+        # 2b. Workload / Exam Week Reduction Request -> Propose One-Week Workload Reduction (Requirement F4)
+        if any(kw in msg_lower for kw in ["exam", "mid-sem", "midsem", "busy", "reduce workload", "less time", "30 min", "1 hour", "no time", "hackathon", "competition", "quiz"]):
+            intent = Intent.WEEK_EXCEPTION
             proposal = ChangeProposal(
                 proposal_id=f"PROP_WORKLOAD_{uuid.uuid4().hex[:8]}",
                 student_id=student_id,
                 proposer_agent="agent_4_query",
                 proposal_type="workload_reduction",
                 status="pending_student_approval",
-                reasoning=f"Student requested workload reduction due to examination/time constraints ('{message}').",
-                target_week=context_card.current_semester,
+                reasoning=f"Student requested workload reduction for Week {target_wk} due to examination/time constraints ('{message}').",
+                target_week=target_wk,
                 proposed_modifications={
+                    "hours_reduction": 8.0,
+                    "target_week": target_wk,
+                    "scope": "one_week_exception",
                     "daily_hours_target": 0.5,
                     "action": "defer_heavy_assignments_to_buffer_week",
                     "mode": "light_revision"
                 },
-                impact_summary="Reduces daily study workload to 30 mins/day this week and defers heavy project milestones to the post-exam buffer week.",
+                impact_summary=f"Scoped one-week workload reduction (-8.0 hours) for Week {target_wk} only to protect CGPA during exams without affecting other weeks.",
                 created_at=datetime.now(timezone.utc)
             )
             resp_text = (
-                "I understand you have examinations/time constraints this week! "
-                "I have prepared a **Workload Reduction Proposal** to adjust your weekly schedule to 30 minutes of light review per day, "
-                "deferring major project exercises to your post-exam buffer period.\n\n"
+                f"I understand you have examinations/time constraints for Week {target_wk}! "
+                f"I have prepared a **Workload Reduction Proposal** (-8.0 hours for Week {target_wk} only) "
+                "to prioritize core course preparation and activate CGPA protection, deferring non-core milestones to the post-exam buffer period.\n\n"
                 "👉 *Please review the proposed adjustment above and confirm if you'd like me to apply this to your roadmap.*"
             )
             return {

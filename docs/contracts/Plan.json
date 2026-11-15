@@ -1,5 +1,54 @@
 {
   "$defs": {
+    "PlanDiff": {
+      "additionalProperties": false,
+      "properties": {
+        "previous_plan_id": {
+          "title": "Previous Plan Id",
+          "type": "string"
+        },
+        "new_plan_id": {
+          "title": "New Plan Id",
+          "type": "string"
+        },
+        "added_items": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Added Items",
+          "type": "array"
+        },
+        "removed_items": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PlanItem"
+          },
+          "title": "Removed Items",
+          "type": "array"
+        },
+        "modified_items": {
+          "default": [],
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Modified Items",
+          "type": "array"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "previous_plan_id",
+        "new_plan_id",
+        "summary"
+      ],
+      "title": "PlanDiff",
+      "type": "object"
+    },
     "PlanItem": {
       "additionalProperties": false,
       "properties": {
@@ -82,6 +131,30 @@
           "default": 0.0,
           "title": "Estimated Hours",
           "type": "number"
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase"
+        },
+        "prep_hours_weekly": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prep Hours Weekly"
         },
         "reason": {
           "$ref": "#/$defs/StructuredReason"
@@ -265,6 +338,42 @@
       },
       "title": "Optional Overload Proposals",
       "type": "array"
+    },
+    "plan_diff": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PlanDiff"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "what_changed_and_why": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "What Changed And Why"
+    },
+    "mismatch_warning": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mismatch Warning"
     },
     "is_active": {
       "default": true,

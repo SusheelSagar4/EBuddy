@@ -14,6 +14,7 @@ ProposalType = Literal[
     'resource_swap',
     'remediation_insertion',
     'workload_reduction',
+    'capacity_increase',
     'pace_change',
     'schedule_shift',
     'goal_pivot'

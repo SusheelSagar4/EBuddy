@@ -11,7 +11,7 @@ export function renderPlan(container, state, navigate) {
     return;
   }
 
-  let activeView = 'phases'; // 'phases', 'weekly', or 'semester'
+  let activeView = 'phases'; // 'phases', 'weekly', 'semester', or 'electives'
   let currentWeekNum = 1;
 
   container.innerHTML = `
@@ -44,6 +44,9 @@ export function renderPlan(container, state, navigate) {
       document.getElementById('btn-toggle-view').textContent = 'Switch to Semestral View';
     } else if (activeView === 'weekly') {
       activeView = 'semester';
+      document.getElementById('btn-toggle-view').textContent = 'Switch to Recommended Electives';
+    } else if (activeView === 'semester') {
+      activeView = 'electives';
       document.getElementById('btn-toggle-view').textContent = 'Switch to Phase-Wise Roadmap';
     } else {
       activeView = 'phases';
@@ -84,6 +87,8 @@ export function renderPlan(container, state, navigate) {
         renderWeeklyView(content, plan, weeklyData, validation);
       } else if (activeView === 'semester') {
         renderSemestralView(content, plan, validation);
+      } else if (activeView === 'electives') {
+        renderElectivesView(content);
       } else {
         renderPhaseView(content, plan, validation);
       }
@@ -345,5 +350,41 @@ export function renderPlan(container, state, navigate) {
         }).join('')}
       </div>
     `;
+  }
+
+  async function renderElectivesView(container) {
+    container.innerHTML = '<div class="loading-state">Evaluating course eligibility and self-study redundancy...</div>';
+    try {
+      const recData = await api.getRecommendedCourses(state.studentId);
+      const recs = recData.recommendations || [];
+      container.innerHTML = `
+        <div class="screen-header">
+          <h3>Course & Elective Recommendations</h3>
+          <p class="subtitle">Evaluated deterministically against institutional prerequisite rules, CGPA thresholds, and self-study velocity redundancy.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+          ${recs.map(r => `
+            <div style="border:1px solid ${r.is_recommended ? '#81c784' : '#e0e0e0'}; background:${r.is_recommended ? '#f1f8e9' : 'white'}; border-radius:8px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <h4 style="margin:0;">${r.course_id}: ${r.title}</h4>
+                <div style="display:flex; gap:6px;">
+                  ${(r.rule_badges || []).map(b => `
+                    <span class="badge ${b === 'RECOMMENDED' ? 'badge-success' : b === 'REDUNDANT' ? 'badge-warning' : b === 'INELIGIBLE' ? 'badge-error' : 'badge-neutral'}">${b}</span>
+                  `).join('')}
+                </div>
+              </div>
+              <div style="font-size:0.9em; color:#555; margin-bottom:6px;">
+                <strong>Credits:</strong> ${r.credits} | <strong>Semester Offered:</strong> ${r.semester_offered}
+              </div>
+              <div style="font-size:0.9em; color:${r.is_recommended ? '#2e7d32' : '#c62828'};">
+                ${r.why_recommended}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } catch (err) {
+      container.innerHTML = `<div class="alert alert-error">Failed to load electives: ${err.message}</div>`;
+    }
   }
 }

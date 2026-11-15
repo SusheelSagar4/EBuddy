@@ -102,6 +102,8 @@
     "Intent": {
       "enum": [
         "plan_query",
+        "plan_edit",
+        "week_exception",
         "domain_concept",
         "goal_change",
         "diagnostic_request",

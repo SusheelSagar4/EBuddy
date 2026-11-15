@@ -83,6 +83,30 @@
           "title": "Estimated Hours",
           "type": "number"
         },
+        "phase": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase"
+        },
+        "prep_hours_weekly": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prep Hours Weekly"
+        },
         "reason": {
           "$ref": "#/$defs/StructuredReason"
         }
