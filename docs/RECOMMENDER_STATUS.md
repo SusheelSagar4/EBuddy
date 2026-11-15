@@ -1,72 +1,93 @@
 # Course Recommender Status & Checklists
 
-Last Updated: 2026-11-15 (Resumed and verified in Phase G)
+Last Updated: 2026-11-15 (Phase G Enhancements Complete & Verified)
 
 ## 1. Feature Checklist
 
 ### DONE (Verified Green)
-- [x] **KB & Curriculum Loader (`app/recommender/kb.py`)**:
-  - `lru_cache` loaders for CSV seed tables (`course`, `course_offering`, `course_prerequisite`, `course_skill`, `skill`, `slot_option`, `resource`, `resource_course`) and `academic_rule.json`.
-  - Curriculum table parsing for EE and MME (`data/raw/ee/` and `data/raw/mme/`).
-  - MME slot-to-semester mapping (`MME_SLOT_SEMESTER_MAP`) mirrored from EE pattern.
-  - Branch detection (`slot_branch`) and semester resolution (`slot_semester`).
-  - Duplicate code resolver (`resolve_course_id`) handling MME `ML4L001`–`ML4L003` (`*_CORE` vs `*_ELEC`).
-  - Primary learning resource linkage (`get_primary_resource`).
-- [x] **Credit Math & Curriculum Parser (`app/recommender/credits.py`)**:
-  - Credit parsing with upper-bound extraction for slot options (e.g. `'3 / 4'` -> `4.0`), en-dash header totals (`'24/25'` -> `25.0`), and extra activity removal (`'22/23 + 1'` -> `23.0`).
-  - Course code extraction (`first_code`) skipping placeholders and descriptive text.
-  - Core course identification (`core_courses`) separating fixed core from slots (Lateral/Breadth/Elective).
-  - Credit limit determination (`credit_limit`):
-    - CGPA < 6.0: 18.0 probation cap (`RULE_SEM_CREDIT_CAP_PROBATION`)
-    - CGPA >= 8.5 with overload approval: 30.0 cap (`RULE_SEM_CREDIT_CAP_REGULAR`)
-    - Normal: `min(26.0, curriculum_total)` (`RULE_SEM_CREDIT_CAP_REGULAR`)
-- [x] **Keyword & Skill Retrieval Engine (`app/recommender/retrieval.py`)**:
+- [x] **Intent Determination & Topic Fallback (`app/recommender/retrieval.py` & `app/recommender/engine.py`)**:
   - Pure Python rule-based tokenizer, stopword filtering, and suffix stemming (`light_stem`).
-  - Goal expansion dictionary across 9 engineering domains (`GOAL_EXPANSION`).
-  - 70/30 weighted scoring: 70% skill name/domain/description match (weighted by `course_skill.weight`) + 30% title/syllabus/objectives text match.
-- [x] **Recommendation Engine Pipeline (`app/recommender/engine.py`)**:
-  - Intent prioritization: student query overrides profile goal; fallback to goal if query is omitted.
-  - Deterministic credit headroom: `limit - core_credits`.
-  - Completed courses detection (explicit list or inferred from preceding semesters).
-  - Slot option candidate extraction for branch and semester.
-  - Deterministic candidate validation & rejection:
-    - Already completed
-    - In student's avoid list
-    - Is placeholder (`is_placeholder=True`)
-    - Semester parity mismatch (`odd`/`even`)
-    - Missing required prerequisite(s)
-    - NaN credits or credits > remaining headroom
-  - Deterministic ranking: score descending, tie-break by `course_id` ascending.
-  - Primary learning resource attachment from NPTEL / seed resource mapping.
-- [x] **Explanation Generator & Hallucination Guard (`app/recommender/explain.py`)**:
-  - LiteLLM integration exclusively via `app.llm.client.llm_client`.
-  - Slim JSON payload with zero unnecessary data to prevent context bloat.
-  - Strict system prompt enforcing factual grounding.
-  - Deterministic template fallback on missing `LLM_MODEL`, timeouts, or call failures.
-  - Strict regex hallucination guard: replaces output if any uncited course code appears.
-- [x] **FastAPI API Router (`app/recommender/api.py`)**:
-  - `POST /recommend` endpoint registered in `app/main.py`.
-  - Pydantic models with validation (`RecommendRequest`, `RecommendResponse`).
-  - 400 Bad Request on invalid branch (only EE and MME supported) and semester (< 1 or > 8).
-- [x] **Architectural Boundaries (`tests/unit/test_import_boundaries.py`)**:
-  - `litellm` imported ONLY in `app/llm/client.py`.
-  - Zero forbidden cross-layer imports in `contracts`, `engine`, `kb`.
-- [x] **Air-gap & Offline Test Conformance**:
+  - Generic noise words (`system`, `systems`, `engineering`, `technology`, `design`, `analysis`, `introduction`, `advanced`) filtered from retrieval stoplist.
+  - Queries with no topic terms (e.g. *"what course should I take this semester"*) cleanly fall back to `intent.source = "profile_goal"`.
+  - Added `intent.query_had_topic: bool` (False for generic queries, True for topical queries).
+  - Expanded `GOAL_EXPANSION` across software, ai, machine learning, data science, vlsi, embedded, power, signal, material, research, gate.
+- [x] **Completed Courses & Backlog Handling (`app/recommender/engine.py`)**:
+  - `completed` = inferred core of all earlier semesters UNION explicit student `completed` list, MINUS optional request field `backlogs: list[str]`.
+  - Explicit list never disables inference; students only list un-cleared core courses in `backlogs`.
+  - Tested with EE Sem 7: `CS1L001` is inferred completed by default; adding `backlogs: ["CS1L001"]` correctly triggers prerequisite rejection for `CS4L003`.
+- [x] **Relevance Honesty & Match Thresholding (`app/recommender/engine.py`)**:
+  - `MIN_RELEVANCE = 0.2` constant enforced.
+  - `weak_match: bool` flagged when best score is below `0.20`.
+  - `no_direct_match: bool` flagged when best score is `0.0`.
+  - Explanation honestly communicates when no courses strongly match rather than falsely claiming relevance.
+- [x] **Multi-Slot Credit Budgeting (`app/recommender/credits.py` & `app/recommender/engine.py`)**:
+  - `open_slot_info()` parses slot definition rows (`Lateral`, `Breadth`, `Elective`) without concrete codes.
+  - Computes `open_slots`, `min_credits_needed`, `max_credits_needed`, and `slot_credit_status` (`"sufficient"`, `"tight"`, `"insufficient"`).
+  - Explicitly states slot headroom and warns when choices are tight (e.g. headroom 7 vs two 4-credit electives requiring 8).
+- [x] **Future Elective Options (`app/recommender/engine.py`)**:
+  - Computes `future_options`: top 3 goal-relevant courses from later semesters' slots for the same branch.
+  - Reports course code, title, credits, semester, relevance score, and missing prerequisites.
+  - Highlighted in explanation to aid academic roadmapping.
+- [x] **Template Formatting & Grammar (`app/recommender/explain.py`)**:
+  - Removed duplicate course code display (e.g. `**EE3L005** (EE3L005 ...)` -> `**EE3L005**: ...`).
+  - Removed duplicated provider tags (e.g. `(NPTEL) (NPTEL)` -> single reference).
+  - Fixed grammatical phrasing (`"eligible elective matching semester slot criteria"`).
+- [x] **LLM Visibility & Error Transparency (`app/recommender/explain.py` & `app/recommender/api.py`)**:
+  - Added `llm_used: bool` and `llm_error: Optional[str]` to `/recommend` response.
+  - Logs exceptions at `WARNING` without leaking sensitive secrets.
+  - Strict hallucination guard replaces uncited course codes with deterministic template fallback.
+- [x] **FastAPI Route & Contract (`app/recommender/api.py`)**:
+  - Registered in `app/main.py`.
+  - `RecommendRequest` includes `backlogs: List[str]`.
+  - `RecommendResponse` includes `answer`, `llm_used`, `llm_error`, `data`.
+  - Validates branch (`EE`, `MME`) and semester range (`1` to `8`).
+- [x] **Air-gap & Zero-Network Safety**:
   - `LITELLM_LOCAL_MODEL_COST_MAP=True` and `LITELLM_TELEMETRY=False` enforced at import time in `app/llm/client.py` and `tests/conftest.py`.
   - Autouse fixture in `tests/conftest.py` ensuring zero outbound network calls during tests.
+  - Architectural boundaries in `tests/unit/test_import_boundaries.py` pass 100%.
 
 ### PARTIAL
 - None.
 
 ### MISSING
-- None for the course recommender scope.
+- None.
 
 ### BROKEN
-- None. All 12 recommender tests, 4 boundary tests, 17 DB-free tests, and walking skeleton integration test pass green.
+- None. All 41 tests pass cleanly across the repository.
 
 ---
 
-## 2. Test Verification Summary
+## 2. Configuration & Where LLM Environment Variables Are Read
+
+### 1. `app/config.py` (Pydantic BaseSettings)
+- Class `Settings(BaseSettings)` reads configuration with `env_file=".env", env_file_encoding="utf-8"`.
+- Loading order / precedence:
+  1. **Shell Environment Variables** (highest precedence, e.g. `$env:LLM_MODEL = "openai/gpt-4o-mini"`).
+  2. **`.env` file in the project root** (`LLM_MODEL=openai/gpt-4o-mini`, `LLM_API_KEY=your_key_here`).
+  3. Default values declared in `Settings`.
+
+### 2. `app/llm/client.py` (LLM Client Gateway)
+- Reads dynamically on each call:
+  ```python
+  model = os.getenv("LLM_MODEL", self.model)
+  api_key = os.getenv("LLM_API_KEY", self.api_key or "")
+  api_base = os.getenv("LLM_API_BASE", self.api_base or "")
+  ```
+- To configure live LLM access:
+  - Add to `.env`:
+    ```ini
+    LLM_MODEL=openai/gpt-4o-mini
+    LLM_API_KEY=sk-...
+    ```
+  - Or set in PowerShell:
+    ```powershell
+    $env:LLM_MODEL = "openai/gpt-4o-mini"
+    $env:LLM_API_KEY = "sk-..."
+    ```
+
+---
+
+## 3. Test Verification Summary
 
 Command executed:
 ```powershell
@@ -74,76 +95,154 @@ python -m pytest tests/test_recommender.py tests/unit/test_import_boundaries.py 
 ```
 
 Output:
-```
-======================== 34 passed, 1 warning in 6.65s ========================
+```text
+======================= 41 passed, 1 warning in 11.01s ========================
 ```
 
 Key verified test suites:
-1. `tests/test_recommender.py::test_core_credits_plus_headroom_equals_limit_ee_and_mme` - PASSED
-2. `tests/test_recommender.py::test_no_recommendation_has_credits_exceeding_headroom` - PASSED
-3. `tests/test_recommender.py::test_credit_limit_probation_and_overload` - PASSED
-4. `tests/test_recommender.py::test_missing_prerequisite_blocks_recommendation` - PASSED
-5. `tests/test_recommender.py::test_empty_query_falls_back_to_profile_goal_and_query_overrides` - PASSED
-6. `tests/test_recommender.py::test_nonsense_query_returns_no_direct_match` - PASSED
-7. `tests/test_recommender.py::test_explain_fallback_when_llm_model_unset_or_fails` - PASSED
-8. `tests/test_recommender.py::test_hallucination_guard_replaces_hallucinated_codes` - PASSED
-9. `tests/test_recommender.py::test_mme_duplicate_codes_core_vs_elec_mapping` - PASSED
-10. `tests/test_recommender.py::test_api_recommend_endpoint_success` - PASSED
-11. `tests/test_recommender.py::test_api_recommend_endpoint_validation_errors` - PASSED
-12. `tests/test_recommender.py::test_deterministic_identical_output_for_same_input` - PASSED
-13. `tests/unit/test_import_boundaries.py` (4 tests) - PASSED
+- `tests/test_recommender.py`: 19 passed (determinism, credit limits, prerequisite checks, fallback templates, hallucination guard, MME duplicate codes, intent fallback, backlogs, relevance honesty, future options, multi-slot credits, template formatting, mocked LLM path, API validation & visibility).
+- `tests/unit/test_import_boundaries.py`: 4 passed (clean LiteLLM isolation, engine boundaries, KB boundaries, contracts isolation).
+- `tests/test_db_free.py`: 9 passed (env compliance, docker ignore, air-gap flags, seed data).
+- `tests/conformance/test_persona_conformance.py`: 8 passed (all 8 persona gates).
+- `tests/integration/test_walking_skeleton.py`: 1 passed (end-to-end walking skeleton).
 
 ---
 
-## 3. Assumptions and Known Seed Data Quirks
+## 4. Sanity Report
 
-1. **MME Slot-to-Semester Mapping Assumption**:
-   - `slot_option.csv` contains explicit semester numbers in EE slot IDs (e.g. `SLOT_SEM4_LATERAL_1`, `SLOT_SEM7_ELECTIVE_2`), but MME slot IDs do not (e.g. `MM_LATERAL_1..3`, `MM_ELECTIVE_1..5`).
-   - MME slots were mapped by structural analogy to EE:
-     - `MM_LATERAL_1` -> Semester 4
-     - `MM_LATERAL_2` -> Semester 5
-     - `MM_LATERAL_3` -> Semester 6
-     - `MM_ELECTIVE_1`, `MM_ELECTIVE_2` -> Semester 7
-     - `MM_ELECTIVE_3`, `MM_ELECTIVE_4`, `MM_ELECTIVE_5` -> Semester 8
-   - Commented and isolated in `app/recommender/kb.py:MME_SLOT_SEMESTER_MAP`.
-2. **MME Duplicate Course Codes (`ML4L001` - `ML4L003`)**:
-   - The same course codes are used in MME curriculum tables for both Semester VII core courses and elective options.
-   - `course.csv` disambiguates them using `ML4L001_CORE` and `ML4L001_ELEC` with `code_conflict=True`.
-   - `resolve_course_id` cleanly routes core row lookups to `*_CORE` and slot candidate lookups to `*_ELEC`.
-3. **Courses Without Skill Mappings**:
-   - `course_skill.csv` contains mappings for ~80 rows out of 136 courses. Courses without skill mapping fall back to the 30% title/syllabus/objectives keyword score, and if no keywords match, are eligible based on slot criteria with score 0.0 (`no_direct_match=True`).
-4. **Unsourced Academic Credit Rules**:
-   - `academic_rule.json` rules (`RULE_SEM_CREDIT_CAP_REGULAR`, `RULE_SEM_CREDIT_CAP_PROBATION`, etc.) are tagged with `status: "unsourced_baseline"` pending institutional senate confirmation.
-5. **Windows Sandbox Loopback Sockets**:
-   - On Windows in standard sandbox mode, outbound TCP connections to `127.0.0.1` are blocked by the OS sandbox policy, causing `starlette.testclient.TestClient` (which spawns an AnyIO blocking portal using asyncio's internal self-pipe `_fallback_socketpair`) to hang on `accept()`.
-   - Direct execution of route handlers with Pydantic request models (`get_recommendations(RecommendRequest(...))`) verifies the endpoint and error handling deterministically and rapidly without socket overhead.
+### Case 1: EE Semester 5
+- **Request**: Branch: `EE`, Semester: `5`, CGPA: `7.8`, Goal: `"Software engineering role"`, Query: `"what course should I take this semester"`
+- **Intent**: `source`: `"profile_goal"`, `query_had_topic`: `False`, terms: `['algorithm', 'artifici', 'cod', 'compu', 'data', 'database', 'develop', 'embedd', 'intelligence', 'machine', 'oop', 'programm', 'python', 'software', 'structur']`
+- **Budget**: Limit: `25.0`, Core Credits: `18.0`, Headroom: `7.0`, Open Slots: `2` (requires min `6.0` cr, max `7.0` cr), Status: `"sufficient"`
+- **Match Status**: `weak_match`: `True`, `no_direct_match`: `True` (all Sem 5 EE lateral options are power/circuits)
+- **Recommendations**:
+  1. `EE3L005`: Control System Technology (3.0 cr, score: 0.0)
+  2. `EE3L006`: Signals and Circuits (3.0 cr, score: 0.0)
+- **Future Options (Sem 7 Electives matching goal)**:
+  1. `CS6L001`: Computational Intelligence [Sem 7, 3.0 cr, score: 0.8]
+  2. `EC6L005`: Statistical Signal Processing [Sem 7, 3.0 cr, score: 0.4667] (Prerequisites needed: EC3L003)
+  3. `CS4L003`: Artificial Intelligence [Sem 7, 3.0 cr, score: 0.2]
+- **Generated Answer**:
+  ```text
+  Credit Summary: Your semester limit is 25.0 credits under RULE_SEM_CREDIT_CAP_REGULAR. Core courses require 18.0 credits, leaving 7.0 credits of headroom for 2 open slot(s) (requires at least 6.0 credits).
+
+  Note: No direct matches were found for your query. Here are the eligible elective courses for this semester:
+
+  - **EE3L005**: Control System Technology (3.0 cr) – eligible elective matching semester slot criteria. Resource: Control Engineering – Prof. M. Gopal, IIT Delhi (NPTEL).
+
+  - **EE3L006**: Signals and Circuits (3.0 cr) – eligible elective matching semester slot criteria. Resource: Networks, Signals and Systems – Prof. T.K. Basu, IIT Kharagpur (NPTEL).
+
+  Upcoming Electives in Later Semesters:
+
+  - **CS6L001**: Computational Intelligence [Sem 7, 3.0 cr]
+
+  - **EC6L005**: Statistical Signal Processing [Sem 7, 3.0 cr] (Prerequisites needed: EC3L003)
+
+  - **CS4L003**: Artificial Intelligence [Sem 7, 3.0 cr]
+
+  What specific topics or elective areas would you prefer to focus on?
+  ```
+
+### Case 2: EE Semester 7
+- **Request**: Branch: `EE`, Semester: `7`, CGPA: `8.0`, Goal: `"Software engineering role"`, Query: `"what course should I take this semester"`
+- **Intent**: `source`: `"profile_goal"`, `query_had_topic`: `False`
+- **Budget**: Limit: `19.0`, Core Credits: `12.0`, Headroom: `7.0`, Open Slots: `2` (requires min `6.0` cr, max `7.0` cr), Status: `"sufficient"`
+- **Match Status**: `weak_match`: `False`, `no_direct_match`: `False` (strong matches found)
+- **Recommendations**:
+  1. `CS6L001`: Computational Intelligence (3.0 cr, score: 0.8, skill: Machine Learning & Pattern Recognition)
+  2. `EC6L005`: Statistical Signal Processing (3.0 cr, score: 0.4667, skill: Embedded Systems & Real-Time Computing)
+  3. `CS4L003`: Artificial Intelligence (3.0 cr, score: 0.2, topics: artificial, intelligence)
+  4. `EC4L001`: Semiconductor Devices (3.0 cr, score: 0.0)
+  5. `EC4L002`: Opto-Electronics (3.0 cr, score: 0.0)
+- **Future Options (Sem 8 Electives)**:
+  1. `EC6L030`: Embedded Systems [Sem 8, 3.0 cr, score: 0.1]
+  2. `EC4L003`: VLSI Design [Sem 8, 3.0 cr, score: 0.0] (Prerequisites needed: EC4L001)
+  3. `EC6L015`: Biomedical Signal Processing [Sem 8, 3.0 cr, score: 0.0]
+- **Generated Answer**:
+  ```text
+  Credit Summary: Your semester limit is 19.0 credits under RULE_SEM_CREDIT_CAP_REGULAR. Core courses require 12.0 credits, leaving 7.0 credits of headroom for 2 open slot(s) (requires at least 6.0 credits).
+
+  Here are your recommended courses:
+
+  - **CS6L001**: Computational Intelligence (3.0 cr) – teaches Machine Learning & Pattern Recognition. Resource: Introduction to Soft Computing Live 1 – Prof. D. Samanta, IIT Kharagpur (NPTEL) – single video.
+
+  - **EC6L005**: Statistical Signal Processing (3.0 cr) – teaches Embedded Systems & Real-Time Computing. Resource: Statistical Signal Processing Lec 9 (NPTEL NOC20_EE53) – single video; its description links the full playlist.
+
+  - **CS4L003**: Artificial Intelligence (3.0 cr) – covers topics in artifici, intelligence. Resource: Artificial Intelligence – Prof. D. Khemani, IIT Madras (NPTEL).
+
+  - **EC4L001**: Semiconductor Devices (3.0 cr) – eligible elective matching semester slot criteria. Resource: Electron Devices – Prof. A.N. Chandorkar, IIT Bombay (NPTEL lectures).
+
+  - **EC4L002**: Opto-Electronics (3.0 cr) – eligible elective matching semester slot criteria. Resource: Advanced Optical Communication – Prof. R.K. Shevgaonkar, IIT Bombay (NPTEL).
+
+  Upcoming Electives in Later Semesters:
+
+  - **EC6L030**: Embedded Systems [Sem 8, 3.0 cr]
+
+  - **EC4L003**: VLSI Design [Sem 8, 3.0 cr] (Prerequisites needed: EC4L001)
+
+  - **EC6L015**: Biomedical Signal Processing [Sem 8, 3.0 cr]
+  ```
+
+### Case 3: MME Semester 6
+- **Request**: Branch: `MME`, Semester: `6`, CGPA: `7.5`, Goal: `"Materials research"`
+- **Budget**: Limit: `24.0`, Core Credits: `16.0`, Headroom: `8.0`, Open Slots: `2` (requires min `6.0` cr, max `8.0` cr), Status: `"sufficient"`
+- **Recommendations**:
+  1. `ML3L011`: Recent advances in composite materials (3.0 cr, score: 0.62, skill: Composites & Nanostructured Materials)
+  2. `ML2L006`: Advances in nanoscience and nanotechnology (3.0 cr, score: 0.42, skill: Composites & Nanostructured Materials)
+  3. `ML3L012`: Mineral processing plant design (3.0 cr, score: 0.21, skill: Mineral Processing & Extractive Metallurgy)
+- **Future Options (Sem 7 Electives)**:
+  1. `ML4L010`: Science and technology of composite materials [Sem 7, 3.0 cr, score: 0.6667]
+  2. `ML4L006`: Energy materials [Sem 7, 3.0 cr, score: 0.5667]
+  3. `ML4L004`: Powder metallurgy [Sem 7, 3.0 cr, score: 0.3333]
+- **Generated Answer**:
+  ```text
+  Credit Summary: Your semester limit is 24.0 credits under RULE_SEM_CREDIT_CAP_REGULAR. Core courses require 16.0 credits, leaving 8.0 credits of headroom for 2 open slot(s) (requires at least 6.0 credits).
+
+  Here are your recommended courses:
+
+  - **ML3L011**: Recent advances in composite materials (3.0 cr) – teaches Composites & Nanostructured Materials. Resource: NPTEL 'Metallurgy and Material Science' channel (browse by course name):.
+
+  - **ML2L006**: Advances in nanoscience and nanotechnology (3.0 cr) – teaches Composites & Nanostructured Materials. Resource: NPTEL 'Metallurgy and Material Science' channel (browse by course name):.
+
+  - **ML3L012**: Mineral processing plant design (3.0 cr) – teaches Mineral Processing & Extractive Metallurgy. Resource: NPTEL 'Metallurgy and Material Science' channel (browse by course name):.
+
+  Upcoming Electives in Later Semesters:
+
+  - **ML4L010**: Science and technology of composite materials [Sem 7, 3.0 cr]
+
+  - **ML4L006**: Energy materials [Sem 7, 3.0 cr]
+
+  - **ML4L004**: Powder metallurgy [Sem 7, 3.0 cr]
+  ```
 
 ---
 
-## 4. Run & Test Commands
+## 5. Commands to Run & Test
 
-### Run Automated Tests
+### Run Pytest Test Suite
 ```powershell
 python -m pytest tests/test_recommender.py tests/unit/test_import_boundaries.py -v
 ```
 
-### Start Development Server
+### Start Local Backend
 ```powershell
 uvicorn app.main:app --reload --port 8000
 ```
 
-### PowerShell API Test Request
+### PowerShell API Test Invocation
 ```powershell
 $body = @{
     branch = "EE"
-    semester = 5
-    cgpa = 7.8
+    semester = 7
+    cgpa = 8.0
     goal = "Software engineering role"
-    query = $null
+    query = "what course should I take this semester"
     completed = @("EE1L001")
     avoid = @()
+    backlogs = @()
     overload_approved = $false
 } | ConvertTo-Json
 
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/recommend" -Method Post -ContentType "application/json" -Body $body
+$response = Invoke-RestMethod -Uri "http://127.0.0.1:8000/recommend" -Method Post -ContentType "application/json" -Body $body
+$response | ConvertTo-Json -Depth 5
 ```

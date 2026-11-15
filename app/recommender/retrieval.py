@@ -13,15 +13,15 @@ from app.recommender.kb import get_courses, get_course_skills, get_skills
 
 # Common English stopwords and academic noise words to ignore
 STOPWORDS: Set[str] = {
-    "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are",
+    "a", "about", "above", "advanced", "after", "again", "against", "all", "am", "an", "analysis", "and", "any", "are",
     "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but",
-    "by", "course", "courses", "do", "does", "did", "doing", "down", "during", "each", "engineering",
+    "by", "course", "courses", "design", "did", "do", "does", "doing", "down", "during", "each", "engineering",
     "few", "for", "from", "further", "had", "has", "have", "having", "he", "her", "here", "hers",
-    "herself", "him", "himself", "his", "how", "i", "if", "in", "into", "is", "it", "its", "itself",
+    "herself", "him", "himself", "his", "how", "i", "if", "in", "into", "introduction", "is", "it", "its", "itself",
     "learn", "learning", "me", "more", "most", "my", "myself", "no", "nor", "not", "of", "off",
     "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own",
     "role", "same", "semester", "she", "should", "so", "some", "student", "study", "studying", "such",
-    "take", "taking", "than", "that", "the", "their", "theirs", "them", "themselves", "then",
+    "system", "systems", "take", "taking", "technology", "technologies", "than", "that", "the", "their", "theirs", "them", "themselves", "then",
     "there", "these", "they", "this", "those", "through", "to", "too", "under", "until", "up",
     "very", "want", "was", "we", "were", "what", "when", "where", "which", "while", "who", "whom",
     "why", "will", "with", "would", "you", "your", "yours", "yourself", "yourselves",
@@ -31,11 +31,20 @@ STOPWORDS: Set[str] = {
 GOAL_EXPANSION: Dict[str, List[str]] = {
     "software": [
         "software", "programming", "data structures", "algorithms", "database",
-        "embedded", "machine learning", "coding", "python", "oop", "systems"
+        "embedded", "machine learning", "coding", "python", "oop",
+        "artificial intelligence", "intelligence", "computing", "development"
+    ],
+    "ai": [
+        "artificial intelligence", "intelligence", "machine learning", "deep learning",
+        "pattern recognition", "neural networks", "heuristics", "reasoning", "agents"
+    ],
+    "machine learning": [
+        "machine learning", "deep learning", "neural networks", "pattern recognition",
+        "statistics", "data science", "classification", "clustering", "algorithms"
     ],
     "data science": [
         "data science", "machine learning", "pattern recognition", "statistics",
-        "probability", "artificial intelligence", "data mining", "algorithms"
+        "probability", "artificial intelligence", "data mining", "algorithms", "python"
     ],
     "vlsi": [
         "vlsi", "cmos", "semiconductor", "verilog", "digital logic", "circuit",
@@ -46,11 +55,11 @@ GOAL_EXPANSION: Dict[str, List[str]] = {
         "robotics", "interfacing", "firmware", "iot"
     ],
     "power": [
-        "power", "power systems", "power electronics", "grid", "electrical machines",
-        "energy", "high voltage", "converters", "drives", "transmission"
+        "power", "grid", "electrical machines", "energy", "high voltage",
+        "converters", "drives", "transmission", "renewable"
     ],
     "signal": [
-        "signal", "signals", "signal processing", "dsp", "linear systems",
+        "signal", "signals", "signal processing", "dsp", "linear",
         "filtering", "communication", "image processing"
     ],
     "material": [
@@ -58,12 +67,12 @@ GOAL_EXPANSION: Dict[str, List[str]] = {
         "ceramics", "polymers", "crystallography", "solidification", "composite"
     ],
     "research": [
-        "research", "higher studies", "thesis", "advanced", "modeling",
+        "research", "higher studies", "thesis", "modeling",
         "simulation", "experimental", "theory", "project"
     ],
     "gate": [
         "gate", "core", "theory", "fundamentals", "mathematics",
-        "machines", "power systems", "signals", "control"
+        "machines", "signals", "control"
     ],
 }
 

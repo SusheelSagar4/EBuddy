@@ -22,8 +22,9 @@ class RecommendRequest(BaseModel):
     cgpa: float = Field(..., ge=0.0, le=10.0, description="Current cumulative grade point average")
     goal: str = Field(default="", description="Career or learning goal from student profile")
     query: Optional[str] = Field(default=None, description="Optional current user query")
-    completed: List[str] = Field(default_factory=list, description="Courses already completed")
+    completed: List[str] = Field(default_factory=list, description="Courses explicitly completed by student")
     avoid: List[str] = Field(default_factory=list, description="Courses student prefers to avoid")
+    backlogs: List[str] = Field(default_factory=list, description="Courses with active backlog to exclude from completed")
     overload_approved: bool = Field(default=False, description="Whether FA approval for credit overload is granted")
 
 
@@ -31,6 +32,8 @@ class RecommendResponse(BaseModel):
     """Course recommendation response payload."""
 
     answer: str
+    llm_used: bool = Field(default=False, description="Whether an LLM was used to generate the explanation")
+    llm_error: Optional[str] = Field(default=None, description="Short reason if deterministic template fallback was used")
     data: Dict[str, Any]
 
 
@@ -62,10 +65,16 @@ def get_recommendations(req: RecommendRequest) -> RecommendResponse:
         "goal": req.goal,
         "completed": req.completed,
         "avoid": req.avoid,
+        "backlogs": req.backlogs,
         "overload_approved": req.overload_approved,
     }
 
     result = recommend(student=student_dict, query=req.query)
-    answer = explain(result=result, student=student_dict)
+    answer, llm_used, llm_error = explain(result=result, student=student_dict)
 
-    return RecommendResponse(answer=answer, data=result)
+    return RecommendResponse(
+        answer=answer,
+        llm_used=llm_used,
+        llm_error=llm_error,
+        data=result,
+    )

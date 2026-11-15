@@ -5,13 +5,14 @@ parity offering, eligibility, and keyword/skill relevance scoring.
 """
 
 import math
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import pandas as pd
 
 from app.recommender.credits import (
     core_courses,
     credit_limit,
+    open_slot_info,
     parse_credit,
     semester_credit_total,
 )
@@ -28,17 +29,21 @@ from app.recommender.kb import (
 )
 from app.recommender.retrieval import intent_terms, score_courses
 
+# Minimum relevance threshold for strong match
+MIN_RELEVANCE: float = 0.2
+
 
 def recommend(student: Dict[str, Any], query: Optional[str] = None, top_k: int = 5) -> Dict[str, Any]:
     """Recommend validated courses for a student in a specific branch and semester.
 
     Pipeline:
-    1. Determine intent: query text if present, else fallback to profile goal.
-    2. Compute credit limit, core credits, and headroom = limit - core_credits.
-    3. Determine completed courses (from student input, or inferred from earlier semesters).
+    1. Determine intent: query text if present and containing topical terms; fallback to profile goal.
+    2. Compute credit limit, core credits, headroom = limit - core_credits, and open slot budget.
+    3. Determine completed courses (inferred from earlier semesters union explicit, minus backlogs).
     4. Find candidate courses from slot options matching branch and semester.
     5. Deterministically filter and reject invalid candidates (prerequisites, parity, credits, avoid list).
     6. Score survivors and rank with stable sort (tie-break by course_id).
+    7. Retrieve future elective options from later semesters.
     """
     branch = str(student.get("branch", "EE")).strip().upper()
     semester = int(student.get("semester", 1))
@@ -46,21 +51,25 @@ def recommend(student: Dict[str, Any], query: Optional[str] = None, top_k: int =
     overload_approved = bool(student.get("overload_approved", False))
     profile_goal = str(student.get("goal", "") or "").strip()
 
-    # 1. Intent determination
+    # 1. Intent determination with fallback if query has no topic terms
     query_text = (query or "").strip()
-    if query_text:
+    query_terms = intent_terms(query_text) if query_text else []
+    query_had_topic = len(query_terms) > 0
+
+    if query_had_topic:
         intent_source = "query"
         intent_text = query_text
+        terms = query_terms
     elif profile_goal:
         intent_source = "profile_goal"
         intent_text = profile_goal
+        terms = intent_terms(profile_goal)
     else:
         intent_source = "none"
         intent_text = ""
+        terms = []
 
-    terms = intent_terms(intent_text)
-
-    # 2. Curriculum, core credits and headroom
+    # 2. Curriculum, core credits, headroom, and open slots
     curriculum_df = get_curriculum_table(branch)
     rules = get_academic_rules()
     sem_total = semester_credit_total(curriculum_df, semester)
@@ -70,26 +79,44 @@ def recommend(student: Dict[str, Any], query: Optional[str] = None, top_k: int =
     core_credits_sum = sum(c["credits"] for c in cores if not math.isnan(c["credits"]))
     headroom = round(limit - core_credits_sum, 2)
 
+    slot_info = open_slot_info(curriculum_df, semester)
+    open_slots = slot_info["open_slots"]
+    min_needed = slot_info["min_credits_needed"]
+    max_needed = slot_info["max_credits_needed"]
+
+    if open_slots == 0:
+        slot_credit_status = "none"
+    elif headroom < min_needed:
+        slot_credit_status = "insufficient"
+    elif headroom < max_needed:
+        slot_credit_status = "tight"
+    else:
+        slot_credit_status = "sufficient"
+
     credit_budget = {
         "limit": limit,
         "rule": rule_used,
         "core_credits": core_credits_sum,
         "headroom": headroom,
         "core_courses": [c["course_id"] for c in cores],
+        "open_slots": open_slots,
+        "min_credits_needed": min_needed,
+        "max_credits_needed": max_needed,
+        "slot_credit_status": slot_credit_status,
     }
 
-    # 3. Completed courses
-    student_completed = student.get("completed")
-    if student_completed is not None and len(student_completed) > 0:
-        completed: Set[str] = set(str(c).strip() for c in student_completed)
-    else:
-        completed = set()
-        for prev_sem in range(1, semester):
-            for c in core_courses(curriculum_df, prev_sem):
-                completed.add(c["course_id"])
-                if c.get("course_code"):
-                    completed.add(c["course_code"])
+    # 3. Completed courses: inferred from all earlier semesters UNION explicit list MINUS backlogs
+    inferred: Set[str] = set()
+    for prev_sem in range(1, semester):
+        for c in core_courses(curriculum_df, prev_sem):
+            inferred.add(c["course_id"])
+            if c.get("course_code"):
+                inferred.add(c["course_code"])
 
+    explicit: Set[str] = set(str(c).strip() for c in (student.get("completed") or []))
+    backlogs: Set[str] = set(str(b).strip() for b in (student.get("backlogs") or []))
+
+    completed = (inferred | explicit) - backlogs
     avoid_list: Set[str] = set(str(a).strip() for a in student.get("avoid", []))
 
     # 4. Candidates from slot options
@@ -154,7 +181,6 @@ def recommend(student: Dict[str, Any], query: Optional[str] = None, top_k: int =
         for _, pr_row in course_prs.iterrows():
             req_id = str(pr_row.get("prereq_id", "")).strip()
             if req_id and (req_id not in completed):
-                # Also check if req_id is a course_code whose course_id is completed
                 missing_prereqs.append(req_id)
 
         if missing_prereqs:
@@ -206,17 +232,80 @@ def recommend(student: Dict[str, Any], query: Optional[str] = None, top_k: int =
 
     recommendations = survivor_items[:top_k]
 
-    # Flag no direct match if top recommendations all have zero score
+    best_score = recommendations[0]["score"] if recommendations else 0.0
     no_direct_match = len(recommendations) == 0 or all(r["score"] == 0.0 for r in recommendations)
+    weak_match = len(recommendations) == 0 or best_score < MIN_RELEVANCE
+
+    # 7. Future options from later semesters' slots
+    future_slot_candidates: List[Tuple[str, int]] = []
+    for _, row in slot_df.iterrows():
+        s_id = str(row.get("slot_id", "") or "").strip()
+        s_b = slot_branch(s_id)
+        s_sem = slot_semester(s_id)
+        if s_b == branch and s_sem is not None and s_sem > semester:
+            cid = str(row.get("course_id", "") or "").strip()
+            if cid:
+                future_slot_candidates.append((cid, s_sem))
+
+    future_cids_map: Dict[str, int] = {}
+    for cid, s_sem in future_slot_candidates:
+        if cid not in future_cids_map or s_sem < future_cids_map[cid]:
+            future_cids_map[cid] = s_sem
+
+    future_valid_cids: List[str] = []
+    for cid in future_cids_map:
+        c_info = course_map.get(cid)
+        code = str(c_info.get("course_code", cid)) if c_info is not None else cid
+        if cid in completed or code in completed or cid in avoid_list or code in avoid_list:
+            continue
+        if c_info is not None and bool(c_info.get("is_placeholder", False)):
+            continue
+        future_valid_cids.append(cid)
+
+    future_scored = score_courses(future_valid_cids, terms)
+    future_items: List[Dict[str, Any]] = []
+    for cid in future_valid_cids:
+        c_row = course_map.get(cid)
+        sc = future_scored.get(cid, {"score": 0.0, "matched_skills": [], "matched_terms": []})
+        c_credits = parse_credit(c_row.get("credits")) if c_row is not None else 3.0
+        c_code = str(c_row.get("display_code", "") or c_row.get("course_code", cid)) if c_row is not None else cid
+        c_title = str(c_row.get("title", "") or "") if c_row is not None else cid
+
+        # Find missing prerequisites against current student completed
+        course_prs = prereqs_df[(prereqs_df["course_id"] == cid) & (prereqs_df["relation"].str.lower() == "required")]
+        missing_pr = [
+            str(r.get("prereq_id", "")).strip()
+            for _, r in course_prs.iterrows()
+            if str(r.get("prereq_id", "")).strip() and str(r.get("prereq_id", "")).strip() not in completed
+        ]
+
+        future_items.append({
+            "course_id": cid,
+            "course_code": c_code,
+            "title": c_title,
+            "credits": c_credits,
+            "semester": future_cids_map[cid],
+            "score": sc["score"],
+            "matched_skills": sc["matched_skills"],
+            "matched_terms": sc["matched_terms"],
+            "missing_prerequisites": sorted(set(missing_pr)),
+        })
+
+    # Sort: score descending, then semester ascending, then course_id ascending
+    future_items.sort(key=lambda x: (-x["score"], x["semester"], x["course_id"]))
+    future_options = future_items[:3]
 
     return {
         "intent": {
             "source": intent_source,
             "text": intent_text,
             "terms": terms,
+            "query_had_topic": query_had_topic,
         },
         "credit_budget": credit_budget,
         "no_direct_match": no_direct_match,
+        "weak_match": weak_match,
         "recommendations": recommendations,
         "rejected": rejected,
+        "future_options": future_options,
     }

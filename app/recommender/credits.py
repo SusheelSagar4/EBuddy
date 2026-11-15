@@ -189,3 +189,44 @@ def credit_limit(
         return overload_cap, "RULE_SEM_CREDIT_CAP_REGULAR"
 
     return min(regular_cap, float(curriculum_total)), "RULE_SEM_CREDIT_CAP_REGULAR"
+
+
+def open_slot_info(curriculum_df: pd.DataFrame, sem: int) -> Dict[str, Any]:
+    """Calculate the number of open slots and the min/max credit budget needed for the semester.
+
+    Identifies slot definition rows (Lateral, Breadth, Elective) where no concrete course code
+    is assigned. Returns dict with open_slots count, min_credits_needed, and max_credits_needed.
+    """
+    if sem in [1, 2] and len(curriculum_df[curriculum_df["Semester"].astype(str).str.contains("Sem I", na=False)]) == 0:
+        curriculum_df = get_curriculum_table("EE")
+
+    slots: List[Dict[str, Any]] = []
+    for _, row in curriculum_df.iterrows():
+        row_sem = _extract_sem_number(row.get("Semester"))
+        if row_sem != sem:
+            continue
+
+        ct = str(row.get("Course Type", "") or "").strip()
+        code = first_code(row.get("Course Code"))
+        if ct.startswith(("Lateral", "Breadth", "Elective")) and not code:
+            c_text = str(row.get("Credits", "") or "").split("+")[0]
+            nums = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", c_text)]
+            min_c = min(nums) if nums else 3.0
+            max_c = max(nums) if nums else 3.0
+            slots.append({
+                "name": str(row.get("Course Name", "") or "").strip(),
+                "type": ct,
+                "min_credits": min_c,
+                "max_credits": max_c,
+            })
+
+    open_slots = len(slots)
+    min_needed = sum(s["min_credits"] for s in slots)
+    max_needed = sum(s["max_credits"] for s in slots)
+
+    return {
+        "open_slots": open_slots,
+        "min_credits_needed": min_needed,
+        "max_credits_needed": max_needed,
+        "slots": slots,
+    }
