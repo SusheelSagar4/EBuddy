@@ -1,0 +1,7 @@
+id,title,url,provider,type,exam_ids,free
+MBA-R01,CAT official website,https://iimcat.ac.in,IIMs,Official site,MBA-EX-CAT,TRUE
+MBA-R02,XAT official website,https://xatonline.in,XLRI,Official site,MBA-EX-XAT,TRUE
+MBA-R03,SNAP official website,https://www.snaptest.org,Symbiosis,Official site,MBA-EX-SNAP,TRUE
+MBA-R04,GMAT exam structure,https://www.mba.com/exams/gmat-exam/about/exam-structure,GMAC,Official page,MBA-EX-GMAT,TRUE
+MBA-R05,GMAT Focus score scale,https://www.mba.com/exams-and-exam-prep/gmat-exam/gmat-focus-evolving-score-scale/amp,GMAC,Official page,MBA-EX-GMAT,TRUE
+MBA-R06,Statistics and Probability,https://www.khanacademy.org/math/statistics-probability,Khan Academy,Video course,MBA-EX-CAT;MBA-EX-GMAT,TRUE

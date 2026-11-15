@@ -1,0 +1,13 @@
+id,department,name,kind,typical_timing,related_exam_id,source_url
+IND_EE_GATE_01,EE,GATE Electrical Engineering - Engineering Mathematics & Circuit Phase,exam,Sem 5 (Aug-Oct),EXAM_GATE_EE,https://gate2026.iitr.ac.in
+IND_EE_GATE_02,EE,GATE Electrical Engineering - Core Machines & Power Systems Phase,exam,Sem 6 (Jan-Feb),EXAM_GATE_EE,https://gate2026.iitr.ac.in
+IND_EE_TOOL_01,EE,MATLAB/Simulink Power System Simulation Proficiency,tool_skill,Sem 4-5,,https://mathworks.com/simulink
+IND_EE_TOOL_02,EE,ETAP / PSCAD Power Grid Dynamic Simulation,tool_skill,Sem 6,,https://etap.com
+IND_EE_CLUB_01,EE,Formula Student Electric / Robotics Club EV Powertrain Design,club,Sem 3-6,,https://iitbbs.ac.in/technical-clubs
+IND_EE_INTERN_01,EE,"Core Utility & PSU Summer Internship Application (PowerGrid, NTPC, BHEL)",internship,Sem 6 (Summer),,https://powergrid.in/careers
+IND_MM_GATE_01,MM,GATE Metallurgical Engineering - Thermodynamics & Physical Metallurgy Phase,exam,Sem 5 (Aug-Oct),EXAM_GATE_MT,https://gate2026.iitr.ac.in
+IND_MM_GATE_02,MM,"GATE Metallurgical Engineering - Ironmaking, Steelmaking & Extractive Metallurgy Phase",exam,Sem 6 (Jan-Feb),EXAM_GATE_MT,https://gate2026.iitr.ac.in
+IND_MM_TOOL_01,MM,Thermo-Calc / FactSage Computational Thermodynamics Phase Equilibria,tool_skill,Sem 5,,https://thermocalc.com
+IND_MM_TOOL_02,MM,ANSYS Fluent / ProCAST Casting & Solidification Modeling,tool_skill,Sem 6,,https://ansys.com/materials
+IND_MM_CLUB_01,MM,Materials Advantage / IIM Student Chapter Technical Activities,club,Sem 4-6,,https://iim-online.net
+IND_MM_INTERN_01,MM,"Integrated Steel Plant Summer Internship (Tata Steel, JSW, SAIL)",internship,Sem 6 (Summer),,https://tatasteel.com/careers

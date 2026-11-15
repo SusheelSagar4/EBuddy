@@ -1,0 +1,12 @@
+persona_id: "mme_materials_core"
+goal_id: "GOAL_MM_ADVANCED_MATERIALS"
+description: "Undergraduate Metallurgical and Materials Engineering (SMMME) student aiming for core metallurgy, physical metallurgy, materials characterization, alloy design, and industrial R&D roles (Tata Steel, SAIL, JSW, DRDO, DMRL)."
+applicable_programmes:
+  - "BTECH_MM"
+target_semester_range: [3, 8]
+eligibility_notes: "Open to B.Tech MME students in regular academic standing at IIT Bhubaneswar."
+planner_weights:
+  cgpa_protection: 0.65
+  skill_acceleration: 0.85
+  workload_smoothing: 0.70
+status: "verified"

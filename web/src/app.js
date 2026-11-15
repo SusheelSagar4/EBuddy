@@ -6,6 +6,7 @@ import { renderProgress } from './screens/progress.js';
 import { renderChat } from './screens/chat.js';
 import { renderAdapt } from './screens/adapt.js';
 import { renderAdmin } from './screens/admin.js';
+import { renderMBA } from './screens/mba.js';
 
 // Application global state
 const state = {
@@ -18,6 +19,7 @@ const routes = {
   '#onboard': { title: 'Onboarding', render: renderOnboarding },
   '#diagnostic': { title: 'Diagnostic', render: renderDiagnostic },
   '#plan': { title: 'Academic Plan', render: renderPlan },
+  '#mba': { title: 'Core to MBA (Career & Prep)', render: renderMBA },
   '#learn': { title: 'Learn & Practise', render: renderLearn },
   '#progress': { title: 'Mastery Progress', render: renderProgress },
   '#chat': { title: 'Buddy Chat', render: renderChat },

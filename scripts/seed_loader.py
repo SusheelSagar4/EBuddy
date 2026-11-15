@@ -10,10 +10,18 @@ import csv
 import json
 import argparse
 from typing import Dict, Any, List
-import psycopg
-from dotenv import load_dotenv
+try:
+    import psycopg
+except ImportError:
+    psycopg = None
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    env_file = os.path.join(os.path.dirname(__file__), "..", ".env")
+    if os.path.exists(env_file):
+        load_dotenv(dotenv_path=env_file)
+except Exception:
+    pass
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy")
 LOCAL_DATABASE_URL = os.getenv("LOCAL_DATABASE_URL", "postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy")
@@ -54,6 +62,55 @@ def reset_database(conn):
         conn.commit()
     print("Schemas and tables successfully recreated.")
 
+def validate_integrity_rules(file_path: str, headers: List[str], rows: List[List[str]]) -> None:
+    """
+    Enforces PS Data Integrity Rules (§3):
+    1. verified can be TRUE only when verified_by holds a non-empty name and source_type = official.
+    2. Rejects files that mix SAMPLE- rows with non-SAMPLE rows.
+    """
+    fname = os.path.basename(file_path)
+    if not rows:
+        return
+
+    sample_prefix = "SAMPLE-"
+    has_sample = False
+    has_real = False
+
+    header_indices = {h.strip().lower(): idx for idx, h in enumerate(headers)}
+    v_idx = header_indices.get("verified")
+    vby_idx = header_indices.get("verified_by")
+    stype_idx = header_indices.get("source_type")
+
+    for r_num, row in enumerate(rows, start=2):
+        is_sample_row = any(str(cell).startswith(sample_prefix) for cell in row)
+        if is_sample_row:
+            has_sample = True
+        else:
+            has_real = True
+
+        if has_sample and has_real:
+            raise ValueError(
+                f"[DATA INTEGRITY VIOLATION] File '{fname}' mixes SAMPLE- rows with real verified rows at line {r_num}! "
+                f"PS Rule: The import script must refuse to load a file that mixes SAMPLE- rows with real rows."
+            )
+
+        if v_idx is not None and v_idx < len(row):
+            val_v = str(row[v_idx]).strip().lower()
+            if val_v in ["true", "t", "1"]:
+                verified_by = str(row[vby_idx]).strip() if (vby_idx is not None and vby_idx < len(row)) else ""
+                source_type = str(row[stype_idx]).strip().lower() if (stype_idx is not None and stype_idx < len(row)) else ""
+
+                if not verified_by:
+                    raise ValueError(
+                        f"[DATA INTEGRITY VIOLATION] File '{fname}' line {r_num} has verified=TRUE without verified_by! "
+                        f"PS Rule: verified can be TRUE only when verified_by holds a person's name."
+                    )
+                if source_type != "official":
+                    raise ValueError(
+                        f"[DATA INTEGRITY VIOLATION] File '{fname}' line {r_num} has verified=TRUE with non-official source_type='{source_type}'! "
+                        f"PS Rule: verified can be TRUE only when source_type = official."
+                    )
+
 def load_csv(conn, file_path: str, table_name: str) -> int:
     if not os.path.exists(file_path):
         return 0
@@ -68,6 +125,9 @@ def load_csv(conn, file_path: str, table_name: str) -> int:
         rows = list(reader)
         if not rows:
             return 0
+
+        # Validate PS Integrity rules before inserting into database
+        validate_integrity_rules(file_path, headers, rows)
 
         placeholders = ", ".join(["%s"] * len(headers))
         cols = ", ".join(headers)
@@ -187,6 +247,17 @@ def load_all_seeds(conn):
         (load_csv, os.path.join(seed_kb, "keyword_skill.csv"), "kb.keyword_skill"),
         (load_csv, os.path.join(seed_kb, "data_issue.csv"), "kb.data_issue"),
 
+        # Core to Core feature tables (Section 5 & 6)
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "academic_calendar.csv"), "kb.academic_calendar"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "area_skills.csv"), "kb.area_skill"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "faculty_areas.csv"), "kb.faculty_area"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "papers.csv"), "kb.paper"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "paper_authors.csv"), "kb.paper_author"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "paper_chunks.csv"), "kb.paper_chunk"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "paper_skills.csv"), "kb.paper_skill"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "taster_tasks.csv"), "kb.taster_task"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "industry_milestones.csv"), "kb.industry_milestone"),
+
         # Student data
         (load_csv, os.path.join(seed_student, "student.csv"), "student.student"),
         (load_csv, os.path.join(seed_student, "completed_course.csv"), "student.completed_course"),
@@ -195,7 +266,35 @@ def load_all_seeds(conn):
         (load_csv, os.path.join(seed_student, "skill_evidence.csv"), "student.skill_evidence"),
         (load_csv, os.path.join(seed_student, "skill_state.csv"), "student.skill_state"),
         (load_csv, os.path.join(seed_student, "constraint.csv"), "student.constraint"),
-        (load_csv, os.path.join(seed_student, "preference.csv"), "student.preference")
+        (load_csv, os.path.join(seed_student, "preference.csv"), "student.preference"),
+
+        # General MBA Track tables (/data/seed/mba/)
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_routes.csv"), "kb.mba_route"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_exams.csv"), "kb.mba_exam"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_exam_cycles.csv"), "kb.mba_exam_cycle"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_exam_sections.csv"), "kb.mba_exam_section"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_syllabus_topics.csv"), "kb.mba_syllabus_topic"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_institutions.csv"), "kb.mba_institution"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_programmes.csv"), "kb.mba_programme"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_admission_stats.csv"), "kb.mba_admission_stat"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_milestones.csv"), "kb.mba_milestone"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_prep_templates.csv"), "kb.mba_prep_template"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_template_phases.csv"), "kb.mba_template_phase"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_practice_items.csv"), "kb.mba_practice_item"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_interview_questions.csv"), "kb.mba_interview_question"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_interview_rubric.csv"), "kb.mba_interview_rubric"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_application_checklist_items.csv"), "kb.mba_application_checklist_item"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_learning_methods.csv"), "kb.mba_learning_method"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba", "mba_resources.csv"), "kb.mba_resource"),
+
+        # Core to MBA tables (/data/seed/core_to_mba/)
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba", "career_paths.csv"), "kb.career_path"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba", "branch_pi_topics.csv"), "kb.branch_pi_topic"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba", "branch_pi_questions.csv"), "kb.branch_pi_question"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba", "profile_audit_rubric.csv"), "kb.profile_audit_rubric"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba", "profile_actions.csv"), "kb.profile_action"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba", "story_drafts.csv"), "student.story_draft"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba", "decision_options.csv"), "student.decision_option")
     ]
 
     total_loaded = 0
@@ -226,7 +325,10 @@ def load_all_seeds(conn):
         "kb.resource", "kb.resource_course", "kb.goal",
         "kb.mastery_criteria", "kb.research_area", "kb.faculty",
         "kb.research_project", "kb.consultancy_engagement", "kb.publication",
-        "kb.project_faculty", "kb.project_keyword", "kb.data_issue"
+        "kb.project_faculty", "kb.project_keyword", "kb.data_issue",
+        "kb.academic_calendar", "kb.area_skill", "kb.faculty_area",
+        "kb.paper", "kb.paper_author", "kb.paper_chunk", "kb.paper_skill",
+        "kb.taster_task", "kb.industry_milestone"
     ]
     with conn.cursor() as cur:
         for t in verified_tables:
@@ -238,10 +340,150 @@ def load_all_seeds(conn):
                 print(f"  {t:35s}: Error checking count: {e}")
     return total_loaded
 
+def generate_mba_data_quality_report(report_path: str = "docs/core_to_mba_data_quality_report.md") -> str:
+    """
+    Generates Data Quality and Integrity Audit Report for MBA and Core to MBA datasets (§3).
+    Audits:
+    - foreign key integrity
+    - missing required fields
+    - unreviewed items used in scored diagnostics (strictly flagged)
+    - conflicting values across sources
+    - counts by institution type, exam sections, and branch career paths
+    """
+    mba_seed_dir = os.path.join(os.path.dirname(__file__), "..", "data", "seed", "mba")
+    c2m_seed_dir = os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_mba")
+    report_lines = [
+        "# Core to MBA Seed Data Quality & Integrity Report",
+        "",
+        f"*Generated automatically from `{mba_seed_dir}` and `{c2m_seed_dir}`.*",
+        "",
+        "## 1. Executive Summary",
+        ""
+    ]
+
+    issues = []
+
+    # 1. Institutions & Programmes
+    inst_file = os.path.join(mba_seed_dir, "mba_institutions.csv")
+    prog_file = os.path.join(mba_seed_dir, "mba_programmes.csv")
+    stat_file = os.path.join(mba_seed_dir, "mba_admission_stats.csv")
+    cycle_file = os.path.join(mba_seed_dir, "mba_exam_cycles.csv")
+    items_file = os.path.join(mba_seed_dir, "mba_practice_items.csv")
+    career_file = os.path.join(c2m_seed_dir, "career_paths.csv")
+
+    institutions = {}
+    inst_types = {}
+    if os.path.exists(inst_file):
+        with open(inst_file, "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                institutions[r["id"]] = r
+                itype = r.get("type", "Unknown")
+                inst_types[itype] = inst_types.get(itype, 0) + 1
+
+    programmes = {}
+    if os.path.exists(prog_file):
+        with open(prog_file, "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                pid = r["id"]
+                programmes[pid] = r
+                iid = r.get("institution_id")
+                if iid not in institutions:
+                    issues.append(f"Foreign Key Error: Programme `{pid}` references unknown institution `{iid}`.")
+                if not r.get("exams_accepted"):
+                    issues.append(f"Programme without accepted exams: `{pid}`.")
+                if not r.get("application_deadline"):
+                    issues.append(f"Programme without deadline: `{pid}`.")
+
+    # 2. Exam Cycles
+    cycle_count = 0
+    if os.path.exists(cycle_file):
+        with open(cycle_file, "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                cycle_count += 1
+                cid = r.get("exam_id")
+                if not r.get("exam_dates") or not r.get("source_url"):
+                    issues.append(f"Exam cycle `{cid}` missing dates or source URL.")
+
+    # 3. Admission Stats
+    stat_count = 0
+    if os.path.exists(stat_file):
+        with open(stat_file, "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                stat_count += 1
+                sid = r.get("programme_id")
+                if sid not in programmes:
+                    issues.append(f"Foreign Key Error: AdmissionStat references unknown programme `{sid}`.")
+                if not r.get("year") or not r.get("category") or not r.get("cutoff_value"):
+                    issues.append(f"Cut-off row for `{sid}` missing year, category or cutoff.")
+
+    # 4. Practice Items Audit (Unreviewed check)
+    section_counts = {}
+    unreviewed_items = 0
+    if os.path.exists(items_file):
+        with open(items_file, "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                sec = r.get("section", "Unknown")
+                section_counts[sec] = section_counts.get(sec, 0) + 1
+                is_reviewed = str(r.get("reviewed", "FALSE")).lower() == "true"
+                if not is_reviewed:
+                    unreviewed_items += 1
+
+    if unreviewed_items > 0:
+        issues.append(f"Data Integrity Error: {unreviewed_items} practice items are unreviewed! Unreviewed items cannot be used in scored diagnostics.")
+
+    # 5. Career Paths
+    career_counts = {"EE": 0, "MM": 0, "any": 0}
+    if os.path.exists(career_file):
+        with open(career_file, "r", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                br = r.get("branch", "any")
+                career_counts[br] = career_counts.get(br, 0) + 1
+
+    report_lines.append(f"- **Total B-Schools / Institutions Cataloged:** {len(institutions)}")
+    report_lines.append(f"- **Total Management Programmes:** {len(programmes)}")
+    report_lines.append(f"- **Total Admission Cut-off Stats:** {stat_count}")
+    report_lines.append(f"- **Total Practice Items Audited:** {sum(section_counts.values())}")
+    report_lines.append(f"- **Unreviewed Items Count:** {unreviewed_items} (Strictly 0 allowed in scored diagnostic)")
+    report_lines.append(f"- **Data Integrity Issues Found:** {len(issues)}")
+    report_lines.append("")
+    report_lines.append("## 2. Counts by Institution Type")
+    report_lines.append("")
+    for itype, count in sorted(inst_types.items()):
+        report_lines.append(f"- **{itype}:** {count}")
+    report_lines.append("")
+    report_lines.append("## 3. Practice Items by Section")
+    report_lines.append("")
+    for sec, count in sorted(section_counts.items()):
+        report_lines.append(f"- **{sec}:** {count} items")
+    report_lines.append("")
+    report_lines.append("## 4. Career Paths by Core Branch")
+    report_lines.append("")
+    for br, count in sorted(career_counts.items()):
+        report_lines.append(f"- **{br.upper()} Aligned Management Paths:** {count}")
+    report_lines.append("")
+    report_lines.append("## 5. Integrity Audit & Validation Log")
+    report_lines.append("")
+    if not issues:
+        report_lines.append("✅ **Zero Data Integrity Issues:** All foreign keys, required fields, and cycle dates passed validation.")
+    else:
+        for iss in issues:
+            report_lines.append(f"- ⚠️ {iss}")
+
+    report_text = "\n".join(report_lines) + "\n"
+    full_path = os.path.join(os.path.dirname(__file__), "..", report_path)
+    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+    with open(full_path, "w", encoding="utf-8") as f:
+        f.write(report_text)
+    print(f"Data quality report successfully written to {report_path} (Issues: {len(issues)}).")
+    return report_text
+
 def main():
     parser = argparse.ArgumentParser(description="Load seed CSV/JSON files into PostgreSQL database.")
     parser.add_argument("--reset", action="store_true", help="Drop and recreate schemas before loading seeds.")
     args = parser.parse_args()
+
+    # Always generate data quality report on run
+    generate_mba_data_quality_report()
 
     conn = get_connection()
     if not conn:

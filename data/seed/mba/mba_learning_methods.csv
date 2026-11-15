@@ -1,0 +1,9 @@
+id,name,when_to_use,how
+MBA-L1,Daily reading,VARC and GK,Read long-form articles and editorials for 30 to 45 minutes daily; write a one-line summary of each
+MBA-L2,Mock analysis,After every full mock,Spend at least as long reviewing as taking the mock; review every wrong and every skipped question
+MBA-L3,Error log,After every test,"Tag each mistake by topic and type (concept, calculation, reading, time); the next week targets the top 3 tags"
+MBA-L4,Selective attempting,DILR and QA in mocks,Scan all sets first; attempt the most doable ones; accuracy before attempts
+MBA-L5,Sectional timing practice,Building and mock phases,Practise each section in its fixed time to build pacing
+MBA-L6,Spaced formula review,Arithmetic and algebra formulas,"Review on day 1, 3, 7 and 21 after learning"
+MBA-L7,Mock interviews with feedback,Personal interview preparation,Record answers; score against the interview rubric; redo weak answers
+MBA-L8,Semester-aware load,Always,"Lighter preparation in mid-sem and end-sem weeks, heavier in breaks"

@@ -640,3 +640,547 @@ DROP TRIGGER IF EXISTS trg_kb_academic_rule ON kb.academic_rule;
 CREATE TRIGGER trg_kb_academic_rule
 AFTER INSERT OR UPDATE OR DELETE ON kb.academic_rule
 FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+-- =============================================================================
+-- CORE TO CORE SCHEMA EXTENSIONS (Section 5)
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS kb.academic_calendar (
+    id SERIAL PRIMARY KEY,
+    semester VARCHAR(20) NOT NULL,
+    week_number INT NOT NULL,
+    week_start DATE NOT NULL,
+    week_type VARCHAR(50) NOT NULL, -- teaching, midsem, endsem, break, holiday
+    calendar_factor NUMERIC(3, 2) NOT NULL DEFAULT 1.0,
+    source_url TEXT,
+    verified BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS student.student_enrollment (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    course_code VARCHAR(50) NOT NULL,
+    semester INT NOT NULL,
+    status VARCHAR(20) NOT NULL, -- current, completed
+    grade VARCHAR(5),
+    grade_source VARCHAR(50) DEFAULT 'institute_transcript'
+);
+
+CREATE TABLE IF NOT EXISTS kb.area_skill (
+    area_id VARCHAR(50) REFERENCES kb.research_area(area_id) ON DELETE CASCADE,
+    skill_id VARCHAR(100) REFERENCES kb.skill(skill_id) ON DELETE CASCADE,
+    required_level NUMERIC(5, 2) NOT NULL,
+    PRIMARY KEY (area_id, skill_id)
+);
+
+CREATE TABLE IF NOT EXISTS kb.faculty_area (
+    faculty_id VARCHAR(100) REFERENCES kb.faculty(faculty_id) ON DELETE CASCADE,
+    area_id VARCHAR(50) REFERENCES kb.research_area(area_id) ON DELETE CASCADE,
+    weight NUMERIC(3, 2) DEFAULT 1.0,
+    PRIMARY KEY (faculty_id, area_id)
+);
+
+CREATE TABLE IF NOT EXISTS kb.paper (
+    paper_id VARCHAR(100) PRIMARY KEY,
+    title VARCHAR(500) NOT NULL,
+    year INT,
+    venue VARCHAR(255),
+    doi_or_url TEXT,
+    abstract TEXT,
+    open_access BOOLEAN DEFAULT FALSE,
+    licence VARCHAR(100),
+    fulltext_path TEXT,
+    source_url TEXT,
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS kb.paper_author (
+    id SERIAL PRIMARY KEY,
+    paper_id VARCHAR(100) REFERENCES kb.paper(paper_id) ON DELETE CASCADE,
+    faculty_id VARCHAR(100) REFERENCES kb.faculty(faculty_id) ON DELETE SET NULL,
+    author_name VARCHAR(255) NOT NULL,
+    author_order INT NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS kb.paper_chunk (
+    chunk_id SERIAL PRIMARY KEY,
+    paper_id VARCHAR(100) REFERENCES kb.paper(paper_id) ON DELETE CASCADE,
+    page INT NOT NULL,
+    chunk_index INT NOT NULL,
+    text TEXT NOT NULL,
+    embedding JSONB
+);
+
+CREATE TABLE IF NOT EXISTS kb.paper_skill (
+    paper_id VARCHAR(100) REFERENCES kb.paper(paper_id) ON DELETE CASCADE,
+    skill_id VARCHAR(100) REFERENCES kb.skill(skill_id) ON DELETE CASCADE,
+    level NUMERIC(5, 2) NOT NULL,
+    reviewed BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (paper_id, skill_id)
+);
+
+CREATE TABLE IF NOT EXISTS kb.taster_task (
+    id VARCHAR(100) PRIMARY KEY,
+    area_id VARCHAR(50) REFERENCES kb.research_area(area_id) ON DELETE CASCADE,
+    kind VARCHAR(50) NOT NULL, -- read_abstract, solve_problem, short_writeup
+    prompt TEXT NOT NULL,
+    rubric TEXT NOT NULL,
+    est_minutes INT DEFAULT 30
+);
+
+CREATE TABLE IF NOT EXISTS plan.weekly_focus (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    week_start DATE NOT NULL,
+    budget_hours NUMERIC(4, 1) NOT NULL,
+    focus_items JSONB NOT NULL DEFAULT '[]',
+    version INT NOT NULL DEFAULT 1,
+    created_by VARCHAR(50) DEFAULT 'system'
+);
+
+CREATE TABLE IF NOT EXISTS student.reflection (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    week_start DATE NOT NULL,
+    worked TEXT,
+    didnt_work TEXT,
+    self_rating INT CHECK (self_rating BETWEEN 1 AND 5),
+    hours_spent NUMERIC(4, 1)
+);
+
+CREATE TABLE IF NOT EXISTS student.interest_signal (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    area_id VARCHAR(50) REFERENCES kb.research_area(area_id) ON DELETE CASCADE,
+    kind VARCHAR(50) NOT NULL, -- stated, taster_score, quiz, project
+    value NUMERIC(5, 2) NOT NULL,
+    source VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.faculty_match (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    faculty_id VARCHAR(100) REFERENCES kb.faculty(faculty_id) ON DELETE CASCADE,
+    score NUMERIC(5, 2) NOT NULL,
+    score_breakdown JSONB NOT NULL,
+    reasons JSONB NOT NULL,
+    computed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    rank INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS student.approach (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    faculty_id VARCHAR(100) REFERENCES kb.faculty(faculty_id) ON DELETE CASCADE,
+    status VARCHAR(50) NOT NULL DEFAULT 'drafting', -- drafting, sent, replied, meeting, accepted, declined, no_reply
+    sent_on DATE,
+    last_update TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    notes TEXT
+);
+
+CREATE TABLE IF NOT EXISTS student.project (
+    id VARCHAR(100) PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    faculty_id VARCHAR(100) REFERENCES kb.faculty(faculty_id) ON DELETE SET NULL,
+    title VARCHAR(500) NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'active',
+    started_on DATE DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE IF NOT EXISTS student.project_milestone (
+    id SERIAL PRIMARY KEY,
+    project_id VARCHAR(100) REFERENCES student.project(id) ON DELETE CASCADE,
+    order_no INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    due_week INT NOT NULL,
+    checkpoint_kind VARCHAR(50) NOT NULL,
+    rubric TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending'
+);
+
+CREATE TABLE IF NOT EXISTS student.research_log (
+    id SERIAL PRIMARY KEY,
+    project_id VARCHAR(100) REFERENCES student.project(id) ON DELETE CASCADE,
+    week_start DATE NOT NULL,
+    done TEXT,
+    blockers TEXT,
+    next TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kb.industry_milestone (
+    id VARCHAR(100) PRIMARY KEY,
+    department VARCHAR(50) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    kind VARCHAR(50) NOT NULL, -- exam, tool_skill, club, internship
+    typical_timing VARCHAR(100),
+    related_exam_id VARCHAR(100),
+    source_url TEXT
+);
+
+-- Triggers for Core-to-Core updates
+DROP TRIGGER IF EXISTS trg_student_approach ON student.approach;
+CREATE TRIGGER trg_student_approach
+AFTER INSERT OR UPDATE OR DELETE ON student.approach
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+DROP TRIGGER IF EXISTS trg_student_reflection ON student.reflection;
+CREATE TRIGGER trg_student_reflection
+AFTER INSERT OR UPDATE OR DELETE ON student.reflection
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+-- =============================================================================
+-- SCHEMA: kb & student (MBA & Core-to-MBA Extensions)
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS kb.mba_route (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    typical_timing TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_exam (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    conducting_body TEXT,
+    route_ids TEXT,
+    pattern TEXT,
+    total_questions VARCHAR(50),
+    total_minutes INT,
+    marking_scheme TEXT,
+    score_scale TEXT,
+    attempts_rule TEXT,
+    eligibility TEXT,
+    official_url TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_exam_cycle (
+    id SERIAL PRIMARY KEY,
+    exam_id VARCHAR(50) REFERENCES kb.mba_exam(id) ON DELETE CASCADE,
+    cycle VARCHAR(50) NOT NULL,
+    organiser TEXT,
+    reg_open DATE,
+    reg_close DATE,
+    exam_dates TEXT,
+    admit_card_date TEXT,
+    result_date TEXT,
+    fee NUMERIC(10,2),
+    notes TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_exam_section (
+    id SERIAL PRIMARY KEY,
+    exam_id VARCHAR(50) REFERENCES kb.mba_exam(id) ON DELETE CASCADE,
+    section VARCHAR(100) NOT NULL,
+    questions VARCHAR(50),
+    minutes INT,
+    notes TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_syllabus_topic (
+    id VARCHAR(50) PRIMARY KEY,
+    exam_id VARCHAR(50) REFERENCES kb.mba_exam(id) ON DELETE CASCADE,
+    section VARCHAR(100) NOT NULL,
+    topic VARCHAR(150) NOT NULL,
+    subtopics TEXT,
+    source_type VARCHAR(50) DEFAULT 'team_curated',
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_institution (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50),
+    city VARCHAR(100),
+    official_url TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_programme (
+    id VARCHAR(50) PRIMARY KEY,
+    institution_id VARCHAR(50) REFERENCES kb.mba_institution(id) ON DELETE CASCADE,
+    programme_name VARCHAR(255) NOT NULL,
+    degree VARCHAR(50),
+    duration_months INT,
+    exams_accepted TEXT,
+    work_ex_policy TEXT,
+    selection_process TEXT,
+    application_deadline DATE,
+    fees NUMERIC(12,2),
+    official_url TEXT,
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_admission_stat (
+    id SERIAL PRIMARY KEY,
+    programme_id VARCHAR(50) REFERENCES kb.mba_programme(id) ON DELETE CASCADE,
+    year INT,
+    category VARCHAR(20),
+    stage VARCHAR(50),
+    cutoff_value NUMERIC(6,2),
+    cutoff_type VARCHAR(50),
+    source_url TEXT,
+    source_type VARCHAR(50) DEFAULT 'official',
+    retrieved_on DATE,
+    verified BOOLEAN DEFAULT FALSE,
+    verified_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_milestone (
+    id VARCHAR(50) PRIMARY KEY,
+    route_id VARCHAR(50) REFERENCES kb.mba_route(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    typical_timing TEXT,
+    depends_on VARCHAR(50),
+    exam_id VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_prep_template (
+    id VARCHAR(50) PRIMARY KEY,
+    exam_id VARCHAR(50),
+    speed_months INT NOT NULL,
+    weekly_hours INT NOT NULL,
+    phases_summary TEXT,
+    readiness_rule TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_template_phase (
+    id SERIAL PRIMARY KEY,
+    template_id VARCHAR(50) REFERENCES kb.mba_prep_template(id) ON DELETE CASCADE,
+    "order" INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    share_of_weeks NUMERIC(4,3) NOT NULL,
+    sections TEXT,
+    checkpoint TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_practice_item (
+    id VARCHAR(50) PRIMARY KEY,
+    exam_id VARCHAR(50),
+    section VARCHAR(100) NOT NULL,
+    topic VARCHAR(150) NOT NULL,
+    difficulty NUMERIC(3,1),
+    type VARCHAR(50),
+    stem TEXT NOT NULL,
+    option_a TEXT,
+    option_b TEXT,
+    option_c TEXT,
+    option_d TEXT,
+    answer TEXT NOT NULL,
+    explanation TEXT,
+    source_type VARCHAR(50) DEFAULT 'team_written',
+    reviewed BOOLEAN DEFAULT FALSE,
+    reviewed_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_interview_question (
+    id VARCHAR(50) PRIMARY KEY,
+    category VARCHAR(100) NOT NULL,
+    question TEXT NOT NULL,
+    what_good_looks_like TEXT,
+    source_type VARCHAR(50) DEFAULT 'team_written'
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_interview_rubric (
+    criterion VARCHAR(100) PRIMARY KEY,
+    score_1 TEXT NOT NULL,
+    score_2 TEXT NOT NULL,
+    score_3 TEXT NOT NULL,
+    score_4 TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_application_checklist_item (
+    id VARCHAR(50) PRIMARY KEY,
+    item TEXT NOT NULL,
+    applies_to TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_learning_method (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    when_to_use TEXT,
+    how TEXT
+);
+
+CREATE TABLE IF NOT EXISTS kb.mba_resource (
+    id VARCHAR(50) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    url TEXT NOT NULL,
+    provider VARCHAR(100),
+    type VARCHAR(50),
+    exam_ids TEXT,
+    free BOOLEAN DEFAULT TRUE
+);
+
+-- Core to MBA Specific Tables
+CREATE TABLE IF NOT EXISTS kb.career_path (
+    id VARCHAR(50) PRIMARY KEY,
+    branch VARCHAR(10) NOT NULL, -- EE, MM, any
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    typical_roles TEXT,
+    skills_valued TEXT,
+    sectors TEXT,
+    source_type VARCHAR(50) DEFAULT 'team_curated',
+    reviewed BOOLEAN DEFAULT FALSE,
+    reviewed_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.branch_pi_topic (
+    id VARCHAR(50) PRIMARY KEY,
+    branch VARCHAR(10) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    subtopics TEXT,
+    interview_level_notes TEXT,
+    reviewed BOOLEAN DEFAULT FALSE,
+    reviewed_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.branch_pi_question (
+    id VARCHAR(50) PRIMARY KEY,
+    branch VARCHAR(10) NOT NULL,
+    topic_id VARCHAR(50) REFERENCES kb.branch_pi_topic(id) ON DELETE CASCADE,
+    question TEXT NOT NULL,
+    what_good_looks_like TEXT,
+    source_type VARCHAR(50) DEFAULT 'team_curated',
+    reviewed BOOLEAN DEFAULT FALSE,
+    reviewed_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS kb.profile_audit_rubric (
+    criterion VARCHAR(100) PRIMARY KEY,
+    level_1 TEXT NOT NULL,
+    level_2 TEXT NOT NULL,
+    level_3 TEXT NOT NULL,
+    level_4 TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS kb.profile_action (
+    id VARCHAR(50) PRIMARY KEY,
+    branch VARCHAR(10) NOT NULL,
+    action TEXT NOT NULL,
+    criterion_improved VARCHAR(100) NOT NULL,
+    effort_hours INT NOT NULL,
+    timing VARCHAR(100),
+    course_code VARCHAR(50),
+    reviewed BOOLEAN DEFAULT FALSE,
+    reviewed_by VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS student.story_draft (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    kind VARCHAR(50) NOT NULL,
+    version INT NOT NULL DEFAULT 1,
+    text TEXT NOT NULL,
+    rubric_scores_json JSONB DEFAULT '{}',
+    feedback TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.decision_option (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    option VARCHAR(50) NOT NULL,
+    timeline_json JSONB DEFAULT '{}',
+    tradeoffs_text TEXT,
+    chosen BOOLEAN DEFAULT FALSE,
+    decided_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.mba_mock_result (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    exam_id VARCHAR(50) NOT NULL,
+    mock_name VARCHAR(255) NOT NULL,
+    raw_score NUMERIC(6,2),
+    scaled_score NUMERIC(6,2),
+    percentile NUMERIC(5,2),
+    accuracy NUMERIC(5,2),
+    section_scores_json JSONB DEFAULT '{}',
+    taken_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.mba_error_log (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    item_id VARCHAR(50),
+    section VARCHAR(100),
+    topic VARCHAR(150),
+    mistake_type VARCHAR(50) NOT NULL,
+    review_notes TEXT,
+    logged_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.mba_application (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    institution_id VARCHAR(50),
+    programme_id VARCHAR(50),
+    stage VARCHAR(50) DEFAULT 'shortlisted',
+    deadline DATE,
+    status VARCHAR(50) DEFAULT 'pending',
+    notes TEXT
+);
+
+CREATE TABLE IF NOT EXISTS student.mba_interview_session (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    question_id VARCHAR(50),
+    response_text TEXT,
+    rubric_scores_json JSONB DEFAULT '{}',
+    feedback TEXT,
+    conducted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS student.mba_exam_result (
+    id SERIAL PRIMARY KEY,
+    student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
+    exam_id VARCHAR(50) NOT NULL,
+    score NUMERIC(6,2),
+    percentile NUMERIC(5,2),
+    sectional_scores_json JSONB DEFAULT '{}',
+    recorded_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Triggers for MBA re-processing
+DROP TRIGGER IF EXISTS trg_mba_programme ON kb.mba_programme;
+CREATE TRIGGER trg_mba_programme
+AFTER INSERT OR UPDATE OR DELETE ON kb.mba_programme
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+DROP TRIGGER IF EXISTS trg_mba_admission_stat ON kb.mba_admission_stat;
+CREATE TRIGGER trg_mba_admission_stat
+AFTER INSERT OR UPDATE OR DELETE ON kb.mba_admission_stat
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+DROP TRIGGER IF EXISTS trg_career_path ON kb.career_path;
+CREATE TRIGGER trg_career_path
+AFTER INSERT OR UPDATE OR DELETE ON kb.career_path
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();

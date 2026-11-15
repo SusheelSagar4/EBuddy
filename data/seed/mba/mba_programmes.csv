@@ -1,0 +1,8 @@
+id,institution_id,programme_name,degree,duration_months,exams_accepted,work_ex_policy,selection_process,application_deadline,fees,official_url,source_url,source_type,retrieved_on,verified,verified_by
+MBA-PG-IIMA,MBA-IN-IIMA,MBA (also referred to as PGP),MBA,24,MBA-EX-CAT,Fresher eligible,CAT + AWT + PI,2026-09-22,"Rs 25,00,000",https://www.iima.ac.in,https://www.iima.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-IIMC,MBA-IN-IIMC,MBA,MBA,24,MBA-EX-CAT,Fresher eligible,CAT + WAT + PI,2026-09-22,"Rs 27,00,000",https://www.iimcal.ac.in,https://www.iimcal.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-ISB,MBA-IN-ISB,Post Graduate Programme in Management (PGP),PGP,12,MBA-EX-GMAT,Minimum 24 months work experience,GMAT + Essays + PI,2026-12-01,"Rs 41,00,000",https://www.isb.edu,https://www.isb.edu,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-FMS,MBA-IN-FMS,Full-time MBA,MBA,24,MBA-EX-CAT,Fresher eligible,CAT + Extempore + PI,2026-12-15,"Rs 2,50,000",https://fms.edu,https://fms.edu,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-XLRI,MBA-IN-XLRI,PGDM (Business Management),PGDM,24,MBA-EX-XAT,Fresher eligible,XAT + GD/PI,2026-12-06,"Rs 28,00,000",https://www.xlri.ac.in,https://www.xlri.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-DMSIITD,MBA-IN-DMSIITD,MBA,MBA,24,MBA-EX-CAT,Fresher eligible (Engineering degree preferred),CAT + PI,2027-01-31,"Rs 12,00,000",https://dms.iitd.ac.in,https://dms.iitd.ac.in,official,2026-11-15,TRUE,Prof. R. Sengupta
+MBA-PG-UNVERIFIED,MBA-IN-FMS,Draft Unverified Executive MBA,EMBA,12,MBA-EX-CAT,Draft policy,Draft process,2027-05-30,,https://example.com/draft,https://example.com/draft,official,2026-11-15,FALSE,

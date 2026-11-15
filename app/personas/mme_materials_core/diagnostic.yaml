@@ -1,0 +1,8 @@
+blueprint:
+  target_skills:
+    - "SKILL_PHYSICAL_METALLURGY"
+    - "SKILL_THERMODYNAMICS_MAT"
+    - "SKILL_MECHANICAL_BEHAVIOR"
+    - "SKILL_MATERIALS_PROCESSING"
+  item_counts: 5
+  difficulty_range: [40.0, 80.0]

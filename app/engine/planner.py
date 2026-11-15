@@ -3,7 +3,7 @@ import csv
 import uuid
 from typing import List, Dict, Any, Optional, Set, Tuple
 from datetime import datetime, timezone
-from app.contracts.student import StudentProfile, Constraint, Preference
+from app.contracts.student import StudentProfile, Constraint, Preference, SkillState
 from app.contracts.goal import Goal
 from app.contracts.plan import Plan, PlanItem, StructuredReason
 from app.engine.interfaces import IPlanner
@@ -129,6 +129,83 @@ class Planner(IPlanner):
                 chain.append(p)
         return chain
 
+    def detect_interest_evidence_mismatch(
+        self,
+        student: StudentProfile,
+        goal: Goal,
+        states: List[SkillState],
+        aims_text: Optional[str] = None
+    ) -> Optional[Dict[str, Any]]:
+        state_map = {s.skill_id: s.estimated_level for s in states}
+        aims_lower = ((aims_text or "") + " " + goal.name + " " + goal.description).lower()
+
+        if any(kw in aims_lower for kw in ["power electronics", "smart grid", "power system", "power transmission", "relay", "converter", "ev drive", "hvdc"]):
+            circ_level = state_map.get("SKILL_CIRCUIT_ANALYSIS", 100.0)
+            if circ_level < 75.0:
+                return {
+                    "mismatch_detected": True,
+                    "target_interest": "Power Electronics & Energy Systems",
+                    "missing_prerequisite": "SKILL_CIRCUIT_ANALYSIS",
+                    "current_level": circ_level,
+                    "required_level": 75.0,
+                    "explanation": (
+                        f"Interest vs. Evidence Mismatch Detected: You expressed strong ambition in Power Electronics & Energy Systems, "
+                        f"but verified diagnostic evidence indicates your proficiency in Circuit Analysis is {circ_level:.1f}% (required: 75.0%). "
+                        f"Circuit analysis theorems (KVL/KCL, Thevenin equivalent, AC steady-state and transient response) are strictly required "
+                        f"before designing converter topologies. To safeguard your GPA and ensure genuine competence, your study roadmap has "
+                        f"automatically prioritized Circuit Analysis foundations in Phase 1 before advancing to converter design."
+                    ),
+                    "tradeoff": "Prioritized prerequisite Circuit Analysis remediation over premature advanced converter modeling."
+                }
+
+        if any(kw in aims_lower for kw in ["high-entropy alloy", "aerospace titanium", "biomaterials", "superalloys", "nanomaterials", "corrosion"]):
+            metal_level = state_map.get("SKILL_PHYSICAL_METALLURGY", 100.0)
+            thermo_level = state_map.get("SKILL_THERMODYNAMICS", 100.0)
+            if metal_level < 70.0 or thermo_level < 70.0:
+                weak_skill = "SKILL_PHYSICAL_METALLURGY" if metal_level < 70.0 else "SKILL_THERMODYNAMICS"
+                val = metal_level if metal_level < 70.0 else thermo_level
+                return {
+                    "mismatch_detected": True,
+                    "target_interest": "Advanced Structural Alloys & High-Entropy Materials",
+                    "missing_prerequisite": weak_skill,
+                    "current_level": val,
+                    "required_level": 70.0,
+                    "explanation": (
+                        f"Interest vs. Evidence Mismatch Detected: You have ambitious research aspirations in Advanced Materials Design, "
+                        f"but diagnostic evidence shows foundational gaps in {weak_skill} ({val:.1f}% vs required 70.0%). "
+                        f"Thermodynamic phase equilibria and dislocation theory are vital before attempting advanced multicomponent alloy formulation."
+                    ),
+                    "tradeoff": f"Scheduled foundational remediation in {weak_skill} prior to specialized alloy synthesis electives."
+                }
+
+        return None
+
+    def calculate_adaptive_phase_weeks(self, gaps: List[Dict[str, Any]], skill_states: Optional[List[SkillState]] = None) -> Dict[str, str]:
+        if skill_states:
+            avg_score = sum(s.estimated_level for s in skill_states) / len(skill_states)
+        else:
+            avg_gap = sum(g.get("gap", 0) for g in gaps) / (len(gaps) or 1)
+            avg_score = max(30.0, 100.0 - avg_gap)
+
+        if avg_score >= 80.0:
+            return {
+                "phase_1": "Phase 1: Foundation (Weeks 1–2 Accelerated)",
+                "phase_2": "Phase 2: Core Depth (Weeks 3–8)",
+                "phase_3": "Phase 3: Applied Mastery (Weeks 9–16)"
+            }
+        elif avg_score < 60.0:
+            return {
+                "phase_1": "Phase 1: Foundation (Weeks 1–6 Extended Remediation)",
+                "phase_2": "Phase 2: Core Depth (Weeks 7–12)",
+                "phase_3": "Phase 3: Applied Mastery (Weeks 13–16+)"
+            }
+        else:
+            return {
+                "phase_1": "Phase 1: Foundation (Weeks 1–4)",
+                "phase_2": "Phase 2: Core Depth (Weeks 5–10)",
+                "phase_3": "Phase 3: Applied Mastery (Weeks 11–16)"
+            }
+
     def generate_plan(
         self,
         student: StudentProfile,
@@ -136,7 +213,10 @@ class Planner(IPlanner):
         gaps: List[Dict[str, Any]],
         constraints: List[Constraint],
         preferences: List[Preference],
-        completed_course_ids: Optional[List[str]] = None
+        completed_course_ids: Optional[List[str]] = None,
+        skill_states: Optional[List[SkillState]] = None,
+        aims_text: Optional[str] = None,
+        version: int = 1
     ) -> Plan:
         items: List[PlanItem] = []
         completed_set = set(completed_course_ids or [])
@@ -152,7 +232,7 @@ class Planner(IPlanner):
         else:
             prog_id = raw_prog
 
-        if completed_course_ids is None and current_sem > 1:
+        if (completed_course_ids is None or student.backlogs == 0) and current_sem > 1:
             for s in range(1, current_sem):
                 for r in self.prog_requirements.get((prog_id, s), []):
                     c = r.get("course_id", "").strip()
@@ -213,6 +293,41 @@ class Planner(IPlanner):
         conflicted_skills = {g["skill_id"] for g in gaps if g.get("conflict_flag")}
         plan_conflict_flag = "HIGH_INTEREST_LOW_FOUNDATION: Remedial bridge required" if conflicted_skills else None
 
+        # 1. Determine adaptive phase weeks based on evidence
+        phase_labels = self.calculate_adaptive_phase_weeks(gaps, skill_states)
+        p1_label = phase_labels["phase_1"]
+        p2_label = phase_labels["phase_2"]
+        p3_label = phase_labels["phase_3"]
+
+        # 2. Check for Interest vs. Evidence Mismatch
+        mismatch = self.detect_interest_evidence_mismatch(
+            student=student,
+            goal=goal,
+            states=skill_states or [],
+            aims_text=aims_text
+        )
+
+        # If mismatch detected, inject high-priority remedial foundation course/exercise in Phase 1
+        if mismatch:
+            missing_skill = mismatch["missing_prerequisite"]
+            remedial_cid = "EE2L001" if "CIRCUIT" in missing_skill else "ML2L002"
+            items.append(PlanItem(
+                item_id=f"ITEM_REM_PREREQ_{missing_skill}_{uuid.uuid4().hex[:4]}",
+                item_type="remediation",
+                course_id=remedial_cid,
+                semester_number=current_sem,
+                estimated_hours=4.0,
+                phase=p1_label,
+                prep_hours_weekly=6.0,
+                reason=StructuredReason(
+                    intent=f"[{p1_label}] Address Interest vs. Evidence Gap in {missing_skill}",
+                    target_skills=[missing_skill],
+                    why_this=mismatch["explanation"],
+                    prerequisite_for=[goal.name],
+                    rule_compliance=["Academic load managed; prerequisite gap resolved before advanced topics"]
+                )
+            ))
+
         current_sem_credits = 0.0
 
         sem_reqs = self.prog_requirements.get((prog_id, current_sem), [])
@@ -239,6 +354,8 @@ class Planner(IPlanner):
                                 course_id=c,
                                 semester_number=current_sem,
                                 estimated_hours=4.0,
+                                phase=p1_label,
+                                prep_hours_weekly=6.0,
                                 reason=StructuredReason(
                                     intent="Backlog Core Clearance Prioritized",
                                     target_skills=c_skills,
@@ -289,6 +406,8 @@ class Planner(IPlanner):
                     course_id=cid,
                     semester_number=current_sem,
                     estimated_hours=4.0,
+                    phase=p1_label,
+                    prep_hours_weekly=6.0,
                     reason=StructuredReason(
                         intent=f"Branch Core Degree Requirement ({prog_id})",
                         target_skills=c_skills,
@@ -304,6 +423,8 @@ class Planner(IPlanner):
                     course_id=cid,
                     semester_number=current_sem,
                     estimated_hours=2.0,
+                    phase=p1_label,
+                    prep_hours_weekly=3.0,
                     reason=StructuredReason(
                         intent=f"Core Course Practice: {cid}",
                         target_skills=c_skills,
@@ -402,6 +523,8 @@ class Planner(IPlanner):
                                 course_id=elec_cid,
                                 semester_number=current_sem,
                                 estimated_hours=4.0,
+                                phase=p2_label,
+                                prep_hours_weekly=4.0,
                                 reason=StructuredReason(
                                     intent=f"Recommended Elective ({slot_name})",
                                     target_skills=self.course_skills.get(elec_cid, []),
@@ -416,6 +539,8 @@ class Planner(IPlanner):
                                 course_id=elec_cid,
                                 semester_number=current_sem,
                                 estimated_hours=2.0,
+                                phase=p2_label,
+                                prep_hours_weekly=2.0,
                                 reason=StructuredReason(
                                     intent=f"Elective Practice: {elec_cid}",
                                     target_skills=self.course_skills.get(elec_cid, []),
@@ -480,6 +605,8 @@ class Planner(IPlanner):
                             course_id=m_cid,
                             semester_number=current_sem,
                             estimated_hours=4.0,
+                            phase=p2_label,
+                            prep_hours_weekly=4.0,
                             reason=StructuredReason(
                                 intent="Approved Minor Course Track",
                                 target_skills=self.course_skills.get(m_cid, []),
@@ -553,6 +680,8 @@ class Planner(IPlanner):
                         resource_id=r_obj.resource_id,
                         semester_number=current_sem,
                         estimated_hours=3.0,
+                        phase=p2_label,
+                        prep_hours_weekly=3.0,
                         reason=StructuredReason(
                             intent=f"Open Courseware Resource: {sid}",
                             target_skills=[sid],
@@ -569,6 +698,8 @@ class Planner(IPlanner):
                 item_type="milestone",
                 semester_number=current_sem,
                 estimated_hours=8.0,
+                phase=p2_label,
+                prep_hours_weekly=8.0,
                 reason=StructuredReason(
                     intent="UPSC General Studies Preparation",
                     target_skills=["SKILL_RESEARCH_WRITING", "SKILL_ENGINEERING_MATH"],
@@ -584,6 +715,8 @@ class Planner(IPlanner):
             item_type="milestone",
             semester_number=current_sem,
             estimated_hours=0.0,
+            phase=p3_label,
+            prep_hours_weekly=4.0,
             reason=StructuredReason(
                 intent="Semester Target Milestone",
                 target_skills=[g["skill_id"] for g in gaps if g.get("gap", 0) > 0] if gaps else [],
@@ -597,11 +730,14 @@ class Planner(IPlanner):
             plan_id=f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
             student_id=student.student_id,
             goal_id=goal.goal_id,
-            version=1,
+            version=version,
             items=items,
             conflict_flag=plan_conflict_flag,
             optional_overload_proposals=optional_overload_proposals,
+            mismatch_warning=mismatch,
             is_active=True,
             created_at=datetime.now(timezone.utc)
         )
         return plan
+
+    create_plan = generate_plan

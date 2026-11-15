@@ -6,8 +6,9 @@ from typing import List, Dict, Any, Optional, Tuple
 from app.contracts.kb import Exercise
 from app.engine.interfaces import IAdaptiveDiagnostic
 
-def _load_default_item_bank() -> List[Exercise]:
-    csv_path = os.path.join("data", "seed", "kb", "exercise.csv")
+def _load_default_item_bank(csv_path: Optional[str] = None) -> List[Exercise]:
+    if not csv_path:
+        csv_path = os.path.join("data", "seed", "kb", "exercise.csv")
     if not os.path.exists(csv_path):
         return []
     items = []
@@ -76,9 +77,15 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
         min_items: int = 5,
         max_items: int = 8,
         confidence_threshold: float = 0.85,
-        rng: Optional[random.Random] = None
+        rng: Optional[random.Random] = None,
+        seed_dir: Optional[str] = None
     ):
-        self.item_bank = item_bank if item_bank is not None else _load_default_item_bank()
+        if item_bank is not None:
+            self.item_bank = item_bank
+        elif seed_dir:
+            self.item_bank = _load_default_item_bank(os.path.join(seed_dir, "exercise.csv"))
+        else:
+            self.item_bank = _load_default_item_bank()
         self.min_items = min_items
         self.max_items = max_items
         self.confidence_threshold = confidence_threshold
@@ -258,4 +265,30 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
 
         return spread <= 4.0
 
+    def verify_question(self, question: Exercise) -> Dict[str, Any]:
+        """
+        Validates generated or bank question against curriculum and assessment constraints.
+        Fails if skill_id is missing, options are malformed, or answer key doesn't match options.
+        """
+        errors = []
+        if not question.skill_id or not question.skill_id.startswith("SKILL_"):
+            errors.append(f"Invalid skill_id '{question.skill_id}'. Must start with 'SKILL_'.")
+        if not question.question_text or len(question.question_text.strip()) < 15:
+            errors.append("Question prompt is too short (< 15 characters) or empty.")
+        if not question.options or len(question.options) < 2:
+            errors.append("Question must have at least 2 selectable options.")
+        if question.correct_answer:
+            matches_option = any(
+                question.correct_answer.strip().lower() == opt.strip().lower() 
+                or opt.strip().startswith(question.correct_answer[:2]) 
+                for opt in (question.options or [])
+            )
+            if not matches_option:
+                errors.append(f"Correct answer '{question.correct_answer}' does not match any provided option.")
+        else:
+            errors.append("Question is missing correct_answer.")
 
+        return {
+            "is_valid": len(errors) == 0,
+            "errors": errors
+        }

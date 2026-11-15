@@ -1,0 +1,15 @@
+- skill_id: "SKILL_PHYSICAL_METALLURGY"
+  required_level: 85.0
+  importance: 1.0
+- skill_id: "SKILL_THERMODYNAMICS_MAT"
+  required_level: 80.0
+  importance: 0.9
+- skill_id: "SKILL_MECHANICAL_BEHAVIOR"
+  required_level: 80.0
+  importance: 0.9
+- skill_id: "SKILL_MATERIALS_PROCESSING"
+  required_level: 75.0
+  importance: 0.8
+- skill_id: "SKILL_MATERIALS_CHAR"
+  required_level: 80.0
+  importance: 0.8

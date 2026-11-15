@@ -250,6 +250,72 @@ A background listener consumes these events, re-evaluates impacted student skill
 
 ---
 
+## 8. Core to Core Engineering Roadmap & Research Track
+
+The **Core to Core** feature serves students who want to grow inside their own core engineering branch (**Electrical Engineering** or **Metallurgical and Materials Engineering**). It follows the Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
+
+Students can pursue one of two specialized pathways:
+1. **Core Research Route:** Preparation for undergraduate research mentorship under IIT Bhubaneswar faculty, literature review, taster tasks, paper insights, and international/national research internships (SURGE, DAAD, Mitacs).
+2. **Core Industry / PSU Route:** Structured preparation for GATE qualification, core industrial simulation and design tool mastery (MATLAB/Simulink, PSCAD, ANSYS, Thermo-Calc), project clubs (SAE BAJA, Formula Student), and PSU recruitment benchmarks.
+
+```mermaid
+flowchart TD
+    Assess["1. Diagnostic Assessment<br/>(Objective Technical Exercises)"] --> Baseline["2. BKT Skill State Baseline<br/>(Tested Mastery Levels)"]
+    Baseline --> PhasePlan["3. Phase-wise Plan<br/>(Foundation → Core Depth → Applied Mastery)"]
+    PhasePlan --> Weekly["4. Weekly Guidance & Free-Hours Budget<br/>(CGPA Protection Active, Never Timetable)"]
+    Weekly --> Checkin["5. Topic Check-ins & Reflections<br/>(Remediation or Acceleration)"]
+    Checkin --> Gate{"6. Readiness Gate<br/>(Tested >= 75%, 2 Tasters >= 60%, 1 Paper >= 60%)"}
+    Gate -- "Goal: Core Research" --> Faculty["7. Faculty Matching & Grounded Assist<br/>(44 Verified IIT BBS Faculty)"]
+    Faculty --> Paper["8. Paper Insights & Guided Reader<br/>(120 Verified Papers, Open-Access Compliant)"]
+    Paper --> Kickoff["9. Project Kickoff & Research Logs<br/>(4 Milestone Phases)"]
+    Gate -- "Goal: Core Industry" --> Industry["7-9. Core Industry Milestones<br/>(GATE Phases, Simulation Tools, PSUs)"]
+```
+
+### A. Non-Negotiable Rules & Hard Constraints
+- **Zero Rigid Timetables:** The buddy **NEVER** generates day-by-day or hour-by-hour timetables. It outputs weekly focus goals, an hours budget, suggested activities, and study approaches. The student decides when to execute.
+- **Never Contact on Student's Behalf:** Draft emails, CV bullets, and interview questions are generated for the student to review, personalize, and send themselves. The buddy never communicates with faculty.
+- **Air-Gapped LiteLLM Gateway:** All LLM completions and embeddings route through LiteLLM reading `LLM_MODEL`, `LLM_API_KEY`, `LLM_API_BASE`, and `EMBEDDING_MODEL` from environment variables. Local cost map is locked (`True`) and telemetry is disabled (`False`). Tested model: `openai/gpt-4o-mini`.
+- **Zero Hallucination Grounding:** Every claim about a professor or paper is strictly grounded in rows stored in `data/seed/core_to_core/`. Unknown fields are rendered as `"not available"`.
+- **Data Ethics & Open Access Compliance:** Full text chunks are provided only for open-access publications (`open_access = True`). Non-open-access publications strictly display public metadata, abstracts, and DOI links.
+- **Data Quality & No SAMPLE- Mix:** All 44 faculty and 120 publications are verified IIT Bhubaneswar institutional records. Seed files contain zero unverified rows, and mixing `SAMPLE-` rows with verified data is strictly prohibited.
+- **CGPA Protection Guarantee:** Core-course academic support always takes precedence over extra research or skill work during midsem/endsem exam weeks (calendar factor 0.4 / 0.2) or whenever course proficiency falls below 75%.
+
+### B. LLM vs. Deterministic Split
+
+| Component | Deterministic Core (Python / SQL) | LiteLLM Model (`gpt-4o-mini` @ Temp 0.0) |
+|---|---|---|
+| **Free-Hours Budget** | Computes contact hours $\sum(L+T+P)$ and calendar factor adjustments. | Writes weekly study advice grounded in retrieved courses. |
+| **Prerequisites & Rules** | Validates course eligibility, credit caps, and DAG sequencing. | Explains reason for prerequisite gating in human language. |
+| **Skill Mastery (BKT)** | Updates estimated level and confidence from objective scores. | Grades free-form open answers against verified rubrics. |
+| **Readiness Gate** | Evaluates 75% tested mastery, 2 tasters >= 60%, 1 paper >= 60%. | Formulates interview discussion questions for faculty group. |
+| **Faculty Matching** | Computes deterministic formula: $0.4 w_1 + 0.3 w_2 + 0.15 w_3 + 0.15 w_4$. | Summarizes research synergies and drafts personalized inquiry email. |
+| **Paper Reader** | Retrieves chunk IDs, page citations, and open-access flags. | Explains difficult technical terms and provides section glossaries. |
+| **Pacing & Adaptation** | Enforces 10-day follow-up logic and midsem budget reduction. | Synthesizes weekly reflection into encouraging feedback. |
+
+### C. Core to Core Data Storage Map (`data/seed/core_to_core/`)
+
+| Table Name | Seed File Path | Verified Rows | Description & Key Schema Fields |
+|---|---|---|---|
+| `kb.academic_calendar` | `data/seed/core_to_core/academic_calendar.csv` | 16 | 16 semester weeks, week_type (teaching/midsem/endsem), calendar_factor (1.0, 0.4, 0.2). |
+| `kb.research_area` | `data/seed/core_to_core/research_areas.csv` | 16 | Core research sub-domains across Electrical and Metallurgy/Materials engineering. |
+| `kb.area_skill` | `data/seed/core_to_core/area_skills.csv` | 23 | Mapping between research areas and required prerequisite skill levels. |
+| `kb.faculty` | `data/seed/core_to_core/faculty.csv` | 44 | 44 verified IIT BBS faculty (27 EE, 17 MM) with designation, lab, profile URL, UG mentorship. |
+| `kb.faculty_area` | `data/seed/core_to_core/faculty_areas.csv` | 88 | Area affiliations and domain weights for all verified faculty. |
+| `kb.paper` | `data/seed/core_to_core/papers.csv` | 120 | 120 verified library papers (41 Open Access, 79 abstract-only per copyright ethics). |
+| `kb.paper_author` | `data/seed/core_to_core/paper_authors.csv` | 120 | Author and faculty affiliations for library papers. |
+| `kb.paper_chunk` | `data/seed/core_to_core/paper_chunks.csv` | 120 | Text chunks indexed by page number and chunk index for verified guided reading. |
+| `kb.paper_skill` | `data/seed/core_to_core/paper_skills.csv` | 120 | Competency skills exercised by each research publication. |
+| `kb.taster_task` | `data/seed/core_to_core/taster_tasks.csv` | 8 | Research exploratory tasks (abstract synthesis, problem solving, short write-ups) with rubrics. |
+| `kb.industry_milestone` | `data/seed/core_to_core/industry_milestones.csv` | 12 | Core industry pathway: GATE syllabus phases, simulation tools (MATLAB, ANSYS), clubs, PSUs. |
+
+### D. Simulation Endpoints (`/api/sim`)
+The system provides documented simulation hooks to test adaptive behaviors in real-time:
+- **Scenario A (`POST /api/sim/{student_id}/scenario/midsem-stress`):** Simulates low quiz performance during midsem exam week. The buddy dynamically triggers CGPA protection, shrinks weekly hours by calendar factor 0.4, and shifts 70-80% of study budget to core-course recovery.
+- **Scenario B (`POST /api/sim/{student_id}/scenario/professor-no-reply`):** Simulates approaching a faculty member with 11 days elapsed without reply. The buddy automatically recommends a polite follow-up template and offers the next top-ranked faculty match.
+- **Scenario C (`POST /api/sim/{student_id}/scenario/goal-pivot`):** Simulates switching between Core Research and Core Industry routes, instantly updating roadmaps without losing verified skill mastery states.
+
+---
+
 ## 9. Non-Core Career Pathways & Domain Packages (SDE, AI/ML & DA)
 
 The repository integrates three specialized, non-core career transformation packages equipping core engineering undergraduates (EE and MME) to transition into high-growth software and data domains:
@@ -350,21 +416,58 @@ python build_da_quiz_csvs.py
 
 ---
 
-## 10. Testing & Quality Assurance
+## 10. Core to MBA Pathway (Feature Documentation)
 
-The repository includes a comprehensive 6-stage CI verification pipeline:
+The **Core to MBA** feature guides core engineering students (**B.Tech EE & B.Tech MM**) who are considering management careers. It builds around their engineering foundations and follows the Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
+
+### A. Key Architectural Modules
+1. **Decision View (`app/engine/mba_decision.py`):** Neutral side-by-side comparative timelines and requirements for 5 routes: Stay Core Research, Stay Core Industry, Core Higher Studies (GATE), MBA Now (CAT Fresher), and MBA After 2-3 Years Core Work Experience.
+2. **Career Map (`app/engine/mba_career_map.py`):** Verified management pathways leveraging engineering skills (EE: power and energy management, semiconductor product management; MM: metals supply chain, materials sourcing, green steel consulting). Zero unverified salary or placement claims.
+3. **Adaptive Diagnostic & Profile Audit (`app/engine/mba_diagnostic.py`, `app/engine/mba_profile_audit.py`):** Short adaptive test across QA, DILR, VARC (max 15 items) and 6-criterion profile audit against 4-level descriptive benchmarks.
+4. **Weekly Guidance & CGPA Protection (`app/engine/mba_planner.py`):** Weekly focus goals and hours budgets (never rigid timetables). Automatically throttles MBA prep to <= 2h during mid-sems (weeks 7-8) and end-sems (weeks 14-16) to protect academic GPA.
+5. **Verbal-Gap Remediation:** Allocates 45% of MBA hours to daily reading (MBA-L1) and RC practice for students weak in VARC, treating quant as a confidence builder.
+6. **Story Builder (`app/engine/mba_story.py`):** Rigorous coaching on "Why MBA", "Why not core", and project STAR narratives. Strictly NO ghostwriting; provides 5-criterion rubric scoring and probing questions.
+7. **Mock Calibration & Shortlist Tiering (`app/engine/mba_mocks_shortlist.py`):** Requires >= 2 full mocks for calibrated score bands. Tiers into Reach, Target, and Safe against verified institutional cutoffs with a strict Zero-Leak Guarantee.
+8. **Interview Prep (`app/engine/mba_interview.py`):** Technical viva on branch fundamentals (circuits, power, metallurgy, heat treatment), general PI, and WAT essays evaluated on official rubrics.
+9. **Re-Plan & Core Pivot (`app/engine/mba_replan.py`):** Post-result alternatives when below target, and seamless lateral switch-back to Core Engineering (Industry or Research) preserving 100% of diagnostic evidence with version diffs.
+
+### B. Seed Data Locations
+- General MBA Tables (17 CSVs): `/data/seed/mba/mba_*.csv`
+- Core to MBA Specialized Tables (7 CSVs): `/data/seed/core_to_mba/*.csv`
+
+### C. Deterministic Split & Tested Models
+- **Deterministic Split:** All hours budgets, IRT skill estimations, rubric benchmarks, percentile bands, shortlist tiers, clashes, and version diffs are computed by 100% deterministic Python/SQL engines.
+- **Tested Models:** Tuned and validated on `openai/gpt-4o-mini` (default), fully compatible with `gemini/gemini-1.5-flash`, `azure/...`, or local `ollama/...` via LiteLLM.
+
+### D. Verification & Scorecard
+- **Comprehensive Test Suite:** `tests/test_core_to_mba.py` (15/15 tests passing).
+- **Evaluation Scorecard:** `scripts/evaluate_mba_scorecard.py` evaluated across 32 synthetic student profiles (16 EE, 16 MM) with 100% pass rates across all verification gates. Report available at `docs/core_to_mba_scorecard.md`.
+
+---
+
+## 11. Testing & Quality Assurance
+
+The repository includes a comprehensive 6-stage CI verification pipeline and rigorous test suites:
 
 ```bash
 # 1. Run the complete automated test suite (58 tests, 49 subtests)
 python -m pytest tests -q
 
-# 2. Run the full CI pipeline (Windows PowerShell)
+# 2. Run Core-to-MBA and Core-to-Core verification suites
+python -m pytest tests/test_core_to_mba.py -q
+python -m pytest tests/test_core_to_core.py -q
+
+# 3. Run the Evaluation Scorecard across 32 synthetic profiles
+python scripts/evaluate_mba_scorecard.py
+python scripts/evaluate_scorecard.py
+
+# 4. Run the full CI pipeline (Windows PowerShell)
 .\scripts\ci.ps1
 
-# 2b. Run the full CI pipeline (Linux / macOS Bash)
+# 4b. Run the full CI pipeline (Linux / macOS Bash)
 ./scripts/ci.sh
 
-# 3. Run the live Web UI smoke test against running container
+# 5. Run the live Web UI smoke test against running container
 powershell -ExecutionPolicy Bypass -File .\scripts\ui_smoke.ps1
 ```
 
@@ -378,7 +481,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\ui_smoke.ps1
 
 ---
 
-## 11. Compliance Checklist
+## 12. Compliance Checklist
 
 | Rule # | Requirement | Implementation & Verification |
 |---|---|---|
@@ -397,7 +500,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\ui_smoke.ps1
 
 ---
 
-## 12. Project Directory Layout
+## 13. Project Directory Layout
 
 ```
 .
@@ -408,84 +511,74 @@ powershell -ExecutionPolicy Bypass -File .\scripts\ui_smoke.ps1
 │   │   ├── agent_3_assessment.py         # Adaptive CAT diagnostic assessor
 │   │   └── agent_4_query.py              # Grounded curriculum query explainer
 │   ├── api/                              # REST API endpoints
+│   │   ├── admin.py                      # Admin & schema endpoints
 │   │   ├── health.py                     # Health & database probe
-│   │   ├── student.py                    # Student profile & onboarding
+│   │   ├── mba.py                        # Core to MBA API routes
+│   │   ├── simulator.py                  # Simulation endpoints (/api/sim)
+│   │   ├── student.py                    # Student profile, onboarding, and core/MBA routes
 │   │   └── ui_routes.py                  # Web UI JSON APIs (roadmap, chat, diagnostic, admin)
 │   ├── contracts/                        # Strict Pydantic contracts & schemas
+│   │   ├── core_to_core.py               # Core engineering research/industry contracts
+│   │   ├── core_to_mba.py                # Core to MBA pathway contracts
+│   │   └── plan.py                       # Plan & PlanItem contracts
 │   ├── engine/                           # Deterministic algorithmic core
 │   │   ├── planner.py                    # Topological prerequisite DAG planner
 │   │   ├── diagnostic.py                 # 1PL IRT adaptive testing engine
+│   │   ├── faculty_matcher.py            # Core research faculty ranker
+│   │   ├── budget.py                     # Study budget & CGPA protection
+│   │   ├── mba_planner.py                # MBA preparation planner
+│   │   ├── mba_diagnostic.py             # MBA CAT adaptive diagnostic engine
+│   │   ├── mba_interview.py              # Technical & HR interview evaluation
+│   │   ├── mba_profile_audit.py          # Profile audit & scorecard evaluation
 │   │   ├── relevance.py                  # Skill-first elective relevance scorer
-│   │   ├── validator.py                  # Hard vs warning constraint validator
-│   │   └── gaps.py                       # Skill gap analyzer
+│   │   └── validator.py                  # Hard vs warning constraint validator
 │   ├── kb/repositories.py                # Relational in-memory & DB query repositories
 │   ├── llm/client.py                     # Air-gapped LiteLLM client with ops logging
 │   ├── static/                           # Air-gapped static assets (CSS, JS; zero CDNs)
 │   │   ├── css/style.css                 # Clean, responsive stylesheet
 │   │   └── js/app.js                     # Vanilla JavaScript SPA controller
 │   ├── templates/                        # Jinja2 HTML templates for all 7 UI pages
-│   │   ├── base.html                     # Base layout with synthetic disclaimer banner
-│   │   ├── index.html                    # Student profile selector
-│   │   ├── goals.html                    # Goal browser
-│   │   ├── roadmap.html                  # Academic roadmap viewer
-│   │   ├── diagnostic.html               # Adaptive diagnostic test interface
-│   │   ├── chat.html                     # Academic tutor chat
-│   │   ├── approvals.html                # Change proposal review & decision
-│   │   └── admin.html                    # System admin & table inspector
 │   └── main.py                           # FastAPI application entrypoint
 ├── data/
 │   ├── raw/                              # Canonical institutional data sources
-│   │   ├── ee/                           # Electrical Engineering curriculum, videos, research
-│   │   ├── mme/                          # Metallurgical Engineering curriculum, videos, faculty
-│   │   ├── library/                      # Central Library catalog (3,000 publications)
-│   │   └── higher_studies/               # Higher Studies pathways (GATE, CAT, GRE, GMAT, TOEFL, IELTS)
-│   └── seed/                             # Structured relational seed data (2,399+ rows)
-│       ├── kb/                           # Knowledge Base CSVs/JSONs (courses, skills, goals, resources)
+│   └── seed/                             # Structured relational seed data
+│       ├── core_to_core/                 # Faculty, publications, taster tasks, calendar
+│       ├── core_to_mba/                  # Career paths, interview topics, decision options
 │       ├── higher_studies/               # 14 relational tables for higher studies pathways
-│       ├── personas/                     # Synthetic test personas & calibrated exercise banks
-│       ├── student/                      # Student profiles, completed courses, and goals
-│       └── survey/                       # Baseline survey instrument & diagnostic rubrics
+│       ├── kb/                           # Courses, skills, goals, resources, exercises
+│       ├── mba/                          # 17 general MBA seed CSVs (CAT, institutes, syllabi)
+│       ├── personas/                     # Synthetic test personas
+│       └── student/                      # Student profiles, completed courses, and goals
 ├── sde/                                  # Software Development Engineer (SDE) domain package
-│   ├── data/                             # Raw SDE Excel knowledge base sources
-│   ├── scripts/                          # SDE transformation pipelines (build_sde_*.py)
-│   ├── output/                           # Generated SDE relational CSV datasets
-│   └── README.md                         # SDE domain catalog & execution guide
 ├── aiml/                                 # AI & Machine Learning (AI/ML) domain package
-│   ├── data/                             # Raw AI/ML Excel knowledge base sources
-│   ├── scripts/                          # AI/ML transformation pipelines (build_*.py)
-│   ├── output/                           # Generated AI/ML relational CSV datasets
-│   └── README.md                         # AI/ML domain catalog & execution guide
 ├── data_analyst/                         # Data Analyst (DA) domain package
-│   ├── data/                             # Raw DA Excel knowledge base sources
-│   ├── scripts/                          # DA transformation pipelines (build_da_*.py)
-│   ├── output/                           # Generated DA relational CSV datasets (UTF-8 with BOM)
-│   └── README.md                         # DA domain catalog & execution guide
-├── da/                                   # Shorthand alias package for Data Analyst
-├── output/                               # Unified legacy output directory (synchronized mirrors)
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   ├── entrypoint.sh                     # Container initialization & seed loader check
 │   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
 ├── docs/
+│   ├── core_to_core_scorecard.md         # Core-to-core evaluation results
+│   ├── core_to_mba_architecture.md       # Core-to-MBA architecture overview
+│   ├── core_to_mba_scorecard.md          # 32-profile MBA evaluation scorecard
 │   ├── technical/                        # Architecture, contracts, and schema documentation
-│   ├── evaluation/conformance_report.md  # Persona conformance test results matrix
-│   ├── DATA_GAPS.md                      # Documented omissions and discrepancies
-│   ├── data_quality_report.md            # Automated curriculum & prerequisite DAG report
 │   ├── UI.md                             # Web UI design & airgap compliance documentation
 │   └── CHANGELOG.md                      # Detailed changelog across all phases
 ├── scripts/
 │   ├── ci.ps1 / ci.sh                    # Automated 6-stage CI verification runner
 │   ├── dev.ps1                           # Windows automation (up, down, reset, test, check-data)
+│   ├── evaluate_mba_scorecard.py         # MBA evaluation scorecard evaluator
+│   ├── evaluate_scorecard.py             # Core-to-core scorecard evaluator
 │   ├── seed_loader.py                    # Database seed loader and reset engine
-│   ├── run_conformance.py                # Persona conformance test runner
-│   ├── audit_course_catalogue.py         # Course catalog audit script
-│   ├── ui_smoke.ps1                      # Live Web UI smoke test script
-│   └── regenerate_relevance.py           # Skill-first relevance matrix generator
+│   └── ui_smoke.ps1                      # Live Web UI smoke test script
 ├── tests/
 │   ├── api/test_ui_endpoints.py          # UI REST endpoint & HTML page rendering tests
 │   ├── conformance/                      # Persona conformance test suite
 │   ├── integration/                      # Multi-agent & curriculum integration tests
 │   ├── unit/                             # Agent features, import boundary, & zero-external checks
+│   ├── test_core_to_core.py              # Core-to-Core verification tests (15 tests)
+│   ├── test_core_to_mba.py               # Core-to-MBA verification tests (15 tests)
+│   ├── test_evaluation_scorecard.py      # Core-to-core scorecard test
+│   ├── test_mba_evaluation_scorecard.py  # MBA scorecard test
 │   ├── test_db_free.py                   # Offline compliance & syntax unit tests
 │   └── test_db_dependent.py              # PostgreSQL integration tests
 ├── .env.example                          # Committed environment variable template

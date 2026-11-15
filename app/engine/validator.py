@@ -66,9 +66,8 @@ class PlanValidator(IPlanValidator):
         messages: List[str] = []
         completed_set = set(completed_course_ids or [])
 
-        # If student is in advanced semester and completed courses were not explicitly passed,
-        # infer completed core courses from prior semesters
-        if completed_course_ids is None and (student.current_semester or 1) > 1:
+        # If student has 0 backlogs or completed courses were not passed, infer completed core courses from prior semesters
+        if (completed_course_ids is None or (student.backlogs or 0) == 0) and (student.current_semester or 1) > 1:
             raw_p = (student.programme_id or "").upper().strip()
             prog = "BTECH_MM" if raw_p in ["BTECH_MME", "MME", "MM"] else ("BTECH_EE" if raw_p in ["BTECH_EE", "EE"] else raw_p)
             for s in range(1, student.current_semester):

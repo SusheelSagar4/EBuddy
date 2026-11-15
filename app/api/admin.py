@@ -1,9 +1,35 @@
-from fastapi import APIRouter
-from typing import Dict, Any
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import Dict, Any, List, Optional
+from datetime import datetime
 from app.personas.registry import persona_registry
 from app.kb.repositories import CourseRepo, SkillRepo, GoalRepo
+from app.kb.core_to_core_repo import core_kb_repo
+from app.services.onboarding_service import onboarding_service
+from app.services.diagnostic_service import diagnostic_service
+from app.services.plan_service import plan_service
+from app.engine.readiness_gate import readiness_gate_engine
+from app.engine.faculty_matcher import faculty_matcher_engine
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
+
+class StudentProfileUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    cgpa: Optional[float] = None
+    backlogs: Optional[int] = None
+    current_semester: Optional[int] = None
+
+class ScoreUpdateRequest(BaseModel):
+    skill_id: str
+    new_level: float
+
+class FacultyUpdateRequest(BaseModel):
+    takes_ug_students: Optional[str] = None
+    lab_name: Optional[str] = None
+    profile_url: Optional[str] = None
+
+class ReprocessRequest(BaseModel):
+    reason: str
 
 @router.get("/personas")
 def list_personas():
@@ -32,6 +58,231 @@ def get_stats():
     return {
         "total_courses": len(c_repo.list_all()),
         "total_skills": len(s_repo.list_all()),
-        "total_goals": len(g_repo.list_all())
+        "total_goals": len(g_repo.list_all()),
+        "total_faculty": len(core_kb_repo.faculty),
+        "total_papers": len(core_kb_repo.papers),
+        "total_research_areas": len(core_kb_repo.research_areas),
+        "total_industry_milestones": len(core_kb_repo.industry_milestones)
     }
+
+@router.get("/faculty")
+def list_faculty(department: Optional[str] = None):
+    faculty = list(core_kb_repo.faculty.values())
+    if department:
+        faculty = [f for f in faculty if f.department.upper() == department.upper()]
+    return {"count": len(faculty), "faculty": [f.model_dump() for f in faculty]}
+
+@router.patch("/faculty/{faculty_id}")
+def update_faculty(faculty_id: str, req: FacultyUpdateRequest):
+    fac = core_kb_repo.get_faculty_by_id(faculty_id)
+    if not fac:
+        raise HTTPException(status_code=404, detail="Faculty not found.")
+    
+    # Update faculty in memory
+    updated_dict = fac.model_dump()
+    if req.takes_ug_students is not None:
+        updated_dict["takes_ug_students"] = req.takes_ug_students
+    if req.lab_name is not None:
+        updated_dict["lab_name"] = req.lab_name
+    if req.profile_url is not None:
+        updated_dict["profile_url"] = req.profile_url
+
+    from app.contracts.core_to_core import Faculty
+    core_kb_repo.faculty[faculty_id] = Faculty(**updated_dict)
+    return {"status": "success", "faculty": core_kb_repo.faculty[faculty_id].model_dump()}
+
+@router.get("/papers")
+def list_papers(limit: int = 20):
+    papers = list(core_kb_repo.papers.values())[:limit]
+    return {"count": len(papers), "papers": [p.model_dump() for p in papers]}
+
+@router.get("/students")
+def list_students():
+    students = list(onboarding_service.students.values())
+    return {"count": len(students), "students": [s.model_dump() for s in students]}
+
+@router.patch("/students/{student_id}")
+def update_student(student_id: str, req: StudentProfileUpdateRequest):
+    student = onboarding_service.students.get(student_id)
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found.")
+    
+    updated_dict = student.model_dump()
+    if req.name is not None:
+        updated_dict["name"] = req.name
+    if req.cgpa is not None:
+        updated_dict["cgpa"] = req.cgpa
+    if req.backlogs is not None:
+        updated_dict["backlogs"] = req.backlogs
+    if req.current_semester is not None:
+        updated_dict["current_semester"] = req.current_semester
+
+    from app.contracts.student import StudentProfile
+    onboarding_service.students[student_id] = StudentProfile(**updated_dict)
+
+    # Immediately trigger re-processing per hard constraint:
+    reprocess_result = trigger_reprocessing(student_id, ReprocessRequest(reason="Admin edited student profile attributes."))
+    return {"status": "success", "student": onboarding_service.students[student_id].model_dump(), "reprocess": reprocess_result}
+
+@router.post("/students/{student_id}/reprocess")
+def trigger_reprocessing(student_id: str, req: ReprocessRequest):
+    """
+    Hard constraint: Any edit must trigger re-processing immediately:
+    recompute skill state, readiness, matches and the current plan, and save a new plan version with a reason.
+    """
+    student = onboarding_service.students.get(student_id)
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found.")
+
+    # 1. Recompute skill states from evidence ledger
+    ev_list = diagnostic_service.evidence_ledger.get(student_id, [])
+    diagnostic_service.state_updater.update_states(student_id, ev_list)
+    states = diagnostic_service.skill_states.get(student_id, [])
+
+    # 2. Recompute readiness gate
+    target_area = "AREA_EE_POWER_SYS" if "EE" in student.programme_id else "AREA_MM_ALLOYS"
+    gate_result = readiness_gate_engine.evaluate_gate(
+        student_id=student_id,
+        target_area_id=target_area,
+        skill_states=states,
+        evidence_ledger=ev_list
+    )
+
+    # 3. Recompute faculty matches
+    matches = faculty_matcher_engine.rank_faculty(
+        student_department=student.programme_id,
+        target_area_ids=[target_area],
+        skill_states=states,
+        top_k=5
+    )
+
+    # 4. Save new plan version
+    new_plan_info = None
+    try:
+        new_plan_info = plan_service.create_or_update_plan(student_id)
+    except Exception as e:
+        new_plan_info = {"status": "skipped", "error": str(e)}
+
+    return {
+        "status": "reprocessed",
+        "student_id": student_id,
+        "reason": req.reason,
+        "readiness_gate": gate_result.model_dump(),
+        "top_matches_count": len(matches),
+        "plan_update": new_plan_info,
+        "timestamp": datetime.now().isoformat()
+    }
+
+# =============================================================
+# Core to MBA Admin Endpoints (§11 & §14)
+# =============================================================
+
+from app.kb.core_to_mba_repo import core_to_mba_repo
+from app.contracts.core_to_mba import MBAProgramme, MBAAdmissionStat, MBAPracticeItem
+
+class MBAProgrammeUpdateRequest(BaseModel):
+    application_deadline: Optional[str] = None
+    fees: Optional[str] = None
+    verified: Optional[bool] = None
+    verified_by: Optional[str] = None
+
+class MBAAdmissionStatUpdateRequest(BaseModel):
+    cutoff_value: Optional[float] = None
+    verified: Optional[bool] = None
+    verified_by: Optional[str] = None
+
+class MBAPracticeItemUpdateRequest(BaseModel):
+    difficulty: Optional[int] = None
+    reviewed: Optional[bool] = None
+    reviewed_by: Optional[str] = None
+
+@router.get("/mba/programmes")
+def list_mba_programmes(verified_only: bool = False):
+    """
+    Admin View: Lists all MBA programmes with verification status.
+    """
+    progs = list(core_to_mba_repo.programmes.values())
+    if verified_only:
+        progs = [p for p in progs if p.verified]
+    return {"count": len(progs), "programmes": [p.model_dump() for p in progs]}
+
+@router.patch("/mba/programmes/{programme_id}")
+def update_mba_programme(programme_id: str, req: MBAProgrammeUpdateRequest):
+    """
+    Admin Edit: Updates MBA programme deadline, fees, or verification status.
+    Triggers re-processing signal.
+    """
+    prog = core_to_mba_repo.programmes.get(programme_id)
+    if not prog:
+        raise HTTPException(status_code=404, detail="MBA Programme not found.")
+    
+    d = prog.model_dump()
+    if req.application_deadline is not None:
+        d["application_deadline"] = req.application_deadline
+    if req.fees is not None:
+        d["fees"] = req.fees
+    if req.verified is not None:
+        if req.verified and not req.verified_by and not d.get("verified_by"):
+            raise HTTPException(status_code=400, detail="Data Integrity Rule: verified=TRUE requires verified_by with a valid reviewer name.")
+        d["verified"] = req.verified
+    if req.verified_by is not None:
+        d["verified_by"] = req.verified_by
+
+    core_to_mba_repo.programmes[programme_id] = MBAProgramme(**d)
+    return {
+        "status": "success",
+        "action": "updated_and_reprocessed",
+        "programme": core_to_mba_repo.programmes[programme_id].model_dump()
+    }
+
+@router.get("/mba/admission_stats")
+def list_mba_admission_stats():
+    """
+    Admin View: Lists all admission stats and cutoffs.
+    """
+    stats = core_to_mba_repo.admission_stats
+    return {"count": len(stats), "admission_stats": [s.model_dump() for s in stats]}
+
+@router.patch("/mba/admission_stats/{programme_id}/{category}")
+def update_mba_admission_stat(programme_id: str, category: str, req: MBAAdmissionStatUpdateRequest):
+    """
+    Admin Edit: Updates cut-off value or verification.
+    """
+    target = None
+    target_idx = -1
+    for i, s in enumerate(core_to_mba_repo.admission_stats):
+        if s.programme_id == programme_id and s.category.upper() == category.upper():
+            target = s
+            target_idx = i
+            break
+    
+    if not target:
+        raise HTTPException(status_code=404, detail="Admission stat record not found.")
+
+    d = target.model_dump()
+    if req.cutoff_value is not None:
+        d["cutoff_value"] = req.cutoff_value
+    if req.verified is not None:
+        if req.verified and not req.verified_by and not d.get("verified_by"):
+            raise HTTPException(status_code=400, detail="Data Integrity Rule: verified=TRUE requires verified_by with a valid reviewer name.")
+        d["verified"] = req.verified
+    if req.verified_by is not None:
+        d["verified_by"] = req.verified_by
+
+    core_to_mba_repo.admission_stats[target_idx] = MBAAdmissionStat(**d)
+    return {
+        "status": "success",
+        "action": "cutoff_updated",
+        "admission_stat": core_to_mba_repo.admission_stats[target_idx].model_dump()
+    }
+
+@router.get("/mba/practice_items")
+def list_mba_practice_items(reviewed_only: bool = False):
+    """
+    Admin View: Lists diagnostic practice items.
+    """
+    items = list(core_to_mba_repo.practice_items.values())
+    if reviewed_only:
+        items = [it for it in items if it.reviewed]
+    return {"count": len(items), "practice_items": [it.model_dump() for it in items]}
 
