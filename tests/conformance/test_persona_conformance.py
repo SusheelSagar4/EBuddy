@@ -247,7 +247,10 @@ class TestPersonaConformance(unittest.TestCase):
         3. Pivot student's plan changes when the goal changes.
         4. Conflict student has conflict_flag set.
         """
-        pkg = self.personas[0]
+        # Edge-case profiles belong to ee_power_core; look it up by ID rather than
+        # relying on registry discovery order.
+        pkg = persona_registry.get("ee_power_core")
+        self.assertIsNotNone(pkg, "ee_power_core persona not registered")
         goal = Goal(goal_id=pkg.spec.goal_id, name="Test Goal", category="career", description="Goal", source_id="TEST")
         reqs = [GoalRequirement(goal_id=goal.goal_id, skill_id=r["skill_id"], required_level=float(r["required_level"]), source_id="TEST") for r in pkg.requirements]
         
