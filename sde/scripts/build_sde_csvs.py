@@ -577,16 +577,6 @@ def build():
         w.writeheader()
         w.writerows(portfolio_projects_data)
 
-    # Sync to inner EBuddy-main/output if directory exists
-    inner_output_dir = os.path.join("EBuddy-main", "output")
-    if os.path.isdir("EBuddy-main"):
-        os.makedirs(inner_output_dir, exist_ok=True)
-        for fname in ["01_sde_roadmap_overview.csv", "02_phase_learning_content.csv", "03_topic_checkpoints.csv", "04_project_repos.csv", "05_portfolio_projects.csv"]:
-            src = os.path.join(OUTPUT_DIR, fname)
-            dst = os.path.join(inner_output_dir, fname)
-            with open(src, "rb") as sf, open(dst, "wb") as df:
-                df.write(sf.read())
-
     # ----------------------------------------------------
     # 8. Assertions & Verification
     # ----------------------------------------------------

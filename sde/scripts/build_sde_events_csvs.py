@@ -726,10 +726,12 @@ def main():
         }
     ]
 
-    # Write files to both output locations
+    # Write files to output locations
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.dirname(os.path.dirname(script_dir))
     dest_dirs = [
-        "c:/Users/Dhaval/Downloads/EBuddy-main/output",
-        "c:/Users/Dhaval/Downloads/EBuddy-main/EBuddy-main/output"
+        os.path.join(repo_root, "output"),
+        os.path.join(repo_root, "sde", "output")
     ]
 
     for d in dest_dirs:

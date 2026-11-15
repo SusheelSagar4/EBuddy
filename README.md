@@ -263,9 +263,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\ui_smoke.ps1
 │   │   ├── mme/                          # Metallurgical Engineering curriculum, videos, faculty
 │   │   ├── library/                      # Central Library catalog (3,000 publications)
 │   │   └── higher_studies/               # Higher Studies pathways (GATE, CAT, GRE, GMAT, TOEFL, IELTS)
-│   └── seed/                             # Structured relational seed data
-│       ├── kb/                           # Knowledge Base CSVs/JSONs (136 courses, 248 resources, 213 projects)
+│   └── seed/                             # Structured relational seed data (2,399+ rows)
+│       ├── kb/                           # Knowledge Base CSVs/JSONs (courses, skills, goals, resources)
 │       ├── higher_studies/               # 14 relational tables for higher studies pathways
+│       ├── personas/                     # Synthetic test personas & calibrated exercise banks
 │       ├── student/                      # Student profiles, completed courses, and goals
 │       └── survey/                       # Baseline survey instrument & diagnostic rubrics
 ├── sde/                                  # Software Development Engineer (SDE) domain package
@@ -338,9 +339,6 @@ powershell -ExecutionPolicy Bypass -File .\scripts\ui_smoke.ps1
 ├── build_da_csvs.py                      # Root forwarder -> data_analyst/scripts/build_da_csvs.py
 ├── build_data_analyst_events_csvs.py     # Root forwarder -> data_analyst/scripts/build_da_events_csvs.py
 ├── build_da_events_csvs.py               # Root forwarder -> data_analyst/scripts/build_da_events_csvs.py
-│   └── seed/                             # Structured relational seed data (2,399+ rows)
-│       ├── kb/                           # Knowledge Base CSVs/JSONs (courses, skills, goals, resources)
-│       └── personas/                     # Synthetic test personas & calibrated exercise banks
 ├── docker/
 │   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
 │   ├── entrypoint.sh                     # Container initialization & seed loader check

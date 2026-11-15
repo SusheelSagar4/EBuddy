@@ -322,8 +322,6 @@ def build_sde_quiz_pipeline(base_dir=None):
     out_dirs = [
         os.path.join(base_dir, "sde", "output"),
         os.path.join(base_dir, "output"),
-        os.path.join(base_dir, "EBuddy-main", "sde", "output"),
-        os.path.join(base_dir, "EBuddy-main", "output"),
     ]
 
     for od in out_dirs:
