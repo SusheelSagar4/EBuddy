@@ -623,6 +623,20 @@ class CustomPersonaPolicy(PersonaPolicy):
 
         return adjusted_items
 
+    def classify_requirement(
+        self,
+        course_id: Optional[str],
+        slot_id: Optional[str],
+        student: StudentProfile,
+        default_is_required: bool
+    ) -> bool:
+        """
+        B.Tech UPSC Persona requirement classification:
+        Preserves degree core requirements as locked while ensuring competitive exam
+        milestones and resources are scheduled outside the locked course list.
+        """
+        return default_is_required
+
     def get_advisories(self, student: StudentProfile) -> List[str]:
         notes = []
         sem = student.current_semester

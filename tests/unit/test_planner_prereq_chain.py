@@ -56,11 +56,11 @@ class TestPlannerPrerequisiteChain(unittest.TestCase):
         plan, prereq_check = self._plan("btech_upsc", sem=5, backlogs=1, completed=completed)
 
         self.assertTrue(prereq_check.passed, prereq_check.message)
-        course_ids = [it.course_id for it in plan.items if it.item_type == "course"]
+        course_ids = [it.course_id for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"]]
         self.assertIn("EE1L001", course_ids)
         self.assertIn("EE3L007", course_ids)
         self.assertLess(course_ids.index("EE1L001"), course_ids.index("EE3L007"))
-        prereq_item = next(it for it in plan.items if it.item_type == "course" and it.course_id == "EE1L001")
+        prereq_item = next(it for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"] and it.course_id == "EE1L001")
         self.assertIn("EE3L007", prereq_item.reason.prerequisite_for)
 
     def test_every_backlog_gap_yields_valid_prereq_order(self):

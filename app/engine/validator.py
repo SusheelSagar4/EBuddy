@@ -79,7 +79,7 @@ class PlanValidator(IPlanValidator):
 
         # 1. Course Existence Check
         missing_courses = []
-        course_items = [it for it in plan.items if it.item_type == "course" and it.course_id]
+        course_items = [it for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"] and it.course_id]
         for it in course_items:
             cid = it.course_id
             if cid not in self.valid_courses:

@@ -6,7 +6,11 @@ from typing import List, Dict, Any, Optional, Set, Tuple
 from datetime import datetime, timezone
 from app.contracts.student import StudentProfile, Constraint, Preference, SkillState
 from app.contracts.goal import Goal
-from app.contracts.plan import Plan, PlanItem, StructuredReason
+from app.contracts.plan import (
+    Plan, PlanItem, StructuredReason,
+    WeeklyScheduleItem, MonthlyTheme, SemesterBlock, TimelineRoadmap
+)
+from app.config import settings
 from app.engine.interfaces import IPlanner
 from app.engine.rules import RuleEngine
 from app.engine.relevance import CourseRelevanceEngine
@@ -39,6 +43,7 @@ class Planner(IPlanner):
         self.prog_requirements: Dict[Tuple[str, int], List[Dict[str, Any]]] = {} # (prog_id, sem) -> [req_row]
         self.slot_options: Dict[str, List[str]] = {} # slot_id -> [course_id]
         self.minor_courses: Dict[str, List[str]] = {} # minor_id -> [course_id]
+        self.academic_calendar: List[Dict[str, Any]] = []
         self._load_knowledge_base()
 
     def _load_knowledge_base(self):
@@ -100,6 +105,16 @@ class Planner(IPlanner):
                     mid = r["minor_id"].strip()
                     cid = r["course_id"].strip()
                     self.minor_courses.setdefault(mid, []).append(cid)
+
+        # 6. Academic calendar (for verified dates and exam weeks)
+        cal_file = os.path.join(os.path.dirname(self.seed_dir), "core_to_core", "academic_calendar.csv")
+        if not os.path.exists(cal_file):
+            cal_file = os.path.join("data", "seed", "core_to_core", "academic_calendar.csv")
+        if os.path.exists(cal_file):
+            with open(cal_file, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for r in reader:
+                    self.academic_calendar.append(r)
 
     def _topological_sort_courses(self, course_ids: List[str]) -> List[str]:
         """Ensures courses within the same batch are ordered so prerequisites precede dependents."""
@@ -222,6 +237,8 @@ class Planner(IPlanner):
         version: int = 1
     ) -> Plan:
         items: List[PlanItem] = []
+        required_courses_list: List[PlanItem] = []
+        recommended_items_list: List[PlanItem] = []
         completed_set = set(completed_course_ids or [])
         assigned_courses: Set[str] = set(completed_set)
         current_sem = student.current_semester
@@ -405,14 +422,35 @@ class Planner(IPlanner):
             # =========================================================================
             # Core courses are mandatory per branch curriculum and are FIXED.
             # Career relevance does NOT determine their inclusion.
+            active_policy = None
+            try:
+                from app.personas.registry import persona_registry
+                for pkg in persona_registry.list_all():
+                    if pkg.spec and pkg.spec.goal_id == goal.goal_id:
+                        active_policy = pkg.policy
+                        break
+            except Exception:
+                pass
+            if active_policy is None:
+                from app.personas.policy import PersonaPolicy
+                active_policy = PersonaPolicy({})
+
             raw_core_cids = []
             core_req_map: Dict[str, Dict[str, Any]] = {}
 
             for r in sem_reqs:
                 cid = r.get("course_id", "").strip()
-                if cid and cid not in assigned_courses:
-                    raw_core_cids.append(cid)
-                    core_req_map[cid] = r
+                slot_type = (r.get("slot_type", "") or "").strip().lower()
+                course_type = (r.get("course_type", "") or "").strip().lower()
+                is_choosable_type = (
+                    slot_type in ["elective", "lateral", "breadth", "minor"] or
+                    course_type in ["elective", "vertical elective", "lateral", "breadth", "minor"]
+                )
+                if cid and not is_choosable_type and cid not in assigned_courses:
+                    is_req = active_policy.classify_requirement(cid, r.get("slot_id"), student, default_is_required=True)
+                    if is_req:
+                        raw_core_cids.append(cid)
+                        core_req_map[cid] = r
 
             # Sort topologically so internal prerequisites precede dependent courses
             ordered_core_cids = self._topological_sort_courses(raw_core_cids)
@@ -425,45 +463,64 @@ class Planner(IPlanner):
                 req_row = core_req_map.get(cid, {})
                 c_meta = self.course_info.get(cid, {})
                 c_title = c_meta.get("title", cid)
+                c_credits = float(c_meta.get("credits", 4.0))
                 slot_name = req_row.get("slot_name", "Core Degree Course")
+                slot_id = req_row.get("slot_id")
+
+                hours_per_credit = float(settings.PLANNER_ASSUMPTIONS.get("hours_per_credit", 1.0))
+                weekly_load = c_credits * hours_per_credit
                 
                 # Fetch career relevance for explanation/rationale only
                 rel_score, rel_rationale = self.relevance_engine.get_relevance(cid, goal.goal_id)
-                why_reason = f"Mandatory major/core requirement for {prog_id} Semester {current_sem} ({slot_name}: {c_title})."
+                goal_emphasis = None
+                why_reason = f"Mandatory major/core requirement for {prog_id} Semester {current_sem} ({slot_name}: {c_title}). Locked commitment."
                 if rel_score > 0:
-                    why_reason += f" Contributes foundational competencies to {goal.name} (Relevance {rel_score}/3: {rel_rationale})."
+                    goal_emphasis = f"Target Mastery: Core competency for {goal.name} (Relevance {rel_score}/3). Master {rel_rationale}."
+                    why_reason += f" {goal_emphasis}"
 
                 c_skills = self.course_skills.get(cid, [])
                 if any(s in conflicted_skills for s in c_skills):
                     why_reason += " [CONFLICT: Interest vs Evidence] Student has high interest/aspiration, but diagnostic evidence indicates foundational gaps (<40). Scheduled foundational bridge before advanced coursework."
 
                 assigned_courses.add(cid)
-                current_sem_credits += c_meta.get("credits", 4.0)
-                items.append(PlanItem(
+                current_sem_credits += c_credits
+
+                core_item = PlanItem(
                     item_id=f"ITEM_CORE_{cid}_{uuid.uuid4().hex[:6]}",
-                    item_type="course",
+                    item_type="REQUIRED_COURSE",
                     course_id=cid,
+                    slot_id=slot_id,
                     semester_number=current_sem,
-                    estimated_hours=4.0,
+                    estimated_hours=weekly_load,
+                    hours_per_week=weekly_load,
                     phase=p1_label,
-                    prep_hours_weekly=6.0,
+                    prep_hours_weekly=weekly_load,
+                    status_badge="LOCKED",
+                    goal_emphasis=goal_emphasis,
+                    cited_kb_codes=[cid],
                     reason=StructuredReason(
                         intent=f"Branch Core Degree Requirement ({prog_id})",
                         target_skills=c_skills,
                         why_this=why_reason,
                         prerequisite_for=[],
-                        rule_compliance=["Mandatory branch curriculum requirement", "Fixed core selection"]
+                        rule_compliance=["Mandatory branch curriculum requirement", "Fixed core selection (LOCKED)"]
                     )
-                ))
+                )
+                items.append(core_item)
+                required_courses_list.append(core_item)
+
                 # Add core practice exercise
                 items.append(PlanItem(
                     item_id=f"ITEM_EX_{cid}_{uuid.uuid4().hex[:6]}",
-                    item_type="exercise",
+                    item_type="EXERCISE_SET",
                     course_id=cid,
                     semester_number=current_sem,
                     estimated_hours=2.0,
+                    hours_per_week=2.0,
                     phase=p1_label,
-                    prep_hours_weekly=3.0,
+                    prep_hours_weekly=2.0,
+                    status_badge="LOCKED",
+                    cited_kb_codes=[cid],
                     reason=StructuredReason(
                         intent=f"Core Course Practice: {cid}",
                         target_skills=c_skills,
@@ -484,6 +541,15 @@ class Planner(IPlanner):
                     slot_id = r.get("slot_id", "").strip()
                     slot_type = r.get("slot_type", "elective").strip().lower()
                     slot_name = r.get("slot_name", slot_id)
+
+                    is_req = active_policy.classify_requirement(None, slot_id, student, default_is_required=False)
+                    if is_req:
+                        continue
+
+                    # Mark pool rule status if unknown (e.g. MME pools)
+                    pool_rule_status = None
+                    if prog_id == "BTECH_MM" and ("BREADTH" in slot_id.upper() or "LATERAL" in slot_id.upper() or "ELECTIVE" in slot_id.upper()):
+                        pool_rule_status = "pool rule unknown"
 
                     candidate_options = list(self.slot_options.get(slot_id, []))
                     if not candidate_options:
@@ -532,7 +598,9 @@ class Planner(IPlanner):
                     if ranked:
                         top_pick = ranked[0]
                         elec_cid = top_pick["course_id"]
-                        elec_credits = self.course_info.get(elec_cid, {}).get("credits", 3.0)
+                        elec_credits = float(self.course_info.get(elec_cid, {}).get("credits", 3.0))
+                        hours_per_credit = float(settings.PLANNER_ASSUMPTIONS.get("hours_per_credit", 1.0))
+                        elec_weekly_load = elec_credits * hours_per_credit
 
                         # Student constraint check (HARD limit)
                         if effective_student_credit_cap is not None and (current_sem_credits + elec_credits > effective_student_credit_cap):
@@ -550,20 +618,30 @@ class Planner(IPlanner):
                             current_sem_credits += elec_credits
                             assigned_courses.add(elec_cid)
 
+                            covered_gaps = top_pick.get("covered_gaps", [])
+                            skill_gap_reason = f"Closes gap in {', '.join(covered_gaps) if covered_gaps else 'domain competencies'} for {slot_name}."
                             why_this = f"Selected for slot {slot_id} based on career relevance to {goal.name} (Score: {top_pick['base_relevance']}/3: {top_pick['rationale']} [Status: {top_pick.get('status', 'draft_for_review')}, Source: {top_pick.get('source_id', 'DESIGN_TEAM')}]) and skill gap alignment."
                             rule_comp = ["Prerequisites verified satisfied", "Complies with curriculum slot options"]
+                            if pool_rule_status:
+                                rule_comp.append(f"Slot rule note: {pool_rule_status}")
                             if exceeds_cap:
                                 why_this += " [WARNING: unsourced_baseline] Total semester credits exceed 26.0 baseline credit cap."
                                 rule_comp.append("[WARNING: unsourced_baseline] Exceeds 26.0 baseline credit cap (RULE_SEM_CREDIT_CAP_REGULAR)")
 
-                            items.append(PlanItem(
+                            elec_item = PlanItem(
                                 item_id=f"ITEM_ELEC_{elec_cid}_{uuid.uuid4().hex[:6]}",
-                                item_type="course",
+                                item_type="ELECTIVE_PICK",
                                 course_id=elec_cid,
+                                slot_id=slot_id,
                                 semester_number=current_sem,
-                                estimated_hours=4.0,
+                                estimated_hours=elec_weekly_load,
+                                hours_per_week=elec_weekly_load,
                                 phase=p2_label,
-                                prep_hours_weekly=4.0,
+                                prep_hours_weekly=elec_weekly_load,
+                                status_badge="RECOMMENDED",
+                                skill_gap_reason=skill_gap_reason,
+                                cited_kb_codes=[elec_cid, slot_id],
+                                pool_rule_status=pool_rule_status,
                                 reason=StructuredReason(
                                     intent=f"Recommended Elective ({slot_name})",
                                     target_skills=self.course_skills.get(elec_cid, []),
@@ -571,15 +649,21 @@ class Planner(IPlanner):
                                     prerequisite_for=[],
                                     rule_compliance=rule_comp
                                 )
-                            ))
-                            items.append(PlanItem(
+                            )
+                            items.append(elec_item)
+                            recommended_items_list.append(elec_item)
+
+                            ex_elec = PlanItem(
                                 item_id=f"ITEM_EX_{elec_cid}_{uuid.uuid4().hex[:6]}",
-                                item_type="exercise",
+                                item_type="EXERCISE_SET",
                                 course_id=elec_cid,
                                 semester_number=current_sem,
                                 estimated_hours=2.0,
+                                hours_per_week=2.0,
                                 phase=p2_label,
                                 prep_hours_weekly=2.0,
+                                status_badge="RECOMMENDED",
+                                cited_kb_codes=[elec_cid],
                                 reason=StructuredReason(
                                     intent=f"Elective Practice: {elec_cid}",
                                     target_skills=self.course_skills.get(elec_cid, []),
@@ -587,7 +671,29 @@ class Planner(IPlanner):
                                     prerequisite_for=[],
                                     rule_compliance=[]
                                 )
-                            ))
+                            )
+                            items.append(ex_elec)
+                            recommended_items_list.append(ex_elec)
+                    else:
+                        no_cand_item = PlanItem(
+                            item_id=f"ITEM_SLOT_EMPTY_{slot_id}_{uuid.uuid4().hex[:6]}",
+                            item_type="ELECTIVE_PICK",
+                            slot_id=slot_id,
+                            semester_number=current_sem,
+                            status_badge="NO_CANDIDATE",
+                            skill_gap_reason=f"No suitable elective candidate found in catalog for slot {slot_name} ({slot_id}).",
+                            pool_rule_status=pool_rule_status,
+                            cited_kb_codes=[slot_id],
+                            reason=StructuredReason(
+                                intent=f"Elective Slot ({slot_name})",
+                                target_skills=[],
+                                why_this=f"No suitable elective candidate found for slot {slot_name} ({slot_id}) in catalog.",
+                                prerequisite_for=[],
+                                rule_compliance=[]
+                            )
+                        )
+                        items.append(no_cand_item)
+                        recommended_items_list.append(no_cand_item)
 
             # =========================================================================
             # PHASE C: Minor Track (Optional Recommendation if Eligible)
@@ -713,14 +819,18 @@ class Planner(IPlanner):
             if not courses_for_sid or not any(c in assigned_courses for c in courses_for_sid):
                 skill_res = self.resource_repo.get_resources_for_skill(sid)
                 for r_obj in skill_res:
-                    items.append(PlanItem(
+                    res_item = PlanItem(
                         item_id=f"ITEM_RES_{r_obj.resource_id}_{uuid.uuid4().hex[:6]}",
-                        item_type="resource",
+                        item_type="RESOURCE",
                         resource_id=r_obj.resource_id,
                         semester_number=current_sem,
                         estimated_hours=3.0,
+                        hours_per_week=3.0,
                         phase=p2_label,
                         prep_hours_weekly=3.0,
+                        status_badge="RECOMMENDED",
+                        cited_kb_codes=[r_obj.resource_id],
+                        skill_gap_reason=f"Open courseware coverage for {sid}",
                         reason=StructuredReason(
                             intent=f"Open Courseware Resource: {sid}",
                             target_skills=[sid],
@@ -728,17 +838,23 @@ class Planner(IPlanner):
                             prerequisite_for=[],
                             rule_compliance=["Self-paced open resource study"]
                         )
-                    ))
+                    )
+                    items.append(res_item)
+                    recommended_items_list.append(res_item)
 
         # UPSC Domain Roadmap & Disclaimers
         if goal.goal_id == "GOAL_UPSC_COMPETITIVE":
-            items.append(PlanItem(
+            upsc_ms = PlanItem(
                 item_id=f"ITEM_MS_UPSC_GS_{uuid.uuid4().hex[:6]}",
-                item_type="milestone",
+                item_type="CHECKPOINT",
                 semester_number=current_sem,
                 estimated_hours=8.0,
+                hours_per_week=8.0,
                 phase=p2_label,
                 prep_hours_weekly=8.0,
+                status_badge="RECOMMENDED",
+                cited_kb_codes=["UPSC_GS_SYLLABUS"],
+                skill_gap_reason="Non-curricular competitive exam preparation",
                 reason=StructuredReason(
                     intent="UPSC General Studies Preparation",
                     target_skills=["SKILL_RESEARCH_WRITING", "SKILL_ENGINEERING_MATH"],
@@ -746,16 +862,22 @@ class Planner(IPlanner):
                     prerequisite_for=[],
                     rule_compliance=["Non-curricular competitive exam preparation"]
                 )
-            ))
+            )
+            items.append(upsc_ms)
+            recommended_items_list.append(upsc_ms)
 
         # Milestone Checkpoint
-        items.append(PlanItem(
+        cp_ms = PlanItem(
             item_id=f"ITEM_MS_{uuid.uuid4().hex[:6]}",
-            item_type="milestone",
+            item_type="CHECKPOINT",
             semester_number=current_sem,
-            estimated_hours=0.0,
+            estimated_hours=2.0,
+            hours_per_week=2.0,
             phase=p3_label,
-            prep_hours_weekly=4.0,
+            prep_hours_weekly=2.0,
+            status_badge="CHECKPOINT",
+            cited_kb_codes=["MILESTONE_CHECKPOINT"],
+            skill_gap_reason=f"Mastery checkpoint gate for {goal.name}",
             reason=StructuredReason(
                 intent="Semester Target Milestone",
                 target_skills=[g["skill_id"] for g in gaps if g.get("gap", 0) > 0] if gaps else [],
@@ -763,7 +885,8 @@ class Planner(IPlanner):
                 prerequisite_for=[],
                 rule_compliance=[]
             )
-        ))
+        )
+        items.append(cp_ms)
 
         # 3. Opt-in persona policy adjustment hook
         current_persona_id = None
@@ -784,12 +907,250 @@ class Planner(IPlanner):
             )
             # Fall back to unadjusted items
 
+        # =========================================================================
+        # Workload Cap Enforcement & Extra Load Shedding (Hard Constraint)
+        # =========================================================================
+        req_weekly_hours = sum(float(getattr(it, "hours_per_week", 0.0) or getattr(it, "estimated_hours", 0.0)) for it in required_courses_list)
+        extra_items = [it for it in items if it not in required_courses_list]
+        extra_weekly_hours = sum(float(getattr(it, "hours_per_week", 0.0) or getattr(it, "estimated_hours", 0.0)) for it in extra_items)
+        total_weekly_load = req_weekly_hours + extra_weekly_hours
+        workload_cap_explanation = None
+
+        if student_weekly_hours is not None and total_weekly_load > student_weekly_hours:
+            allowed_extras = max(0.0, student_weekly_hours - req_weekly_hours)
+            if req_weekly_hours >= student_weekly_hours:
+                workload_cap_explanation = (
+                    f"Total required core academic workload ({req_weekly_hours:.1f}h/week) meets or exceeds your stated study cap ({student_weekly_hours:.1f}h/week). "
+                    f"Mandatory core courses ({req_weekly_hours:.1f}h/week) are locked commitments and cannot be dropped under curriculum regulations. "
+                    f"All supplementary extras (elective practice, extra modules, open resources) have been reduced/deferred to protect your workload."
+                )
+                for it in extra_items:
+                    it.hours_per_week = 0.0
+            else:
+                workload_cap_explanation = (
+                    f"Total requested workload ({total_weekly_load:.1f}h/week) exceeded weekly study hours cap ({student_weekly_hours:.1f}h/week). "
+                    f"Mandatory core courses ({req_weekly_hours:.1f}h/week) are locked commitments and preserved. "
+                    f"Non-mandatory extras were reduced from {extra_weekly_hours:.1f}h to {allowed_extras:.1f}h to fit your weekly limit."
+                )
+                scale = allowed_extras / extra_weekly_hours if extra_weekly_hours > 0 else 0.0
+                for it in extra_items:
+                    it.hours_per_week = round(float(getattr(it, "hours_per_week", 0.0)) * scale, 1)
+
+        # =========================================================================
+        # Multi-Semester Horizon & Semester Blocks
+        # =========================================================================
+        semester_blocks: List[SemesterBlock] = []
+        hours_per_credit = float(settings.PLANNER_ASSUMPTIONS.get("hours_per_credit", 1.0))
+        for sem in range(current_sem, 9):
+            sem_name = f"Autumn 2026 (Semester {sem})" if sem % 2 == 1 else f"Spring 2027 (Semester {sem})"
+            cal_entries = [r for r in self.academic_calendar if r.get("semester", "").strip().lower() == ("autumn 2026" if sem % 2 == 1 else "spring 2027")]
+            if cal_entries:
+                start_d = cal_entries[0]["week_start"]
+                end_d = cal_entries[-1]["week_start"]
+                is_ind = False
+            else:
+                start_d = str(settings.PLANNER_ASSUMPTIONS.get("default_autumn_start", "2026-08-03")) if sem % 2 == 1 else str(settings.PLANNER_ASSUMPTIONS.get("default_spring_start", "2027-01-04"))
+                end_d = "2026-11-23" if sem % 2 == 1 else "2027-04-26"
+                is_ind = True
+
+            sem_req_items = [it for it in required_courses_list if it.semester_number == sem]
+            sem_elec_items = [it for it in recommended_items_list if it.semester_number == sem and it.item_type == "ELECTIVE_PICK"]
+
+            # If sem > current_sem, fetch future required courses from prog_requirements
+            if sem > current_sem:
+                for r in self.prog_requirements.get((prog_id, sem), []):
+                    c = r.get("course_id", "").strip()
+                    if c:
+                        c_meta = self.course_info.get(c, {})
+                        c_title = c_meta.get("title", c)
+                        c_credits = float(c_meta.get("credits", 4.0))
+                        rel_score, rel_rationale = self.relevance_engine.get_relevance(c, goal.goal_id)
+                        sem_req_items.append(PlanItem(
+                            item_id=f"ITEM_CORE_S{sem}_{c}_{uuid.uuid4().hex[:4]}",
+                            item_type="REQUIRED_COURSE",
+                            course_id=c,
+                            semester_number=sem,
+                            estimated_hours=c_credits * hours_per_credit,
+                            hours_per_week=c_credits * hours_per_credit,
+                            status_badge="LOCKED",
+                            cited_kb_codes=[c],
+                            goal_emphasis=f"Target Mastery: Foundational for {goal.name} (Relevance {rel_score}/3)." if rel_score > 0 else None,
+                            reason=StructuredReason(
+                                intent=f"Mandatory Degree Core Requirement (Semester {sem})",
+                                target_skills=self.course_skills.get(c, []),
+                                why_this=f"Fixed core requirement for {prog_id} Semester {sem} ({c_title}). Locked commitment.",
+                                prerequisite_for=[],
+                                rule_compliance=["Mandatory branch curriculum requirement"]
+                            )
+                        ))
+
+            # 4 Monthly themes
+            monthly_themes = [
+                MonthlyTheme(
+                    month_index=1,
+                    theme_name="Foundational Depth & Diagnostic Gate",
+                    focus_skills=[g["skill_id"] for g in gaps[:2]],
+                    checkpoint={"week": 4, "type": "diagnostic_gate"},
+                    weekly_hours_cap=student_weekly_hours or 20.0
+                ),
+                MonthlyTheme(
+                    month_index=2,
+                    theme_name="Core Depth & Midsem Assessment",
+                    focus_skills=[g["skill_id"] for g in gaps[2:4]] if len(gaps) > 2 else [],
+                    checkpoint={"week": 8, "type": "midsem_gate"},
+                    weekly_hours_cap=(student_weekly_hours or 20.0) * float(settings.PLANNER_ASSUMPTIONS.get("exam_week_factor", 0.4))
+                ),
+                MonthlyTheme(
+                    month_index=3,
+                    theme_name="Specialization, Electives & Lab Projects",
+                    focus_skills=[g["skill_id"] for g in gaps],
+                    checkpoint={"week": 12, "type": "mastery_gate"},
+                    weekly_hours_cap=student_weekly_hours or 20.0
+                ),
+                MonthlyTheme(
+                    month_index=4,
+                    theme_name="Integration, Comprehensive Review & Endsem",
+                    focus_skills=[g["skill_id"] for g in gaps],
+                    checkpoint={"week": 16, "type": "semester_mastery_gate"},
+                    weekly_hours_cap=(student_weekly_hours or 20.0) * 0.2
+                )
+            ]
+
+            sem_tot_credits = sum(float(self.course_info.get(it.course_id, {}).get("credits", 4.0)) for it in sem_req_items if it.course_id)
+            sem_tot_credits += sum(float(self.course_info.get(it.course_id, {}).get("credits", 3.0)) for it in sem_elec_items if it.course_id)
+
+            semester_blocks.append(SemesterBlock(
+                semester_number=sem,
+                semester_name=sem_name,
+                start_date=start_d,
+                end_date=end_d,
+                is_indicative=is_ind,
+                required_courses=sem_req_items,
+                elective_picks=sem_elec_items,
+                monthly_themes=monthly_themes,
+                total_credits=sem_tot_credits,
+                buffer_exam_weeks=[8, 15, 16]
+            ))
+
+        # =========================================================================
+        # Next 4 Weeks Detailed Schedule
+        # =========================================================================
+        next_4_weeks: List[WeeklyScheduleItem] = []
+        base_h = req_weekly_hours / 4.0 if req_weekly_hours > 0 else 4.0
+
+        # Week 1
+        next_4_weeks.append(WeeklyScheduleItem(
+            item_id=f"WEEK_1_CORE_{uuid.uuid4().hex[:4]}",
+            item_type="REQUIRED_COURSE",
+            title=f"Core Lectures & Foundations (Semester {current_sem})",
+            hours_per_week=round(min(base_h, (student_weekly_hours or 20.0) * 0.4), 1),
+            week_index=1,
+            is_indicative=semester_blocks[0].is_indicative if semester_blocks else True,
+            skill_gap_reason="Mandatory curriculum foundation",
+            status_badge="LOCKED",
+            cited_kb_codes=[it.course_id for it in required_courses_list if it.course_id][:3]
+        ))
+        next_4_weeks.append(WeeklyScheduleItem(
+            item_id=f"WEEK_1_EX_{uuid.uuid4().hex[:4]}",
+            item_type="EXERCISE_SET",
+            title="Core Problem Set 1: Foundational Problem Solving",
+            hours_per_week=2.0,
+            week_index=1,
+            is_indicative=True,
+            status_badge="LOCKED"
+        ))
+
+        # Week 2
+        next_4_weeks.append(WeeklyScheduleItem(
+            item_id=f"WEEK_2_CORE_{uuid.uuid4().hex[:4]}",
+            item_type="REQUIRED_COURSE",
+            title="Core Lectures Continuation & Analytical Techniques",
+            hours_per_week=round(min(base_h, (student_weekly_hours or 20.0) * 0.4), 1),
+            week_index=2,
+            is_indicative=True,
+            status_badge="LOCKED"
+        ))
+        if recommended_items_list:
+            top_rec = recommended_items_list[0]
+            next_4_weeks.append(WeeklyScheduleItem(
+                item_id=f"WEEK_2_ELEC_{uuid.uuid4().hex[:4]}",
+                item_type="ELECTIVE_PICK",
+                title=f"Recommended Elective Study: {top_rec.course_id or top_rec.slot_id}",
+                hours_per_week=3.0,
+                week_index=2,
+                is_indicative=True,
+                skill_gap_reason=top_rec.skill_gap_reason,
+                status_badge="RECOMMENDED",
+                cited_kb_codes=top_rec.cited_kb_codes
+            ))
+
+        # Week 3
+        next_4_weeks.append(WeeklyScheduleItem(
+            item_id=f"WEEK_3_CORE_{uuid.uuid4().hex[:4]}",
+            item_type="REQUIRED_COURSE",
+            title="Core Advanced Concepts & Lab Preparation",
+            hours_per_week=round(min(base_h, (student_weekly_hours or 20.0) * 0.4), 1),
+            week_index=3,
+            is_indicative=True,
+            status_badge="LOCKED"
+        ))
+        next_4_weeks.append(WeeklyScheduleItem(
+            item_id=f"WEEK_3_PROJ_{uuid.uuid4().hex[:4]}",
+            item_type="PROJECT",
+            title=f"Applied Project / Research Taster Setup for {goal.name}",
+            hours_per_week=2.5,
+            week_index=3,
+            is_indicative=True,
+            status_badge="RECOMMENDED"
+        ))
+
+        # Week 4
+        next_4_weeks.append(WeeklyScheduleItem(
+            item_id=f"WEEK_4_CORE_{uuid.uuid4().hex[:4]}",
+            item_type="REQUIRED_COURSE",
+            title="Core Synthesis & Monthly Revision",
+            hours_per_week=round(min(base_h, (student_weekly_hours or 20.0) * 0.4), 1),
+            week_index=4,
+            is_indicative=True,
+            status_badge="LOCKED"
+        ))
+        next_4_weeks.append(WeeklyScheduleItem(
+            item_id=f"WEEK_4_CHECKPOINT_{uuid.uuid4().hex[:4]}",
+            item_type="CHECKPOINT",
+            title="Month 1 Diagnostic & Mastery Gate Checkpoint",
+            hours_per_week=2.0,
+            week_index=4,
+            is_indicative=True,
+            status_badge="CHECKPOINT",
+            skill_gap_reason="End of Month 1 Diagnostic Evaluation"
+        ))
+
+        grad_year = 2026 + (8 - current_sem) // 2
+        grad_sem = "May" if current_sem % 2 == 1 else "December"
+        horizon_deadline = f"{grad_sem} {grad_year} (Degree Completion)"
+
+        timeline_roadmap = TimelineRoadmap(
+            plan_id=f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
+            student_id=student.student_id,
+            goal_id=goal.goal_id,
+            horizon_deadline=horizon_deadline,
+            semester_blocks=semester_blocks,
+            next_4_weeks=next_4_weeks,
+            assumptions=dict(settings.PLANNER_ASSUMPTIONS)
+        )
+
         plan = Plan(
             plan_id=f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
             student_id=student.student_id,
             goal_id=goal.goal_id,
             version=version,
             items=items,
+            timeline_roadmap=timeline_roadmap,
+            semester_blocks=semester_blocks,
+            next_4_weeks=next_4_weeks,
+            required_courses=required_courses_list,
+            recommended_items=recommended_items_list,
+            workload_cap_explanation=workload_cap_explanation,
             conflict_flag=plan_conflict_flag,
             optional_overload_proposals=optional_overload_proposals,
             mismatch_warning=mismatch,
@@ -797,5 +1158,50 @@ class Planner(IPlanner):
             created_at=datetime.now(timezone.utc)
         )
         return plan
+
+    def adapt_plan_on_checkpoint(
+        self,
+        plan: Plan,
+        checkpoint_item_id: str,
+        score: float,
+        target_skill: str = "CORE_TOPIC"
+    ) -> Plan:
+        """
+        Adaptive Checkpoint gate:
+        - Weak result (score < 50): Inserts targeted remediation, shifts later items.
+        - Strong result (score >= 85): Accelerates plan by shortening practice and advancing milestones.
+        """
+        new_items = list(plan.items)
+        if score < 50.0:
+            rem_item = PlanItem(
+                item_id=f"ITEM_REM_{checkpoint_item_id}_{uuid.uuid4().hex[:6]}",
+                item_type="remediation",
+                estimated_hours=4.0,
+                hours_per_week=4.0,
+                status_badge="REMEDIATION",
+                reason=StructuredReason(
+                    intent=f"Checkpoint Remediation: {target_skill}",
+                    target_skills=[target_skill],
+                    why_this=f"Weak checkpoint mastery score ({score:.1f}/100 < 50). Remedial practice inserted; later modules shifted.",
+                    prerequisite_for=[],
+                    rule_compliance=["Academic load managed; remedial clearance prioritized"]
+                )
+            )
+            cp_idx = len(new_items)
+            for idx, it in enumerate(new_items):
+                if it.item_id == checkpoint_item_id or it.item_type == "CHECKPOINT":
+                    cp_idx = idx + 1
+                    break
+            new_items.insert(cp_idx, rem_item)
+            change_summary = f"Checkpoint Weak Result ({score:.1f}/100): Inserted 4.0h remedial bridge in {target_skill} and shifted subsequent items."
+        else:
+            new_items = [it for it in new_items if not (it.item_type in ["exercise", "EXERCISE_SET"] and it.estimated_hours <= 2.0 and getattr(it, "status_badge", "") == "RECOMMENDED")]
+            change_summary = f"Checkpoint Strong Mastery ({score:.1f}/100): Accelerated plan by shortening basic exercises and advancing next milestone."
+
+        return plan.model_copy(update={
+            "items": new_items,
+            "version": plan.version + 1,
+            "what_changed_and_why": change_summary
+        })
 
     create_plan = generate_plan

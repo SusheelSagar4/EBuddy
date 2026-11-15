@@ -156,7 +156,7 @@ class TestPersonaConformance(unittest.TestCase):
                     gaps = self.gap_analyzer.analyze_gaps(goal, reqs, [])
                     plan = self.planner.generate_plan(student, goal, gaps, [], [], completed_course_ids=completed)
 
-                    exercise_items = [it for it in plan.items if it.item_type in ["exercise", "project"]]
+                    exercise_items = [it for it in plan.items if it.item_type in ["exercise", "project", "EXERCISE_SET", "PROJECT"]]
                     self.assertTrue(len(exercise_items) >= 1, f"Expected at least 1 active practice item for {student.student_id}")
 
     def test_06_adaptation_on_quiz_results(self):
@@ -291,8 +291,8 @@ class TestPersonaConformance(unittest.TestCase):
             gaps_sde = self.gap_analyzer.analyze_gaps(goal_sde, reqs_sde, [])
             plan_sde = self.planner.generate_plan(stu, goal_sde, gaps_sde, [], [], completed_course_ids=comp)
 
-            power_courses = [it.course_id for it in plan_power.items if it.item_type == "course"]
-            sde_courses = [it.course_id for it in plan_sde.items if it.item_type == "course"]
+            power_courses = [it.course_id for it in plan_power.items if it.item_type in ["course", "ELECTIVE_PICK", "REQUIRED_COURSE"]]
+            sde_courses = [it.course_id for it in plan_sde.items if it.item_type in ["course", "ELECTIVE_PICK", "REQUIRED_COURSE"]]
             self.assertNotEqual(power_courses, sde_courses, "Plan did not adapt when student pivoted goal to SDE")
 
         # Edge 4: Conflict Student (CONF_STU_EE_EDGE_CONFLICT)

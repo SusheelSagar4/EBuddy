@@ -37,7 +37,7 @@ class LearningResourceAgent:
         grounded in the active roadmap and knowledge-base resources.
         """
         # Extract active courses for the student's current semester
-        active_courses = [it for it in plan.items if it.item_type == "course"]
+        active_courses = [it for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"]]
         target_course_ids = [it.course_id for it in active_courses if it.course_id]
 
         recommended_resources: List[Dict[str, Any]] = []

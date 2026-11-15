@@ -50,7 +50,7 @@ def test_01_major_course_fixed_regardless_of_low_relevance():
         preferences=[]
     )
 
-    course_items = [it for it in plan.items if it.item_type == "course"]
+    course_items = [it for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"]]
     course_ids = [it.course_id for it in course_items]
 
     # Thermodynamics MUST be included because it is fixed major core for MME Sem 3
@@ -170,7 +170,7 @@ def test_04_branch_specific_curriculum_isolation():
         constraints=[],
         preferences=[]
     )
-    course_ids = [it.course_id for it in plan.items if it.item_type == "course"]
+    course_ids = [it.course_id for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"]]
 
     # Must contain MME core courses
     assert "ML2L002" in course_ids
@@ -378,7 +378,7 @@ def test_11_student_constraints_hard_while_institute_rules_are_warnings():
         preferences=[],
         completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
     )
-    course_items_b = [it for it in plan_baseline.items if it.item_type == "course"]
+    course_items_b = [it for it in plan_baseline.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"]]
     assert len(course_items_b) >= 7, "Under baseline rules alone, courses are not dropped"
     warning_items = [it for it in course_items_b if any("unsourced_baseline" in w for w in it.reason.rule_compliance)]
     assert len(warning_items) > 0, "Overload item must carry [WARNING: unsourced_baseline] label"
@@ -403,7 +403,7 @@ def test_11_student_constraints_hard_while_institute_rules_are_warnings():
         completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
     )
     # Default plan must not exceed 24.0 credits
-    total_default_credits = sum(planner.course_info.get(it.course_id, {}).get("credits", 4.0) for it in plan_capped.items if it.item_type == "course")
+    total_default_credits = sum(planner.course_info.get(it.course_id, {}).get("credits", 4.0) for it in plan_capped.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"])
     assert total_default_credits <= 24.0, f"Default plan exceeded student limit: {total_default_credits} > 24.0"
 
     # The overload course (minor course) must be in optional_overload_proposals
@@ -429,7 +429,7 @@ def test_11_student_constraints_hard_while_institute_rules_are_warnings():
         preferences=[],
         completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
     )
-    plan_course_ids = [it.course_id for it in plan_avoid.items if it.item_type == "course"]
+    plan_course_ids = [it.course_id for it in plan_avoid.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"]]
     assert "CS4L003" not in plan_course_ids, "Course in avoid_course must never be scheduled in default plan"
     avoid_props = [p for p in plan_avoid.optional_overload_proposals if p.get("course_id") == "CS4L003"]
     assert len(avoid_props) > 0, "Avoided course placed in optional proposals needing student approval"

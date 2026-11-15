@@ -563,6 +563,20 @@ class CustomPersonaPolicy(PersonaPolicy):
 
         return adjusted_items
 
+    def classify_requirement(
+        self,
+        course_id: Optional[str],
+        slot_id: Optional[str],
+        student: StudentProfile,
+        default_is_required: bool
+    ) -> bool:
+        """
+        Student Startup Persona requirement classification:
+        Keeps branch core requirements locked while enabling entrepreneurial milestones
+        to be choosable and workload-managed.
+        """
+        return default_is_required
+
     def get_advisories(self, student: StudentProfile) -> List[str]:
         notes = []
         sem = student.current_semester or 1

@@ -69,7 +69,7 @@ class RoadmapPlannerAgent:
         If weekly_hours_budget is provided, prunes daily tasks to fit within budget
         and explicitly records deferred tasks.
         """
-        semester_courses = [it for it in plan.items if it.item_type == "course" and it.semester_number == semester_number]
+        semester_courses = [it for it in plan.items if it.item_type in ["course", "REQUIRED_COURSE", "ELECTIVE_PICK"] and it.semester_number == semester_number]
         focus_skills = []
         target_course_ids = []
         for c in semester_courses:
@@ -198,10 +198,43 @@ class RoadmapPlannerAgent:
         add_courses = mods.get("add_courses", [])
         remove_courses = mods.get("remove_courses", [])
         add_exercises = mods.get("add_exercises", [])
+        move_items = {m["item_id"]: m for m in mods.get("move_items", []) if "item_id" in m}
+        replace_items = {r["replace_item_id"]: r for r in mods.get("replace_items", []) if "replace_item_id" in r}
 
-        # Filter out removed courses
+        # Filter out removed courses and handle move / replace
         for it in old_items:
             if it.course_id and it.course_id in remove_courses:
+                continue
+            if it.item_id in replace_items:
+                r_spec = replace_items[it.item_id]
+                with_item = r_spec.get("with_item")
+                if isinstance(with_item, PlanItem):
+                    new_items.append(with_item)
+                elif isinstance(with_item, dict):
+                    new_items.append(PlanItem(**with_item))
+                elif "course_id" in r_spec:
+                    c_new = r_spec["course_id"]
+                    new_items.append(it.model_copy(update={
+                        "course_id": c_new,
+                        "item_id": f"ITEM_REP_{c_new}_{uuid.uuid4().hex[:6]}",
+                        "reason": StructuredReason(
+                            intent=it.reason.intent,
+                            target_skills=it.reason.target_skills,
+                            why_this=f"Replaced {it.course_id} with {c_new} per approved proposal: {proposal.reasoning}",
+                            prerequisite_for=it.reason.prerequisite_for,
+                            rule_compliance=it.reason.rule_compliance
+                        )
+                    }))
+                continue
+            if it.item_id in move_items:
+                m_spec = move_items[it.item_id]
+                updates = {}
+                if "target_semester" in m_spec:
+                    updates["semester_number"] = m_spec["target_semester"]
+                if "target_week" in m_spec:
+                    updates["scheduled_week"] = m_spec["target_week"]
+                    updates["week_index"] = m_spec["target_week"]
+                new_items.append(it.model_copy(update=updates))
                 continue
             new_items.append(it)
 
@@ -243,12 +276,17 @@ class RoadmapPlannerAgent:
                 )
             ))
 
+        req_courses = [it for it in new_items if it.item_type == "REQUIRED_COURSE" or (it.item_type == "course" and getattr(it, "status_badge", "") == "LOCKED")]
+        rec_items = [it for it in new_items if it not in req_courses]
+
         candidate_plan = Plan(
             plan_id=f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
             student_id=student.student_id,
             goal_id=current_plan.goal_id,
             version=current_plan.version + 1,
             items=new_items,
+            required_courses=req_courses,
+            recommended_items=rec_items,
             is_active=True,
             created_at=datetime.now(timezone.utc)
         )
