@@ -41,9 +41,9 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER:-ebuddy_user}:${POSTGRES_PASSWORD:-ebuddy_password}@db:5432/${POSTGRES_DB:-ebuddy}
-      - LITELLM_LOCAL_MODEL_COST_MAP=True
-      - LITELLM_TELEMETRY=False
+      DATABASE_URL: "postgresql+psycopg://${POSTGRES_USER:-ebuddy_user}:${POSTGRES_PASSWORD:-ebuddy_password}@db:5432/${POSTGRES_DB:-ebuddy}"
+      LITELLM_LOCAL_MODEL_COST_MAP: "True"
+      LITELLM_TELEMETRY: "False"
     ports:
       - "${APP_PORT:-8000}:8000"
     depends_on:

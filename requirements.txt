@@ -17,8 +17,9 @@ psycopg[binary]>=3.1.18
 # LLM Gateway (LiteLLM strictly per Hard Rule 1)
 litellm>=1.35.0
 
+
 # Testing & Utilities
 pytest>=8.1.0
 pytest-asyncio>=0.23.0
 httpx>=0.27.0
-
+tenacity>=8.2.0
