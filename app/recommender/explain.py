@@ -267,17 +267,19 @@ def explain(
         reply = llm_client.completion(
             messages=messages,
             temperature=0.2,
-            timeout=30,
+            timeout=45,
             num_retries=2,
             purpose="course_recommendation_explanation",
         )
     except Exception as e:
         logger.warning(f"LLM call failed or timed out: {e}")
-        return build_deterministic_explanation(result), False, f"LLM call failed: {type(e).__name__}"
+        llm_err = getattr(llm_client, "last_error", None) or f"LLM call failed: {type(e).__name__}"
+        return build_deterministic_explanation(result), False, llm_err
 
     if not reply or not reply.strip():
         logger.warning("LLM returned empty reply, falling back to deterministic explanation")
-        return build_deterministic_explanation(result), False, "Empty LLM response"
+        llm_err = getattr(llm_client, "last_error", None) or "Empty LLM response"
+        return build_deterministic_explanation(result), False, llm_err
 
     # 4. Hallucination guard: verify that any course code cited in the reply exists in the allowed identifiers
     cited_codes = COURSE_CODE_PATTERN.findall(reply)

@@ -554,3 +554,49 @@ def test_unstemmed_original_words_in_matched_terms():
     assert "artifici" not in matched
     assert "artificial" in matched
 
+
+def test_mock_client_503_fallback():
+    """Verify that when the LLM client encounters a 503 error:
+    1. llm_used == False
+    2. llm_error mentions 503
+    3. The fallback answer is valid and cites only existing valid course codes.
+    Call handlers directly (no TestClient).
+    """
+    req = RecommendRequest(
+        branch="EE",
+        semester=7,
+        cgpa=8.0,
+        goal="Software engineering role",
+        query="what course should I take this semester",
+        completed=["EE1L001"],
+    )
+
+    with patch.dict("os.environ", {"LLM_MODEL": "openai/gpt-4o-mini", "LLM_API_KEY": "sk-mock-valid"}, clear=False):
+        import litellm.exceptions
+        mock_503 = litellm.exceptions.ServiceUnavailableError(
+            message="Service Unavailable 503",
+            response=MagicMock(status_code=503),
+            llm_provider="openai",
+            model="openai/gpt-4o-mini",
+        )
+        with patch("litellm.completion", side_effect=mock_503):
+            with patch("time.sleep"):  # Avoid delay from backoff
+                response = get_recommendations(req)
+
+                assert response.llm_used is False
+                assert response.llm_error is not None
+                assert "503" in response.llm_error
+                assert "Credit Summary:" in response.answer
+
+                # Verify that all cited course codes exist in valid shortlisted items
+                valid_codes = {r["course_id"] for r in response.data.get("recommendations", [])}
+                valid_codes.update(r["course_id"] for r in response.data.get("other_eligible", []))
+                valid_codes.update(r["course_id"] for r in response.data.get("future_options", []))
+
+                from app.recommender.explain import COURSE_CODE_PATTERN
+                cited_codes = set(COURSE_CODE_PATTERN.findall(response.answer))
+                assert len(cited_codes) > 0
+                for code in cited_codes:
+                    assert code in valid_codes
+
+
