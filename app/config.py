@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     )
 
     # LiteLLM Configuration (Hard Rule 1, 2, 8)
-    LLM_MODEL: str = "openai/gpt-4o-mini"
+    LLM_MODEL: str = "gemini/gemini-3.5-flash-lite"
     LLM_API_KEY: str = ""
     LLM_API_BASE: Optional[str] = None
     EMBEDDING_MODEL: Optional[str] = "text-embedding-3-small"

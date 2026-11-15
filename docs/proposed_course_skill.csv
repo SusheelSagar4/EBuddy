@@ -1,0 +1,35 @@
+course_id,title,skill_id,level_taught,weight,reason
+CS4L003,Artificial Intelligence,SKILL_AI_ML,80,1.0,Core foundational course covering search algorithms logic and intelligent agents
+EC4L001,Semiconductor Devices,SKILL_ANALOG_ELECTRONICS,75,1.0,Solid-state physics PN junctions and MOSFET semiconductor device characteristics
+EC4L002,Opto-Electronics,SKILL_ANALOG_ELECTRONICS,70,0.90,Optical semiconductor devices lasers LEDs and photodetectors
+EC6L002,Image and Video Processing,SKILL_DSP,85,1.0,2D multidimensional signal processing frequency filtering and video representation
+EC6L012,Optical Communication,SKILL_EM_FIELDS,75,0.85,Optical waveguides fiber dispersion and electromagnetic wave transmission in fiber
+EC6L015,Biomedical Signal Processing,SKILL_DSP,80,0.90,Biosignal acquisition ECG/EEG digital filtering and physiological signal processing
+EC6L016,Computational Electromagnetics,SKILL_EM_FIELDS,80,1.0,Numerical methods (FDTD MoM FEM) for solving Maxwell electromagnetic field equations
+EC6L017,Semiconductor Device Modelling,SKILL_ANALOG_ELECTRONICS,80,0.95,Physics-based compact mathematical modeling of advanced semiconductor MOSFET devices
+EC6L019,Fiber Optic Sensors,SKILL_INSTRUMENTATION,75,0.90,Fiber Bragg gratings interferometric sensors and optical transducers for measurement
+EC6L023,Adaptive Signal Processing,SKILL_DSP,85,1.0,LMS/RLS adaptive filtering algorithms system identification and adaptive noise cancellation
+EC6L024,Array Signal Processing,SKILL_DSP,80,0.90,Spatial signal processing sensor arrays direction-of-arrival estimation and beamforming
+EC6L027,Pattern Recognition,SKILL_AI_ML,85,1.0,Statistical pattern classification feature extraction clustering and decision boundaries
+EC6L030,Embedded Systems,SKILL_EMBEDDED_SYSTEMS,90,1.0,Direct domain match covering microcontroller architecture RTOS and peripheral interfacing
+EC6L031,Computer Vision,SKILL_AI_ML,85,1.0,Image segmentation object detection deep vision models and visual scene understanding
+EE2L004,Introduction to Electromagnetic Engineering,SKILL_EM_FIELDS,70,1.0,Electrostatics magnetostatics Maxwell equations and plane electromagnetic wave propagation
+EE3L006,Signals and Circuits,SKILL_SIGNALS_SYSTEMS,75,0.90,Fourier and Laplace transform analysis of continuous-time signals and electrical networks
+EE3L009,Utilization of Electric Power,SKILL_POWER_SYSTEMS,70,0.85,Electric traction illumination industrial heating and load utilization in power systems
+EE6L002,Electric Power Quality,SKILL_POWER_SYSTEMS,80,0.95,Voltage sags harmonics reactive power compensation and power quality grid standards
+EE6L004,Power System Protection,SKILL_POWER_SYSTEMS,85,1.0,Overcurrent distance and differential relay protection for electrical power grid systems
+EE6L005,HVDC and Flexible AC Transmission Systems,SKILL_HIGH_VOLTAGE,85,0.95,High-voltage direct current converters and FACTS controllers for bulk power transmission
+EE6L007,Industrial Instrumentation,SKILL_INSTRUMENTATION,80,1.0,Process transducers temperature pressure flow measurement and industrial signal conditioning
+EE6L009,High Voltage Engineering,SKILL_HIGH_VOLTAGE,85,1.0,Breakdown in gas solid liquid dielectrics impulse surge generation and high voltage testing
+EE6L010,Advanced Power Electronics,SKILL_POWER_ELECTRONICS,85,1.0,Advanced DC-DC converters multilevel inverters resonant switches and converter PWM control
+EE6L011,Energy Storage Systems,SKILL_ENERGY_MATERIALS,75,0.90,Battery energy storage technologies supercapacitors and electrical energy storage systems
+EE6L014,Smart Grid Technology,SKILL_POWER_GRID_CONTROL,85,1.0,Wide area monitoring phasor measurement units (PMUs) microgrid automation and grid control
+EE6L015,Advanced High Voltage Engineering,SKILL_HIGH_VOLTAGE,85,1.0,Advanced insulation diagnostics partial discharge measurement and surge arrester coordination
+EE6L017,Distribution System Engineering,SKILL_POWER_SYSTEMS,80,0.90,Radial distribution networks voltage regulation capacitor placement and loss minimization
+EE6L018,Power System Planning,SKILL_POWER_SYSTEMS,80,0.90,Generation expansion planning transmission reliability evaluation and load forecasting
+ML4L001_ELEC,Joining of metals and alloys,SKILL_MATERIALS_PROCESSING,80,0.95,Fusion welding solid-state bonding brazing and weld pool solidification metallurgy
+ML4L002_ELEC,Solidification of metals and alloys,SKILL_MATERIALS_PROCESSING,85,1.0,Nucleation dendritic growth casting segregation and solidification microstructure evolution
+ML4L003_ELEC,Electrochemical methods in metallurgy,SKILL_CORROSION_SURFACE,75,0.90,Electrochemical polarization electrowinning electroplating and corrosion protection
+ML4L008,Micro Electro Mechanical Systems,SKILL_COMPOSITES_NANO,70,0.85,Microfabrication lithography silicon micromachining and micro-scale material transducers
+ML4L009,Physics of materials,SKILL_PHYSICAL_METALLURGY,75,0.90,Band theory of solids dielectric/magnetic properties and electron physics in materials
+ML4L012,Materials in archaeology,SKIPPED,0,0.0,Archaeometallurgy has no close match in 32 engineering skills catalog (skipped per instructions)
