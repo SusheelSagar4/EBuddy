@@ -66,7 +66,10 @@ def run_conformance_and_report():
         "6. Quiz Adapt",
         "7. Determinism",
         "8. Unachievable Req",
-        "9. Edge Assertions"
+        "9. Edge Assertions",
+        "10. Req vs Rec Disjoint",
+        "11. Remaining Core Locked",
+        "12. Horizon & Exam Bounds"
     ]
 
     report = [
@@ -137,7 +140,7 @@ def run_conformance_and_report():
             c4 = all(g["skill_id"] in covered_skills for g in gaps if g["gap"] > 0)
 
             # Check 5: Active practice
-            c5 = len([it for it in plan.items if it.item_type in ["exercise", "project"]]) >= 1
+            c5 = len([it for it in plan.items if it.item_type in ["exercise", "project", "EXERCISE_SET", "PROJECT"]]) >= 1
 
             # Check 6: Adaptation on quiz results
             target_sk = pkg.requirements[0]["skill_id"]
@@ -209,13 +212,42 @@ def run_conformance_and_report():
                 ]
                 gaps_sde = gap_analyzer.analyze_gaps(goal_sde, reqs_sde, [])
                 plan_sde = planner.generate_plan(student, goal_sde, gaps_sde, [], [], completed_course_ids=completed)
-                power_courses = [it.course_id for it in plan.items if it.item_type == "course"]
-                sde_courses = [it.course_id for it in plan_sde.items if it.item_type == "course"]
+                power_courses = [it.course_id for it in plan.items if it.item_type in ["course", "ELECTIVE_PICK", "REQUIRED_COURSE"]]
+                sde_courses = [it.course_id for it in plan_sde.items if it.item_type in ["course", "ELECTIVE_PICK", "REQUIRED_COURSE"]]
                 c9 = (power_courses != sde_courses)
             elif stu_id == "CONF_STU_EE_EDGE_CONFLICT":
                 c9 = (plan.conflict_flag is not None and "HIGH_INTEREST_LOW_FOUNDATION" in plan.conflict_flag)
 
-            results = [c1, c2, c3, c4, c5, c6, c7, c8, c9]
+            # Check 10: No REQUIRED course in recommendations
+            req_cids = {it.course_id for it in plan.required_courses if it.course_id}
+            rec_cids = {it.course_id for it in plan.recommended_items if it.course_id}
+            c10 = (
+                len(req_cids.intersection(rec_cids)) == 0 and
+                all(it.status_badge == "LOCKED" for it in plan.required_courses) and
+                all(it.item_type != "REQUIRED_COURSE" for it in plan.recommended_items)
+            )
+
+            # Check 11: All remaining core courses locked
+            prog_id_check = "BTECH_MM" if "MM" in (student.programme_id or "").upper() else "BTECH_EE"
+            curr_sem_reqs = planner.prog_requirements.get((prog_id_check, student.current_semester), [])
+            expected_core_cids = set()
+            for r in curr_sem_reqs:
+                cid = r.get("course_id", "").strip()
+                stype = (r.get("slot_type", "") or "").lower()
+                ctype = (r.get("course_type", "") or "").lower()
+                if cid and stype not in ["elective", "lateral", "breadth", "minor"] and ctype not in ["elective", "vertical elective", "lateral", "breadth", "minor"]:
+                    expected_core_cids.add(cid)
+            expected_rem_core = expected_core_cids - set(completed)
+            actual_locked = {it.course_id for it in plan.required_courses if it.course_id and it.status_badge == "LOCKED"}
+            c11 = expected_rem_core.issubset(actual_locked) and len(plan.semester_blocks) >= 1
+
+            # Check 12: Dated items within bounds & exam weeks lighter
+            c12 = (
+                all(w.week_index in [1, 2, 3, 4] for w in plan.next_4_weeks) and
+                all(block.monthly_themes[3].weekly_hours_cap <= 15.0 for block in plan.semester_blocks)
+            )
+
+            results = [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12]
             row_passed = all(results)
             if not row_passed:
                 all_profiles_passed = False
