@@ -35,6 +35,14 @@ class GenerateRoadmapRequest(BaseModel):
     student_id: str
     goal_id: Optional[str] = None
 
+class GoalRouteRequest(BaseModel):
+    student_id: str
+    goal_text: str
+
+class GoalConfirmRequest(BaseModel):
+    student_id: str
+    goal_id: str
+
 class DiagnosticStartRequest(BaseModel):
     student_id: str
     goal_id: Optional[str] = None
@@ -103,9 +111,16 @@ def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]
     # Pending proposals
     pending = roadmap_orchestrator.list_pending_proposals(student_id)
 
+    active_g = onboarding_service.goals.get(student_id)
+    gid = active_g.goal_id if active_g else plan_dict.get("goal_id", "")
+    gname = active_g.name if active_g else ""
+
     return {
         "plan_id": plan_dict.get("plan_id"),
         "student_id": student_id,
+        "goal_id": gid,
+        "goal_name": gname,
+        "has_goal": bool(gid),
         "version": plan_dict.get("version", 1),
         "committed_by": "Agent 1 (Roadmap Planner)",
         "total_items": len(enriched_items),
@@ -217,6 +232,26 @@ def list_goals(programme_id: Optional[str] = Query(None)):
 # -----------------------------------------------------------------------------
 # 3. Roadmap Endpoints (Page 3)
 # -----------------------------------------------------------------------------
+@router.post("/goals/route")
+def route_student_goal(req: GoalRouteRequest):
+    """Routes free-text goal input through intent_router to verified kb.goal id."""
+    from app.llm.tasks.intent_router import intent_router
+    student = onboarding_service.students.get(req.student_id)
+    prog = student.programme_id if student else None
+    res = intent_router.route_goal_text(req.goal_text, prog)
+    return res.model_dump()
+
+@router.post("/goals/confirm")
+def confirm_student_goal(req: GoalConfirmRequest):
+    """Confirms routed goal, persists to DB, and triggers roadmap generation."""
+    canonical_id = canonicalize_goal_id(req.goal_id)
+    onboarding_service.ensure_student_onboarded(req.student_id, canonical_id)
+    res = roadmap_orchestrator.create_initial_roadmap(req.student_id, canonical_id)
+    raw_plan = res.get("plan", {})
+    decorated = _decorate_plan(raw_plan, req.student_id)
+    decorated["confirmed_goal_id"] = canonical_id
+    return decorated
+
 @router.post("/roadmap/generate")
 def generate_roadmap(req: GenerateRoadmapRequest):
     """
@@ -224,8 +259,9 @@ def generate_roadmap(req: GenerateRoadmapRequest):
     Decorates all courses with title, credits, skill-gap reason, and draft/verified badges.
     """
     try:
-        onboarding_service.ensure_student_onboarded(req.student_id, req.goal_id)
-        res = roadmap_orchestrator.create_initial_roadmap(req.student_id)
+        canonical_id = canonicalize_goal_id(req.goal_id) if req.goal_id else None
+        onboarding_service.ensure_student_onboarded(req.student_id, canonical_id)
+        res = roadmap_orchestrator.create_initial_roadmap(req.student_id, canonical_id)
         raw_plan = res.get("plan", {})
         return _decorate_plan(raw_plan, req.student_id)
     except Exception as e:
@@ -233,18 +269,43 @@ def generate_roadmap(req: GenerateRoadmapRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/roadmap/{student_id}")
-def get_current_roadmap(student_id: str):
-    """Returns the student's active roadmap plan."""
-    plan = plan_service.get_plan(student_id)
+def get_current_roadmap(student_id: str, goal_id: Optional[str] = Query(None)):
+    """Returns the student's active roadmap plan for the selected goal."""
+    if not goal_id:
+        from app.services.onboarding_service import get_student_db_goal
+        goal_id = get_student_db_goal(student_id)
+    
+    if goal_id:
+        goal_id = canonicalize_goal_id(goal_id)
+
+    plan = plan_service.get_plan(student_id, goal_id)
     if not plan:
-        # Attempt auto-generation if student exists
-        try:
-            onboarding_service.ensure_student_onboarded(student_id)
-            res = roadmap_orchestrator.create_initial_roadmap(student_id)
-            plan_dict = res.get("plan", {})
-            return _decorate_plan(plan_dict, student_id)
-        except Exception:
-            raise HTTPException(status_code=404, detail=f"No roadmap plan found for student {student_id}")
+        student = onboarding_service.students.get(student_id)
+        if not student:
+            onboarding_service.ensure_student_onboarded(student_id, goal_id)
+            student = onboarding_service.students.get(student_id)
+
+        active_goal = onboarding_service.goals.get(student_id)
+        if active_goal and active_goal.goal_id:
+            try:
+                res = roadmap_orchestrator.create_initial_roadmap(student_id, active_goal.goal_id)
+                plan_dict = res.get("plan", {})
+                return _decorate_plan(plan_dict, student_id)
+            except Exception as e:
+                logger.error(f"Error generating plan: {e}")
+
+        return {
+            "has_goal": False,
+            "student_id": student_id,
+            "message": "No goal selected. Please choose or enter your target goal to generate your roadmap.",
+            "total_items": 0,
+            "total_credits": 0.0,
+            "items": [],
+            "semesters": [],
+            "warnings": [],
+            "pending_proposals": []
+        }
+
     return _decorate_plan(plan.model_dump(), student_id)
 
 # -----------------------------------------------------------------------------

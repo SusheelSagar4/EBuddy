@@ -269,15 +269,17 @@ def submit_micro_task(student_id: str, req: MicroTaskSubmission):
     }
 
 @router.post("/{student_id}/plan")
-def generate_plan(student_id: str):
+def generate_plan(student_id: str, goal_id: Optional[str] = None):
     try:
-        return roadmap_orchestrator.create_initial_roadmap(student_id)
+        g = goal_id if isinstance(goal_id, str) else None
+        return roadmap_orchestrator.create_initial_roadmap(student_id, g)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{student_id}/plan")
-def get_plan(student_id: str):
-    plan = plan_service.get_plan(student_id)
+def get_plan(student_id: str, goal_id: Optional[str] = None):
+    g = goal_id if isinstance(goal_id, str) else None
+    plan = plan_service.get_plan(student_id, g)
     if not plan:
         try:
             return plan_service.create_or_update_plan(student_id)

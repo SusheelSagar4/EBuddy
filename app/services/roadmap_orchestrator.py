@@ -147,13 +147,20 @@ class RoadmapOrchestrator:
         except Exception as e:
             logger.debug(f"Unable to persist roadmap version to DB: {e}")
 
-    def create_initial_roadmap(self, student_id: str) -> Dict[str, Any]:
+    def create_initial_roadmap(self, student_id: str, goal_id: Optional[str] = None) -> Dict[str, Any]:
         """Invokes Agent 1 to create the initial Version 1 roadmap."""
+        if not isinstance(goal_id, str):
+            goal_id = None
+        if goal_id:
+            onboarding_service.ensure_student_onboarded(student_id, goal_id)
         student = onboarding_service.students.get(student_id)
         if not student:
             raise ValueError(f"Student {student_id} not onboarded")
 
         goal = onboarding_service.goals.get(student_id)
+        if not goal:
+            raise ValueError(f"Student {student_id} has no target goal selected")
+
         completed = onboarding_service.completed_courses.get(student_id, [])
         constraints = onboarding_service.constraints.get(student_id, [])
         preferences = onboarding_service.preferences.get(student_id, [])
@@ -173,6 +180,8 @@ class RoadmapOrchestrator:
             completed_course_ids=completed
         )
 
+        cache_k = f"{student_id}::{goal.goal_id}"
+        plan_service.plans[cache_k] = v1_plan
         plan_service.plans[student_id] = v1_plan
 
         # Generate initial Week 1 schedule
@@ -182,6 +191,7 @@ class RoadmapOrchestrator:
             week_number=1,
             daily_hours=2.0
         )
+        self.weekly_roadmaps[cache_k] = weekly
         self.weekly_roadmaps[student_id] = weekly
 
         # Record Version 1 in history
@@ -207,9 +217,9 @@ class RoadmapOrchestrator:
             "validation": v1_plan.validation_report.model_dump() if v1_plan.validation_report else None
         }
 
-    def get_weekly_roadmap(self, student_id: str, week_number: int = 1) -> WeeklyRoadmap:
+    def get_weekly_roadmap(self, student_id: str, week_number: int = 1, goal_id: Optional[str] = None) -> WeeklyRoadmap:
         """Retrieves or generates the weekly roadmap for the student, enforcing weekly hours budget if set."""
-        current_plan = plan_service.get_plan(student_id)
+        current_plan = plan_service.get_plan(student_id, goal_id)
         if not current_plan:
             raise ValueError(f"No active plan found for student {student_id}")
 
@@ -383,6 +393,10 @@ class RoadmapOrchestrator:
         self.proposals[proposal_id] = committed_prop
 
         # Update canonical plan in plan_service
+        goal = onboarding_service.goals.get(student_id)
+        gid = goal.goal_id if goal else getattr(new_plan, "goal_id", "NO_GOAL")
+        cache_k = f"{student_id}::{gid}"
+        plan_service.plans[cache_k] = new_plan
         plan_service.plans[student_id] = new_plan
 
         # Regenerate updated weekly schedule
@@ -391,6 +405,7 @@ class RoadmapOrchestrator:
             semester_number=student.current_semester,
             week_number=committed_prop.target_week or 1
         )
+        self.weekly_roadmaps[cache_k] = updated_weekly
         self.weekly_roadmaps[student_id] = updated_weekly
 
         # Record Version Record

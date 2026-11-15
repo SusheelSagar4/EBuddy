@@ -159,6 +159,8 @@ class PlanService:
 
         if old_plan:
             self.plan_history.setdefault(student_id, []).append(old_plan)
+        cache_k = f"{student_id}::{goal.goal_id}"
+        self.plans[cache_k] = final_plan
         self.plans[student_id] = final_plan
 
         return {
@@ -171,7 +173,20 @@ class PlanService:
             "validation": report.model_dump()
         }
 
-    def get_plan(self, student_id: str) -> Optional[Plan]:
+    def _cache_key(self, student_id: str, goal_id: Optional[str] = None) -> str:
+        if not goal_id:
+            goal = onboarding_service.goals.get(student_id)
+            goal_id = goal.goal_id if goal else "NO_GOAL"
+        return f"{student_id}::{goal_id}"
+
+    def get_plan(self, student_id: str, goal_id: Optional[str] = None) -> Optional[Plan]:
+        if goal_id:
+            k = f"{student_id}::{goal_id}"
+            if k in self.plans:
+                return self.plans[k]
+        active_k = self._cache_key(student_id, goal_id)
+        if active_k in self.plans:
+            return self.plans[active_k]
         return self.plans.get(student_id)
 
     def get_plan_history(self, student_id: str) -> List[Plan]:

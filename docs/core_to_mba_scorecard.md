@@ -1,6 +1,6 @@
 # Core to MBA Evaluation Scorecard
 
-*Evaluated on 2026-11-15 23:01:59 across 32 synthetic student profiles (16 EE, 16 MM).*
+*Evaluated on 2026-11-15 23:07:37 across 32 synthetic student profiles (16 EE, 16 MM).*
 
 ## 1. Summary Metrics & Hard Verification Gates
 
