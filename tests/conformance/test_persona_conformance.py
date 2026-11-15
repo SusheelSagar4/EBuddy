@@ -305,5 +305,105 @@ class TestPersonaConformance(unittest.TestCase):
             self.assertIsNotNone(plan_conf.conflict_flag, "Conflict flag was not set for student with interest vs evidence conflict")
             self.assertIn("HIGH_INTEREST_LOW_FOUNDATION", plan_conf.conflict_flag)
 
+    def test_10_no_required_course_in_recommendations(self):
+        """
+        Check 10: No REQUIRED course ever appears in recommendations (across all personas and profiles).
+        Core courses must be classified as REQUIRED_COURSE, locked, and never placed in recommended_items.
+        """
+        for pkg in self.personas:
+            p_id = pkg.spec.persona_id
+            for student, completed in self.persona_profiles[p_id]:
+                with self.subTest(persona=p_id, profile=student.student_id):
+                    goal = Goal(goal_id=pkg.spec.goal_id, name="Test Goal", category="career", description="Goal", source_id="TEST")
+                    reqs = [GoalRequirement(goal_id=goal.goal_id, skill_id=r["skill_id"], required_level=float(r["required_level"]), source_id="TEST") for r in pkg.requirements]
+                    gaps = self.gap_analyzer.analyze_gaps(goal, reqs, [])
+                    plan = self.planner.generate_plan(student, goal, gaps, [], [], completed_course_ids=completed)
+
+                    required_cids = {it.course_id for it in plan.required_courses if it.course_id}
+                    recommended_cids = {it.course_id for it in plan.recommended_items if it.course_id}
+
+                    # Assert disjoint sets
+                    intersection = required_cids.intersection(recommended_cids)
+                    self.assertEqual(len(intersection), 0, f"REQUIRED course(s) {intersection} appeared in recommendations for {student.student_id}")
+
+                    # Assert no REQUIRED_COURSE in recommended_items
+                    for it in plan.recommended_items:
+                        self.assertNotEqual(it.item_type, "REQUIRED_COURSE", f"Item {it.item_id} in recommended_items has item_type REQUIRED_COURSE")
+                        self.assertNotEqual(getattr(it, "status_badge", ""), "LOCKED", f"Item {it.item_id} in recommended_items has status_badge LOCKED")
+
+                    # Assert all required courses carry status_badge LOCKED
+                    for it in plan.required_courses:
+                        self.assertEqual(it.status_badge, "LOCKED", f"Required course {it.course_id} must have status_badge LOCKED")
+
+    def test_11_all_remaining_required_courses_locked(self):
+        """
+        Check 11: Every REQUIRED course for the student's remaining semesters appears as a locked commitment.
+        """
+        for pkg in self.personas:
+            p_id = pkg.spec.persona_id
+            for student, completed in self.persona_profiles[p_id]:
+                with self.subTest(persona=p_id, profile=student.student_id):
+                    goal = Goal(goal_id=pkg.spec.goal_id, name="Test Goal", category="career", description="Goal", source_id="TEST")
+                    reqs = [GoalRequirement(goal_id=goal.goal_id, skill_id=r["skill_id"], required_level=float(r["required_level"]), source_id="TEST") for r in pkg.requirements]
+                    gaps = self.gap_analyzer.analyze_gaps(goal, reqs, [])
+                    plan = self.planner.generate_plan(student, goal, gaps, [], [], completed_course_ids=completed)
+
+                    # Check current semester required courses
+                    prog_id = "BTECH_MM" if "MM" in (student.programme_id or "").upper() else "BTECH_EE"
+                    curr_sem_reqs = self.planner.prog_requirements.get((prog_id, student.current_semester), [])
+                    expected_core_cids = set()
+                    for r in curr_sem_reqs:
+                        cid = r.get("course_id", "").strip()
+                        stype = (r.get("slot_type", "") or "").lower()
+                        ctype = (r.get("course_type", "") or "").lower()
+                        if cid and stype not in ["elective", "lateral", "breadth", "minor"] and ctype not in ["elective", "vertical elective", "lateral", "breadth", "minor"]:
+                            expected_core_cids.add(cid)
+
+                    # Completed courses need not be re-scheduled
+                    expected_remaining_core = expected_core_cids - set(completed)
+                    actual_locked_cids = {it.course_id for it in plan.required_courses if it.course_id and it.status_badge == "LOCKED"}
+
+                    for cid in expected_remaining_core:
+                        self.assertIn(cid, actual_locked_cids, f"Mandatory core course {cid} missing from locked required courses for {student.student_id}")
+
+                    # Check multi-semester horizon blocks
+                    self.assertTrue(len(plan.semester_blocks) >= 1, f"Plan must contain semester blocks for {student.student_id}")
+                    for block in plan.semester_blocks:
+                        self.assertTrue(len(block.monthly_themes) == 4, f"Semester block {block.semester_number} must have 4 monthly themes")
+                        for it in block.required_courses:
+                            self.assertEqual(it.status_badge, "LOCKED")
+
+    def test_12_dated_items_within_window_and_workload_bounds(self):
+        """
+        Check 12: Every dated item falls inside its semester window; weekly hours <= cap; exam weeks are lighter.
+        """
+        for pkg in self.personas:
+            p_id = pkg.spec.persona_id
+            for student, completed in self.persona_profiles[p_id]:
+                with self.subTest(persona=p_id, profile=student.student_id):
+                    # Add a 20.0h study hours constraint
+                    c_hours = Constraint(
+                        constraint_id="C_HOURS_20",
+                        student_id=student.student_id,
+                        constraint_type="weekly_hours",
+                        parameters={"max_hours": 20.0}
+                    )
+                    goal = Goal(goal_id=pkg.spec.goal_id, name="Test Goal", category="career", description="Goal", source_id="TEST")
+                    reqs = [GoalRequirement(goal_id=goal.goal_id, skill_id=r["skill_id"], required_level=float(r["required_level"]), source_id="TEST") for r in pkg.requirements]
+                    gaps = self.gap_analyzer.analyze_gaps(goal, reqs, [])
+                    plan = self.planner.generate_plan(student, goal, gaps, [c_hours], [], completed_course_ids=completed)
+
+                    # 1. Weekly schedule items within window and bounds
+                    for w_item in plan.next_4_weeks:
+                        self.assertTrue(w_item.week_index in [1, 2, 3, 4], f"Week index {w_item.week_index} outside next-4-weeks window")
+                        self.assertTrue(w_item.hours_per_week <= 20.0, f"Weekly item hours {w_item.hours_per_week} exceed cap 20.0 for {student.student_id}")
+
+                    # 2. Semester blocks exam weeks have lighter extra load
+                    for block in plan.semester_blocks:
+                        midsem_theme = block.monthly_themes[1] # Month 2 includes Week 8 midsem
+                        endsem_theme = block.monthly_themes[3] # Month 4 includes Week 16 endsem
+                        self.assertTrue(midsem_theme.weekly_hours_cap <= 20.0, "Midsem month cap not properly scaled")
+                        self.assertTrue(endsem_theme.weekly_hours_cap <= 10.0, "Endsem exam month cap not properly reduced")
+
 if __name__ == "__main__":
     unittest.main()

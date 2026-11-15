@@ -924,8 +924,13 @@ class Planner(IPlanner):
                     f"Mandatory core courses ({req_weekly_hours:.1f}h/week) are locked commitments and cannot be dropped under curriculum regulations. "
                     f"All supplementary extras (elective practice, extra modules, open resources) have been reduced/deferred to protect your workload."
                 )
-                for it in extra_items:
-                    it.hours_per_week = 0.0
+                items = [
+                    it.model_copy(update={"hours_per_week": 0.0}) if it in extra_items else it
+                    for it in items
+                ]
+                recommended_items_list = [
+                    it.model_copy(update={"hours_per_week": 0.0}) for it in recommended_items_list
+                ]
             else:
                 workload_cap_explanation = (
                     f"Total requested workload ({total_weekly_load:.1f}h/week) exceeded weekly study hours cap ({student_weekly_hours:.1f}h/week). "
@@ -933,8 +938,15 @@ class Planner(IPlanner):
                     f"Non-mandatory extras were reduced from {extra_weekly_hours:.1f}h to {allowed_extras:.1f}h to fit your weekly limit."
                 )
                 scale = allowed_extras / extra_weekly_hours if extra_weekly_hours > 0 else 0.0
-                for it in extra_items:
-                    it.hours_per_week = round(float(getattr(it, "hours_per_week", 0.0)) * scale, 1)
+                items = [
+                    it.model_copy(update={"hours_per_week": round(float(getattr(it, "hours_per_week", 0.0)) * scale, 1)})
+                    if it in extra_items else it
+                    for it in items
+                ]
+                recommended_items_list = [
+                    it.model_copy(update={"hours_per_week": round(float(getattr(it, "hours_per_week", 0.0)) * scale, 1)})
+                    for it in recommended_items_list
+                ]
 
         # =========================================================================
         # Multi-Semester Horizon & Semester Blocks
