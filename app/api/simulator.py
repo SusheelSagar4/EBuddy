@@ -221,3 +221,167 @@ def simulate_goal_pivot(student_id: str, req: GoalPivotSimulationRequest):
             "new_goal": new_goal.model_dump(),
             "weekly_focus": weekly.model_dump()
         }
+
+# =============================================================================
+# Core to M.Tech Simulation Endpoints (§10)
+# =============================================================================
+
+@router.post("/{student_id}/scenario/strong-vs-weak-mock")
+def simulate_strong_vs_weak_mock(student_id: str):
+    """
+    Simulates the same student with two mock performance histories side by side (§10).
+    Plan A: Strong mock trend [760, 800, 830] -> High predicted band, IISc/IIT Top tiers.
+    Plan B: Weak mock trend [510, 530, 520] -> Moderate band, NITs/MS(R) tiers, remedial focus.
+    """
+    from app.engine.gate_readiness_shortlist import gate_readiness_shortlist_engine
+    from app.engine.gate_planner import gate_planner_engine
+
+    student = onboarding_service.students.get(student_id)
+    dept = student.programme_id if student else "BTECH_EE"
+    paper_code = "EE" if "EE" in dept else "MT"
+    cgpa = student.cgpa if student else 7.5
+    backlogs = student.backlogs if student else 0
+
+    # Plan A: Strong Mocks
+    mocks_strong = [760.0, 800.0, 830.0]
+    band_strong = gate_readiness_shortlist_engine.compute_predicted_score_band(mocks_strong)
+    shortlist_strong = gate_readiness_shortlist_engine.compute_shortlist_and_tiers(
+        student_branch=dept,
+        student_cgpa=cgpa,
+        backlogs=backlogs,
+        paper_code=paper_code,
+        score_band=band_strong,
+        allow_unverified_demo=True
+    )
+    guidance_strong = gate_planner_engine.generate_weekly_guidance(
+        student_id=student_id,
+        week_num=10,
+        paper_code=paper_code,
+        cgpa=cgpa,
+        backlogs=backlogs,
+        hours_available=16.0,
+        current_course_codes=["EE2L001"] if "EE" in dept else ["ML2L001"],
+        topic_masteries={"SAMPLE-TOPIC-EE-CIRCUITS": 0.85, "SAMPLE-TOPIC-EE-POWER": 0.80},
+        weeks_remaining=8
+    )
+
+    # Plan B: Weak Mocks
+    mocks_weak = [510.0, 530.0, 520.0]
+    band_weak = gate_readiness_shortlist_engine.compute_predicted_score_band(mocks_weak)
+    shortlist_weak = gate_readiness_shortlist_engine.compute_shortlist_and_tiers(
+        student_branch=dept,
+        student_cgpa=cgpa,
+        backlogs=backlogs,
+        paper_code=paper_code,
+        score_band=band_weak,
+        allow_unverified_demo=True
+    )
+    guidance_weak = gate_planner_engine.generate_weekly_guidance(
+        student_id=student_id,
+        week_num=10,
+        paper_code=paper_code,
+        cgpa=cgpa,
+        backlogs=backlogs,
+        hours_available=16.0,
+        current_course_codes=["EE2L001"] if "EE" in dept else ["ML2L001"],
+        topic_masteries={"SAMPLE-TOPIC-EE-CIRCUITS": 0.45, "SAMPLE-TOPIC-EE-POWER": 0.40},
+        weeks_remaining=8
+    )
+
+    return {
+        "scenario": "Strong vs Weak Mock Comparison (Same Student Profile)",
+        "student_id": student_id,
+        "branch": dept,
+        "paper_code": paper_code,
+        "plan_strong": {
+            "mock_series": mocks_strong,
+            "predicted_score_band": band_strong.model_dump() if band_strong else None,
+            "shortlist_summary": {
+                "reach_count": len(shortlist_strong.reach),
+                "target_count": len(shortlist_strong.target),
+                "safe_count": len(shortlist_strong.safe),
+                "top_recommendations": shortlist_strong.balanced_recommendation[:3]
+            },
+            "weekly_focus": guidance_strong["weekly_focus_items"]
+        },
+        "plan_weak": {
+            "mock_series": mocks_weak,
+            "predicted_score_band": band_weak.model_dump() if band_weak else None,
+            "shortlist_summary": {
+                "reach_count": len(shortlist_weak.reach),
+                "target_count": len(shortlist_weak.target),
+                "safe_count": len(shortlist_weak.safe),
+                "top_recommendations": shortlist_weak.balanced_recommendation[:3]
+            },
+            "weekly_focus": guidance_weak["weekly_focus_items"]
+        }
+    }
+
+@router.post("/{student_id}/scenario/placement-clash")
+def simulate_placement_clash(student_id: str):
+    """
+    Scenario: Detects and surfaces clash between GATE mock preparation and campus placements (§10).
+    """
+    from app.engine.gate_conflicts_and_tracker import gate_conflicts_and_tracker_engine
+    conflicts = gate_conflicts_and_tracker_engine.detect_conflicts(
+        current_week=7,
+        placement_active=True,
+        placement_window_weeks=(6, 10)
+    )
+    return {
+        "scenario": "Campus Placement vs. GATE Prep Peak Clash",
+        "student_id": student_id,
+        "current_week": 7,
+        "clashes_detected": len(conflicts),
+        "alerts": [c.model_dump() for c in conflicts]
+    }
+
+@router.post("/{student_id}/scenario/result-below-target")
+def simulate_result_below_target(student_id: str, actual_score: float = 490.0):
+    """
+    Scenario: Student enters official GATE score below all Target programmes (§10).
+    Produces honest alternatives: MS(R), Interdisciplinary programmes, Core Industry track, and 3-year retake plan.
+    """
+    from app.engine.gate_interview_and_replan import gate_interview_and_replan_engine
+    student = onboarding_service.students.get(student_id)
+    dept = student.programme_id if student else "BTECH_EE"
+    paper = "EE" if "EE" in dept else "MT"
+    cgpa = student.cgpa if student else 7.2
+    backlogs = student.backlogs if student else 0
+
+    replan = gate_interview_and_replan_engine.replan_post_result(
+        student_id=student_id,
+        actual_score=actual_score,
+        actual_rank=2850,
+        paper_code=paper,
+        category="GEN",
+        branch=dept,
+        cgpa=cgpa,
+        backlogs=backlogs
+    )
+    return {
+        "scenario": "Official GATE Result Below Initial Target Programmes",
+        "result_data": replan
+    }
+
+@router.post("/{student_id}/scenario/route-switch-psu")
+def simulate_route_switch_psu(student_id: str):
+    """
+    Scenario: Student transitions from M.Tech higher studies to PSU recruitment via GATE (§10).
+    Preserves 100% of skill evidence and updates milestones and focus areas.
+    """
+    from app.engine.gate_interview_and_replan import gate_interview_and_replan_engine
+    states = diagnostic_service.skill_states.get(student_id, [])
+    ev_count = len(states) if states else 8
+
+    switch_data = gate_interview_and_replan_engine.switch_route(
+        student_id=student_id,
+        from_route="ROUTE_MTECH_INDIA",
+        to_route="ROUTE_PSU_GATE",
+        current_evidence_count=ev_count
+    )
+    return {
+        "scenario": "Route Transition: M.Tech Higher Studies -> PSU Recruitment",
+        "transition": switch_data
+    }
+
