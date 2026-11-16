@@ -89,13 +89,17 @@ class LLMClient:
     def embedding_model(self) -> str:
         return (_env("EMBEDDING_MODEL", "") or "").strip()
 
-    def is_live(self) -> bool:
-        if os.getenv("PYTEST_CURRENT_TEST"):
-            return False
+    def is_configured(self) -> bool:
+        """True when the environment names a real model that can be reached (single source of truth for status pages)."""
         if self.model.lower() in _FAKE_NAMES:
             return False
         # Local endpoints (e.g. Ollama via LLM_API_BASE) do not need a key
         return key_is_configured(self.api_key) or bool(self.api_base)
+
+    def is_live(self) -> bool:
+        if os.getenv("PYTEST_CURRENT_TEST"):
+            return False
+        return self.is_configured()
 
     def status(self) -> Dict[str, Any]:
         return {

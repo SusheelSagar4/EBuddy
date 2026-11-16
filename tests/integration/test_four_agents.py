@@ -2,9 +2,10 @@ import pytest
 from app.api.student import (
     onboard, generate_plan, get_plan, get_weekly_roadmap, get_roadmap_versions,
     get_learn_today, get_proposals, decide_proposal, chat,
-    submit_diagnostic_answer,
+    submit_diagnostic_answer, next_diagnostic_question,
     OnboardRequest, AnswerRequest, ChatRequest, ProposalDecisionRequest
 )
+from app.services.diagnostic_service import diagnostic_service
 
 def test_four_agents_system_and_single_writer_rule():
     student_id = "STU_FOUR_AGENTS_TEST_01"
@@ -80,17 +81,14 @@ def test_four_agents_system_and_single_writer_rule():
     # =========================================================================
     # STAGE 3: Agent 3 (Assessment / Quiz Agent)
     # =========================================================================
-    # Submit incorrect answer to simulate low score (< 75%)
-    ans_req = AnswerRequest(
-        exercise_id="EX_EE_DIAG_QUIZ_01",
-        skill_id="SKILL_CIRCUIT_ANALYSIS",
-        title="Mesh Current Analysis",
-        question_text="Determine the loop current in Mesh 2.",
-        exercise_type="mcq",
-        options=["A: 2A", "B: 5A", "C: 10A", "D: 0A"],
-        correct_answer="A: 2A",
-        student_answer="D: 0A" # Wrong
-    )
+    # Submit an incorrect answer to simulate low score (< 75%). The question must be served by the server first:
+    # answers to client-built exercises (with a client-supplied answer key) are refused.
+    served = next_diagnostic_question(student_id)
+    assert served["complete"] is False and "correct_answer" not in served["exercise"]
+    ex = served["exercise"]
+    key = diagnostic_service.served_keys[(student_id, ex["exercise_id"])].correct_answer
+    wrong = next(o for o in ex["options"] if o.split(":")[0] != key.split(":")[0])
+    ans_req = AnswerRequest(exercise_id=ex["exercise_id"], student_answer=wrong)
     eval_res = submit_diagnostic_answer(student_id, ans_req)
     assert eval_res["score"] == 0.0
     assert eval_res["demonstrated_mastery"] is False

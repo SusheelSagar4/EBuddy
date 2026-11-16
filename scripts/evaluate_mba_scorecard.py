@@ -218,8 +218,8 @@ def run_mba_scorecard_evaluation():
     print(f"7. Profile Action Curriculum Compliance   : {profile_action_passes}/{total_count} ({(profile_action_passes/total_count)*100:.1f}%)")
     print("=" * 80)
 
-    # Save to docs/core_to_mba_scorecard.md
-    docs_dir = "docs"
+    # Save to docs/core_to_mba_scorecard.md (the test-suite redirects this with EBUDDY_REPORTS_DIR)
+    docs_dir = os.getenv("EBUDDY_REPORTS_DIR", "docs")
     os.makedirs(docs_dir, exist_ok=True)
     report_file = os.path.join(docs_dir, "core_to_mba_scorecard.md")
     with open(report_file, "w", encoding="utf-8") as f:

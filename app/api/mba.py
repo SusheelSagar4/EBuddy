@@ -143,21 +143,21 @@ def get_career_map(branch: str = Query("EE"), include_general: bool = Query(True
 def start_diagnostic(req: DiagnosticStartRequest):
     try:
         return mba_diagnostic_engine.start_diagnostic(req.student_id, req.exam_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/diagnostic/answer")
 def submit_diagnostic_answer(req: DiagnosticAnswerRequest):
     try:
         return mba_diagnostic_engine.submit_answer(req.session_id, req.question_id, req.user_answer)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/diagnostic/report/{session_id}")
 def get_diagnostic_report(session_id: str):
     try:
         return mba_diagnostic_engine.get_report(session_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=404, detail=str(e))
 
 @router.post("/profile-audit")
@@ -190,7 +190,7 @@ def generate_prep_plan(req: PlanGenerationRequest):
             profile_actions=req.profile_actions,
             completed_course_ids=req.completed_course_ids
         )
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 # 5. Story Builder (Authoring critique, NO ghostwriting)
@@ -245,7 +245,10 @@ def get_checklist(student_id: str, category: str = Query("GEN")):
 
 @router.post("/checklist/{student_id}/update")
 def update_checklist_item(student_id: str, req: ChecklistUpdateRequest):
-    return mba_conflict_tracker_engine.update_checklist_item(student_id, req.item_id, req.completed)
+    try:
+        return mba_conflict_tracker_engine.update_checklist_item(student_id, req.item_id, req.completed)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e.args[0]) if e.args else "Unknown checklist item")
 
 @router.get("/deadlines")
 def get_official_deadlines():
@@ -269,7 +272,7 @@ def start_interview_session(req: InterviewStartRequest):
 def submit_interview_answer(req: InterviewAnswerRequest):
     try:
         return mba_interview_engine.evaluate_response(req.session_id, req.question_id, req.answer_text)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/wat/evaluate")
@@ -295,5 +298,5 @@ def switch_back_to_core(req: SwitchBackRequest):
             current_plan_version=req.current_plan_version,
             reason=req.reason
         )
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))

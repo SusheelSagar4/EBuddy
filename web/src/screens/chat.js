@@ -1,4 +1,5 @@
 import { api } from '../api/client.js';
+import { esc } from '../ui.js';
 
 export function renderChat(container, state, navigate) {
   if (!state.studentId) {
@@ -26,9 +27,9 @@ export function renderChat(container, state, navigate) {
       <div id="context-card-drawer" class="context-drawer" style="display:none; background:#f9f9f9; padding:12px; border-radius:6px; margin-bottom:12px;">
         <h4>Active LLM Context Card (Zero Fabrication Boundary)</h4>
         <div class="context-body" style="font-size:0.9em; color:#444;">
-          <p><strong>Student ID:</strong> ${state.studentId}</p>
-          <p><strong>Programme:</strong> ${state.profile?.programme_id || 'BTECH_EE'}</p>
-          <p><strong>Rules Enforced:</strong> Prerequisite chain compliance, 16–26 credit cap, Semester parity</p>
+          <p><strong>Student ID:</strong> ${esc(state.studentId)}</p>
+          <p><strong>Programme:</strong> ${esc(state.profile?.programme_id || 'not loaded')}</p>
+          <p><strong>Rules Enforced:</strong> Prerequisite chain compliance and your own credit limit (hard); 26-credit semester cap as an unsourced baseline (warning only); semester parity</p>
           <p class="text-muted"><small>Dates, cut-offs, or fees are never stated unless verified in official statutes.</small></p>
         </div>
       </div>
@@ -90,25 +91,25 @@ export function renderChat(container, state, navigate) {
     if (proposal) {
       proposalHtml = `
         <div style="margin-top: 10px; background: #fffde7; border: 1px solid #fff59d; border-radius: 6px; padding: 12px;">
-          <strong style="color: #f57f17;">📋 Generated Change Proposal (${proposal.proposal_type})</strong>
-          <p style="margin: 4px 0; font-size: 0.9em;"><strong>Reasoning:</strong> ${proposal.reasoning}</p>
-          <p style="margin: 4px 0; font-size: 0.9em; color: #2e7d32;"><strong>Effect:</strong> ${proposal.impact_summary}</p>
-          <div style="margin-top: 8px; display:flex; gap:8px;" id="prop-actions-${proposal.proposal_id}">
-            <button class="btn btn-primary btn-sm btn-appr" data-id="${proposal.proposal_id}">Approve Proposal</button>
-            <button class="btn btn-outline btn-sm btn-rej" data-id="${proposal.proposal_id}">Reject Proposal</button>
+          <strong style="color: #f57f17;">📋 Generated Change Proposal (${esc(proposal.proposal_type)})</strong>
+          <p style="margin: 4px 0; font-size: 0.9em;"><strong>Reasoning:</strong> ${esc(proposal.reasoning)}</p>
+          <p style="margin: 4px 0; font-size: 0.9em; color: #2e7d32;"><strong>Effect:</strong> ${esc(proposal.impact_summary)}</p>
+          <div style="margin-top: 8px; display:flex; gap:8px;" id="prop-actions-${esc(proposal.proposal_id)}">
+            <button class="btn btn-primary btn-sm btn-appr" data-id="${esc(proposal.proposal_id)}">Approve Proposal</button>
+            <button class="btn btn-outline btn-sm btn-rej" data-id="${esc(proposal.proposal_id)}">Reject Proposal</button>
           </div>
-          <div id="prop-status-${proposal.proposal_id}" style="display:none; margin-top:6px; font-weight:bold;"></div>
+          <div id="prop-status-${esc(proposal.proposal_id)}" style="display:none; margin-top:6px; font-weight:bold;"></div>
         </div>
       `;
     }
 
-    let intentHtml = intent ? `<span class="badge badge-info">Intent: ${intent}</span>` : '';
-    let disclaimerHtml = disclaimer ? `<p style="font-size:0.8em; color:#777; margin-top:8px;"><em>${disclaimer}</em></p>` : '';
+    let intentHtml = intent ? `<span class="badge badge-info">Intent: ${esc(intent)}</span>` : '';
+    let disclaimerHtml = disclaimer ? `<p style="font-size:0.8em; color:#777; margin-top:8px;"><em>${esc(disclaimer)}</em></p>` : '';
 
     msgDiv.innerHTML = `
       <div class="msg-bubble" style="background:white; border:1px solid #e0e0e0; padding:10px 14px; border-radius:8px; margin-bottom:8px;">
-        <span class="sender-name" style="font-weight:bold; color:${sender === 'You' ? '#333' : '#0052cc'};">${sender}</span>
-        <p style="white-space: pre-wrap; margin:6px 0;">${String(text ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</p>
+        <span class="sender-name" style="font-weight:bold; color:${sender === 'You' ? '#333' : '#0052cc'};">${esc(sender)}</span>
+        <p style="white-space: pre-wrap; margin:6px 0;">${esc(text)}</p>
         ${proposalHtml}
         ${disclaimerHtml}
         ${intentHtml ? `<div class="msg-meta" style="margin-top:4px;">${intentHtml}</div>` : ''}

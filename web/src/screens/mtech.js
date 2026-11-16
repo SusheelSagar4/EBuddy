@@ -4,11 +4,31 @@
  */
 
 import { api } from '../api/client.js';
+import { esc, needStudent } from '../ui.js';
+
+// The app keeps the selected student under state.profile; this screen used to read state.programmeId / state.cgpa,
+// which do not exist, so every student was shown as EE with "CGPA: 7.5".
+const profileOf = (state) => state.profile || {};
+const branchOf = (state) => profileOf(state).programme_id || "BTECH_EE";
+const cgpaOf = (state) => (typeof profileOf(state).cgpa === "number" ? profileOf(state).cgpa : null);
+const yearOf = (state) => profileOf(state).year || (profileOf(state).current_semester ? Math.ceil(profileOf(state).current_semester / 2) : null);
+
+// Tabs below still show fixed illustration figures: there is no student-facing M.Tech API for mocks, topic
+// mastery or the shortlist yet. Say so on screen instead of presenting them as this student's results.
+const SAMPLE_NOTE = `<div class="alert alert-warning" style="margin-bottom:14px;"><strong>Sample figures.</strong>
+  The numbers on this tab are a fixed illustration, not computed from your evidence yet. Use the Adapt Simulator's
+  M.Tech scenarios for computed results.</div>`;
+
+function weeksUntil(isoDate) {
+  const ms = new Date(isoDate + "T00:00:00") - new Date();
+  return Math.max(0, Math.round(ms / (7 * 24 * 3600 * 1000)));
+}
 
 export function renderMTechScreen(container, state, navigate) {
-  const branch = state.programmeId || "BTECH_EE";
+  if (!state.studentId) { needStudent(container); return; }
+  const branch = branchOf(state);
   const paperCode = branch.includes("EE") ? "EE" : "MT";
-  const studentId = state.studentId || "24EE01001";
+  const studentId = state.studentId;
 
   container.innerHTML = `
     <div class="screen-card">
@@ -19,7 +39,7 @@ export function renderMTechScreen(container, state, navigate) {
             <p class="subtitle">Pathway: B.Tech ${branch.replace('BTECH_', '')} → GATE ${paperCode} → M.Tech / MS(R) / Direct PhD / PSU</p>
           </div>
           <span class="badge" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 0.85rem; padding: 4px 10px; border-radius: 6px;">
-            Target Cycle: GATE 2027 (~12 Weeks Remaining)
+            Target Cycle: GATE 2027 (~${weeksUntil("2027-02-06")} weeks to the 6 Feb 2027 date in the knowledge base; date not verified)
           </span>
         </div>
       </div>
@@ -76,10 +96,10 @@ export function renderMTechScreen(container, state, navigate) {
 }
 
 function renderOverviewTab(container, state) {
-  const branch = state.programmeId || "BTECH_EE";
+  const branch = branchOf(state);
   const paper = branch.includes("EE") ? "EE" : "MT";
 
-  container.innerHTML = `
+  container.innerHTML = `${SAMPLE_NOTE}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
         <span style="font-size: 0.8rem; font-weight: 600; color: #64748b; text-transform: uppercase;">Study Budget Allocation</span>
@@ -115,9 +135,9 @@ function renderOverviewTab(container, state) {
         <p style="margin: 6px 0; font-size: 0.9rem; color: #475569;"><strong>How:</strong> Active recall on governing mesh equations, followed by 10 past GATE PYQs.</p>
         <p style="margin: 6px 0; font-size: 0.85rem; color: #64748b;"><strong>Why:</strong> High frequency topic (9 marks 5-yr avg). Tested mastery currently at 45%.</p>
         <div style="display: flex; gap: 8px; margin-top: 10px;">
-          <button style="padding: 6px 12px; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">✓ Mark Done</button>
-          <button style="padding: 6px 12px; background: #f1f5f9; color: #475569; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Skip for Now</button>
-          <button style="padding: 6px 12px; background: #f1f5f9; color: #64748b; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Not Useful</button>
+          <button disabled title="Not connected yet" style="opacity:0.6; cursor:not-allowed; padding: 6px 12px; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">✓ Mark Done</button>
+          <button disabled title="Not connected yet" style="opacity:0.6; cursor:not-allowed; padding: 6px 12px; background: #f1f5f9; color: #475569; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Skip for Now</button>
+          <button disabled title="Not connected yet" style="opacity:0.6; cursor:not-allowed; padding: 6px 12px; background: #f1f5f9; color: #64748b; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Not Useful</button>
         </div>
       </div>
 
@@ -133,8 +153,8 @@ function renderOverviewTab(container, state) {
         <p style="margin: 6px 0; font-size: 0.9rem; color: #475569;"><strong>How:</strong> Timed sectional problem set (25 mins for 10 problems) + NAT precision drill.</p>
         <p style="margin: 6px 0; font-size: 0.85rem; color: #64748b;"><strong>Why:</strong> Foundational prerequisite for control/signals. Guaranteed 3-4 marks on paper.</p>
         <div style="display: flex; gap: 8px; margin-top: 10px;">
-          <button style="padding: 6px 12px; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">✓ Mark Done</button>
-          <button style="padding: 6px 12px; background: #f1f5f9; color: #475569; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Skip for Now</button>
+          <button disabled title="Not connected yet" style="opacity:0.6; cursor:not-allowed; padding: 6px 12px; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">✓ Mark Done</button>
+          <button disabled title="Not connected yet" style="opacity:0.6; cursor:not-allowed; padding: 6px 12px; background: #f1f5f9; color: #475569; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Skip for Now</button>
         </div>
       </div>
     </div>
@@ -142,16 +162,22 @@ function renderOverviewTab(container, state) {
 }
 
 function renderEligibilityTab(container, state) {
-  const branch = state.programmeId || "BTECH_EE";
+  const branch = branchOf(state);
   const paper = branch.includes("EE") ? "EE" : "MT";
   const allowedSecond = branch.includes("EE") ? "IN, EC, DA" : "ME, XE, PI";
+  const cgpa = cgpaOf(state);
+  const year = yearOf(state);
+  const eligibleNow = year !== null && year >= 3;
 
   container.innerHTML = `
     <h3>Deterministic Eligibility & Approved Route Fit</h3>
-    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-      <h4 style="margin: 0 0 6px 0; color: #065f46;">✓ Status: Full GATE Eligibility Confirmed</h4>
-      <p style="margin: 0; font-size: 0.9rem; color: #047857;">
-        <strong>Rule Citation:</strong> GATE 2027 Information Brochure Section 3 (Pre-final & Final Year Degree Enrollment).
+    ${eligibleNow
+      ? `<div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h4 style="margin: 0 0 6px 0; color: #065f46;">✓ Year ${esc(year)}: eligible to sit GATE (3rd year or above)</h4>`
+      : `<div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h4 style="margin: 0 0 6px 0; color: #92400e;">${year ? `Year ${esc(year)}: not eligible yet` : 'Year not recorded'}. GATE needs a student in the 3rd year or above.</h4>`}
+      <p style="margin: 0; font-size: 0.9rem; color: #475569;">
+        Rule used by this app: 3rd year or above. Confirm against the official GATE 2027 information brochure. The two-paper list below is sample data.
       </p>
     </div>
 
@@ -168,7 +194,7 @@ function renderEligibilityTab(container, state) {
         <tr>
           <td style="padding: 10px; border: 1px solid #e2e8f0;"><strong>Primary Paper</strong></td>
           <td style="padding: 10px; border: 1px solid #e2e8f0;">GATE ${paper}</td>
-          <td style="padding: 10px; border: 1px solid #e2e8f0; color: #059669; font-weight: 600;">Directly Eligible</td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0; color: ${eligibleNow ? '#059669' : '#d97706'}; font-weight: 600;">${eligibleNow ? 'Eligible now' : 'From 3rd year'}</td>
           <td style="padding: 10px; border: 1px solid #e2e8f0;">gate2027.iitm.ac.in/papers</td>
         </tr>
         <tr>
@@ -179,15 +205,15 @@ function renderEligibilityTab(container, state) {
         </tr>
         <tr>
           <td style="padding: 10px; border: 1px solid #e2e8f0;"><strong>Direct PhD Route</strong></td>
-          <td style="padding: 10px; border: 1px solid #e2e8f0;">CGPA: ${state.cgpa || 7.5}</td>
-          <td style="padding: 10px; border: 1px solid #e2e8f0; color: ${state.cgpa >= 8.0 ? '#059669' : '#d97706'}; font-weight: 600;">
-            ${state.cgpa >= 8.0 ? 'Eligible for Direct PhD' : 'Below 8.0 CFTI Cutoff (M.Tech First Recommended)'}
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">CGPA: ${cgpa === null ? 'not recorded' : esc(cgpa.toFixed(2))}</td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0; color: ${cgpa !== null && cgpa >= 8.0 ? '#059669' : '#d97706'}; font-weight: 600;">
+            ${cgpa === null ? 'Cannot assess without a CGPA' : (cgpa >= 8.0 ? 'Meets the 8.0 guideline used here' : 'Below the 8.0 guideline used here (M.Tech first recommended)')}
           </td>
           <td style="padding: 10px; border: 1px solid #e2e8f0;">iisc.ac.in/admissions/phd</td>
         </tr>
         <tr>
           <td style="padding: 10px; border: 1px solid #e2e8f0;"><strong>PSU Recruitment</strong></td>
-          <td style="padding: 10px; border: 1px solid #e2e8f0;">Discipline: ${branch}</td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">Discipline: ${esc(branch)}</td>
           <td style="padding: 10px; border: 1px solid #e2e8f0; color: #059669; font-weight: 600;">Eligible (POWERGRID, NTPC, SAIL)</td>
           <td style="padding: 10px; border: 1px solid #e2e8f0;">careers.psu.gov.in</td>
         </tr>
@@ -197,10 +223,11 @@ function renderEligibilityTab(container, state) {
 }
 
 function renderMasteryTab(container, state) {
-  const branch = state.programmeId || "BTECH_EE";
+  const branch = branchOf(state);
   const paper = branch.includes("EE") ? "EE" : "MT";
 
   container.innerHTML = `
+${SAMPLE_NOTE}
     <h3>GATE ${paper} Syllabus Topic Mastery & Weightage Map</h3>
     <p style="font-size: 0.85rem; color: #64748b;">
       Mastery is calculated via multi-weight Bayesian evidence. Self-declaration (0.2 weight) alone cannot achieve mastery.
@@ -259,6 +286,7 @@ function renderMasteryTab(container, state) {
 
 function renderMocksTab(container, state) {
   container.innerHTML = `
+${SAMPLE_NOTE}
     <h3>Mock Performance & Predicted Score Band</h3>
     
     <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
@@ -299,6 +327,7 @@ function renderMocksTab(container, state) {
 
 function renderShortlistTab(container, state) {
   container.innerHTML = `
+${SAMPLE_NOTE}
     <h3>Reach, Target & Safe Programme Shortlist</h3>
     <p style="font-size: 0.85rem; color: #64748b;">
       Tiering is computed by comparing your calibrated score band [670 - 745] against official past closing ranges.
@@ -347,6 +376,7 @@ function renderShortlistTab(container, state) {
 
 function renderTrackerTab(container, state) {
   container.innerHTML = `
+${SAMPLE_NOTE}
     <h3>Application Tracker & Conflict Detection</h3>
 
     <div style="background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 6px; padding: 14px; margin-bottom: 16px;">
@@ -390,25 +420,39 @@ function renderInterviewTab(container, state) {
 
   const btn = container.querySelector("#btn-eval-interview");
   const fbox = container.querySelector("#interview-feedback-box");
-  btn.addEventListener("click", () => {
+  // Scores the typed answer with the deterministic GATE interview rubric on the server (it used to show a fixed 86/100)
+  btn.addEventListener("click", async () => {
+    const answer = container.querySelector("#interview-resp").value.trim();
     fbox.style.display = "block";
-    fbox.innerHTML = `
-      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 6px;">
-        <h4 style="margin: 0 0 6px 0; color: #166534;">Evaluation Score: 86 / 100 (Strong Derivation)</h4>
-        <ul style="font-size: 0.8rem; color: #14532d; padding-left: 18px; margin: 4px 0;">
-          <li>Technical Depth: 22/25 | Governing Equations: 22/25</li>
-          <li>Practical Application: 21/25 | Clarity: 21/25</li>
-        </ul>
-        <p style="margin: 4px 0; font-size: 0.8rem; color: #15803d;">
-          <em>Feedback:</em> Good derivation of dV/dQ sensitivity. Consider mentioning FACTs or synchronous condenser mitigation in practical systems.
-        </p>
-      </div>
-    `;
+    if (!answer) { fbox.innerHTML = `<div class="alert alert-warning">Type an answer first.</div>`; return; }
+    fbox.innerHTML = `<div class="loading-state">Scoring against the rubric...</div>`;
+    btn.disabled = true;
+    try {
+      const r = await api.mtechInterview(state.studentId, "REACTIVE_POWER_VOLTAGE_STABILITY", answer);
+      const b = r.rubric_breakdown || {};
+      fbox.innerHTML = `
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 6px;">
+          <h4 style="margin: 0 0 6px 0; color: #166534;">Rubric score: ${esc(r.total_score)} / 100</h4>
+          <ul style="font-size: 0.8rem; color: #14532d; padding-left: 18px; margin: 4px 0;">
+            <li>Technical accuracy: ${esc(b.technical_accuracy)}/25 | Mathematical rigour: ${esc(b.mathematical_rigor)}/25</li>
+            <li>Practical application: ${esc(b.practical_application)}/25 | Clarity: ${esc(b.clarity_of_expression)}/25</li>
+          </ul>
+          <ul style="font-size: 0.8rem; color: #15803d; padding-left: 18px; margin: 4px 0;">
+            ${(r.feedback || []).map((f) => `<li>${esc(f)}</li>`).join('')}
+          </ul>
+          <p class="small muted" style="margin:4px 0 0;">Keyword-based rubric: it checks for technical terms, governing laws, an engineering example and length, not correctness.</p>
+        </div>`;
+    } catch (err) {
+      fbox.innerHTML = `<div class="alert alert-error">${esc(err.message || err)}</div>`;
+    } finally {
+      btn.disabled = false;
+    }
   });
 }
 
 function renderPostResultTab(container, state) {
   container.innerHTML = `
+${SAMPLE_NOTE}
     <h3>Post-Result Re-Planner</h3>
     <p style="font-size: 0.85rem; color: #64748b;">
       Enter your official GATE score to recalculate realistic options and explore trade-offs.
@@ -423,7 +467,7 @@ function renderPostResultTab(container, state) {
         <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 4px;">All India Rank (AIR)</label>
         <input type="number" id="actual-rank-input" value="2650" style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; width: 140px;" />
       </div>
-      <button id="btn-replan" style="padding: 9px 18px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Recompute Pathways</button>
+      <button id="btn-replan" disabled title="Not connected yet: use the Adapt Simulator's M.Tech result scenario" style="opacity:0.6; cursor:not-allowed; "padding: 9px 18px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">Recompute Pathways</button>
     </div>
 
     <div id="replan-results-box">

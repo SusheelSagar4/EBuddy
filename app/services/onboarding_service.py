@@ -5,6 +5,7 @@ Profiles come from the deterministic seed (`data/seed/student/*.csv`, 75 synthet
 when PostgreSQL is reachable, from the `student.*` tables (so Adminer edits are picked up on reload).
 State is held in memory for the deterministic engine; edits are mirrored to the database best-effort.
 """
+import logging
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
 import os
@@ -15,6 +16,17 @@ from app.contracts.student import StudentProfile, Constraint, Preference, Eviden
 from app.contracts.goal import Goal
 from app.kb.repositories import GoalRepo
 from app.db import persistence
+
+class StudentNotFoundError(KeyError):
+    """Raised for a student id that is not loaded, not in the seed or database, and not in a persona roster."""
+
+    def __init__(self, student_id: str):
+        super().__init__(student_id)
+        self.student_id = student_id
+
+    def __str__(self) -> str:
+        return f"Student {self.student_id} not found. Create the profile first (POST /api/v2/students or /api/student/onboard)."
+
 
 SEED_STUDENT_DIR = os.path.join("data", "seed", "student")
 DEFAULT_GOALS = {"BTECH_EE": "GOAL_EE_CORE_POWER", "BTECH_MM": "GOAL_MM_PROCESS_ENGINEER"}
@@ -120,7 +132,7 @@ class OnboardingService:
                             "is_synthetic": True,
                         })
             except Exception as e:
-                print(f"Notice: Failed to read {f}: {e}")
+                logging.getLogger("ebuddy.onboarding").warning("Failed to read persona roster %s: %s", f, e)
         return students
 
     def get_all_synthetic_students(self) -> List[Dict[str, Any]]:
@@ -207,6 +219,14 @@ class OnboardingService:
         diagnostic_service.set_ledger(sid, seeded + runtime)
         return student
 
+    def student_exists(self, student_id: str) -> bool:
+        """True for a student already loaded, in the seed or database, or in a persona roster (never fabricates one)."""
+        if student_id in self.students:
+            return True
+        if self.get_bundle(student_id) is not None:
+            return True
+        return any(s["student_id"] == student_id for s in self._legacy_roster())
+
     def ensure_student_onboarded(self, student_id: str, goal_id: Optional[str] = None) -> StudentProfile:
         """Ensures the student is loaded in memory (seed / DB); an explicit goal_id selects the goal."""
         if student_id in self.students:
@@ -220,11 +240,8 @@ class OnboardingService:
 
         target = next((s for s in self._legacy_roster() if s["student_id"] == student_id), None)
         if not target:
-            target = {
-                "student_id": student_id, "name": f"Student {student_id}",
-                "programme_id": "BTECH_MM" if ("MM" in student_id or "MET" in student_id or "MAT" in student_id) else "BTECH_EE",
-                "current_semester": 3, "cgpa": 8.0, "backlogs": 0, "completed_courses": ["MA1L001", "PH1L001"], "is_synthetic": True
-            }
+            # Never invent a profile (it used to create "Student <id>" with CGPA 8.0): callers get a 404 instead.
+            raise StudentNotFoundError(student_id)
         prog = target["programme_id"]
         return self.onboard_student(
             student_id=target["student_id"], name=target["name"], programme_id=prog,

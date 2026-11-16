@@ -5,6 +5,8 @@ is deterministic - the LLM is never asked to choose courses or schedule anything
 """
 import os
 import csv
+import logging
+import threading
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional, Tuple
 from app.contracts.goal import GoalRequirement
@@ -15,6 +17,7 @@ from app.services.onboarding_service import onboarding_service
 from app.services.diagnostic_service import diagnostic_service
 from app.db import persistence
 
+logger = logging.getLogger("ebuddy.plan")
 
 def item_key(it: PlanItem) -> Tuple[str, str]:
     ident = it.course_id or it.resource_id or it.track_phase_id or it.exercise_id or it.title or it.item_id
@@ -41,6 +44,7 @@ class PlanService:
         self.version_log: Dict[str, List[Dict[str, Any]]] = {}
         self.input_snapshots: Dict[str, Dict[str, Any]] = {}
         self.goal_requirements: Dict[str, List[GoalRequirement]] = {}
+        self._lock = threading.RLock()
         self._load_requirements()
 
     def _load_requirements(self):
@@ -68,7 +72,7 @@ class PlanService:
                 return [GoalRequirement(goal_id=goal_id, skill_id=r["skill_id"], required_level=float(r["required_level"]),
                                         importance=float(r.get("importance", 1.0)), source_id="PERSONA") for r in pkg.requirements]
         except Exception:
-            pass
+            logger.exception("Persona requirements for goal %s could not be loaded; planning without them", goal_id)
         return []
 
     # ------------------------------------------------------------------ diff + explanation
@@ -186,6 +190,12 @@ class PlanService:
     # ------------------------------------------------------------------ build
     def create_or_update_plan(self, student_id: str, trigger: str = "manual_regen", reasons: Optional[List[str]] = None,
                               horizon: str = "degree") -> Dict[str, Any]:
+        # FastAPI runs sync endpoints on a thread pool: without this, two concurrent edits could both read
+        # version N and both write N+1, losing one change. Re-entrant because commit() is called inside.
+        with self._lock:
+            return self._create_or_update_plan(student_id, trigger, reasons, horizon)
+
+    def _create_or_update_plan(self, student_id: str, trigger: str, reasons: Optional[List[str]], horizon: str) -> Dict[str, Any]:
         student = onboarding_service.students.get(student_id)
         if not student:
             raise ValueError(f"Student {student_id} not onboarded")
@@ -197,7 +207,7 @@ class PlanService:
         evidence = diagnostic_service.evidence_ledger.get(student_id, [])
         states = diagnostic_service.skill_states.get(student_id, [])
 
-        old_plan = self.plans.get(student_id)
+        old_plan = self.get_plan(student_id)  # restores the stored version after a restart, so numbering continues
         new_version = (old_plan.version + 1) if old_plan else 1
         reqs = self.requirements_for(goal.goal_id)
         gaps = self.gap_analyzer.analyze_gaps(goal, reqs, states, evidence=evidence)
@@ -214,6 +224,12 @@ class PlanService:
         diff = self._compute_plan_diff(old_plan, candidate, trigger=trigger, reasons=all_reasons)
         what_changed = self._generate_explanation(old_plan, candidate, diff, candidate.mismatch_warning)
         report = self.validator.validate_plan(candidate, student, completed_course_ids=completed, constraints=constraints)
+        if not report.passed:
+            # The version is still stored (the old one is stale once inputs change), but it must never look approved.
+            errors = [c.message for c in report.checks if not c.passed and c.severity == "error"]
+            logger.warning("Plan v%s for %s failed validation: %s", new_version, student_id, "; ".join(errors))
+            what_changed = ("**This version did not pass validation; do not act on it until it is fixed.** "
+                            "Failed checks: " + ("; ".join(errors) or "see the validation report") + "\n\n" + (what_changed or ""))
 
         final_plan = candidate.model_copy(update={"validation_report": report, "plan_diff": diff, "what_changed_and_why": what_changed})
         return self.commit(student_id, final_plan, trigger, gaps=gaps, snapshot=new_snap)
@@ -221,6 +237,11 @@ class PlanService:
     def commit(self, student_id: str, final_plan: Plan, trigger: str, gaps: Optional[List[Dict[str, Any]]] = None,
                snapshot: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Stores a validated plan version (memory + best-effort PostgreSQL) and logs it."""
+        with self._lock:
+            return self._commit(student_id, final_plan, trigger, gaps, snapshot)
+
+    def _commit(self, student_id: str, final_plan: Plan, trigger: str, gaps: Optional[List[Dict[str, Any]]],
+                snapshot: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         old_plan = self.plans.get(student_id)
         if old_plan:
             self.plan_history.setdefault(student_id, []).append(old_plan)
@@ -257,8 +278,46 @@ class PlanService:
     def goal_repo_has(self, goal_id: str) -> bool:
         return onboarding_service.goal_repo.get_by_id(goal_id) is not None
 
+    def restore_from_db(self, student_id: str) -> Optional[Plan]:
+        """
+        Reloads a student's stored roadmap versions from PostgreSQL after a restart, so the next change continues
+        from the last committed version instead of starting again at version 1. Returns None when the database is
+        off or holds no snapshot; a snapshot that no longer matches the Plan contract is skipped, not fatal.
+        """
+        if not persistence.db_available():
+            return None
+        rows = persistence.fetch_plan_history(student_id)
+        restored: List[Plan] = []
+        for r in rows:
+            try:
+                restored.append(Plan.model_validate(r["snapshot"]))
+            except Exception as e:
+                logger.warning("Skipping stored plan %s for %s: snapshot does not match the Plan contract (%s)",
+                               r["plan_id"], student_id, str(e)[:160])
+        if not restored:
+            return None
+        trig = {r["plan_id"]: r["trigger"] for r in rows}
+        with self._lock:
+            if student_id in self.plans:  # a request built a plan meanwhile; keep it
+                return self.plans[student_id]
+            self.plans[student_id] = restored[-1]
+            self.plan_history[student_id] = restored[:-1]
+            self.version_log[student_id] = [{
+                "version": p.version, "plan_id": p.plan_id, "trigger": trig.get(p.plan_id, "restored"),
+                "summary": p.plan_diff.summary if p.plan_diff else "", "reasons": list(p.plan_diff.reasons) if p.plan_diff else [],
+                "validation_passed": bool(p.validation_report.passed) if p.validation_report else None,
+                "total_items": len(p.items),
+                "total_credits": round(sum((it.credits or 0.0) for it in p.items if it.item_type == "course"), 1),
+                "created_at": p.created_at.isoformat(), "committed_by": "agent_1_planner", "restored_from_db": True,
+            } for p in restored]
+        logger.info("Restored %s stored plan version(s) for %s (active v%s)", len(restored), student_id, restored[-1].version)
+        return restored[-1]
+
     def get_plan(self, student_id: str) -> Optional[Plan]:
-        return self.plans.get(student_id)
+        plan = self.plans.get(student_id)
+        if plan is None and student_id in onboarding_service.students:
+            plan = self.restore_from_db(student_id)
+        return plan
 
     def get_plan_history(self, student_id: str) -> List[Plan]:
         return self.plan_history.get(student_id, [])
@@ -266,9 +325,15 @@ class PlanService:
     def get_or_create(self, student_id: str) -> Plan:
         plan = self.plans.get(student_id)
         if plan is None:
-            onboarding_service.ensure_student_onboarded(student_id)
-            self.create_or_update_plan(student_id, trigger="initial")
-            plan = self.plans[student_id]
+            with self._lock:  # re-check inside the lock so two first requests don't both build "version 1"
+                plan = self.plans.get(student_id)
+                if plan is None:
+                    onboarding_service.ensure_student_onboarded(student_id)
+                    plan = self.restore_from_db(student_id)
+                    if plan is not None:
+                        return plan
+                    self.create_or_update_plan(student_id, trigger="initial")
+                    plan = self.plans[student_id]
         return plan
 
 plan_service = PlanService()

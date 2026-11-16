@@ -1,6 +1,6 @@
 # Core to M.Tech Seed Data Quality & Integrity Report
 
-*Generated automatically on seed import from `/home/user/EBuddy/EBuddy-main/scripts/../data/seed/core_to_mtech`.*
+*Generated automatically on seed import from `data/seed/core_to_mtech`.*
 
 ## 1. Executive Summary
 

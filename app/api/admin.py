@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 from datetime import datetime
@@ -10,8 +10,9 @@ from app.services.diagnostic_service import diagnostic_service
 from app.services.plan_service import plan_service
 from app.engine.readiness_gate import readiness_gate_engine
 from app.engine.faculty_matcher import faculty_matcher_engine
+from app.api.security import require_admin_token
 
-router = APIRouter(prefix="/api/admin", tags=["Admin"])
+router = APIRouter(prefix="/api/admin", tags=["Admin"], dependencies=[Depends(require_admin_token)])
 
 class StudentProfileUpdateRequest(BaseModel):
     name: Optional[str] = None
@@ -133,11 +134,17 @@ def list_students():
     extra = [s for sid, s in onboarding_service.students.items() if sid not in {r["student_id"] for r in rows}]
     return {"count": len(rows) + len(extra), "students": rows + [dict(s.model_dump(mode="json"), loaded=True) for s in extra]}
 
+def _require_known_student(student_id: str):
+    """Admin edits must target a real profile; ensure_student_onboarded would otherwise invent one."""
+    if not onboarding_service.student_exists(student_id):
+        raise HTTPException(status_code=404, detail="Student not found.")
+
 @router.get("/students/{student_id}")
 def get_student_detail(student_id: str):
+    _require_known_student(student_id)
     try:
         st = onboarding_service.ensure_student_onboarded(student_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=404, detail=str(e))
     from app.engine.skill_state import reliability_tier_for
     names = plan_service.planner.skill_names
@@ -163,6 +170,7 @@ def update_student(student_id: str, req: StudentEditRequest):
     from app.services.reprocess_service import reprocess_service
     from app.contracts.student import StudentProfile
     from app.db import persistence
+    _require_known_student(student_id)
     try:
         student = onboarding_service.ensure_student_onboarded(student_id)
     except Exception:
@@ -171,6 +179,14 @@ def update_student(student_id: str, req: StudentEditRequest):
         raise HTTPException(status_code=400, detail="cgpa must be between 0 and 10")
     if req.current_semester is not None and not 1 <= req.current_semester <= 8:
         raise HTTPException(status_code=400, detail="current_semester must be between 1 and 8")
+    if req.backlogs is not None and req.backlogs < 0:
+        raise HTTPException(status_code=400, detail="backlogs cannot be negative")
+    if req.weekly_hours_cap is not None and not 0 < req.weekly_hours_cap <= 100:
+        raise HTTPException(status_code=400, detail="weekly_hours_cap must be between 0 and 100")
+    if req.credit_cap is not None and not 0 < req.credit_cap <= 40:
+        raise HTTPException(status_code=400, detail="credit_cap must be between 0 and 40")
+    if req.name is not None and not req.name.strip():
+        raise HTTPException(status_code=400, detail="name cannot be empty")
     if req.goal_id is not None and onboarding_service.goal_repo.get_by_id(req.goal_id) is None:
         raise HTTPException(status_code=400, detail=f"Unknown goal {req.goal_id}")
     plan_service.get_or_create(student_id)
@@ -212,14 +228,19 @@ def edit_evidence(student_id: str, req: EvidenceEditRequest):
     """Edits or adds a diagnostic / assessment score; skill state and roadmap are re-processed immediately."""
     from app.services.reprocess_service import reprocess_service
     from app.db import persistence
+    _require_known_student(student_id)
     try:
         onboarding_service.ensure_student_onboarded(student_id)
     except Exception:
         raise HTTPException(status_code=404, detail="Student not found.")
     if not 0 <= req.score <= 100:
         raise HTTPException(status_code=400, detail="score must be between 0 and 100")
+    # An unknown source type would silently get "medium" reliability (more than a self-declaration), so reject it.
+    from app.engine.skill_state import SOURCE_WEIGHTS
+    if not req.evidence_id and (req.source_type or "diagnostic") not in SOURCE_WEIGHTS:
+        raise HTTPException(status_code=400, detail=f"source_type must be one of {sorted(SOURCE_WEIGHTS)}")
     plan_service.get_or_create(student_id)
-    ledger = diagnostic_service.evidence_ledger.get(student_id, [])
+    ledger =diagnostic_service.evidence_ledger.get(student_id, [])
     if req.evidence_id:
         idx = next((i for i, e in enumerate(ledger) if e.evidence_id == req.evidence_id), None)
         if idx is None:
@@ -568,15 +589,16 @@ def update_exam_cycle(cycle_id: str, req: ExamCycleUpdateRequest):
 @router.post("/mtech/students/{student_id}/reprocess")
 def reprocess_mtech_student(student_id: str, reason: str = "Admin triggered Core to M.Tech re-processing"):
     """
-    Immediate re-processing engine for Core to M.Tech (§15):
-    Recomputes skill state, readiness, score band, shortlist tiers, current plan, and bumps plan version.
+    Core to M.Tech re-processing preview (§15): recomputes score band, readiness, shortlist tiers and weekly
+    guidance. It runs on fixed sample inputs (see `demo_inputs_note` in the response) and does not write
+    a new roadmap version.
     """
     from app.engine.gate_readiness_shortlist import gate_readiness_shortlist_engine
     from app.engine.gate_planner import gate_planner_engine
 
     student = onboarding_service.students.get(student_id)
     if not student:
-        return {"status": "skipped", "reason": "student_not_found"}
+        raise HTTPException(status_code=404, detail="Student not found or not loaded.")
 
     dept = student.programme_id
     paper_code = "EE" if "EE" in dept else "MT"
@@ -616,15 +638,18 @@ def reprocess_mtech_student(student_id: str, reason: str = "Admin triggered Core
         weeks_remaining=8
     )
 
-    # 5. Bump plan version
+    # 5. This preview does not write a roadmap version, so report the version that is actually stored.
     current_plan = plan_service.get_plan(student_id)
-    new_version = (current_plan.version + 1) if current_plan else 2
 
     return {
-        "status": "reprocessed",
+        "status": "preview",
         "student_id": student_id,
         "reason": reason,
-        "new_plan_version": new_version,
+        "plan_version": current_plan.version if current_plan else None,
+        "roadmap_version_written": False,
+        "demo_inputs": True,
+        "demo_inputs_note": ("Mock scores, topic masteries, week number and weekly hours are fixed sample values, "
+                             "not this student's records; unverified SAMPLE- rows are allowed in the shortlist."),
         "predicted_score_band": score_band.model_dump() if score_band else None,
         "readiness": readiness,
         "shortlist_summary": {

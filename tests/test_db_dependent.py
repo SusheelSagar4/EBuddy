@@ -88,5 +88,31 @@ class TestDBDependent(unittest.TestCase):
             triggers = cur.fetchall()
             self.assertGreater(len(triggers), 0, "Reprocess triggers must be registered")
 
+    def test_05_interrupted_queue_events_are_requeued(self):
+        """An event left in 'processing' by a crashed process goes back to 'pending' when the worker starts."""
+        from app.db import persistence
+        with self.conn.cursor() as cur:
+            cur.execute("""INSERT INTO ops.reprocess_queue (entity_type, entity_id, action, status)
+                           VALUES ('test.interrupted', 'T5', 'UPDATE', 'processing') RETURNING event_id""")
+            event_id = cur.fetchone()[0]
+        self.conn.commit()
+        old_sync = os.environ.get("EBUDDY_DB_SYNC")
+        os.environ["EBUDDY_DB_SYNC"] = "auto"  # conftest turns the app's DB helpers off for the other tests
+        persistence._state.update(ok=None, checked_at=0.0)
+        try:
+            self.assertGreaterEqual(persistence.requeue_interrupted_events() or 0, 1)
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT status FROM ops.reprocess_queue WHERE event_id=%s", (event_id,))
+                self.assertEqual(cur.fetchone()[0], "pending")
+        finally:
+            if old_sync is None:
+                os.environ.pop("EBUDDY_DB_SYNC", None)
+            else:
+                os.environ["EBUDDY_DB_SYNC"] = old_sync
+            persistence._state.update(ok=None, checked_at=0.0)
+            with self.conn.cursor() as cur:
+                cur.execute("DELETE FROM ops.reprocess_queue WHERE event_id=%s", (event_id,))
+            self.conn.commit()
+
 if __name__ == "__main__":
     unittest.main()

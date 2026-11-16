@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -13,14 +14,38 @@ from app.api.admin import router as admin_router
 from app.api.mba import router as mba_router
 from app.api.buddy import router as buddy_router
 from app.services.reprocess_service import reprocess_service
+from app.services.onboarding_service import StudentNotFoundError
+from app.api.limits import RequestSizeLimitMiddleware
+from fastapi.responses import JSONResponse
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Starts the worker that re-processes plans after direct database edits (Adminer / SQL), stops it on shutdown."""
+    reprocess_service.start_worker()
+    try:
+        yield
+    finally:
+        reprocess_service.stop_worker()
+
 
 app = FastAPI(
     title="Adobe Personalised Learning Buddy",
     description="Adaptive academic planning and mastery buddy for IIT Bhubaneswar (B.Tech EE & B.Tech Metallurgical Engineering)",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url=None
+    redoc_url=None,
+    lifespan=lifespan,
 )
+
+
+app.add_middleware(RequestSizeLimitMiddleware)
+
+
+@app.exception_handler(StudentNotFoundError)
+async def _student_not_found(_request: Request, exc: StudentNotFoundError):
+    """Any endpoint that looks up an unknown student (path or request body) answers 404, never a 500."""
+    return JSONResponse(status_code=404, content={"detail": str(exc)})
 
 # Include core routers
 app.include_router(health_router, prefix="", tags=["System"])
@@ -30,17 +55,6 @@ app.include_router(simulator_router)
 app.include_router(admin_router)
 app.include_router(mba_router)
 app.include_router(buddy_router)
-
-
-@app.on_event("startup")
-def _start_background_reprocessing():
-    """Starts the worker that re-processes plans after direct database edits (Adminer / SQL)."""
-    reprocess_service.start_worker()
-
-
-@app.on_event("shutdown")
-def _stop_background_reprocessing():
-    reprocess_service.stop_worker()
 
 # Ensure static directory exists and mount
 static_dir = os.path.join(os.path.dirname(__file__), "static")

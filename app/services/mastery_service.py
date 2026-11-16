@@ -1,3 +1,4 @@
+import logging
 from typing import Dict, Any
 from app.contracts.goal import MasteryCriteria
 from app.engine.mastery import MasteryEvaluator
@@ -24,7 +25,7 @@ class MasteryService:
                 crit.update(pkg.mastery["criteria"])
                 source = f"persona:{pkg.spec.persona_id}"
         except Exception:
-            pass
+            logging.getLogger("ebuddy.mastery").exception("Persona mastery criteria for %s could not be loaded; using defaults", goal_id)
         return MasteryCriteria(criteria_id=f"MASTERY_{goal_id}", goal_id=goal_id, criteria=crit, status="draft_for_review", source_id=source)
 
     def check_mastery(self, student_id: str) -> Dict[str, Any]:

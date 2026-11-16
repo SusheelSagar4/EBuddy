@@ -13,6 +13,7 @@ Checks (per semester where relevant)
   student_credit_cap    student-stated credit cap (HARD)
   student_weekly_hours  student-stated weekly-hours cap for the current semester (HARD)
 """
+import logging
 import os
 import csv
 import glob
@@ -79,7 +80,8 @@ class PlanValidator(IPlanValidator):
             from app.kb.track_repo import TrackRepo
             self.valid_resources.update(TrackRepo().all_resource_ids())
         except Exception:
-            pass
+            # without these ids every plan with career-track resources fails the resource check
+            logging.getLogger("ebuddy.validator").exception("Career-track resource ids could not be loaded")
         root = os.path.abspath(os.path.join(self.seed_dir, "..", "..", ".."))
         for pattern in (os.path.join(root, "data", "raw", "higher_studies", "*", "resources.csv"),
                         os.path.join(root, "data", "seed", "mba", "mba_resources.csv")):
@@ -91,6 +93,7 @@ class PlanValidator(IPlanValidator):
                             if rid:
                                 self.valid_resources.add(rid)
                 except Exception:
+                    logging.getLogger("ebuddy.validator").warning("Skipping unreadable resource file %s", path, exc_info=True)
                     continue
 
     @staticmethod

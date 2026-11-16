@@ -2,8 +2,11 @@ import os
 import csv
 import json
 import uuid
-from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel
+import logging
+from fastapi import APIRouter, Depends, HTTPException, Query
+from app.api.deps import require_existing_student
+from app.api.validation import validate_new_profile
+from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 
 from app.services.onboarding_service import onboarding_service
@@ -26,7 +29,7 @@ from app.services.project_kickoff_service import project_kickoff_service
 from app.contracts.core_to_core import ReflectionSubmission
 from app.kb.core_to_core_repo import core_kb_repo
 
-router = APIRouter(prefix="/api/student", tags=["Student"])
+router = APIRouter(prefix="/api/student", tags=["Student"], dependencies=[Depends(require_existing_student)])
 
 class OnboardRequest(BaseModel):
     student_id: str
@@ -45,17 +48,19 @@ class OnboardRequest(BaseModel):
     preferences: Optional[List[Dict[str, Any]]] = None
 
 class DiagnosticSubmissionRequest(BaseModel):
-    answers: Dict[str, str] # { exercise_id: student_answer }
+    answers: Dict[str, str] = Field(max_length=50)  # { exercise_id: student_answer }
 
 class AnswerRequest(BaseModel):
+    """Only exercise_id and student_answer are used. The other fields are accepted so older clients keep working,
+    but they are ignored: the skill, options and answer key always come from the server's item bank."""
     exercise_id: str
-    skill_id: str
-    title: str
-    question_text: str
-    exercise_type: str = "mcq"
+    student_answer: str = Field(max_length=2000)
+    skill_id: Optional[str] = None
+    title: Optional[str] = None
+    question_text: Optional[str] = None
+    exercise_type: Optional[str] = None
     options: Optional[List[str]] = None
     correct_answer: Optional[str] = None
-    student_answer: str
 
 class MicroTaskSubmission(BaseModel):
     skill_id: str
@@ -108,8 +113,11 @@ class ResearchLogRequest(BaseModel):
 def onboard(req: OnboardRequest):
     s_name = req.full_name or req.name or "Student"
     g_id = req.target_goal_id or req.goal_id or ("GOAL_EE_CORE_POWER" if req.programme_id == "BTECH_EE" else "GOAL_MM_ADVANCED_MATERIALS")
+    # Same rules as POST /api/v2/students; this route used to accept anything and overwrite existing students
+    sid = validate_new_profile(req.student_id, s_name, req.programme_id, req.current_semester, req.cgpa, req.backlogs,
+                               g_id, req.completed_course_ids, plan_service.planner.course_info)
     student = onboarding_service.onboard_student(
-        student_id=req.student_id,
+        student_id=sid,
         name=s_name,
         programme_id=req.programme_id,
         current_semester=req.current_semester,
@@ -124,155 +132,132 @@ def onboard(req: OnboardRequest):
     )
     return {"status": "success", "student": student.model_dump(), "profile": student.model_dump()}
 
+def _public_item(ex: Exercise) -> Dict[str, Any]:
+    """An exercise as sent to the browser: everything except the answer key."""
+    return ex.model_dump(exclude={"correct_answer"})
+
+
+def _candidate_skills(student_id: str) -> List[str]:
+    """Skills of the student's goal that have bank items; branch defaults otherwise (it used to be EE skills for everyone)."""
+    goal = onboarding_service.goals.get(student_id)
+    bank_skills = {ex.skill_id for ex in diagnostic_service.diagnostic_engine.item_bank}
+    skills = [r.skill_id for r in plan_service.requirements_for(goal.goal_id if goal else "") if r.skill_id in bank_skills]
+    if skills:
+        return skills
+    st = onboarding_service.students.get(student_id)
+    if st and "MM" in st.programme_id:
+        return ["SKILL_PHYSICAL_METALLURGY", "SKILL_THERMODYNAMICS_MAT"]
+    return ["SKILL_CIRCUIT_ANALYSIS", "SKILL_POWER_ELECTRONICS", "SKILL_ELECTRIC_MACHINES"]
+
+
 @router.get("/{student_id}/diagnostic/next")
 def next_diagnostic_question(student_id: str):
-    ex = diagnostic_service.get_next_question(student_id, ["SKILL_CIRCUIT_ANALYSIS", "SKILL_POWER_ELECTRONICS", "SKILL_ELECTRIC_MACHINES"])
+    ex = diagnostic_service.get_next_question(student_id, _candidate_skills(student_id))
     if not ex:
         return {"complete": True, "message": "Diagnostic assessment complete."}
-    return {"complete": False, "exercise": ex.model_dump()}
+    return {"complete": False, "exercise": _public_item(ex)}
 
 @router.post("/{student_id}/diagnostic/answer")
 def submit_diagnostic_answer(student_id: str, req: AnswerRequest):
-    ex = Exercise(
-        exercise_id=req.exercise_id,
-        skill_id=req.skill_id,
-        title=req.title,
-        question_text=req.question_text,
-        exercise_type=req.exercise_type, # type: ignore
-        options=req.options,
-        correct_answer=req.correct_answer,
-        status="draft_for_review",
-        source_id="SYNTHETIC_EXERCISE"
-    )
-    res = roadmap_orchestrator.submit_assessment(student_id, ex, req.student_answer)
-    return res
+    """
+    Grades one answer against the server's copy of an item served to this student. It used to build the item from
+    the request, answer key and skill included, so any client could record 100% "strong" evidence for any skill.
+    """
+    ex = diagnostic_service.take_served(student_id, req.exercise_id)
+    if ex is None:
+        raise HTTPException(status_code=409, detail=(f"Exercise {req.exercise_id} was not served to this student or was "
+                                                     f"already answered. Request a question first."))
+    return roadmap_orchestrator.submit_assessment(student_id, ex, req.student_answer)
 
 @router.get("/{student_id}/diagnostic")
 def get_diagnostic_test(student_id: str):
     """
-    Returns the real technical diagnostic test questions matching the student's branch & core goal.
+    Returns a short fixed-form diagnostic for the student's branch. The items are registered as served (one answer
+    each); the answer keys stay on the server (they used to be sent to the browser).
     """
     student = onboarding_service.students.get(student_id)
     goal = onboarding_service.goals.get(student_id)
     prog = student.programme_id if student else "BTECH_EE"
-
-    ex_file = os.path.join("data", "seed", "kb", "exercise.csv")
-    exercises = []
-    if os.path.exists(ex_file):
-        with open(ex_file, "r", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for r in reader:
-                opts = []
-                if r.get("options"):
-                    try:
-                        opts = json.loads(r["options"])
-                    except Exception:
-                        opts = [opt.strip() for opt in r["options"].split(",")]
-                ans_key = r.get("answer_key", "")
-                corr = ""
-                if ans_key:
-                    try:
-                        corr = json.loads(ans_key).get("correct", "")
-                    except Exception:
-                        corr = ans_key
-                
-                exercises.append({
-                    "exercise_id": r["exercise_id"],
-                    "skill_id": r["skill_id"],
-                    "prompt": r.get("prompt", ""),
-                    "question_text": r.get("prompt", ""),
-                    "options": opts,
-                    "correct_answer": corr,
-                    "difficulty": float(r.get("difficulty", 3)) / 5.0,
-                    "difficulty_level": "Intermediate" if int(r.get("difficulty", 3)) <= 3 else "Advanced"
-                })
-
-    if prog == "BTECH_MM":
-        target_exercises = [e for e in exercises if e["exercise_id"].startswith("EX_MM_")][:5]
-    else:
-        target_exercises = [e for e in exercises if e["exercise_id"].startswith("EX_EE_")][:5]
-
+    prefix = "EX_MM_" if prog == "BTECH_MM" else "EX_EE_"
+    items = [ex for ex in diagnostic_service.diagnostic_engine.item_bank if ex.exercise_id.startswith(prefix)][:5]
+    questions = []
+    for ex in items:
+        diagnostic_service.serve(student_id, ex)
+        level = ex.difficulty_0_100 / 20.0  # bank stores difficulty 1-5 as 20-100
+        questions.append({
+            "exercise_id": ex.exercise_id, "skill_id": ex.skill_id, "prompt": ex.question_text, "question_text": ex.question_text,
+            "options": ex.options or [], "difficulty": level / 5.0, "difficulty_level": "Intermediate" if level <= 3 else "Advanced",
+        })
     return {
         "student_id": student_id,
         "programme_id": prog,
         "goal_name": goal.name if goal else "Core Track",
-        "questions": target_exercises
+        "questions": questions
     }
 
 @router.post("/{student_id}/diagnostic")
 def submit_diagnostic(student_id: str, req: DiagnosticSubmissionRequest):
     """
-    Evaluates real diagnostic test answers and updates calibrated skill states.
+    Grades answers to served fixed-form items with the same grader as the adaptive diagnostic. It used to read a key
+    field that does not exist ("correct" instead of "correct_option") and accept any answer that *starts with* the
+    key, so every answer - including ones for made-up exercise ids - was marked correct.
     """
-    ex_file = os.path.join("data", "seed", "kb", "exercise.csv")
-    answer_keys = {}
-    skill_maps = {}
-    if os.path.exists(ex_file):
-        with open(ex_file, "r", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for r in reader:
-                ans_key = r.get("answer_key", "")
-                corr = ""
-                if ans_key:
-                    try:
-                        corr = json.loads(ans_key).get("correct", "")
-                    except Exception:
-                        corr = ans_key
-                answer_keys[r["exercise_id"]] = corr
-                skill_maps[r["exercise_id"]] = r["skill_id"]
-
-    results = []
+    results, rejected = [], []
     correct_count = 0
-    total = len(req.answers)
-
     for ex_id, ans in req.answers.items():
-        corr = answer_keys.get(ex_id, "")
-        sid = skill_maps.get(ex_id, "SKILL_CIRCUIT_ANALYSIS")
-        is_corr = (ans.strip().lower() == corr.strip().lower()) or (ans.strip().startswith(corr.strip()))
-        if is_corr:
-            correct_count += 1
-        results.append({
-            "exercise_id": ex_id,
-            "skill_id": sid,
-            "student_answer": ans,
-            "correct_answer": corr,
-            "is_correct": is_corr
-        })
-        diagnostic_service.record_answer(student_id, ex_id, sid, is_corr, 0.6)
+        ex = diagnostic_service.take_served(student_id, ex_id)
+        if ex is None:
+            rejected.append({"exercise_id": ex_id, "reason": "not served to this student or already answered"})
+            continue
+        graded = diagnostic_service.grader.grade_answer(ex, ans)
+        is_corr = bool(graded.get("is_correct", False))
+        correct_count += int(is_corr)
+        results.append({"exercise_id": ex_id, "skill_id": ex.skill_id, "student_answer": ans,
+                        "correct_answer": ex.correct_answer, "is_correct": is_corr})
+        diagnostic_service.record_answer(student_id, ex_id, ex.skill_id, is_corr, ex.difficulty_0_100 / 100.0)
 
-    score_pct = (correct_count / total * 100.0) if total > 0 else 50.0
-
+    total = len(results)
+    if total == 0:
+        raise HTTPException(status_code=409, detail={"message": "None of the answers were for served, unanswered items. "
+                                                                "Fetch the test first (GET /diagnostic).", "rejected": rejected})
+    score_pct = correct_count / total * 100.0
     return {
         "student_id": student_id,
         "total_items": total,
         "correct_items": correct_count,
         "score_percentage": score_pct,
         "performance_tier": "Strong" if score_pct >= 80 else ("Moderate" if score_pct >= 50 else "Needs Foundation"),
-        "results": results
+        "results": results,
+        "rejected": rejected,
     }
 
 @router.post("/{student_id}/micro-task/submit")
 def submit_micro_task(student_id: str, req: MicroTaskSubmission):
-    is_correct = len(req.student_answer.strip()) > 3
-    diagnostic_service.record_answer(
-        student_id=student_id,
-        exercise_id=req.exercise_id or f"EX_TASK_{uuid.uuid4().hex[:6]}",
-        skill_id=req.skill_id,
-        is_correct=is_correct,
-        difficulty=0.7
-    )
+    """
+    Logs a free-text micro-task. There is no answer key for free text, so it is recorded as a weak self-reported
+    attempt (it cannot raise mastery). It used to count any answer longer than 3 characters as a correct
+    *diagnostic* (strong evidence) for whatever skill the request named.
+    """
+    if req.skill_id not in plan_service.planner.skill_names:
+        raise HTTPException(status_code=400, detail=f"Unknown skill {req.skill_id}")
+    if not req.student_answer.strip():
+        raise HTTPException(status_code=400, detail="student_answer is empty")
+    diagnostic_service.add_evidence(
+        student_id, req.skill_id, "self_declaration", 50.0, reliability_tier="weak",
+        notes=f"Ungraded micro-task {req.exercise_id or ''}".strip())
     return {
-        "status": "success",
+        "status": "recorded_ungraded",
         "skill_id": req.skill_id,
-        "feedback": "Correct reasoning verified." if is_correct else "Review key concept definitions.",
-        "points_earned": 10 if is_correct else 2
+        "feedback": ("Logged. Free-text answers are not auto-graded, so this counts as a weak self-reported attempt; "
+                     "take a timed quiz or the diagnostic to show proficiency."),
+        "points_earned": 0
     }
 
 @router.post("/{student_id}/plan")
 def generate_plan(student_id: str):
     try:
         return roadmap_orchestrator.create_initial_roadmap(student_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{student_id}/plan")
@@ -280,7 +265,7 @@ def get_plan(student_id: str):
     try:
         onboarding_service.ensure_student_onboarded(student_id)
         plan = plan_service.get_or_create(student_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=404, detail=f"Plan not found: {e}")
     data = plan.model_dump()
     data["plan"] = plan.model_dump()
@@ -298,8 +283,8 @@ def get_interest_evidence_mismatch(student_id: str):
         try:
             plan_service.create_or_update_plan(student_id)
             plan = plan_service.get_plan(student_id)
-        except Exception:
-            pass
+        except ValueError:
+            logging.getLogger("ebuddy.api.student").exception("Could not build a plan for %s", student_id)
     return {
         "student_id": student_id,
         "mismatch_warning": plan.mismatch_warning if plan else None
@@ -361,7 +346,7 @@ def get_weekly_roadmap(student_id: str, week: int = Query(1, ge=1, le=16)):
     try:
         weekly = roadmap_orchestrator.get_weekly_roadmap(student_id, week_number=week)
         return weekly.model_dump()
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{student_id}/roadmap/versions")
@@ -374,7 +359,7 @@ def get_roadmap_versions(student_id: str):
 def get_learn_today(student_id: str):
     try:
         return roadmap_orchestrator.get_today_learning(student_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{student_id}/proposals")
@@ -391,14 +376,14 @@ def decide_proposal(student_id: str, proposal_id: str, req: ProposalDecisionRequ
             approve=req.approve,
             feedback=req.feedback
         )
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{student_id}/mastery")
 def get_mastery(student_id: str):
     try:
         return mastery_service.check_mastery(student_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/{student_id}/chat")
@@ -406,7 +391,11 @@ def chat(student_id: str, req: ChatRequest):
     try:
         return roadmap_orchestrator.chat_turn(student_id, req.message)
     except Exception:
-        return chat_service.handle_message(student_id, req.message)
+        # The legacy chat service is a degraded fallback; record why it was needed instead of hiding it.
+        logging.getLogger("ebuddy.api.student").exception("Agent 4 chat failed for %s; using the legacy chat service", student_id)
+        res = chat_service.handle_message(student_id, req.message)
+        res["fallback_used"] = True
+        return res
 
 # =========================================================================
 # Core-to-Core Domain Endpoints (Adobe PS Learning Loop)
@@ -418,11 +407,16 @@ def get_student_budget(student_id: str, week_number: int = 1):
     if not student:
         raise HTTPException(status_code=404, detail="Student not found.")
     
-    courses = onboarding_service.student_completed_courses.get(student_id, [])
-    enrolled = ["EE2L001", "EE3L004"] if "EE" in student.programme_id else ["ML2L002", "ML2L005"]
-    
+    # The student's own current-semester courses and weekly-hours limit. This route used to read an attribute that
+    # does not exist (it crashed for everyone) and assumed EE2L001 + EE3L004 / ML2L002 + ML2L005 and 15 h for all.
+    plan = plan_service.get_or_create(student_id)
+    enrolled = [it.course_id for it in plan.items
+                if it.item_type == "course" and it.course_id and (it.semester_number or 0) == student.current_semester]
+    limits = plan_service.planner.parse_constraints(onboarding_service.constraints.get(student_id, []))
+    declared = float(limits["weekly_hours"]) if limits.get("weekly_hours") else 15.0
+
     budget = budget_engine.calculate_weekly_budget(
-        declared_hours=15.0,
+        declared_hours=declared,
         enrolled_course_ids=enrolled,
         week_number=week_number,
         cgpa=student.cgpa,
@@ -466,6 +460,16 @@ def submit_reflection(student_id: str, req: ReflectionRequest):
     )
     result = weekly_guidance_engine.process_reflection(student_id, sub)
     return result
+
+class MTechInterviewRequest(BaseModel):
+    topic_id: str = Field(default="GENERAL", max_length=100)
+    response: str = Field(min_length=1, max_length=4000)
+
+@router.post("/{student_id}/mtech/interview/evaluate")
+def evaluate_mtech_interview(student_id: str, req: MTechInterviewRequest):
+    """Scores a typed technical-interview answer with the deterministic GATE interview rubric (no LLM)."""
+    from app.engine.gate_interview_and_replan import gate_interview_and_replan_engine
+    return gate_interview_and_replan_engine.evaluate_interview_response(req.topic_id, req.response)
 
 @router.get("/{student_id}/readiness-gate")
 def check_readiness_gate(student_id: str, area_id: Optional[str] = None):
@@ -557,7 +561,7 @@ def update_approach_status(student_id: str, req: ApproachStatusUpdateRequest):
             alternative_faculty_id=req.alternative_faculty_id
         )
         return updated.model_dump()
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{student_id}/paper/{paper_id}")
@@ -565,7 +569,7 @@ def get_paper_insights(student_id: str, paper_id: str):
     try:
         insights = paper_reader_service.get_paper_insights(paper_id)
         return insights
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=404, detail=str(e))
 
 @router.post("/{student_id}/paper/{paper_id}/quiz")

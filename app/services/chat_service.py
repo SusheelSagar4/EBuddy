@@ -31,6 +31,17 @@ class ChatService:
         self.history: Dict[str, List[ChatTurn]] = {}
         self.long_term_preferences: Dict[str, Dict[str, Any]] = {}
 
+    @staticmethod
+    def _second_paper_summary() -> str:
+        """Allowed second papers as stored in data/seed/core_to_mtech/exam_papers.csv (never typed in by hand)."""
+        try:
+            from app.kb.core_to_mtech_repo import core_to_mtech_repo
+            parts = [f"{code}: {p.allowed_second_papers}" for code, p in sorted(core_to_mtech_repo.exam_papers.items())
+                     if p.allowed_second_papers]
+            return "; ".join(parts) if parts else "none recorded"
+        except Exception:
+            return "not available"
+
     def _build_pinned_context(self, student_id: str) -> Dict[str, Any]:
         student = onboarding_service.students.get(student_id)
         goal = onboarding_service.goals.get(student_id)
@@ -71,14 +82,16 @@ class ChatService:
             "target_gate_paper": paper_code,
             "target_gate_cycle": "2027",
             "weeks_remaining": weeks_rem,
+            # The fields below are fixed placeholders of the legacy chat, not computed for this student.
             "weekly_budget_hours": 15.0,
             "current_phase": "Phase 1: Foundation & High-Weightage Core",
             "readiness_status": "Assessment in progress (need >= 3 full mocks)",
             "predicted_score_band": "Not enough evidence yet (< 2 full mocks)",
-            "shortlist_summary": "Reach: 2, Target: 4, Safe: 2",
+            "shortlist_summary": "Not computed in this chat; open the Core to M.Tech screen for your shortlist",
+            "placeholder_fields": ["weekly_budget_hours", "current_phase", "readiness_status", "next_deadlines"],
             "next_deadlines": verified_deadlines,
             "institutional_rules": [
-                "RULE_SEM_CREDIT_CAP_REGULAR: 16-26 credits maximum",
+                "RULE_SEM_CREDIT_CAP_REGULAR: 26 credits per regular semester (unsourced baseline, warning only)",
                 "RULE_CGPA_PROTECTION: Priority review when score < 75% or during exam weeks"
             ]
         }
@@ -97,7 +110,7 @@ class ChatService:
 
         verified_facts = [
             {"fact": "Programme Curriculum", "value": f"B.Tech {student.programme_id if student else 'EE'} IIT BBS Official Sheet", "verified": True},
-            {"fact": "Credit Cap Rule", "value": "Regular Semester Credit Cap: 16-26 credits", "verified": True}
+            {"fact": "Credit Cap Rule", "value": "Regular Semester Credit Cap: 26 credits (unsourced baseline)", "verified": False}
         ]
         unverified_advisories = [
             {"advisory": "Examination Schedule", "value": "Subject to formal Academic Section notification", "verified": False}
@@ -161,10 +174,11 @@ class ChatService:
         # 3. Academic rule side question (e.g., "credit limit", "backlogs")
         if any(kw in msg_lower for kw in ["credit cap", "maximum credit", "credit limit", "how many credits"]):
             return (
-                "**Institutional Regulation (RULE_SEM_CREDIT_CAP_REGULAR):**\n"
-                "Under IIT Bhubaneswar B.Tech Senate regulations, regular semester registration is capped at "
-                "26 credits maximum (normal load is 20–24 credits). Overloading requires prior approval from the Dean of Academic Affairs.\n\n"
-                f"*(Your plan for {pinned['goal_name']} is strictly constrained within this limit.)*"
+                "**Credit cap (RULE_SEM_CREDIT_CAP_REGULAR) [WARNING: unsourced_baseline]:**\n"
+                "The planner uses a baseline of 26 credits per regular semester. This value has not been confirmed "
+                "against the official IIT Bhubaneswar UG regulations, so plans that exceed it get a labelled warning, not a hard block. "
+                "Check the current limit and the overload procedure with the Academic Section.\n\n"
+                f"*(Any credit limit you set yourself is enforced as a hard limit in your plan for {pinned['goal_name']}.)*"
             )
 
         # 4. MBA Section & Exam Side Questions (e.g. "What is DILR?", "What is VARC?", "Explain CAT")
@@ -252,15 +266,17 @@ class ChatService:
 
         if "allowed second paper" in msg_lower or "two paper" in msg_lower or "second paper" in msg_lower:
             return (
-                "**GATE Approved Two-Paper Combinations (Official IIT Madras 2027 Guidelines):**\n"
-                "- **For Electrical Engineering (EE):** Allowed 2nd papers are **IN** (Instrumentation), **EC** (Electronics & Comm), **DA** (Data Science & AI).\n"
-                "- **For Metallurgical Engineering (MT):** Allowed 2nd papers are **ME** (Mechanical), **XE** (Engineering Sciences), **PI** (Production & Industrial).\n\n"
+                "**GATE two-paper combinations [not verified]:**\n"
+                f"- **Second papers in this knowledge base:** {self._second_paper_summary()}.\n"
+                "- These rows are sample data and have not been checked against the official GATE 2027 brochure. "
+                "Confirm the allowed combinations on the organising institute's GATE website before registering.\n\n"
                 f"*(Your active target paper is {pinned.get('target_gate_paper', 'EE')}. Preparing a second paper requires balanced hours budgeting.)*"
             )
 
         return None
 
     def handle_message(self, student_id: str, message: str) -> Dict[str, Any]:
+        onboarding_service.ensure_student_onboarded(student_id)  # real profile, or StudentNotFoundError
         pinned = self._build_pinned_context(student_id)
         card = self._build_context_card(student_id)
 
@@ -304,7 +320,8 @@ class ChatService:
                         f"**Current Study Plan (Version {pinned['plan_version']}):**\n\n"
                         f"{explanation.short_summary}\n\n"
                         f"**Rationale:** {explanation.detailed_rationale}\n\n"
-                        f"*Academic Rule Compliance:* Enforces 16–26 regular semester credit caps and verified prerequisite trees."
+                        f"*Academic Rule Compliance:* Checks prerequisites and your own credit limit as hard rules; the 26-credit "
+                        f"semester cap is an unsourced baseline and only raises a labelled warning."
                     )
                 elif intent == Intent.GOAL_CHANGE:
                     resp_text = (

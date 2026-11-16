@@ -19,7 +19,7 @@ docker compose up
 | Web app | http://localhost:8000/app/ |
 | API docs | http://localhost:8000/docs |
 | Health | http://localhost:8000/health |
-| Adminer | http://localhost:8080 (system PostgreSQL, server `db`, user `ebuddy_user`, password `ebuddy_password`, database `ebuddy`) |
+| Adminer | http://localhost:8080, reachable from this machine only (system PostgreSQL, server `db`, user `ebuddy_user`, password `ebuddy_password`, database `ebuddy`) |
 | Older server-rendered pages | http://localhost:8000/ |
 
 The first start builds the app image (`linux/amd64`, CPU only, 759 MB when built in the development sandbox), waits for PostgreSQL and seeds it. No `.env` file is required. To use a live model, copy `.env.example` to `.env` and set `LLM_MODEL` and `LLM_API_KEY` (and `LLM_API_BASE` for a custom endpoint).
@@ -35,8 +35,10 @@ or the **Reset everything to the original seed** button on the Admin screen (`PO
 ### Without Docker
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt -c constraints.txt
 ```
+
+`constraints.txt` pins every package to the versions the Docker image was tested with (Python 3.12).
 ```bash
 python scripts/seed_loader.py --reset
 ```
@@ -84,7 +86,7 @@ flowchart LR
     DB -- "triggers -> ops.reprocess_queue" --> SVC
 ```
 
-- Agents 2, 3 and 4 can only raise change proposals; Agent 1 commits a new roadmap version after the validator passes.
+- Agents 2, 3 and 4 can only raise change proposals; Agent 1 commits a proposal only after the validator passes. A re-plan triggered by an input change (edit, evidence, goal switch) is always stored, because the previous version is stale; if it fails validation, its explanation starts with a "did not pass validation" notice listing the failed checks.
 - `app/engine` and `app/kb` never import `app/llm` or `app/api`; `litellm` is imported only in `app/llm/client.py` (enforced by `tests/unit/test_import_boundaries.py`).
 - Student-stated limits (credit cap, weekly hours, rejected courses) are hard. Institute credit rules in the seed are unsourced baselines and produce labelled warnings.
 
@@ -106,7 +108,18 @@ All settings come from environment variables; see [`.env.example`](.env.example)
 | `DATABASE_URL`, `LOCAL_DATABASE_URL` | see file | Connection strings outside Compose |
 | `EBUDDY_DB_SYNC` | `auto` | `off` keeps everything in memory (tests) |
 | `REPROCESS_POLL_SECONDS` | 2 | Poll interval for direct database edits |
-| `APP_PORT`, `ADMINER_PORT` | 8000, 8080 | Host ports |
+| `APP_PORT`, `ADMINER_PORT` | 8000, 8080 | Host ports (Adminer is bound to 127.0.0.1 only) |
+| `ADMIN_TOKEN` | empty | When set, state-changing `/api/admin/*` requests (edits, reset) need it in the `X-Admin-Token` header; the web app asks for it once. Empty leaves admin open for the local demo |
+| `MAX_REQUEST_BYTES` | 1048576 | Largest accepted request body; bigger requests get 413 |
+
+There is no user login: anyone who can reach port 8000 can read every synthetic profile and use the student endpoints. Set `ADMIN_TOKEN` and keep the stack on a trusted network before sharing it.
+
+Behaviour API clients should know:
+
+- An unknown `student_id` returns 404 on every route; profiles are never invented. Create one with `POST /api/v2/students` or `POST /api/student/onboard` (both return 409 for an existing id).
+- Diagnostic answers are graded only for items the server served to that student, once each (409 otherwise). The answer key always comes from the server's item bank and is never sent to the browser; fields such as `correct_answer` or `skill_id` in an answer request are ignored.
+- Free-text micro-tasks are recorded as weak, ungraded evidence; free-text answers are not marked correct unless a configured LLM grades them.
+- The app container runs as an unprivileged user (uid 10001).
 
 ---
 
@@ -214,7 +227,7 @@ flowchart TD
 - **Air-Gapped LiteLLM Gateway:** All LLM completions and embeddings route through LiteLLM reading `LLM_MODEL`, `LLM_API_KEY`, `LLM_API_BASE`, and `EMBEDDING_MODEL` from environment variables. Local cost map is locked (`True`) and telemetry is disabled (`False`). Tested model: `openai/gpt-4o-mini`.
 - **Zero Hallucination Grounding:** Every claim about a professor or paper is strictly grounded in rows stored in `data/seed/core_to_core/`. Unknown fields are rendered as `"not available"`.
 - **Data Ethics & Open Access Compliance:** Full text chunks are provided only for open-access publications (`open_access = True`). Non-open-access publications strictly display public metadata, abstracts, and DOI links.
-- **Data Quality & No SAMPLE- Mix:** All 44 faculty and 120 publications are verified IIT Bhubaneswar institutional records. Seed files contain zero unverified rows, and mixing `SAMPLE-` rows with verified data is strictly prohibited.
+- **Data Quality & No SAMPLE- Mix:** The 44 faculty and 120 publications were taken from IIT Bhubaneswar institutional pages in earlier work. Their `verified` flags were set then and have not been re-checked (see the note at the top of this section), so treat them as sourced but unconfirmed. Mixing `SAMPLE-` rows with these rows is not allowed.
 - **CGPA Protection Guarantee:** Core-course academic support always takes precedence over extra research or skill work during midsem/endsem exam weeks (calendar factor 0.4 / 0.2) or whenever course proficiency falls below 75%.
 
 #### B. LLM vs. Deterministic Split
@@ -231,7 +244,7 @@ flowchart TD
 
 #### C. Core to Core Data Storage Map (`data/seed/core_to_core/`)
 
-| Table Name | Seed File Path | Verified Rows | Description & Key Schema Fields |
+| Table Name | Seed File Path | Rows (flagged verified in earlier work, not re-checked) | Description & Key Schema Fields |
 |---|---|---|---|
 | `kb.academic_calendar` | `data/seed/core_to_core/academic_calendar.csv` | 16 | 16 semester weeks, week_type (teaching/midsem/endsem), calendar_factor (1.0, 0.4, 0.2). |
 | `kb.research_area` | `data/seed/core_to_core/research_areas.csv` | 16 | Core research sub-domains across Electrical and Metallurgy/Materials engineering. |
@@ -363,7 +376,7 @@ Before final submission to the Adobe evaluation panel, the team must replace sam
 2. **Institute Admission Cut-Offs:** Update `kb.admission_stat` with official COAP/CCMT closing rounds from institutional websites.
 3. **PSU Recruitment Rows:** Confirm upcoming notification dates and eligible paper codes for IOCL, NTPC, PGCIL, SAIL, and NALCO.
 4. **Human Verifier Sign-off:** For each confirmed row, set `verified = TRUE`, record the student researcher's name in `verified_by`, and ensure `source_type = 'official'`.
-5. **Data Quality Report:** Ingestion integrity and missing field audits are tracked in [docs/core_to_mtech_data_quality_report.md](file:///c:/Users/panda/OneDrive/Desktop/EBuddy_main/docs/core_to_mtech_data_quality_report.md).
+5. **Data Quality Report:** Ingestion integrity and missing field audits are tracked in [docs/core_to_mtech_data_quality_report.md](docs/core_to_mtech_data_quality_report.md).
 
 #### E. Simulation & Verification Endpoints (`/api/sim`)
 Four dedicated endpoints allow instant end-to-end testing of dynamic adaptation behaviors:

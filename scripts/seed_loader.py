@@ -496,7 +496,7 @@ def generate_mba_data_quality_report(report_path: str = "docs/core_to_mba_data_q
     report_lines = [
         "# Core to MBA Seed Data Quality & Integrity Report",
         "",
-        f"*Generated automatically from `{mba_seed_dir}` and `{c2m_seed_dir}`.*",
+        f"*Generated automatically from `data/seed/mba` and `data/seed/core_to_mba`.*",  # repo-relative: no local paths in docs
         "",
         "## 1. Executive Summary",
         ""
@@ -634,7 +634,7 @@ def generate_data_quality_report(report_path: str = "docs/core_to_mtech_data_qua
     report_lines = [
         "# Core to M.Tech Seed Data Quality & Integrity Report",
         "",
-        f"*Generated automatically on seed import from `{seed_dir}`.*",
+        f"*Generated automatically on seed import from `data/seed/core_to_mtech`.*",  # repo-relative: no local paths in docs
         "",
         "## 1. Executive Summary",
         ""

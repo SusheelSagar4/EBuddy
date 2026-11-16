@@ -9,8 +9,9 @@ import { renderAdmin } from './screens/admin.js';
 import { renderMBA } from './screens/mba.js';
 import { renderMTechScreen } from './screens/mtech.js';
 import { api } from './api/client.js';
+import { store } from './ui.js';
 
-const state = { studentId: localStorage.getItem('ebuddy_student_id') || null, profile: null, activeRoute: '#onboard' };
+const state = { studentId: store.get('ebuddy_student_id') || null, profile: null, activeRoute: '#onboard' };
 
 const routes = {
   '#onboard': { title: 'Profiles & Goals', render: renderOnboarding },
@@ -44,7 +45,7 @@ async function handleRoute() {
   if (titleEl) titleEl.textContent = route.title;
   if (state.studentId && !state.profile) {
     try { state.profile = await api.selectStudent(state.studentId); }
-    catch (e) { state.studentId = null; localStorage.removeItem('ebuddy_student_id'); }
+    catch (e) { state.studentId = null; store.remove('ebuddy_student_id'); }
   }
   refreshPill();
   route.render(document.getElementById('app-screen'), state, navigate);

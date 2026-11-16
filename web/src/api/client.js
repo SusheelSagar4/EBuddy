@@ -2,12 +2,27 @@
  * API client for the Personalised Learning Buddy (IIT Bhubaneswar).
  * Zero external dependencies - browser Fetch API only, same-origin requests.
  */
+const ADMIN_TOKEN_KEY = 'ebuddy.adminToken';
+const readAdminToken = () => { try { return localStorage.getItem(ADMIN_TOKEN_KEY) || ''; } catch (e) { return ''; } };
+const saveAdminToken = (t) => { try { localStorage.setItem(ADMIN_TOKEN_KEY, t); } catch (e) { /* storage unavailable */ } };
+
 class ApiClient {
   constructor(baseUrl = '') { this.baseUrl = baseUrl; }
 
-  async _request(endpoint, options = {}) {
+  async _request(endpoint, options = {}, retried = false) {
     const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+    const isAdmin = endpoint.startsWith('/api/admin');
+    const token = isAdmin ? readAdminToken() : '';
+    if (token) headers['X-Admin-Token'] = token;
     const response = await fetch(`${this.baseUrl}${endpoint}`, { ...options, headers });
+    // The server only asks for a token when ADMIN_TOKEN is set; ask the user once and retry.
+    if (response.status === 401 && isAdmin && !retried) {
+      const entered = window.prompt('This server requires an admin token (ADMIN_TOKEN). Enter it to continue:');
+      if (entered) {
+        saveAdminToken(entered.trim());
+        return this._request(endpoint, options, true);
+      }
+    }
     if (!response.ok) {
       const body = await response.json().catch(() => ({ detail: response.statusText }));
       const detail = typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail);
@@ -43,6 +58,11 @@ class ApiClient {
   nextDiagnostic(id) { return this._get(`/api/diagnostic/${encodeURIComponent(id)}/next`); }
   answerDiagnostic(id, exerciseId, skillId, answer) {
     return this._send('POST', `/api/diagnostic/${encodeURIComponent(id)}/answer`, { exercise_id: exerciseId, skill_id: skillId, student_answer: answer });
+  }
+
+  // Core to M.Tech: deterministic interview rubric
+  mtechInterview(id, topicId, response) {
+    return this._send('POST', `/api/student/${encodeURIComponent(id)}/mtech/interview/evaluate`, { topic_id: topicId, response });
   }
 
   // Chat

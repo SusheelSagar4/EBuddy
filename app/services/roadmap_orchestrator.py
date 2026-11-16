@@ -163,6 +163,9 @@ class RoadmapOrchestrator:
         Loads rolling conversation memory from ops.memory_summary into ContextCard,
         and saves updated rolling summary for long-term multi-session retention.
         """
+        # Load the real profile (seed / database) instead of answering from placeholder defaults;
+        # an unknown id raises StudentNotFoundError (404 at the API).
+        onboarding_service.ensure_student_onboarded(student_id)
         student = onboarding_service.students.get(student_id)
         goal = onboarding_service.goals.get(student_id)
         plan = plan_service.get_plan(student_id)
@@ -185,9 +188,9 @@ class RoadmapOrchestrator:
             long_term_memory=memory,
             verified_facts=[
                 {"fact": "Programme Curriculum", "value": "B.Tech Curriculum 2016-17", "verified": True},
-                {"fact": "Credit Cap Rule", "value": "Regular Semester Credit Cap: 16-26 credits", "verified": True}
             ],
             unverified_advisories=[
+                {"advisory": "Credit Cap Rule", "value": "26 credits per regular semester (unsourced baseline; warning only)", "verified": False},
                 {"advisory": "Examination Dates", "value": "Not confirmed yet (contact Academic Section)", "verified": False}
             ]
         )

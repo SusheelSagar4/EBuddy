@@ -152,7 +152,8 @@ class ReprocessService:
                 from app.services.roadmap_orchestrator import roadmap_orchestrator
                 roadmap_orchestrator.reset()
             except Exception:
-                pass
+                # otherwise proposals from before the reset would silently survive it
+                logger.exception("Resetting pending proposals failed during the system reset")
             self._record("system", "ALL", "in-memory state restored to seed", source)
 
     def reset_all(self) -> Dict[str, Any]:
@@ -226,12 +227,24 @@ class ReprocessService:
         return done
 
     def _loop(self):
+        requeued_after_restart = False
         while not self._stop.is_set():
+            # Retried until the database is reachable: events a previous process claimed but never finished
+            if not requeued_after_restart and persistence.db_available():
+                try:
+                    n = persistence.requeue_interrupted_events()
+                    if n is not None:
+                        if n:
+                            logger.warning("Re-queued %s database-edit event(s) interrupted by a previous restart", n)
+                        requeued_after_restart = True
+                except Exception:
+                    logger.warning("Re-queueing interrupted database-edit events failed; retrying", exc_info=True)
             try:
                 if persistence.db_available():
                     self.process_queue_once()
             except Exception:
-                logger.debug("queue poll failed", exc_info=True)
+                # warning, not debug: a failing queue means Adminer edits silently stop being applied
+                logger.warning("Processing the database-edit queue failed; retrying in %ss", self.poll_seconds, exc_info=True)
             self._stop.wait(self.poll_seconds)
 
     def start_worker(self):

@@ -4,11 +4,13 @@ import logging
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, HTTPException, Query, Depends
+from app.api.deps import require_existing_student
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app.config import settings
+from app.api.security import require_admin_token
 from app.db.session import get_db
 from app.contracts.student import StudentProfile
 from app.contracts.goal import Goal
@@ -22,7 +24,7 @@ from app.services.roadmap_orchestrator import roadmap_orchestrator
 
 logger = logging.getLogger("ebuddy.ui_api")
 
-router = APIRouter(prefix="/api", tags=["UI-Endpoints"])
+router = APIRouter(prefix="/api", tags=["UI-Endpoints"], dependencies=[Depends(require_existing_student)])
 
 # In-memory singletons for KB queries
 course_repo = CourseRepo()
@@ -53,12 +55,9 @@ class ProposalDecisionRequest(BaseModel):
     feedback: Optional[str] = None
 
 def _is_llm_configured() -> bool:
-    key = (settings.LLM_API_KEY or "").strip()
-    return bool(
-        key 
-        and key.lower() not in ["", "placeholder", "your-api-key-here", "your_key", "sk-placeholder"]
-        and not key.startswith("your_api_key")
-    )
+    """Same answer as the LLM gateway itself (model, key and endpoint), so status pages never disagree with it."""
+    from app.llm.client import llm_client
+    return llm_client.is_configured()
 
 def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]:
     """Adds course title, credits, verification status, and KB code badges to each item."""
@@ -212,28 +211,26 @@ def generate_roadmap(req: GenerateRoadmapRequest):
     Generates deterministic academic roadmap using Agent 1.
     Decorates all courses with title, credits, skill-gap reason, and draft/verified badges.
     """
+    # Outside the try: an unknown student is a 404 (app-wide handler), not a generic 400
+    onboarding_service.ensure_student_onboarded(req.student_id, req.goal_id)
     try:
-        onboarding_service.ensure_student_onboarded(req.student_id, req.goal_id)
         res = roadmap_orchestrator.create_initial_roadmap(req.student_id)
         raw_plan = res.get("plan", {})
         return _decorate_plan(raw_plan, req.student_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         logger.error(f"Error generating roadmap: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/roadmap/{student_id}")
 def get_current_roadmap(student_id: str):
     """Returns the student's active roadmap plan."""
+    # The router guard has already returned 404 for unknown students, so any failure below is a real error:
+    # it is no longer disguised as "No roadmap plan found".
+    onboarding_service.ensure_student_onboarded(student_id)
     plan = plan_service.get_plan(student_id)
     if not plan:
-        # Attempt auto-generation if student exists
-        try:
-            onboarding_service.ensure_student_onboarded(student_id)
-            res = roadmap_orchestrator.create_initial_roadmap(student_id)
-            plan_dict = res.get("plan", {})
-            return _decorate_plan(plan_dict, student_id)
-        except Exception:
-            raise HTTPException(status_code=404, detail=f"No roadmap plan found for student {student_id}")
+        res = roadmap_orchestrator.create_initial_roadmap(student_id)
+        return _decorate_plan(res.get("plan", {}), student_id)
     return _decorate_plan(plan.model_dump(), student_id)
 
 # -----------------------------------------------------------------------------
@@ -308,12 +305,12 @@ def submit_diagnostic_answer_ui(student_id: str, req: DiagnosticAnswerRequest):
     """Submits answer, evaluates via CAT engine, updates theta ability and confidence."""
     onboarding_service.ensure_student_onboarded(student_id)
     
-    # Grade against the server-side key of the item that was actually served (options were shuffled)
-    item_ex = getattr(diagnostic_service, "served_keys", {}).get((student_id, req.exercise_id))
+    # Grade against the server-side key of the item that was actually served (options were shuffled). The item is
+    # consumed: each serve accepts one answer, and items that were never served are refused (no replay, no picking).
+    item_ex = diagnostic_service.take_served(student_id, req.exercise_id)
     if not item_ex:
-        item_ex = next((ex for ex in diagnostic_service.diagnostic_engine.item_bank if ex.exercise_id == req.exercise_id), None)
-    if not item_ex:
-        raise HTTPException(status_code=404, detail=f"Exercise {req.exercise_id} is not in the verified item bank.")
+        raise HTTPException(status_code=409, detail=(f"Exercise {req.exercise_id} was not served in your current diagnostic "
+                                                     f"session or was already answered. Request the next question."))
     plan_service.get_or_create(student_id)
 
     res = roadmap_orchestrator.submit_assessment(student_id, item_ex, req.student_answer)
@@ -343,7 +340,8 @@ def handle_chat_message(req: ChatQueryRequest):
     try:
         plan_service.get_or_create(req.student_id)
     except Exception:
-        pass
+        # chat still works without a plan, but a failing planner must be visible
+        logger.exception("Could not build a plan for %s before chat", req.student_id)
     llm_ready = _is_llm_configured()
 
     try:
@@ -415,7 +413,7 @@ def decide_proposal_ui(student_id: str, proposal_id: str, req: ProposalDecisionR
             approve=req.approve,
             feedback=req.feedback
         )
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         logger.error(f"Error deciding proposal {proposal_id}: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -501,10 +499,12 @@ def get_table_data(table_name: str, db: Session = Depends(get_db)):
             "table": table_name,
             "columns": columns,
             "count": len(rows),
-            "rows": rows
+            "rows": rows,
+            "source": "database",
         }
-    except Exception as e:
-        # Graceful fallback to seed CSV files if DB connection is unavailable
+    except Exception:
+        # The database error is logged, not sent to the browser (it can contain connection details / SQL)
+        logger.exception("Table preview of %s failed; falling back to the seed file", table_name)
         simple_name = table_name.split(".")[-1]
         seed_path = Path("data/seed/kb") / f"{simple_name}.csv"
         if seed_path.exists():
@@ -517,11 +517,14 @@ def get_table_data(table_name: str, db: Session = Depends(get_db)):
                     "table": table_name,
                     "columns": columns,
                     "count": len(rows),
-                    "rows": rows
+                    "rows": rows,
+                    # say so: these are the original seed rows, not live data (edits since the seed are not shown)
+                    "source": "seed_file",
+                    "note": "Database unavailable: showing the original seed file, not live data.",
                 }
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=503, detail="Database unavailable and no seed file exists for this table.")
 
-@router.post("/admin/reload-seed")
+@router.post("/admin/reload-seed", dependencies=[Depends(require_admin_token)])
 def reload_seed_data():
     """Resets PostgreSQL and the in-memory state to the original seed (same as POST /api/admin/reset)."""
     from app.services.reprocess_service import reprocess_service

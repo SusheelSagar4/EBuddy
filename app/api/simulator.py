@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from app.api.deps import require_existing_student
 from pydantic import BaseModel
 from typing import Dict, Any, Optional
 from app.services.adapt_service import adapt_service
@@ -9,7 +10,7 @@ from app.engine.weekly_guidance import weekly_guidance_engine
 from app.engine.faculty_matcher import faculty_matcher_engine
 from app.services.diagnostic_service import diagnostic_service
 
-router = APIRouter(prefix="/api/sim", tags=["Simulator"])
+router = APIRouter(prefix="/api/sim", tags=["Simulator"], dependencies=[Depends(require_existing_student)])
 
 class QuizSimulationRequest(BaseModel):
     skill_id: str
@@ -66,7 +67,7 @@ def simulate_quiz_score(student_id: str, req: QuizSimulationRequest):
             score=req.score
         )
         return res
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/{student_id}/scenario/midsem-stress")

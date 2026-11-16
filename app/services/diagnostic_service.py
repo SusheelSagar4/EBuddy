@@ -15,18 +15,32 @@ class DiagnosticService:
         self.evidence_ledger: Dict[str, List[EvidenceItem]] = {}
         self.skill_states: Dict[str, List[SkillState]] = {}
         self.active_sessions: Dict[str, List[Dict[str, Any]]] = {}
+        # Items served to a student and not answered yet, with their (possibly shuffled) answer key. An answer is
+        # accepted only for an item in here, and it is removed when answered: no replaying one correct answer to
+        # pile up "strong" evidence, no answering items that were never served, no client-supplied answer keys.
+        self.served_keys: Dict[tuple, Exercise] = {}
 
     def get_prior(self, student_id: str, candidate_skills: List[str]) -> Dict[str, Any]:
         return self.diagnostic_engine.prior_from_evidence(self.skill_states.get(student_id, []), candidate_skills)
 
+    def bank_item(self, exercise_id: str) -> Optional[Exercise]:
+        """The verified item-bank copy of an exercise (with the server's answer key), or None."""
+        return next((ex for ex in self.diagnostic_engine.item_bank if ex.exercise_id == exercise_id), None)
+
+    def serve(self, student_id: str, item: Exercise) -> None:
+        self.served_keys[(student_id, item.exercise_id)] = item
+
+    def take_served(self, student_id: str, exercise_id: str) -> Optional[Exercise]:
+        """Returns the served item and marks it answered (one answer per serve), or None if it was not served."""
+        return self.served_keys.pop((student_id, exercise_id), None)
+
     def get_next_question(self, student_id: str, candidate_skills: List[str]) -> Optional[Exercise]:
         answers = self.active_sessions.get(student_id, [])
         prior = self.get_prior(student_id, candidate_skills)
-        self.served_keys = getattr(self, "served_keys", {})
         item = self.diagnostic_engine.select_next_item(candidate_skills, answers, prior_difficulty=prior["start_difficulty"])
         if item is not None:
             # remember the (shuffled) answer key server-side; it is never sent to the browser
-            self.served_keys[(student_id, item.exercise_id)] = item
+            self.serve(student_id, item)
         return item
 
     def submit_answer(
@@ -100,6 +114,8 @@ class DiagnosticService:
     def reset_session(self, student_id: str):
         """Starts a fresh adaptive session. The evidence ledger is append-only and is never wiped here."""
         self.active_sessions[student_id] = []
+        for key in [k for k in self.served_keys if k[0] == student_id]:
+            del self.served_keys[key]
 
     def set_ledger(self, student_id: str, evidence: List[EvidenceItem]):
         """Replaces a student's ledger (seed / DB reload) and recomputes skill states."""
@@ -118,7 +134,7 @@ class DiagnosticService:
         return ev
 
     def clear_all(self):
-        self.evidence_ledger.clear(); self.skill_states.clear(); self.active_sessions.clear()
+        self.evidence_ledger.clear(); self.skill_states.clear(); self.active_sessions.clear(); self.served_keys.clear()
 
     def record_answer(self, student_id: str, exercise_id: str, skill_id: str, is_correct: bool, difficulty: float = 0.5) -> EvidenceItem:
         """Records one objectively graded answer as diagnostic evidence (used by the fixed-form diagnostic)."""

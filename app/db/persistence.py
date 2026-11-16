@@ -58,7 +58,8 @@ def _run(fn, default=None):
             c.commit()
             return out
     except Exception as e:
-        logger.debug("DB operation skipped: %s", e)
+        # the database was reachable a moment ago, so this is a failed read/write, not "database off"
+        logger.warning("Database operation failed (in-memory state is unaffected): %s", e)
         _state["checked_at"] = 0.0
         return default
 
@@ -108,6 +109,17 @@ def fetch_academic_rules() -> Optional[List[Dict[str, Any]]]:
         return [dict(rule_id=r[0], rule_type=r[1], parameters=r[2] if isinstance(r[2], dict) else json.loads(r[2] or "{}"),
                      human_text=r[3], status=r[4], source_id=r[5]) for r in cur.fetchall()]
     return _run(q)
+
+
+def fetch_plan_history(student_id: str) -> List[Dict[str, Any]]:
+    """All stored roadmap versions of one student, oldest first (used to restore plans after a restart)."""
+    def q(cur):
+        cur.execute("""SELECT plan_id, version, status, trigger, plan_snapshot, created_at FROM plan.plan
+                       WHERE student_id=%s AND plan_snapshot IS NOT NULL ORDER BY version, created_at""", (student_id,))
+        return [dict(plan_id=r[0], version=r[1], status=r[2], trigger=r[3],
+                     snapshot=r[4] if isinstance(r[4], dict) else json.loads(r[4] or "{}"), created_at=r[5])
+                for r in cur.fetchall()]
+    return _run(q, []) or []
 
 
 def table_counts(tables: List[str]) -> Dict[str, int]:
@@ -294,6 +306,18 @@ def claim_pending_events(limit: int = 50) -> List[Dict[str, Any]]:
                        RETURNING event_id, entity_type, entity_id, action""", (limit,))
         return [dict(event_id=r[0], entity_type=r[1], entity_id=r[2], action=r[3]) for r in cur.fetchall()]
     return _run(q, []) or []
+
+
+def requeue_interrupted_events() -> Optional[int]:
+    """
+    Puts events left in 'processing' back to 'pending'. Called when the worker starts: this process has not claimed
+    anything yet, so such rows were claimed by a process that stopped mid-way (crash, restart) and would otherwise
+    never be applied. Assumes one app instance per database, which is how docker-compose.yml runs it.
+    """
+    def q(cur):
+        cur.execute("UPDATE ops.reprocess_queue SET status='pending' WHERE status='processing'")
+        return cur.rowcount
+    return _run(q, None)  # None = the update did not run (database error); the caller retries
 
 
 def complete_events(event_ids: List[int], result: str, status: str = "completed") -> None:

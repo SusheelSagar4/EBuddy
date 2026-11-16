@@ -250,8 +250,8 @@ def run_scorecard_evaluation():
     print(f"6. Faculty Match Verification Accuracy    : {faculty_matches_valid}/{total_count} ({(faculty_matches_valid/total_count)*100:.1f}%)")
     print("=" * 80)
 
-    # Save to docs/core_to_core_scorecard.md
-    docs_dir = "docs"
+    # Save to docs/core_to_core_scorecard.md (the test-suite redirects this with EBUDDY_REPORTS_DIR)
+    docs_dir = os.getenv("EBUDDY_REPORTS_DIR", "docs")
     os.makedirs(docs_dir, exist_ok=True)
     report_file = os.path.join(docs_dir, "core_to_core_scorecard.md")
     with open(report_file, "w", encoding="utf-8") as f:
@@ -473,8 +473,8 @@ def run_mtech_scorecard_evaluation():
     print(f"6. Diagnostic Question Verification       : {'PASS (100%)' if question_verification_passed else 'FAIL'}")
     print("=" * 80)
 
-    # Save to docs/core_to_mtech_scorecard.md
-    docs_dir = "docs"
+    # Save to docs/core_to_mtech_scorecard.md (the test-suite redirects this with EBUDDY_REPORTS_DIR)
+    docs_dir = os.getenv("EBUDDY_REPORTS_DIR", "docs")
     os.makedirs(docs_dir, exist_ok=True)
     report_file = os.path.join(docs_dir, "core_to_mtech_scorecard.md")
     with open(report_file, "w", encoding="utf-8") as f:

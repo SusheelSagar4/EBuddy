@@ -174,7 +174,11 @@ def test_rolling_conversation_memory_ops_summary():
     and loaded into ContextCard on next turn.
     """
     student_id = "STU_MEMORY_TEST_01"
-    
+    # Chat needs a real profile (unknown ids are no longer invented)
+    from app.services.onboarding_service import onboarding_service
+    onboarding_service.onboard_student(student_id=student_id, name="Memory Test", programme_id="BTECH_EE",
+                                       current_semester=5, cgpa=8.0, goal_id="GOAL_EE_CORE_POWER")
+
     # Turn 1
     res1 = roadmap_orchestrator.chat_turn(student_id, "I have exams approaching next week, what should I study?")
     assert "turn_id" in res1

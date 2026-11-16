@@ -1,3 +1,5 @@
+import logging
+import re
 import uuid
 from typing import Dict, Any, Optional
 from datetime import datetime, timezone
@@ -35,6 +37,49 @@ class QueryAdaptationAgent:
         (("vlsi", "semiconductor"), "GOAL_EE_CORE_VLSI"),
         (("power system", "smart grid", "core power"), "GOAL_EE_CORE_POWER"),
     ]
+
+    # Phrases that on their own ask for a lighter week.
+    WORKLOAD_REQUESTS = ("reduce my workload", "reduce workload", "reduce my load", "reduce the load", "lighter", "lighten",
+                         "less time", "no time", "too busy", "i'm busy", "i am busy", "too much work", "cut down", "cut back",
+                         "30 min", "1 hour", "adjust my schedule", "adjust my plan", "adjust my workload", "free up time")
+    # Events that justify a lighter week, and softer verbs that only count when such an event is mentioned.
+    WORKLOAD_EVENTS = ("exam", "mid-sem", "midsem", "end-sem", "endsem", "hackathon", "competition", "fest", "quiz week")
+    WORKLOAD_SOFT_REQUESTS = ("reduce", "adjust", "busy", "pause", "postpone", "defer", "can't cope", "less work", "less study")
+    _CREDIT_AMOUNT = re.compile(r"\b(\d{2})(?:\.\d)?\s*credits?\b")
+
+    def wants_workload_reduction(self, message: str) -> bool:
+        """True only when the student asks for less work; mentioning an exam alone ("when is the GATE exam?") is not a request."""
+        m = message.lower()
+        if any(k in m for k in self.WORKLOAD_REQUESTS):
+            return True
+        return any(e in m for e in self.WORKLOAD_EVENTS) and any(k in m for k in self.WORKLOAD_SOFT_REQUESTS)
+
+    def requested_credit_load(self, message: str) -> Optional[float]:
+        """Credits the student asks to register for, when the message is an overload request; None otherwise."""
+        m = message.lower()
+        amounts = [float(x) for x in self._CREDIT_AMOUNT.findall(m)]
+        above_cap = [a for a in amounts if a > 26.0]
+        asks = any(k in m for k in ("want", "take", "register", "allow", "let me", "please", "can i", "add"))
+        if "overload" in m or (above_cap and asks) or ("exceed" in m and "credit" in m and asks):
+            return max(above_cap) if above_cap else 30.0
+        return None
+
+    _catalogue_codes: Optional[set] = None
+
+    @classmethod
+    def catalogue_course_codes(cls) -> set:
+        """Every code a student may legitimately see (internal id, printed code, display code) from the course KB."""
+        if cls._catalogue_codes is None:
+            codes = set()
+            try:
+                from app.kb.repositories import CourseRepo
+                for cid, c in CourseRepo()._courses.items():
+                    codes.update(x for x in (cid, c.course_code, c.display_code) if x)
+            except Exception:
+                # with an empty catalogue every course code would be stripped from LLM answers
+                logging.getLogger("ebuddy.agent4").exception("Course catalogue could not be loaded for answer checking")
+            cls._catalogue_codes = codes
+        return cls._catalogue_codes
 
     def detect_target_goal(self, message: str, programme_id: str) -> Optional[str]:
         """Deterministic mapping of a goal-switch request to a knowledge-base goal id (None when unclear)."""
@@ -83,7 +128,7 @@ class QueryAdaptationAgent:
             }
 
         # 2. Workload / Exam Week Reduction Request -> Propose Schedule Adjustment
-        if any(kw in msg_lower for kw in ["exam", "mid-sem", "midsem", "busy", "reduce workload", "less time", "30 min", "1 hour", "no time", "hackathon", "competition"]):
+        if self.wants_workload_reduction(message):
             intent = Intent.PLAN_QUERY
             proposal = ChangeProposal(
                 proposal_id=f"PROP_WORKLOAD_{uuid.uuid4().hex[:8]}",
@@ -115,7 +160,8 @@ class QueryAdaptationAgent:
             }
 
         # 3. Credit Load Request -> Labelled Warning under unsourced_baseline rules
-        if any(kw in msg_lower for kw in ["credit cap", "exceed", "30 credit", "32 credit", "35 credit", "overload"]):
+        requested_credits = self.requested_credit_load(message)
+        if requested_credits is not None:
             intent = Intent.PLAN_QUERY
             proposal = ChangeProposal(
                 proposal_id=f"PROP_OVERLOAD_{uuid.uuid4().hex[:8]}",
@@ -126,9 +172,9 @@ class QueryAdaptationAgent:
                 reasoning=f"[WARNING: unsourced_baseline] Student requested credit overload ('{message}') exceeding baseline cap of 26.0 credits (RULE_SEM_CREDIT_CAP_REGULAR).",
                 target_week=1,
                 proposed_modifications={
-                    "requested_credits": 30.0,
+                    "requested_credits": requested_credits,
                     "baseline_limit": 26.0,
-                    "condition": "requires_dean_senate_approval"
+                    "condition": "requires_official_approval_procedure_unconfirmed"
                 },
                 impact_summary="[WARNING: unsourced_baseline] Overload exceeds 26-credit baseline limit; recommendation subject to academic advisor confirmation.",
                 created_at=datetime.now(timezone.utc)
@@ -138,7 +184,7 @@ class QueryAdaptationAgent:
                 "(RULE_SEM_CREDIT_CAP_REGULAR), the regular semester credit ceiling is normally 26 credits. "
                 "Because this limit originates from unverified baseline rules, I have prepared a provisional "
                 "Overload Proposal for you rather than hard-blocking your request. "
-                "Note that registering beyond 26 credits requires departmental advisor and Senate approval.\n\n"
+                "Check the actual overload procedure (approvals, CGPA conditions) with your faculty advisor and the Academic Section.\n\n"
                 "👉 *Please review the provisional overload proposal above.*"
             )
             return {
@@ -235,7 +281,10 @@ class QueryAdaptationAgent:
             resp_text = ("Open the Mastery screen: it separates courses you have completed from proficiency you have demonstrated "
                          "(timed quizzes, rubric projects, mock interviews) for " + context_card.goal_name + "." + conflict_note)
         else:
+            # Codes in the catalogue are real even when they are not in this plan (e.g. a prerequisite already passed);
+            # only codes that exist nowhere in the knowledge base are stripped from the model's answer.
             valid_ids = {it.get("course_id") for it in context_card.current_plan_items if it.get("course_id")}
+            valid_ids |= self.catalogue_course_codes()
             ans = self.answerer.answer(message, context_card, valid_ids)
             llm_used = not ans["fallback_used"]
             if ans["text"]:

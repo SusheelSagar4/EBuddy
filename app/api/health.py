@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -5,6 +6,7 @@ from app.db.session import get_db
 from app.config import settings
 
 router = APIRouter()
+logger = logging.getLogger("ebuddy.health")
 
 def _check_health(db: Session):
     db_status = "connected"
@@ -25,23 +27,19 @@ def _check_health(db: Session):
         for key, q in queries.items():
             res = db.execute(text(q)).scalar()
             table_counts[key] = res
-    except Exception as e:
-        db_status = f"unhealthy: {str(e)}"
+    except Exception:
+        logger.exception("Health check: database query failed")
+        db_status = "unhealthy: database query failed (details in the server log)"
 
-    llm_key = (settings.LLM_API_KEY or "").strip()
-    is_llm_configured = bool(
-        llm_key
-        and llm_key.lower() not in ["", "placeholder", "your-api-key-here", "your_key", "sk-placeholder"]
-        and not llm_key.startswith("your_api_key")
-    )
+    from app.llm.client import llm_client
 
     return {
         "status": "healthy" if "unhealthy" not in db_status else "degraded",
         "database": db_status,
-        "llm_configured": is_llm_configured,
+        "llm_configured": llm_client.is_configured(),
         "counts": table_counts,
-        "configured_llm_model": settings.LLM_MODEL,
-        "configured_embedding_model": settings.EMBEDDING_MODEL,
+        "configured_llm_model": llm_client.model,
+        "configured_embedding_model": llm_client.embedding_model or None,
         "telemetry_disabled": not settings.LITELLM_TELEMETRY,
         "local_cost_map": settings.LITELLM_LOCAL_MODEL_COST_MAP
     }

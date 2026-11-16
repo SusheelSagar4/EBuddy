@@ -1,4 +1,11 @@
 // Small shared rendering helpers (no dependencies).
+
+// Browser storage can be blocked (private windows, strict settings): never let that stop the app from loading.
+export const store = {
+  get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+  set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* storage unavailable */ } },
+  remove(key) { try { localStorage.removeItem(key); } catch (e) { /* storage unavailable */ } },
+};
 export const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const skill = (s) => esc(String(s || '').replace('SKILL_', '').replace(/_/g, ' ').toLowerCase());
 export const badge = (text, kind = 'neutral') => `<span class="badge badge-${kind}">${esc(text)}</span>`;

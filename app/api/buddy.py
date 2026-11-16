@@ -17,6 +17,7 @@ from app.services.plan_service import plan_service
 from app.services.mastery_service import mastery_service
 from app.engine.skill_state import reliability_tier_for, TIER_WEIGHTS, SOURCE_WEIGHTS
 from app.db import persistence
+from app.api.validation import validate_new_profile
 
 router = APIRouter(prefix="/api/v2", tags=["Learning Buddy v2"])
 
@@ -66,9 +67,12 @@ def _family(goal_id: str) -> str:
 
 
 def _need(student_id: str):
+    # ensure_student_onboarded invents a placeholder profile for unknown ids; the web app must get a 404 instead.
+    if not onboarding_service.student_exists(student_id):
+        raise HTTPException(status_code=404, detail=f"Student {student_id} not found. Pick a profile or create one first.")
     try:
         return onboarding_service.ensure_student_onboarded(student_id)
-    except Exception as e:
+    except (ValueError, KeyError) as e:  # expected errors only; anything else is a logged 500
         raise HTTPException(status_code=404, detail=str(e))
 
 
@@ -147,12 +151,11 @@ def select_student(student_id: str, req: SelectRequest = SelectRequest()):
 
 @router.post("/students")
 def create_student(req: NewStudentRequest):
-    if onboarding_service.goal_repo.get_by_id(req.goal_id) is None:
-        raise HTTPException(status_code=400, detail=f"Unknown goal {req.goal_id}")
-    known = plan_service.planner.course_info
-    unknown = [c for c in (req.completed_course_ids or []) if c not in known]
-    if unknown:
-        raise HTTPException(status_code=400, detail=f"Unknown course code(s): {', '.join(unknown)}. Use codes from the catalogue.")
+    sid = validate_new_profile(req.student_id, req.name, req.programme_id, req.current_semester, req.cgpa, req.backlogs,
+                               req.goal_id, req.completed_course_ids, plan_service.planner.course_info,
+                               req.weekly_hours_cap, req.credit_cap)
+    if req.student_id != sid:
+        req = req.model_copy(update={"student_id": sid})
     cons = []
     if req.weekly_hours_cap:
         cons.append({"constraint_type": "weekly_hours", "parameters": {"max_hours": req.weekly_hours_cap}})

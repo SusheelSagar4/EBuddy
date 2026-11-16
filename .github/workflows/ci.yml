@@ -1,0 +1,57 @@
+# Runs scripts/ci.sh on every push and pull request: import boundaries, the full test-suite (including the
+# PostgreSQL tests against a real database), persona conformance, the data check and the secret / network scans.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ebuddy
+          POSTGRES_USER: ebuddy_user
+          POSTGRES_PASSWORD: ebuddy_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ebuddy_user -d ebuddy"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+
+    env:
+      DATABASE_URL: postgresql+psycopg://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy
+      LOCAL_DATABASE_URL: postgresql+psycopg://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy
+      LLM_MODEL: fake
+      LITELLM_TELEMETRY: "False"
+      LITELLM_LOCAL_MODEL_COST_MAP: "True"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt -c constraints.txt
+
+      - name: Create the schema and load the seed
+        run: python scripts/seed_loader.py --reset
+
+      - name: Run the CI checks
+        run: bash scripts/ci.sh
+
+      - name: Generated reports must not change tracked files
+        run: git diff --exit-code -- . ':(exclude)docs/evaluation/conformance_report.md' ':(exclude)docs/data_quality_report.md'

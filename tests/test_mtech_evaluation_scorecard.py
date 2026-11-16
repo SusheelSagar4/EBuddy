@@ -172,7 +172,7 @@ class TestMTechEvaluationScorecard(unittest.TestCase):
     def test_05_scorecard_markdown_file_generation(self):
         """Executing run_mtech_scorecard_evaluation creates docs/core_to_mtech_scorecard.md with 100% pass rates."""
         run_mtech_scorecard_evaluation()
-        report_path = os.path.join("docs", "core_to_mtech_scorecard.md")
+        report_path = os.path.join(os.getenv("EBUDDY_REPORTS_DIR", "docs"), "core_to_mtech_scorecard.md")
         self.assertTrue(os.path.exists(report_path))
         with open(report_path, "r", encoding="utf-8") as f:
             content = f.read()

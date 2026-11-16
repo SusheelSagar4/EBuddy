@@ -22,7 +22,7 @@ class TestEvaluationScorecard(unittest.TestCase):
         # Execute scorecard evaluation
         run_scorecard_evaluation()
 
-        report_path = os.path.join("docs", "core_to_core_scorecard.md")
+        report_path = os.path.join(os.getenv("EBUDDY_REPORTS_DIR", "docs"), "core_to_core_scorecard.md")
         self.assertTrue(os.path.exists(report_path), "Scorecard markdown report must be written to docs/core_to_core_scorecard.md")
         with open(report_path, "r", encoding="utf-8") as f:
             content = f.read()

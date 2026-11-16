@@ -242,7 +242,7 @@ def test_08_agent_isolation_single_writer_guarantee():
         current_semester=3,
         cgpa=8.1,
         backlogs=0,
-        goal_id="GOAL_CS_AI_ML",
+        goal_id="GOAL_TRACK_AIML",  # a real goal (unknown goals are now rejected at onboarding)
         completed_course_ids=["MA1L001", "CS1L001"]
     ))
     res_plan = generate_plan(student_id)

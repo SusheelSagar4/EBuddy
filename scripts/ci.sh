@@ -17,7 +17,8 @@ echo "=== Step 4: Knowledge-Base Integrity and Provenance Check ==="
 python scripts/check_data.py
 
 echo "=== Step 5: Secret & Hard-Coded Credential Scan ==="
-if grep -rnEI "sk-proj-|AIzaSy|ghp_|AKIA" --exclude-dir={.git,.pytest_cache,node_modules} .; then
+# ci.sh / ci.ps1 contain the patterns themselves and must not match (ci.ps1 already excludes both).
+if grep -rnEI "sk-proj-|AIzaSy|ghp_|AKIA" --exclude-dir={.git,.pytest_cache,node_modules} --exclude=ci.sh --exclude=ci.ps1 .; then
     echo "ERROR: Potential secrets detected in codebase!"
     exit 1
 fi

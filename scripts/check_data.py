@@ -259,7 +259,7 @@ def run_data_checks(release_mode: bool = False) -> bool:
     }
     table_status_breakdown = {}
 
-    for fn in os.listdir(seed_kb):
+    for fn in sorted(os.listdir(seed_kb)):  # sorted: listdir order varies by filesystem, which reshuffled the report
         fpath = os.path.join(seed_kb, fn)
         tname = fn.replace(".csv", "").replace(".json", "")
         if fn.endswith(".csv"):

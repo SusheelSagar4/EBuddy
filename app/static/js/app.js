@@ -1,3 +1,11 @@
+/**
+ * Escapes text for HTML. Every value from the server goes through this before reaching innerHTML: student names,
+ * chat replies (which can echo the message) and database rows are user-editable.
+ */
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 /* ==============================================================================
    EBuddy Web UI Shell — Frontend Vanilla JS
    Zero Outbound / Relative Paths Only / Traceable KB Codes
@@ -5,12 +13,14 @@
 
 const EBuddy = {
   // Active student management
+  // Storage can be blocked (private windows, strict settings): fall back to the default profile instead of failing
   getActiveStudentId() {
-    return localStorage.getItem("ebuddy_active_student_id") || "CONF_STU_EE_POWER_01";
+    try { return localStorage.getItem("ebuddy_active_student_id") || "CONF_STU_EE_POWER_01"; }
+    catch (e) { return "CONF_STU_EE_POWER_01"; }
   },
 
   setActiveStudentId(studentId) {
-    localStorage.setItem("ebuddy_active_student_id", studentId);
+    try { localStorage.setItem("ebuddy_active_student_id", studentId); } catch (e) { /* storage unavailable */ }
     window.location.reload();
   },
 
@@ -58,27 +68,27 @@ const EBuddy = {
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
           <div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">STUDENT ID</div>
-            <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-mono);">${data.student_id}</div>
+            <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-mono);">${escapeHtml(data.student_id)}</div>
           </div>
           <div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">NAME</div>
-            <div style="font-size: 1.1rem; font-weight: 600;">${data.name}</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">${escapeHtml(data.name)}</div>
           </div>
           <div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">PROGRAMME</div>
-            <div><span class="badge badge-info">${data.programme_id}</span></div>
+            <div><span class="badge badge-info">${escapeHtml(data.programme_id)}</span></div>
           </div>
           <div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">SEMESTER</div>
-            <div style="font-size: 1.1rem; font-weight: 600;">Semester ${data.current_semester}</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">Semester ${escapeHtml(data.current_semester)}</div>
           </div>
           <div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">CGPA</div>
-            <div style="font-size: 1.1rem; font-weight: 700; color: #15803d;">${data.cgpa || 8.0}</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: #15803d;">${data.cgpa === null || data.cgpa === undefined ? 'not recorded' : escapeHtml(data.cgpa)}</div>
           </div>
           <div>
             <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">ACTIVE BACKLOGS</div>
-            <div style="font-size: 1.1rem; font-weight: 600;">${data.backlogs || 0}</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">${escapeHtml(data.backlogs ?? 0)}</div>
           </div>
         </div>
       `;
@@ -89,13 +99,13 @@ const EBuddy = {
         } else {
           coursesEl.innerHTML = data.completed_courses.map(c => `
             <span class="badge badge-code" style="margin: 4px; display: inline-block;">
-              ✓ ${c}
+              ✓ ${escapeHtml(c)}
             </span>
           `).join(" ");
         }
       }
     } catch (err) {
-      infoEl.innerHTML = `<div class="alert alert-danger">Error loading student profile: ${err.message}</div>`;
+      infoEl.innerHTML = `<div class="alert alert-danger">Error loading student profile: ${escapeHtml(err.message)}</div>`;
     }
   },
 
@@ -118,17 +128,17 @@ const EBuddy = {
       container.innerHTML = (gData.goals || []).map((g, idx) => `
         <div class="card" style="margin-bottom: 16px; border: 2px solid ${idx === 0 ? 'var(--color-accent)' : 'var(--border-light)'};">
           <label style="display: flex; gap: 16px; cursor: pointer; align-items: flex-start;">
-            <input type="radio" name="selected_goal" value="${g.goal_id}" ${idx === 0 ? 'checked' : ''} style="margin-top: 6px; width: 18px; height: 18px;">
+            <input type="radio" name="selected_goal" value="${escapeHtml(g.goal_id)}" ${idx === 0 ? 'checked' : ''} style="margin-top: 6px; width: 18px; height: 18px;">
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span class="badge badge-code">${g.goal_id}</span>
-                <span class="badge badge-${g.status === 'verified' ? 'verified' : 'draft'}">${g.status}</span>
-                <span class="badge badge-info">${g.category}</span>
+                <span class="badge badge-code">${escapeHtml(g.goal_id)}</span>
+                <span class="badge badge-${g.status === 'verified' ? 'verified' : 'draft'}">${escapeHtml(g.status)}</span>
+                <span class="badge badge-info">${escapeHtml(g.category)}</span>
               </div>
-              <h3 style="font-size: 1.15rem; color: var(--color-primary); margin-bottom: 4px;">${g.name}</h3>
-              <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">${g.description}</p>
+              <h3 style="font-size: 1.15rem; color: var(--color-primary); margin-bottom: 4px;">${escapeHtml(g.name)}</h3>
+              <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">${escapeHtml(g.description)}</p>
               <div style="font-size: 0.8rem; color: var(--text-muted);">
-                Target Skill Requirements: <strong>${g.skill_requirements_count}</strong> | Source: <code>${g.source_id}</code>
+                Target Skill Requirements: <strong>${escapeHtml(g.skill_requirements_count)}</strong> | Source: <code>${escapeHtml(g.source_id)}</code>
               </div>
             </div>
           </label>
@@ -161,7 +171,7 @@ const EBuddy = {
         };
       }
     } catch (err) {
-      container.innerHTML = `<div class="alert alert-danger">Error loading goals: ${err.message}</div>`;
+      container.innerHTML = `<div class="alert alert-danger">Error loading goals: ${escapeHtml(err.message)}</div>`;
     }
   },
 
@@ -195,7 +205,7 @@ const EBuddy = {
         if (warns.length > 0) {
           warningsEl.innerHTML = warns.map(w => `
             <div class="alert alert-warning" style="margin-bottom: 8px;">
-              <strong>⚠️ Advisory Notice:</strong> ${w}
+              <strong>⚠️ Advisory Notice:</strong> ${escapeHtml(w)}
             </div>
           `).join("");
         } else {
@@ -208,10 +218,10 @@ const EBuddy = {
       if (verEl) {
         verEl.innerHTML = `
           <span class="badge badge-info" style="font-size: 0.9rem; padding: 6px 12px;">
-            Roadmap Version ${data.version} (${data.committed_by})
+            Roadmap Version ${escapeHtml(data.version)} (${escapeHtml(data.committed_by)})
           </span>
           <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: 12px;">
-            Total Planned Credits: <strong>${data.total_credits}</strong> across ${data.total_items} items
+            Total Planned Credits: <strong>${escapeHtml(data.total_credits)}</strong> across ${escapeHtml(data.total_items)} items
           </span>
         `;
       }
@@ -223,7 +233,7 @@ const EBuddy = {
           proposalsEl.innerHTML = `
             <div class="alert alert-info" style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <strong>⚖ ${props.length} Pending Change Proposal(s) awaiting your decision.</strong>
+                <strong>⚖ ${escapeHtml(props.length)} Pending Change Proposal(s) awaiting your decision.</strong>
               </div>
               <a href="/approvals" class="btn btn-sm btn-primary">Review Proposals</a>
             </div>
@@ -237,9 +247,9 @@ const EBuddy = {
       container.innerHTML = (data.semesters || []).map(sem => `
         <div class="card" style="margin-bottom: 24px;">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 12px; margin-bottom: 16px;">
-            <h3 style="font-size: 1.2rem; color: var(--color-primary);">Semester ${sem.semester_number}</h3>
+            <h3 style="font-size: 1.2rem; color: var(--color-primary);">Semester ${escapeHtml(sem.semester_number)}</h3>
             <span class="badge badge-info" style="font-size: 0.85rem;">
-              Credits: ${sem.semester_credits}
+              Credits: ${escapeHtml(sem.semester_credits)}
             </span>
           </div>
 
@@ -248,20 +258,20 @@ const EBuddy = {
               <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 14px; background: #fafafa;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
                   <div>
-                    <span class="badge badge-code" style="font-size: 0.85rem;">${it.kb_code}</span>
-                    <span class="badge badge-${it.status === 'verified' ? 'verified' : 'draft'}">${it.status}</span>
-                    <strong style="font-size: 1.05rem; margin-left: 8px; color: var(--text-primary);">${it.title}</strong>
+                    <span class="badge badge-code" style="font-size: 0.85rem;">${escapeHtml(it.kb_code)}</span>
+                    <span class="badge badge-${it.status === 'verified' ? 'verified' : 'draft'}">${escapeHtml(it.status)}</span>
+                    <strong style="font-size: 1.05rem; margin-left: 8px; color: var(--text-primary);">${escapeHtml(it.title)}</strong>
                   </div>
-                  <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">${it.credits} Credits</span>
+                  <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">${escapeHtml(it.credits)} Credits</span>
                 </div>
 
                 <div style="margin-top: 8px; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;">
-                  <strong>Why this course:</strong> ${it.reason?.why_this || it.reason?.intent || 'Curriculum Requirement'}
+                  <strong>Why this course:</strong> ${escapeHtml(it.reason?.why_this || it.reason?.intent || 'Curriculum Requirement')}
                 </div>
 
                 ${it.reason?.target_skills?.length ? `
                   <div style="margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);">
-                    Skills: ${it.reason.target_skills.map(s => `<code>${s}</code>`).join(", ")}
+                    Skills: ${it.reason.target_skills.map(s => `<code>${escapeHtml(s)}</code>`).join(", ")}
                   </div>
                 ` : ''}
               </div>
@@ -271,7 +281,7 @@ const EBuddy = {
       `).join("");
 
     } catch (err) {
-      container.innerHTML = `<div class="alert alert-danger">Error loading roadmap: ${err.message}</div>`;
+      container.innerHTML = `<div class="alert alert-danger">Error loading roadmap: ${escapeHtml(err.message)}</div>`;
     }
   },
 
@@ -297,10 +307,10 @@ const EBuddy = {
               </span>
               <h2 style="margin: 16px 0; color: var(--color-primary);">Adaptive Ability Assessment Concluded</h2>
               <div style="font-size: 2.5rem; font-weight: 800; color: var(--color-accent); margin-bottom: 8px;">
-                ${st.ability_estimate || 50.0} <span style="font-size: 1.2rem; color: var(--text-muted);">/ 100</span>
+                ${escapeHtml(st.ability_estimate ?? 50.0)} <span style="font-size: 1.2rem; color: var(--text-muted);">/ 100</span>
               </div>
               <p style="color: var(--text-secondary); margin-bottom: 20px;">
-                Confidence Spread Rating: <strong>${st.confidence >= 0.84 ? 'High Confidence (Converged)' : 'Moderate Confidence'}</strong> (${st.confidence || 0.85})
+                Confidence Spread Rating: <strong>${st.confidence >= 0.84 ? 'High Confidence (Converged)' : 'Moderate Confidence'}</strong> (${escapeHtml(st.confidence ?? 0.85)})
               </p>
               <div style="display: flex; justify-content: center; gap: 12px;">
                 <a href="/roadmap" class="btn btn-primary">View Adapted Roadmap</a>
@@ -330,24 +340,24 @@ const EBuddy = {
           <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 12px;">
               <div>
-                <span class="badge badge-code">${ex.exercise_id}</span>
-                <span class="badge badge-${ex.status === 'verified' ? 'verified' : 'draft'}">${ex.status}</span>
-                <span class="badge badge-info">${ex.skill_id}</span>
+                <span class="badge badge-code">${escapeHtml(ex.exercise_id)}</span>
+                <span class="badge badge-${ex.status === 'verified' ? 'verified' : 'draft'}">${escapeHtml(ex.status)}</span>
+                <span class="badge badge-info">${escapeHtml(ex.skill_id)}</span>
               </div>
               <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-secondary);">
-                Question ${qNum} of max ${st.max_items || 8}
+                Question ${escapeHtml(qNum)} of max ${escapeHtml(st.max_items || 8)}
               </span>
             </div>
 
             <h3 style="font-size: 1.15rem; line-height: 1.6; margin-bottom: 20px; color: var(--text-primary);">
-              ${ex.question_text}
+              ${escapeHtml(ex.question_text)}
             </h3>
 
             <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
               ${(ex.options || []).map((opt, i) => `
                 <label style="display: flex; gap: 12px; align-items: center; padding: 12px 16px; border: 1px solid var(--border-light); border-radius: var(--radius-md); cursor: pointer; background: #fafafa;">
-                  <input type="radio" name="diag_opt" value="${opt}" style="width: 18px; height: 18px;">
-                  <span style="font-size: 0.95rem;">${opt}</span>
+                  <input type="radio" name="diag_opt" value="${escapeHtml(opt)}" style="width: 18px; height: 18px;">
+                  <span style="font-size: 0.95rem;">${escapeHtml(opt)}</span>
                 </label>
               `).join("")}
             </div>
@@ -356,7 +366,7 @@ const EBuddy = {
 
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: 0.85rem; color: var(--text-muted);">
-                Estimated Running Ability: <strong>${st.ability_estimate || 50.0}</strong>
+                Estimated Running Ability: <strong>${escapeHtml(st.ability_estimate ?? 50.0)}</strong>
               </span>
               <button id="btn-submit-answer" class="btn btn-primary">Submit Answer</button>
             </div>
@@ -386,7 +396,7 @@ const EBuddy = {
             const fbEl = document.getElementById("diag-feedback");
             fbEl.innerHTML = `
               <div class="alert ${ansData.is_correct ? 'alert-info' : 'alert-warning'}">
-                <strong>${ansData.is_correct ? '✓ Correct!' : '✗ Incorrect'}</strong> — Score: ${ansData.score}/100. ${ansData.feedback || ''}
+                <strong>${ansData.is_correct ? '✓ Correct!' : '✗ Incorrect'}</strong> — Score: ${escapeHtml(ansData.score)}/100. ${escapeHtml(ansData.feedback || '')}
               </div>
             `;
 
@@ -401,7 +411,7 @@ const EBuddy = {
         };
 
       } catch (err) {
-        container.innerHTML = `<div class="alert alert-danger">Error loading diagnostic: ${err.message}</div>`;
+        container.innerHTML = `<div class="alert alert-danger">Error loading diagnostic: ${escapeHtml(err.message)}</div>`;
       }
     };
 
@@ -420,13 +430,13 @@ const EBuddy = {
 
     const appendMessage = (sender, text, meta = null) => {
       const bubble = document.createElement("div");
-      bubble.className = `chat-bubble ${sender}`;
+      bubble.className = `chat-bubble ${escapeHtml(sender)}`;
 
       let metaHtml = "";
       if (meta && meta.cited_codes && meta.cited_codes.length > 0) {
         metaHtml = `
           <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,0.15); font-size: 0.8rem;">
-            <strong>Cited KB Entities:</strong> ${meta.cited_codes.map(c => `<span class="badge badge-code">${c}</span>`).join(" ")}
+            <strong>Cited KB Entities:</strong> ${meta.cited_codes.map(c => `<span class="badge badge-code">${escapeHtml(c)}</span>`).join(" ")}
           </div>
         `;
       }
@@ -434,12 +444,12 @@ const EBuddy = {
       if (meta && meta.intent) {
         metaHtml = `
           <div style="margin-bottom: 4px; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">
-            Intent: <strong>${meta.intent}</strong>
+            Intent: <strong>${escapeHtml(meta.intent)}</strong>
           </div>
         ` + metaHtml;
       }
 
-      bubble.innerHTML = `<div>${text.replace(/\n/g, '<br>')}</div>${metaHtml}`;
+      bubble.innerHTML = `<div>${escapeHtml(text).replace(/\n/g, '<br>')}</div>${metaHtml}`;
       messagesEl.appendChild(bubble);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     };
@@ -516,26 +526,26 @@ const EBuddy = {
         <div class="card" style="margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
             <div>
-              <span class="badge badge-code">${p.proposal_id}</span>
+              <span class="badge badge-code">${escapeHtml(p.proposal_id)}</span>
               <span class="badge badge-draft">AWAITING APPROVAL</span>
-              <span class="badge badge-info">${p.proposer_agent}</span>
+              <span class="badge badge-info">${escapeHtml(p.proposer_agent)}</span>
             </div>
-            <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary);">${p.proposal_type}</span>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary);">${escapeHtml(p.proposal_type)}</span>
           </div>
 
-          <h3 style="font-size: 1.1rem; color: var(--color-primary); margin-bottom: 6px;">${p.impact_summary}</h3>
+          <h3 style="font-size: 1.1rem; color: var(--color-primary); margin-bottom: 6px;">${escapeHtml(p.impact_summary)}</h3>
           <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 12px; line-height: 1.5;">
-            <strong>Reasoning:</strong> ${p.reasoning}
+            <strong>Reasoning:</strong> ${escapeHtml(p.reasoning)}
           </p>
 
           <div style="background: var(--bg-subtle); padding: 12px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 16px;">
             <strong>Proposed Modifications:</strong>
-            <pre style="margin-top: 4px; font-family: var(--font-mono); white-space: pre-wrap;">${JSON.stringify(p.proposed_modifications, null, 2)}</pre>
+            <pre style="margin-top: 4px; font-family: var(--font-mono); white-space: pre-wrap;">${escapeHtml(JSON.stringify(p.proposed_modifications, null, 2))}</pre>
           </div>
 
           <div style="display: flex; gap: 12px; justify-content: flex-end;">
-            <button class="btn btn-danger btn-sm btn-reject-prop" data-id="${p.proposal_id}">✗ Reject</button>
-            <button class="btn btn-success btn-sm btn-approve-prop" data-id="${p.proposal_id}">✓ Approve (Re-plan via Agent 1)</button>
+            <button class="btn btn-danger btn-sm btn-reject-prop" data-id="${escapeHtml(p.proposal_id)}">✗ Reject</button>
+            <button class="btn btn-success btn-sm btn-approve-prop" data-id="${escapeHtml(p.proposal_id)}">✓ Approve (Re-plan via Agent 1)</button>
           </div>
         </div>
       `).join("");
@@ -584,7 +594,7 @@ const EBuddy = {
       });
 
     } catch (err) {
-      container.innerHTML = `<div class="alert alert-danger">Error loading proposals: ${err.message}</div>`;
+      container.innerHTML = `<div class="alert alert-danger">Error loading proposals: ${escapeHtml(err.message)}</div>`;
     }
   },
 
@@ -616,11 +626,11 @@ const EBuddy = {
             </div>
             <div>
               <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">CONFIGURED MODEL</div>
-              <div style="font-family: var(--font-mono); font-size: 0.95rem;">${data.configured_llm_model}</div>
+              <div style="font-family: var(--font-mono); font-size: 0.95rem;">${escapeHtml(data.configured_llm_model)}</div>
             </div>
             <div>
               <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">ADMINER PORT</div>
-              <div style="font-family: var(--font-mono); font-size: 0.95rem;">${data.adminer_port || 8080}</div>
+              <div style="font-family: var(--font-mono); font-size: 0.95rem;">${escapeHtml(data.adminer_port || 8080)}</div>
             </div>
           </div>
 
@@ -628,13 +638,13 @@ const EBuddy = {
             <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px;">CORE ROW COUNTS:</div>
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
               ${Object.entries(data.counts || {}).map(([k, v]) => `
-                <span class="badge badge-code">${k}: <strong>${v}</strong></span>
+                <span class="badge badge-code">${escapeHtml(k)}: <strong>${escapeHtml(v)}</strong></span>
               `).join(" ")}
             </div>
           </div>
         `;
       } catch (err) {
-        statusEl.innerHTML = `<div class="alert alert-danger">Error loading status: ${err.message}</div>`;
+        statusEl.innerHTML = `<div class="alert alert-danger">Error loading status: ${escapeHtml(err.message)}</div>`;
       }
     };
 
@@ -643,36 +653,39 @@ const EBuddy = {
     // Table viewer
     if (tableSelect && previewEl) {
       const loadTableData = async (tbl) => {
-        previewEl.innerHTML = `<div style="padding: 20px; color: var(--text-muted);">Loading ${tbl}...</div>`;
+        previewEl.innerHTML = `<div style="padding: 20px; color: var(--text-muted);">Loading ${escapeHtml(tbl)}...</div>`;
         try {
-          const res = await fetch(`/api/admin/tables/${tbl}`);
+          const res = await fetch(`/api/admin/tables/${encodeURIComponent(tbl)}`);
           const data = await res.json();
-          
+          // an error used to be shown as "Table ... is empty"
+          if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : `HTTP ${res.status}`);
+
           if (!data.rows || data.rows.length === 0) {
-            previewEl.innerHTML = `<div style="padding: 20px; color: var(--text-muted);">Table ${tbl} is empty.</div>`;
+            previewEl.innerHTML = `<div style="padding: 20px; color: var(--text-muted);">Table ${escapeHtml(tbl)} is empty.</div>`;
             return;
           }
 
           const cols = data.columns || [];
           previewEl.innerHTML = `
             <div style="padding: 12px; font-size: 0.85rem; color: var(--text-muted); border-bottom: 1px solid var(--border-light);">
-              Showing first <strong>${data.count}</strong> rows of <code>${data.table}</code>
+              Showing first <strong>${escapeHtml(data.count)}</strong> rows of <code>${escapeHtml(data.table)}</code>
+              ${data.source === "seed_file" ? `<div class="alert alert-warning" style="margin-top:6px;">${escapeHtml(data.note || "Showing the original seed file, not live data.")}</div>` : ""}
             </div>
             <div class="table-responsive">
               <table>
                 <thead>
-                  <tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr>
+                  <tr>${cols.map(c => `<th>${escapeHtml(c)}</th>`).join("")}</tr>
                 </thead>
                 <tbody>
                   ${data.rows.map(row => `
-                    <tr>${cols.map(c => `<td>${row[c] !== null ? String(row[c]).slice(0, 80) : '<em style="color:#94a3b8">null</em>'}</td>`).join("")}</tr>
+                    <tr>${cols.map(c => `<td>${row[c] !== null && row[c] !== undefined ? escapeHtml(String(row[c]).slice(0, 80)) : '<em style="color:#94a3b8">null</em>'}</td>`).join("")}</tr>
                   `).join("")}
                 </tbody>
               </table>
             </div>
           `;
         } catch (err) {
-          previewEl.innerHTML = `<div class="alert alert-danger">Error fetching table data: ${err.message}</div>`;
+          previewEl.innerHTML = `<div class="alert alert-danger">Error fetching table data: ${escapeHtml(err.message)}</div>`;
         }
       };
 
@@ -691,8 +704,19 @@ const EBuddy = {
         reloadBtn.textContent = "Reloading Seeds...";
 
         try {
-          const res = await fetch("/api/admin/reload-seed", { method: "POST" });
+          // Sends the optional admin token (ADMIN_TOKEN on the server); asks for it once on a 401.
+          const readToken = () => { try { return localStorage.getItem("ebuddy.adminToken") || ""; } catch (e) { return ""; } };
+          const send = (token) => fetch("/api/admin/reload-seed", { method: "POST", headers: token ? { "X-Admin-Token": token } : {} });
+          let res = await send(readToken());
+          if (res.status === 401) {
+            const entered = prompt("This server requires an admin token (ADMIN_TOKEN). Enter it to continue:");
+            if (entered) {
+              try { localStorage.setItem("ebuddy.adminToken", entered); } catch (e) { /* storage unavailable */ }
+              res = await send(entered);
+            }
+          }
           const data = await res.json();
+          if (!res.ok) throw new Error(data.detail || `HTTP ${escapeHtml(res.status)}`);
           alert(data.message || "Seed reset successful.");
           loadStatus();
           if (tableSelect) tableSelect.dispatchEvent(new Event("change"));

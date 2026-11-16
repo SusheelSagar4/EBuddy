@@ -39,15 +39,15 @@
 - **Flagged Placeholders (is_placeholder = true):** 0
 - **Unsourced Baselines (rules/credits/minors):** 7
 - **Draft for Review (skills/goals):** 2670
-  - `programme`: {'unsourced_baseline': 1}
-  - `minor_course`: {'draft_for_review': 4}
-  - `mastery_criteria`: {'draft_for_review': 5}
-  - `goal`: {'draft_for_review': 17}
-  - `minor`: {'unsourced_baseline': 2}
   - `academic_rule`: {'unsourced_baseline': 4}
-  - `skill`: {'draft_for_review': 66}
-  - `relevance_tags`: {'draft_for_review': 2312}
-  - `exercise`: {'draft_for_review': 60}
-  - `goal_skill_requirement`: {'draft_for_review': 83}
-  - `track_phase_skill`: {'draft_for_review': 32}
   - `course_skill`: {'draft_for_review': 91}
+  - `exercise`: {'draft_for_review': 60}
+  - `goal`: {'draft_for_review': 17}
+  - `goal_skill_requirement`: {'draft_for_review': 83}
+  - `mastery_criteria`: {'draft_for_review': 5}
+  - `minor`: {'unsourced_baseline': 2}
+  - `minor_course`: {'draft_for_review': 4}
+  - `programme`: {'unsourced_baseline': 1}
+  - `relevance_tags`: {'draft_for_review': 2312}
+  - `skill`: {'draft_for_review': 66}
+  - `track_phase_skill`: {'draft_for_review': 32}

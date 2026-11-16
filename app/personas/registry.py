@@ -1,3 +1,4 @@
+import logging
 import os
 try:
     import yaml
@@ -85,7 +86,7 @@ class PersonaRegistry:
                     if pkg.spec:
                         self._personas[pkg.spec.persona_id] = pkg
                 except Exception as e:
-                    print(f"Error loading persona plugin {item}: {e}")
+                    logging.getLogger("ebuddy.personas").error("Error loading persona plugin %s: %s", item, e, exc_info=True)
 
     def get(self, persona_id: str) -> Optional[PersonaPackage]:
         return self._personas.get(persona_id)

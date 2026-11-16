@@ -1,6 +1,6 @@
 # Core to MBA Seed Data Quality & Integrity Report
 
-*Generated automatically from `/home/user/EBuddy/EBuddy-main/scripts/../data/seed/mba` and `/home/user/EBuddy/EBuddy-main/scripts/../data/seed/core_to_mba`.*
+*Generated automatically from `data/seed/mba` and `data/seed/core_to_mba`.*
 
 ## 1. Executive Summary
 

@@ -1,5 +1,5 @@
 import { api } from '../api/client.js';
-import { esc, badge, tagBadges, TAG_LABELS, errorBox } from '../ui.js';
+import { esc, badge, tagBadges, TAG_LABELS, errorBox, store } from '../ui.js';
 
 export function renderOnboarding(container, state, navigate) {
   container.innerHTML = `
@@ -82,7 +82,7 @@ export function renderOnboarding(container, state, navigate) {
         box.innerHTML = '<div class="loading-state">Loading profile and building a validated roadmap...</div>';
         try {
           const p = await api.selectStudent(id, goalId);
-          state.studentId = id; state.profile = p; localStorage.setItem('ebuddy_student_id', id); state.refreshPill();
+          state.studentId = id; state.profile = p; store.set('ebuddy_student_id', id); state.refreshPill();
           box.innerHTML = `<div class="card">
             <h3>${esc(p.name)} <span class="muted small">${esc(p.student_id)}</span></h3>
             <p>${esc(p.programme_id)} • Year ${p.year}, Semester ${p.current_semester} • CGPA ${Number(p.cgpa).toFixed(2)} • ${p.completed_count} courses completed${p.backlog_courses.length ? ` • backlog: ${esc(p.backlog_courses.join(', '))}` : ''}</p>
@@ -110,7 +110,7 @@ export function renderOnboarding(container, state, navigate) {
             completed_course_ids: val('n-done') ? val('n-done').split(',').map((x) => x.trim().toUpperCase()).filter(Boolean) : null,
             aims: val('n-int') ? `Interested in ${val('n-int')}` : null
           });
-          state.studentId = p.student_id; state.profile = p; localStorage.setItem('ebuddy_student_id', p.student_id); state.refreshPill();
+          state.studentId = p.student_id; state.profile = p; store.set('ebuddy_student_id', p.student_id); state.refreshPill();
           navigate('#plan');
         } catch (err) { msg.innerHTML = errorBox(err); }
       });

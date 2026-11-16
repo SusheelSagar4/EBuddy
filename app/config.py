@@ -10,10 +10,11 @@ class Settings(BaseSettings):
     )
 
     # LiteLLM Configuration (Hard Rule 1, 2, 8)
-    LLM_MODEL: str = "openai/gpt-4o-mini"
+    # Defaults match .env.example and the README: offline deterministic mode until a model is configured.
+    LLM_MODEL: str = "fake"
     LLM_API_KEY: str = ""
     LLM_API_BASE: Optional[str] = None
-    EMBEDDING_MODEL: Optional[str] = "text-embedding-3-small"
+    EMBEDDING_MODEL: Optional[str] = ""
     LITELLM_LOCAL_MODEL_COST_MAP: bool = True
     LITELLM_TELEMETRY: bool = False
 
@@ -26,6 +27,8 @@ class Settings(BaseSettings):
     APP_PORT: int = 8000
     ADMINER_PORT: int = 8080
     LOG_LEVEL: str = "INFO"
+    # Optional: when set, state-changing admin requests must send it in the X-Admin-Token header.
+    ADMIN_TOKEN: str = ""
 
     @property
     def effective_db_url(self) -> str:

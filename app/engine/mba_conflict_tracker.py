@@ -60,10 +60,12 @@ class MBAConflictTrackerEngine:
         student_state = self.student_checklist_state.setdefault(student_id, {})
 
         items: List[Dict[str, Any]] = []
-        for chk in self.repo.application_checklist_items.values():
-            # Check applicability
-            applies = chk.applies_to.upper()
-            if applies != "ALL" and applies != norm_cat:
+        for chk in self.repo.application_checklist_items:  # a list (calling .values() crashed every request)
+            # `applies_to` in the seed is descriptive text ("All programmes", "Only if claiming a category", ...), not a
+            # category code, so matching it against "ALL" / the category dropped every item. Show each item with its
+            # applicability note; the only case the data lets us decide is the category certificate for GEN.
+            applies = chk.applies_to.lower()
+            if "claiming a category" in applies and norm_cat == "GEN":
                 continue
 
             is_done = student_state.get(chk.id, False)
@@ -88,6 +90,8 @@ class MBAConflictTrackerEngine:
         """
         Toggles completion state of a student application document checklist item.
         """
+        if not any(chk.id == item_id for chk in self.repo.application_checklist_items):
+            raise KeyError(f"Unknown checklist item {item_id}")
         student_state = self.student_checklist_state.setdefault(student_id, {})
         student_state[item_id] = completed
         return {"student_id": student_id, "item_id": item_id, "completed": completed}
