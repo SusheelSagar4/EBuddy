@@ -9,8 +9,8 @@
 
 | Issue ID | Entity / Field | Description | Proposed Resolution | Status |
 |---|---|---|---|---|
-| `ISSUE_PREREQ_EE6L007` | `kb.course_prerequisite`<br>(`EE6L007`) | Prerequisite is listed as `"Measurement and Electronic Instruments"`, which does not exist in the course table. | Map to `EE3L010` (*Measurement and Instrumentation*) or `EE2L002` (*Transducers, Sensors and Measurement*). | **UNRESOLVED**<br>(Awaiting user decision) |
-| `ISSUE_MME_CURR_03` | `kb.course`<br>(`ML4L001`–`ML4L003`) | Semester VII core courses (*Light metals and alloys*, *Elements of electroceramics*, *Polymers and nanocomposites*) clash with 3 Metallurgical electives (*Joining of metals and alloys*, *Solidification of metals and alloys*, *Electrochemical methods in metallurgy*). | Both courses keep printed `display_code` (`ML4L001`–`003`) and `code_conflict = true`. Distinct surrogate keys assigned (`ML4L001_CORE` vs `ML4L001_ELEC`). Neither course is designated "canonical"; both flagged in data issue register. | **ACKNOWLEDGED & OPEN**<br>(Awaiting departmental clarification) |
+| `ISSUE_PREREQ_EE6L007` | `kb.course_prerequisite`<br>(`EE6L007`) | Prerequisite is listed as `"Measurement and Electronic Instruments"`, which does not exist in the course table. | Team decision: prerequisite set to `EE3L010` (*Measurement and Instrumentation*, the closest course). The official wording is kept as a student-facing note (`data/seed/kb/course_note.csv`). | **RESOLVED**<br>(team decision) |
+| `ISSUE_MME_CURR_03` | `kb.course`<br>(`ML4L001`–`ML4L003`) | Semester VII core courses (*Light metals and alloys*, *Elements of electroceramics*, *Polymers and nanocomposites*) clash with 3 Metallurgical electives (*Joining of metals and alloys*, *Solidification of metals and alloys*, *Electrochemical methods in metallurgy*). | Team decision: keep all six courses under separate internal ids (`ML4L001_CORE` / `ML4L001_ELEC`, ...); codes are never treated as unique (lookups resolve a code to every matching course and refuse ambiguous input); students see "The official curriculum uses this code for two different courses. Please confirm with the department." wherever these courses appear. | **ACKNOWLEDGED & OPEN**<br>(department confirmation still needed) |
 | `ISSUE_MME_SUSPECT_AMOUNT_045` | `kb.research_project`<br>(`PROJ_MM_SPON_14`) | Suspect project amount: ₹ 0.45 Lakhs for UGC-DAE CSR project. May be travel contingency or print typo for ₹45 L or ₹4.5 L. | Flagged `amount_suspect = true`. Preserved as printed. | **UNRESOLVED** |
 | `ISSUE_MME_SUSPECT_AMOUNT_289` | `kb.research_project`<br>(`PROJ_MM_SPON_44`) | Suspect project amount: ₹ 289 Lakhs for DFG Germany project. Likely international consortium funding in Euros rather than direct IIT BBS grant. | Flagged `amount_suspect = true`. Preserved as printed. | **UNRESOLVED** |
 | `ISSUE_MME_DUPLICATE_NAB` | `kb.research_project`<br>(`PROJ_MM_SPON_43`) | Duplicate project entry in source catalog: *Improving damping capacity of cast NAB alloys* listed as row 33 and row 43. | Flagged `duplicate_of = 'PROJ_MM_SPON_33'`. Kept distinct to preserve source numbering. | **UNRESOLVED** |
@@ -19,6 +19,8 @@
 | `ISSUE_FACULTY_NAME_VARIANTS` | `kb.faculty`<br>(SMMME Faculty) | Name variants between catalog and profiles (e.g. *Partha Sarathi De* vs *Partha S. De*, *Rama Krushna Sabat* vs *R. K. Sabat*). | Profiles used as canonical; variants cataloged. | **ACKNOWLEDGED** |
 
 ---
+
+Every discrepancy in section 3 keeps the value listed first in the official source and has a student-facing note in `data/seed/kb/course_note.csv`, shown on the roadmap, the Learn cards and in chat.
 
 ## 2. Curriculum Content Gaps
 

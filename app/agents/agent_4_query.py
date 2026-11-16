@@ -92,14 +92,20 @@ class QueryAdaptationAgent:
         return None
 
     @staticmethod
-    def _plan_item_for_course(context_card: ContextCard, message: str) -> Optional[Dict[str, Any]]:
-        import re
-        codes = re.findall(r"\b[A-Z]{2}\d[A-Z]\d{3}\b", message.upper())
+    def _plan_items_for_course(context_card: ContextCard, message: str) -> Optional[Dict[str, Any]]:
+        """
+        Plan items for the first course code in the message. A printed code is not unique (ML4L001 is a Sem VII core
+        course and an elective), so it is resolved to internal ids and every matching plan item is returned.
+        """
+        from app.kb.course_notes import course_notes
+        codes = re.findall(r"\b[A-Z]{2}\d[A-Z]\d{3}(?:_[A-Z]+)?\b", message.upper())
         for code in codes:
-            for it in context_card.current_plan_items:
-                if it.get("course_id") == code and it.get("item_type") == "course":
-                    return it
-        return {"course_id": codes[0], "_not_in_plan": True} if codes else None
+            ids = set(course_notes.resolve(code))
+            items = [it for it in context_card.current_plan_items
+                     if it.get("item_type") == "course" and it.get("course_id") in ids]
+            if items:
+                return {"code": code, "items": items}
+        return {"code": codes[0], "items": []} if codes else None
 
     def handle_query(
         self,
@@ -226,23 +232,35 @@ class QueryAdaptationAgent:
                 "How can I assist with your coursework or preparations?"
             )
         elif intent == Intent.PLAN_QUERY:
-            item = self._plan_item_for_course(context_card, message)
-            if item and not item.get("_not_in_plan"):
+            found = self._plan_items_for_course(context_card, message)
+            if found and found["items"]:
                 # Grounded "why": quoted from the planner's own structured reason (no generation involved)
-                reason = item.get("reason", {})
-                rules = "; ".join(reason.get("rule_compliance", [])[:3]) or "curriculum rules checked by the validator"
+                from app.kb.course_notes import course_notes
+                blocks = []
+                for item in found["items"]:
+                    reason = item.get("reason", {})
+                    rules = "; ".join(reason.get("rule_compliance", [])[:3]) or "curriculum rules checked by the validator"
+                    notes = "".join(f"\n**Note:** {n['text']}" for n in course_notes.notes_for(item["course_id"]))
+                    blocks.append(
+                        f"**Why {course_notes.display_code(item['course_id'])} {item.get('title') or ''} is on your roadmap "
+                        f"(Semester {item.get('semester_number')}):**\n"
+                        f"{reason.get('why_this', 'Planned by the deterministic planner.')}\n\n"
+                        f"**Rule checks:** {rules}.{notes}")
+                resp_text = ("\n\n".join(blocks) +
+                             "\n*Source: deterministic planner + validator; course code verified in the knowledge base.*"
+                             f"{conflict_note}")
+            elif found:
+                # Not planned, but if the code is a known course, still show its notes from the official sources
+                # (e.g. the duplicate-code warning, or EE6L007's prerequisite wording)
+                from app.kb.course_notes import course_notes
+                known = course_notes.resolve(found["code"])
+                notes = "".join(
+                    f"\n\n**{course_notes.describe(cid)}:**" + "".join(f"\n**Note:** {n['text']}" for n in course_notes.notes_for(cid))
+                    for cid in known if course_notes.notes_for(cid))
                 resp_text = (
-                    f"**Why {item['course_id']} {item.get('title') or ''} is on your roadmap (Semester {item.get('semester_number')}):**\n"
-                    f"{reason.get('why_this', 'Planned by the deterministic planner.')}\n\n"
-                    f"**Rule checks:** {rules}.\n"
-                    f"*Source: deterministic planner + validator; course code verified in the knowledge base.*"
-                    f"{conflict_note}"
-                )
-            elif item and item.get("_not_in_plan"):
-                resp_text = (
-                    f"{item['course_id']} is not in your current roadmap. If you expected it, it may be already completed, "
+                    f"{found['code']} is not in your current roadmap. If you expected it, it may be already completed, "
                     f"an elective option that ranked lower for {context_card.goal_name}, or not in the knowledge base. "
-                    f"Open the Plan screen to see the alternatives considered for each elective slot.{conflict_note}"
+                    f"Open the Plan screen to see the alternatives considered for each elective slot.{notes}{conflict_note}"
                 )
             else:
                 explanation = self.explainer.explain_recommendation("your current curriculum plan", context_card)

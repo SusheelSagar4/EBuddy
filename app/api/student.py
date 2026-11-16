@@ -5,7 +5,7 @@ import uuid
 import logging
 from fastapi import APIRouter, Depends, HTTPException, Query
 from app.api.deps import require_existing_student
-from app.api.validation import validate_new_profile
+from app.api.validation import validate_new_profile, resolve_course_codes
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 
@@ -116,6 +116,7 @@ def onboard(req: OnboardRequest):
     # Same rules as POST /api/v2/students; this route used to accept anything and overwrite existing students
     sid = validate_new_profile(req.student_id, s_name, req.programme_id, req.current_semester, req.cgpa, req.backlogs,
                                g_id, req.completed_course_ids, plan_service.planner.course_info)
+    completed = resolve_course_codes(req.completed_course_ids, plan_service.planner.course_info)
     student = onboarding_service.onboard_student(
         student_id=sid,
         name=s_name,
@@ -126,7 +127,7 @@ def onboard(req: OnboardRequest):
         goal_id=g_id,
         aims_and_aspirations=req.aims_and_aspirations,
         target_timeline=req.target_timeline,
-        completed_course_ids=req.completed_course_ids,
+        completed_course_ids=completed,
         constraints=req.constraints,
         preferences=req.preferences
     )

@@ -1,16 +1,19 @@
 import { api } from '../api/client.js';
-import { esc, badge, skill, needStudent, errorBox, md, link, tagBadges } from '../ui.js';
+import { esc, badge, skill, needStudent, errorBox, md, link, tagBadges, codeWarning, courseNotes } from '../ui.js';
 
 const itemRow = (it) => {
   const r = it.reason || {};
-  const label = it.item_type === 'course' ? `${it.course_id ? esc(it.course_id) + ' ' : ''}${esc(it.title || '')}` : esc(it.title || it.course_id || it.item_id);
+  // printed code (display_code), not the internal id: ML4L001_CORE / ML4L001_ELEC are both printed as ML4L001
+  const code = it.display_code || it.course_id;
+  const label = it.item_type === 'course' ? `${code ? esc(code) + ' ' : ''}${esc(it.title || '')}` : esc(it.title || it.course_id || it.item_id);
   const rules = (r.rule_compliance || []).map((x) => `<li>${esc(x)}</li>`).join('');
   const warn = (r.rule_compliance || []).some((x) => x.includes('WARNING'));
   return `<details class="item-row"><summary>
       <span>${badge(it.item_type, it.item_type === 'remediation' ? 'error' : (it.item_type === 'course' ? 'info' : 'neutral'))} <strong>${label}</strong>
         ${it.credits ? `<span class="muted small">${it.credits} cr</span>` : ''} ${warn ? badge('warning', 'warning') : ''} ${it.planning_status === 'beyond_horizon' ? badge('does not fit before Sem 8', 'error') : ''}</span>
-      <span class="muted small">${it.prep_hours_weekly != null && it.planning_status === 'current' ? `${it.prep_hours_weekly} h/wk • ` : ''}${esc(r.intent || '')} ▾</span></summary>
-    <div class="why"><strong>Why:</strong> ${esc(r.why_this || '')}
+      <span class="muted small">${it.prep_hours_weekly != null && it.planning_status === 'current' ? `${it.prep_hours_weekly} h/wk • ` : ''}${esc(r.intent || '')} ▾</span>
+      ${it.item_type === 'course' ? codeWarning(it.course_notes) : ''}</summary>
+    <div class="why">${it.item_type === 'course' ? courseNotes(it.course_notes) : ''}<strong>Why:</strong> ${esc(r.why_this || '')}
       ${(r.target_skills || []).length ? `<div class="pill-row" style="margin-top:4px;">${r.target_skills.map((s) => badge(skill(s))).join(' ')}</div>` : ''}
       ${(r.prerequisite_for || []).length ? `<div>Unlocks: ${esc(r.prerequisite_for.join(', '))}</div>` : ''}
       ${rules ? `<ul style="margin:4px 0 0 18px;">${rules}</ul>` : ''}${it.url ? `<div>${link(it.url, 'Open resource')}</div>` : ''}</div></details>`;

@@ -1,5 +1,5 @@
 import { api } from '../api/client.js';
-import { esc, badge, skill, needStudent, errorBox, link, md } from '../ui.js';
+import { esc, badge, skill, needStudent, errorBox, link, md, codeWarning, courseNotes } from '../ui.js';
 
 export function renderLearn(container, state) {
   if (!state.studentId) return needStudent(container);
@@ -41,7 +41,8 @@ export function renderLearn(container, state) {
             <div class="small muted">${esc(r.provider || '')} • ${skill(r.target_skill)}</div><div>${r.verified ? link(r.url, 'Open') : ''}</div><div class="small">${esc(r.note || '')}</div></div>`).join('')}</div>` : ''}
 
         <h3 style="margin-top:18px;">This semester's courses</h3>
-        <div class="grid-2">${d.courses.map((c) => `<div class="card"><strong>${esc(c.course_id || '')} ${esc(c.title || '')}</strong> <span class="small muted">${c.credits ?? ''} cr • ${c.weekly_hours ?? '-'} h/wk</span>
+        <div class="grid-2">${d.courses.map((c) => `<div class="card"><strong>${esc(c.display_code || c.course_id || '')} ${esc(c.title || '')}</strong> <span class="small muted">${c.credits ?? ''} cr • ${c.weekly_hours ?? '-'} h/wk</span>
+          ${codeWarning(c.course_notes)}${courseNotes(c.course_notes)}
           <div class="pill-row">${(c.skills || []).map((s) => badge(skill(s))).join(' ')}</div>
           ${c.primary ? `<div>${link(c.primary.url, c.primary.title)} <span class="small muted">${esc(c.primary.provider)} • ${esc(c.primary.coverage_status)}</span></div>` : '<div class="small muted">No lecture resource in the knowledge base for this course.</div>'}
           ${c.backups.length ? `<details><summary class="small">Alternative resources (${c.backups.length})</summary>${c.backups.map((b) => `<div class="small">${link(b.url, b.title)}</div>`).join('')}</details>` : ''}</div>`).join('') || '<p class="muted">No courses this semester.</p>'}</div>`;

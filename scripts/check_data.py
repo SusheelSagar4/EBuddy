@@ -241,7 +241,8 @@ def run_data_checks(release_mode: bool = False) -> bool:
             open_issues.append(r)
 
     # All High severity issues
-    all_high_issues = [i for i in open_issues if i["severity"] == "high"]
+    # high-severity entries that are still open (a team decision marks an entry "resolved"; the row is kept as history)
+    all_high_issues = [i for i in open_issues if i["severity"] == "high" and i["status"].strip().lower() != "resolved"]
     report_lines.append("\n## 6. Open Data Issues Register")
     report_lines.append(f"- **Total Cataloged Issues:** {len(open_issues)}")
     report_lines.append(f"- **High-Severity Blockers:** {len(all_high_issues)}")

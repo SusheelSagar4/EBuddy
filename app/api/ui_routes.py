@@ -65,15 +65,19 @@ def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]
     enriched_items = []
     total_credits = 0.0
 
+    from app.kb.course_notes import course_notes
     for it in items:
         cid = it.get("course_id")
         course = course_repo.get_by_id(cid) if cid else None
-        
+        is_course = it.get("item_type") == "course" and course is not None
+
         status = "draft_for_review"
         credits = 0.0
-        title = "Self-Directed Activity"
-        
-        if course:
+        title = it.get("title") or "Self-Directed Activity"
+
+        if is_course:
+            # Only course items carry credits. Exercises and remediation linked to a course used to be counted again
+            # (inflating total credits) and had their own titles replaced by the course title.
             status = getattr(course, "status", "verified")
             credits = float(getattr(course, "credits", 0.0))
             title = course.title
@@ -86,7 +90,9 @@ def _decorate_plan(plan_dict: Dict[str, Any], student_id: str) -> Dict[str, Any]
         enriched["title"] = title
         enriched["credits"] = credits
         enriched["status"] = status
-        enriched["kb_code"] = cid or ex_id or res_id or "N/A"
+        # printed code for courses (codes are not unique: ML4L001-ML4L003) + official-source notes
+        enriched["kb_code"] = (course_notes.display_code(cid) if is_course else None) or cid or ex_id or res_id or "N/A"
+        enriched["course_notes"] = course_notes.notes_for(cid) if is_course else []
         enriched_items.append(enriched)
 
     # Group by semester

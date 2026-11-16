@@ -1,10 +1,11 @@
 """Validation shared by the two profile-creation routes (POST /api/v2/students and POST /api/student/onboard)."""
 import re
-from typing import Iterable, Optional
+from typing import Iterable, List, Optional
 
 from fastapi import HTTPException
 
 from app.services.onboarding_service import onboarding_service
+from app.kb.course_notes import course_notes
 
 STUDENT_ID = re.compile(r"[A-Za-z0-9_-]{3,40}")
 PROGRAMMES = {"BTECH_EE", "BTECH_MM"}
@@ -39,7 +40,28 @@ def validate_new_profile(student_id: str, name: Optional[str], programme_id: str
         raise HTTPException(status_code=400, detail="name must be at most 120 characters")
     if goal_id is not None and onboarding_service.goal_repo.get_by_id(goal_id) is None:
         raise HTTPException(status_code=400, detail=f"Unknown goal {goal_id}")
-    unknown = [c for c in (completed_course_ids or []) if c not in known_courses]
+    resolve_course_codes(completed_course_ids, known_courses)  # raises 400 for unknown / ambiguous codes
+    return sid
+
+
+def resolve_course_codes(codes: Optional[Iterable[str]], known_courses) -> List[str]:
+    """
+    Maps what a student typed (printed code, internal id or a known alternative name/code) to internal course ids.
+    A printed code is not unique (ML4L001 is both a Sem VII core course and an elective), so an ambiguous code is
+    refused with the options instead of picking one silently.
+    """
+    resolved, unknown, ambiguous = [], [], []
+    for raw in codes or []:
+        ids = [cid for cid in course_notes.resolve(raw) if cid in known_courses]
+        if not ids:
+            unknown.append(raw)
+        elif len(ids) > 1:
+            ambiguous.append(f"{raw} is used for {' and for '.join(course_notes.describe(i) + ' (id ' + i + ')' for i in ids)}")
+        elif ids[0] not in resolved:
+            resolved.append(ids[0])
     if unknown:
         raise HTTPException(status_code=400, detail=f"Unknown course code(s): {', '.join(unknown)}. Use codes from the catalogue.")
-    return sid
+    if ambiguous:
+        raise HTTPException(status_code=400, detail=("The official curriculum uses the same code for two different courses: "
+                                                     + "; ".join(ambiguous) + ". Give the course id instead."))
+    return resolved

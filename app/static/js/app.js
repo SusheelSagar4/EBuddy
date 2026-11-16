@@ -265,6 +265,11 @@ const EBuddy = {
                   <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">${escapeHtml(it.credits)} Credits</span>
                 </div>
 
+                ${(it.course_notes || []).map(n => `
+                  <div class="alert ${n.type === 'code_conflict' ? 'alert-warning' : 'alert-info'}" style="margin-top: 8px; font-size: 0.85rem;">
+                    ${n.type === 'code_conflict' ? '⚠ ' : '<strong>Note from the official curriculum:</strong> '}${escapeHtml(n.text)}
+                  </div>`).join("")}
+
                 <div style="margin-top: 8px; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;">
                   <strong>Why this course:</strong> ${escapeHtml(it.reason?.why_this || it.reason?.intent || 'Curriculum Requirement')}
                 </div>

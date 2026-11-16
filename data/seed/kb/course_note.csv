@@ -1,0 +1,16 @@
+note_id,course_id,note_type,note_text,source_id,issue_id
+NOTE_EE6L007_PREREQ,EE6L007,prerequisite_wording,"The official curriculum writes this course's prerequisite as ""Measurement and Electronic Instruments"", which is not the name of any course. This app uses EE3L010 Measurement and Instrumentation, the closest course. Please confirm with the department.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_PREREQ_EE6L007
+NOTE_ML4L001_CORE_CLASH,ML4L001_CORE,code_conflict,The official curriculum uses this code for two different courses. Please confirm with the department.,IITBBS_MME_CURRICULUM_2016_17,ISSUE_MME_CURR_03
+NOTE_ML4L002_CORE_CLASH,ML4L002_CORE,code_conflict,The official curriculum uses this code for two different courses. Please confirm with the department.,IITBBS_MME_CURRICULUM_2016_17,ISSUE_MME_CURR_03
+NOTE_ML4L003_CORE_CLASH,ML4L003_CORE,code_conflict,The official curriculum uses this code for two different courses. Please confirm with the department.,IITBBS_MME_CURRICULUM_2016_17,ISSUE_MME_CURR_03
+NOTE_ML4L001_ELEC_CLASH,ML4L001_ELEC,code_conflict,The official curriculum uses this code for two different courses. Please confirm with the department.,IITBBS_MME_CURRICULUM_2016_17,ISSUE_MME_CURR_03
+NOTE_ML4L002_ELEC_CLASH,ML4L002_ELEC,code_conflict,The official curriculum uses this code for two different courses. Please confirm with the department.,IITBBS_MME_CURRICULUM_2016_17,ISSUE_MME_CURR_03
+NOTE_ML4L003_ELEC_CLASH,ML4L003_ELEC,code_conflict,The official curriculum uses this code for two different courses. Please confirm with the department.,IITBBS_MME_CURRICULUM_2016_17,ISSUE_MME_CURR_03
+NOTE_EE2L003_CODE,EE2L003,code_discrepancy,"The semester table lists Electric Machines as EE2L003, but its syllabus section gives EE3L001. This app uses EE2L003.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_CURR_01
+NOTE_EE3L003_CREDITS,EE3L003,credit_discrepancy,"The semester table lists this course as 3-1-0, 4 credits, but the syllabus header says 3 credits. This app uses 4 credits.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_CURR_02
+NOTE_EE4L005_CREDITS,EE4L005,credit_discrepancy,"The semester table lists this course as 3-0-0, 3 credits, but the syllabus says 3-1-0, 4 credits. This app uses 3 credits.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_CURR_03
+NOTE_EE4L006_CREDITS,EE4L006,credit_discrepancy,"The semester table lists this course as 3-0-0, 3 credits, but the syllabus says 3-1-0, 4 credits. This app uses 3 credits.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_CURR_04
+NOTE_EC6L002_CREDITS,EC6L002,credit_discrepancy,"The elective list gives this course as 3-1-0, 4 credits, but the syllabus says 3-0-0, 3 credits. This app uses 4 credits.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_CURR_05
+NOTE_EC4L003_NAME,EC4L003,name_discrepancy,"The syllabus also calls this course ""Introduction to VLSI Design"". This app uses the elective-list name, VLSI Design.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_CURR_06
+NOTE_EC6L023_NAME,EC6L023,name_discrepancy,"The syllabus also calls this course ""Adaptive Digital Signal Processing"". This app uses the elective-list name, Adaptive Signal Processing.",IITBBS_EE_CURRICULUM_2016_17,ISSUE_CURR_07
+NOTE_ID2L003_CODE,ID2L003,code_discrepancy,"The Metallurgy curriculum prints this course as ID2L003 in one table and ID3L003 in another. This app uses ID2L003.",IITBBS_MME_CURRICULUM_2016_17,ISSUE_MME_CURR_04

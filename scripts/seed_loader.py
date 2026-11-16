@@ -324,6 +324,7 @@ def load_all_seeds(conn):
         (load_csv, os.path.join(seed_kb, "programme.csv"), "kb.programme"),
         (load_csv, os.path.join(seed_kb, "course.csv"), "kb.course"),
         (load_csv, os.path.join(seed_kb, "course_alias.csv"), "kb.course_alias"),
+        (load_csv, os.path.join(seed_kb, "course_note.csv"), "kb.course_note"),
         (load_csv, os.path.join(seed_kb, "course_prerequisite.csv"), "kb.course_prerequisite"),
         (load_csv, os.path.join(seed_kb, "course_offering.csv"), "kb.course_offering"),
         (load_csv, os.path.join(seed_kb, "programme_requirement.csv"), "kb.programme_requirement"),
@@ -458,7 +459,7 @@ def load_all_seeds(conn):
     print("\n--- Verified PostgreSQL Database Row Counts ---")
     verified_tables = [
         "kb.source", "kb.department", "kb.programme", "kb.course",
-        "kb.course_alias", "kb.course_prerequisite", "kb.course_offering",
+        "kb.course_alias", "kb.course_note", "kb.course_prerequisite", "kb.course_offering",
         "kb.programme_requirement", "kb.slot_option", "kb.minor",
         "kb.minor_course", "kb.academic_rule", "kb.skill",
         "kb.resource", "kb.resource_course", "kb.goal",

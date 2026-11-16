@@ -17,7 +17,8 @@ from app.services.plan_service import plan_service
 from app.services.mastery_service import mastery_service
 from app.engine.skill_state import reliability_tier_for, TIER_WEIGHTS, SOURCE_WEIGHTS
 from app.db import persistence
-from app.api.validation import validate_new_profile
+from app.api.validation import validate_new_profile, resolve_course_codes
+from app.kb.course_notes import course_notes
 
 router = APIRouter(prefix="/api/v2", tags=["Learning Buddy v2"])
 
@@ -154,8 +155,8 @@ def create_student(req: NewStudentRequest):
     sid = validate_new_profile(req.student_id, req.name, req.programme_id, req.current_semester, req.cgpa, req.backlogs,
                                req.goal_id, req.completed_course_ids, plan_service.planner.course_info,
                                req.weekly_hours_cap, req.credit_cap)
-    if req.student_id != sid:
-        req = req.model_copy(update={"student_id": sid})
+    completed = resolve_course_codes(req.completed_course_ids, plan_service.planner.course_info)
+    req = req.model_copy(update={"student_id": sid, "completed_course_ids": completed})
     cons = []
     if req.weekly_hours_cap:
         cons.append({"constraint_type": "weekly_hours", "parameters": {"max_hours": req.weekly_hours_cap}})
@@ -212,6 +213,10 @@ def get_plan(student_id: str):
         d = sems.setdefault(s, {"semester_number": s, "is_current": s == st.current_semester, "credits": 0.0,
                                 "courses": [], "practice": [], "goal_items": [], "remediation": []})
         row = it.model_dump()
+        if it.course_id:
+            # printed code (codes are not unique) + official-source notes such as the duplicate-code warning
+            row["display_code"] = course_notes.display_code(it.course_id)
+            row["course_notes"] = course_notes.notes_for(it.course_id)
         if it.item_type == "course":
             d["courses"].append(row)
             d["credits"] += it.credits or 0.0
@@ -264,7 +269,8 @@ def learn(student_id: str):
         prim = planner.resource_repo.get_primary_resource_for_course(it.course_id)
         backs = planner.resource_repo.get_backup_resources_for_course(it.course_id)
         course_cards.append({
-            "course_id": it.course_id, "title": it.title, "credits": it.credits, "why": it.reason.why_this,
+            "course_id": it.course_id, "display_code": course_notes.display_code(it.course_id),
+            "course_notes": course_notes.notes_for(it.course_id), "title": it.title, "credits": it.credits, "why": it.reason.why_this,
             "skills": it.reason.target_skills, "weekly_hours": it.prep_hours_weekly,
             "primary": ({"resource_id": prim.resource_id, "title": prim.title, "provider": prim.provider, "url": prim.url,
                          "coverage_status": prim.coverage_status, "link_verified": prim.link_verified} if prim else None),

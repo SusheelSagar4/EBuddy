@@ -10,7 +10,7 @@
 - **Courses Flagged with code_conflict = true:** 6 (Expected 6: ML4L001/002/003 core vs electives)
 
 ## 2. Prerequisite Graph & DAG Verification
-- **Total Directed Edges:** 64
+- **Total Directed Edges:** 65
 - **Acyclicity Check (DAG Property):** PASSED (Zero cycles detected)
 - **Track-Aware Temporal Ordering:** PASSED (0 violations)
 
@@ -31,8 +31,7 @@
 
 ## 6. Open Data Issues Register
 - **Total Cataloged Issues:** 38
-- **High-Severity Blockers:** 2
-  - **ISSUE_PREREQ_EE6L007** [UNRESOLVED] `EE6L007`: Prerequisite 'Measurement and Electronic Instruments' matches no course name in curriculum semester table.
+- **High-Severity Blockers:** 1
   - **ISSUE_MME_CURR_03** [ACKNOWLEDGED] `Duplicate codes ML4L001–ML4L003`: Sem VII core courses (Light metals and alloys, Elements of electroceramics, Polymers and nanocomposites) use the same codes as three Metallurgical electives (Joining of metals and alloys, Solidification of metals and alloys, Electrochemical methods in metallurgy).
 
 ## 7. Status & Placeholder Audit Across All Tables

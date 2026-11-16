@@ -22,4 +22,10 @@ export const needStudent = (container) => {
 export const link = (url, label) => url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>` : `<span class="text-muted">${esc(label)} (no link in knowledge base)</span>`;
 export const errorBox = (err) => `<div class="alert alert-error"><p>${esc(err.message || err)}</p></div>`;
 export const md = (text) => esc(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>');
+// Notes from the official sources (course_note.csv). The duplicate-code warning is shown on the visible line;
+// codeWarning() returns just that warning, courseNotes() renders every note for a course's details.
+export const codeWarning = (notes) => (notes || []).filter((n) => n.type === 'code_conflict')
+  .map((n) => `<div class="alert alert-warning small" style="margin:4px 0;">⚠ ${esc(n.text)}</div>`).join('');
+export const courseNotes = (notes) => (notes || []).filter((n) => n.type !== 'code_conflict')
+  .map((n) => `<div class="alert alert-info small" style="margin:4px 0;"><strong>Note from the official curriculum:</strong> ${esc(n.text)}</div>`).join('');
 export const tierBadge = (tier) => badge(`${tier} evidence`, tier === 'strong' ? 'success' : (tier === 'weak' ? 'warning' : 'info'));

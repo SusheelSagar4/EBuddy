@@ -65,6 +65,17 @@ CREATE TABLE IF NOT EXISTS kb.course_alias (
     target_course_id VARCHAR(50) REFERENCES kb.course(course_id) ON DELETE CASCADE
 );
 
+-- Student-facing notes where the official curriculum is inconsistent (duplicate codes, conflicting credits /
+-- codes / names, a prerequisite that names no course). The chosen value stays in kb.course; the note says so.
+CREATE TABLE IF NOT EXISTS kb.course_note (
+    note_id VARCHAR(100) PRIMARY KEY,
+    course_id VARCHAR(50) NOT NULL REFERENCES kb.course(course_id) ON DELETE CASCADE,
+    note_type VARCHAR(50) NOT NULL, -- code_conflict, prerequisite_wording, code_discrepancy, credit_discrepancy, name_discrepancy
+    note_text TEXT NOT NULL,
+    source_id VARCHAR(100) REFERENCES kb.source(source_id),
+    issue_id VARCHAR(100)
+);
+
 CREATE TABLE IF NOT EXISTS kb.course_prerequisite (
     course_id VARCHAR(50) REFERENCES kb.course(course_id) ON DELETE CASCADE,
     prereq_id VARCHAR(50) REFERENCES kb.course(course_id) ON DELETE CASCADE,

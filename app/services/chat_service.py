@@ -144,16 +144,25 @@ class ChatService:
         """
         msg_upper = message.upper()
 
-        # 1. Course lookup side question (e.g., "What is EE2L001?")
-        for cid, cinfo in self.course_repo._courses.items():
-            if cid in msg_upper or cinfo.display_code in msg_upper:
-                return (
-                    f"**Course Information ({cinfo.display_code} - {cinfo.title}):**\n"
-                    f"- **Credits:** {cinfo.credits} | **L-T-P:** {cinfo.ltp or '3-0-0'}\n"
-                    f"- **Level:** {cinfo.level} | **Mode:** {cinfo.mode.capitalize()}\n"
-                    f"- **Citation:** {cinfo.student_citation()}\n\n"
-                    f"*(This was a side inquiry. Your active Version {pinned['plan_version']} study plan remains unchanged.)*"
-                )
+        # 1. Course lookup side question (e.g., "What is EE2L001?"). A printed code can name two courses
+        #    (ML4L001-ML4L003), so every course behind each code is described, each with its notes.
+        from app.kb.course_notes import course_notes
+        found: List[str] = []
+        for code in dict.fromkeys(re.findall(r"\b[A-Z]{2}\d[A-Z]\d{3}(?:_[A-Z]+)?\b", msg_upper)):
+            for cid in course_notes.resolve(code):
+                if cid in self.course_repo._courses and cid not in found:
+                    found.append(cid)
+        if found:
+            blocks = []
+            for cid in found:
+                cinfo = self.course_repo._courses[cid]
+                lines = [f"**Course Information ({cinfo.display_code} - {cinfo.title}):**",
+                         f"- **Credits:** {cinfo.credits} | **L-T-P:** {cinfo.ltp or 'not recorded'}",
+                         f"- **Level:** {cinfo.level} | **Mode:** {cinfo.mode.capitalize()}"]
+                lines += [f"- **Note:** {n['text']}" for n in course_notes.notes_for(cid)]
+                blocks.append("\n".join(lines))
+            return ("\n\n".join(blocks) +
+                    f"\n\n*(This was a side inquiry. Your active Version {pinned['plan_version']} study plan remains unchanged.)*")
 
         # 2. Faculty lookup side question (e.g., "Tell me about Dr. Abhik Jana")
         msg_lower = message.lower()
