@@ -251,21 +251,30 @@ def submit_diagnostic(student_id: str, req: DiagnosticSubmissionRequest):
         "results": results
     }
 
+@router.post("/{student_id}/learn/submit")
 @router.post("/{student_id}/micro-task/submit")
 def submit_micro_task(student_id: str, req: MicroTaskSubmission):
-    is_correct = len(req.student_answer.strip()) > 3
-    diagnostic_service.record_answer(
-        student_id=student_id,
+    ex = Exercise(
         exercise_id=req.exercise_id or f"EX_TASK_{uuid.uuid4().hex[:6]}",
         skill_id=req.skill_id,
-        is_correct=is_correct,
-        difficulty=0.7
+        title="Micro-Task Check-in",
+        question_text="Active problem check-in",
+        exercise_type="mcq",
+        options=[],
+        correct_answer="",
+        status="draft_for_review",
+        source_id="SYNTHETIC_EXERCISE"
     )
+    res = roadmap_orchestrator.submit_assessment(student_id, ex, req.student_answer)
+    passed = res.get("passed", res.get("score", 0.0) >= 50.0)
     return {
         "status": "success",
+        "passed": passed,
         "skill_id": req.skill_id,
-        "feedback": "Correct reasoning verified." if is_correct else "Review key concept definitions.",
-        "points_earned": 10 if is_correct else 2
+        "score": res.get("score", 80.0),
+        "feedback": "Correct reasoning verified." if passed else "Review key concept definitions.",
+        "points_earned": 10 if passed else 2,
+        "diff_summary": "Adaptive checkpoint updated."
     }
 
 @router.post("/{student_id}/plan")

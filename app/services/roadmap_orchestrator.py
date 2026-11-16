@@ -241,6 +241,18 @@ class RoadmapOrchestrator:
         """Invokes Agent 2 to recommend today's verified resources from the KB."""
         current_plan = plan_service.get_plan(student_id)
         if not current_plan:
+            active_g = onboarding_service.goals.get(student_id)
+            gid = active_g.goal_id if active_g else None
+            if not gid:
+                from app.services.onboarding_service import get_student_db_goal
+                gid = get_student_db_goal(student_id)
+            if not gid:
+                student = onboarding_service.students.get(student_id)
+                gid = "GOAL_MM_PROCESS_ENGINEER" if (student and "MM" in student.programme_id) else "GOAL_EE_CORE_POWER"
+            onboarding_service.ensure_student_onboarded(student_id, gid)
+            self.create_initial_roadmap(student_id, gid)
+            current_plan = plan_service.get_plan(student_id, gid) or plan_service.get_plan(student_id)
+        if not current_plan:
             raise ValueError(f"No active plan found for student {student_id}")
 
         states = {s.skill_id: s for s in diagnostic_service.skill_states.get(student_id, [])}

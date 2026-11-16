@@ -33,6 +33,10 @@ print(f"[PASS] 3. GET /roadmap -> Status: {status} | Size: {len(body)} bytes")
 status, body = test_endpoint(f"{base_url}/goals")
 print(f"[PASS] 4. GET /goals -> Status: {status} | Size: {len(body)} bytes")
 
+# 4b. Legacy Web SPA (#learn)
+status, body = test_endpoint(f"{base_url}/legacy-web/")
+print(f"[PASS] 4b. GET /legacy-web/ (SPA) -> Status: {status} | Size: {len(body)} bytes")
+
 # 5. Onboard student
 onboard_payload = {
     "student_id": "SMOKE_TEST_STU_01",
