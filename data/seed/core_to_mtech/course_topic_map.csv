@@ -1,8 +1,8 @@
 id,course_code,topic_id,coverage,reviewed_by,source_url,source_type,retrieved_on,cycle,verified,verified_by
 SAMPLE-MAP-1,EE2L001,SAMPLE-TOPIC-EE-CIRCUITS,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
 SAMPLE-MAP-2,EE2L002,SAMPLE-TOPIC-EE-SIGNALS,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
-SAMPLE-MAP-3,EE3L001,SAMPLE-TOPIC-EE-MACHINES,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
-SAMPLE-MAP-4,EE3L002,SAMPLE-TOPIC-EE-POWER,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
+SAMPLE-MAP-3,EE2L003,SAMPLE-TOPIC-EE-MACHINES,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
+SAMPLE-MAP-4,EE3L007,SAMPLE-TOPIC-EE-POWER,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
 SAMPLE-MAP-5,EE3L003,SAMPLE-TOPIC-EE-CONTROL,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
 SAMPLE-MAP-6,EE3L004,SAMPLE-TOPIC-EE-POWER-ELEC,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,
 SAMPLE-MAP-7,EE2L004,SAMPLE-TOPIC-EE-ANALOG,full,SAMPLE-Curriculum Committee,https://www.iitbbs.ac.in/academic-curriculum,official,2026-11-14,2027,FALSE,

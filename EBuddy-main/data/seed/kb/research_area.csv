@@ -1,0 +1,13 @@
+area_id,name
+AREA_PWR,Power Systems & Energy
+AREA_PED,Power Electronics & Drives
+AREA_CSP,Communications & Signal Processing
+AREA_RMA,"RF, Microwave & Antennas"
+AREA_VLS,"VLSI, Devices & Sensors"
+AREA_CTL,Control Systems
+AREA_MM_PROC,Process Metallurgy & Iron/Steelmaking
+AREA_MM_PHYS,"Physical Metallurgy, Thin Films & High Entropy Alloys"
+AREA_MM_MECH,Mechanical Metallurgy & Additive Manufacturing
+AREA_MM_BIO,Biomaterials & Tissue Scaffold Engineering
+AREA_MM_ENG,"Energy Materials, Batteries & Thermoelectrics"
+AREA_MM_MIN,"Mineral Processing, Recycling & Corrosion"

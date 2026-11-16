@@ -1,0 +1,18 @@
+- semester_target: 3
+  title: First 50 problems and Git workflow
+  description: Solve 50 easy problems in one language and keep every solution in a public Git repository.
+- semester_target: 4
+  title: DSA foundations checkpoint
+  description: Pass the DSA foundations checkpoint (timed set at 70% or better) and enter one beginner-friendly hackathon.
+- semester_target: 5
+  title: Internship applications
+  description: Resume with one portfolio project; apply for summer internships. Institute placement-cell dates are not confirmed yet - check the official notice.
+- semester_target: 6
+  title: Portfolio project 1 reviewed
+  description: One portfolio project from the track knowledge base reviewed against its rubric by a peer or mentor.
+- semester_target: 7
+  title: Mock interview readiness
+  description: At least 2 timed mock interviews (DSA + CS core) with written feedback before the placement season.
+- semester_target: 8
+  title: Offer decision or continued preparation
+  description: Record the outcome and, if needed, a continued-preparation plan.

@@ -1,0 +1,42 @@
+# CODEOWNERS — Personalised Learning Buddy (IIT Bhubaneswar)
+# Clear folder-level ownership to eliminate merge collisions across teammates.
+
+# Shared Core Contracts (Requires contract-change review)
+/app/contracts/             @team-lead @contracts-owner
+
+# Core Engine Modules
+/app/engine/                @core-engine-lead
+/app/engine/rules.py        @academic-regulations-owner
+/app/engine/planner.py      @planner-owner
+/app/engine/skill_state.py  @adapt-mastery-owner
+/app/engine/mastery.py      @adapt-mastery-owner
+/app/engine/diagnostic.py   @adapt-mastery-owner
+
+# LLM Gateway & Tasks
+/app/llm/                   @llm-lead
+/app/llm/client.py          @llm-lead
+/app/llm/tasks/             @llm-tasks-owner
+
+# Knowledge Base & Ingestion
+/data/                      @data-lead
+/data/raw/                  @data-lead
+/data/seed/kb/              @data-lead
+/app/kb/                    @data-lead
+/scripts/ingest_*           @data-lead
+
+# Persona Plugins (Owned per persona author)
+/app/personas/ee_power_core/        @persona-ee-power-owner
+/app/personas/ee_embedded_vlsi/     @persona-ee-vlsi-owner
+/app/personas/ee_gate/              @persona-ee-gate-owner
+/app/personas/mme_core_extractive/  @persona-mme-core-owner
+
+# Web Frontend Shell
+/web/                       @frontend-lead
+/docs/product/ux_design.md  @frontend-lead
+
+# Product, Surveys & Conformance Evaluation
+/docs/product/              @product-lead
+/docs/survey/               @product-lead
+/docs/evaluation/           @eval-lead
+/tests/conformance/         @eval-lead
+

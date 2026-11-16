@@ -1,167 +1,61 @@
 import { api } from '../api/client.js';
+import { esc, badge, skill, needStudent, errorBox, link, md } from '../ui.js';
 
-export function renderLearn(container, state, navigate) {
-  if (!state.studentId) {
-    container.innerHTML = `
-      <div class="screen-card alert-warning">
-        <p>Please complete onboarding first.</p>
-        <button class="btn btn-primary" onclick="window.location.hash='#onboard'">Go to Onboarding</button>
-      </div>
-    `;
-    return;
-  }
+export function renderLearn(container, state) {
+  if (!state.studentId) return needStudent(container);
+  container.innerHTML = `<div class="screen-card"><div id="learn-body" class="loading-state">Loading resources from the knowledge base...</div></div>`;
+  load();
 
-  container.innerHTML = `
-    <div class="screen-card">
-      <div class="screen-header flex-between" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <h2>Daily Learning & Resources (Agent 2)</h2>
-          <p class="subtitle">Study core modules via verified NPTEL playlists, then take check-in tasks to adaptively guide your plan.</p>
-        </div>
-        <button class="btn btn-outline" onclick="window.location.hash='#plan'">← View Academic Roadmap</button>
-      </div>
-
-      <div id="learn-loading" class="loading-state">Loading today's curated materials from Knowledge Base...</div>
-      <div id="learn-content" style="display: none;"></div>
-    </div>
-  `;
-
-  loadLearnData();
-
-  async function loadLearnData() {
-    const loading = document.getElementById('learn-loading');
-    const content = document.getElementById('learn-content');
-
+  async function load() {
+    const body = document.getElementById('learn-body');
     try {
-      const [todayData, learnData] = await Promise.all([
-        api.getLearnToday(state.studentId).catch(() => null),
-        api.getLearn(state.studentId).catch(() => null)
-      ]);
+      const d = await api.getLearnV2(state.studentId);
+      const t = d.track; const ph = t && t.current_phase; const ps = d.persona;
+      body.className = '';
+      body.innerHTML = `
+        <div class="screen-header"><h2>Learn &amp; practise - ${esc(d.goal_name)}</h2><p class="subtitle">${esc(d.disclaimer)}</p></div>
+        ${d.remediation.length ? `<h3>Remedial foundation first</h3>${d.remediation.map((r) => `<div class="alert alert-warning"><strong>${esc(r.title)}</strong><br/><span class="small">${esc(r.reason.why_this)}</span>${r.url ? `<div>${link(r.url, 'Open the course lectures')}</div>` : ''}</div>`).join('')}` : ''}
 
-      loading.style.display = 'none';
-      content.style.display = 'block';
+        ${t ? `<h3 style="margin-top:8px;">${esc(t.track_name)} track ${ph ? `- phase ${ph.order}: ${esc(ph.name)}` : '- all phases demonstrated'}</h3>
+          ${ph ? `<p class="small">${esc(ph.objective)} <span class="muted">(~${ph.est_hours} h${ph.hours_basis !== 'source' ? ', design default' : ''}; checkpoint pass mark ${ph.pass_threshold_pct}%)</span></p>
+          <div class="grid-2">
+            <div><h4>Resource cards</h4>${ph.resources.map((r) => `<div class="card" style="margin-bottom:8px;"><strong>${esc(r.title)}</strong>
+              <div class="small muted">${esc(r.provider || 'provider not stated')} • ${esc(r.topic || '')} ${r.tier ? badge(r.tier) : ''}</div><div class="small">${esc((r.usage_guidance || '').slice(0, 140))}</div><div>${link(r.url, 'Open')}</div></div>`).join('') || '<p class="muted">No resources for this phase.</p>'}</div>
+            <div><h4>Checkpoints (how you demonstrate it)</h4><ul style="margin-left:18px;">${ph.checkpoints.map((c) => `<li class="small">${esc(c.text)} ${c.type ? badge(c.type) : ''}</li>`).join('')}</ul>
+              ${ph.projects.length ? `<h4 style="margin-top:10px;">Portfolio projects</h4>${ph.projects.map((p) => `<div class="card" style="margin-bottom:8px;"><strong>${esc(p.title)}</strong><div class="small">${esc(p.why)}</div>${(p.rubric || []).length ? `<div class="small muted">Rubric: ${esc(p.rubric.join('; '))}</div>` : ''}</div>`).join('')}` : ''}
+              ${t.practice_problems.length ? `<h4 style="margin-top:10px;">Practice problems</h4><ul style="margin-left:18px;">${t.practice_problems.map((p) => `<li class="small">${link(p.url, p.title)} ${badge(p.difficulty)} <span class="muted">${esc(p.topic)}</span></li>`).join('')}</ul>` : ''}</div>
+          </div>` : ''}
+          ${t.practice_questions.length ? `<h4 style="margin-top:12px;">Quick check (graded; counts as assessed evidence)</h4>${t.practice_questions.map((q) => `<div class="card" style="margin-bottom:8px;" id="q-${esc(q.question_id)}">
+            <div class="small muted">${esc(q.skill)} • difficulty ${q.difficulty_num}/3</div><p>${esc(q.stem)}</p>
+            ${q.options.map((o) => `<label style="display:block;margin:3px 0;"><input type="radio" name="${esc(q.question_id)}" value="${esc(o)}"> ${esc(o)}</label>`).join('')}
+            <button class="btn btn-secondary btn-sm" data-q="${esc(q.question_id)}">Submit</button><div class="fb small"></div></div>`).join('')}` : (t.question_bank_note ? `<p class="small muted">${esc(t.question_bank_note)}</p>` : '')}
+          <h4 style="margin-top:12px;">Hackathons, competitions and fests unlocked for you</h4><p class="small muted">${esc(t.events.message || '')} (${t.events.locked_count} more unlock with later phases)</p>
+          <div class="grid-2">${t.events.events.map((e) => `<div class="card"><strong>${esc(e.name)}</strong> ${badge(e.category)} ${e.is_home_campus ? badge('IIT Bhubaneswar', 'success') : ''}
+            <div class="small muted">${esc(e.organiser)} • expected ${esc(e.window || 'window not stated')}</div><div class="small">Dates are expected windows, not confirmed - check the organiser's page.</div></div>`).join('') || '<p class="muted">Nothing unlocked yet.</p>'}</div>` : ''}
 
-      const resources = todayData?.resources || learnData?.video_resources || [];
-      const exercises = todayData?.exercises || learnData?.practice_exercises || [];
+        ${ps ? `<h3 style="margin-top:18px;">${ps.persona_id === 'student_startup' ? 'Startup roadmap' : 'UPSC roadmap'}</h3>
+          ${ps.advisories.map((a) => `<div class="alert alert-info">${esc(a)}</div>`).join('')}
+          ${ps.incubation_and_club_pointers.length ? `<h4>Incubation and institute pointers</h4><div class="grid-2">${ps.incubation_and_club_pointers.map((r) => `<div class="card"><strong>${esc(r.title)}</strong><div class="small muted">${esc(r.provider)}</div><div>${link(r.url, 'Open official page')}</div><div class="small">${esc(r.note || '')}</div></div>`).join('')}</div>` : ''}
+          <h4 style="margin-top:10px;">Phase-wise milestones</h4><table class="table">${ps.milestones.map((m) => `<tr><td>Sem ${m.semester_target}</td><td><strong>${esc(m.title)}</strong><br/><span class="small">${esc(m.description)}</span></td></tr>`).join('')}</table>
+          <h4 style="margin-top:10px;">Resource cards</h4><div class="grid-2">${ps.resources.map((r) => `<div class="card"><strong>${esc(r.title)}</strong> ${r.verified ? badge('verified', 'success') : badge('not confirmed yet', 'warning')}
+            <div class="small muted">${esc(r.provider || '')} • ${skill(r.target_skill)}</div><div>${r.verified ? link(r.url, 'Open') : ''}</div><div class="small">${esc(r.note || '')}</div></div>`).join('')}</div>` : ''}
 
-      content.innerHTML = `
-        <div class="learn-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-          <!-- Left Column: Open Educational Resources -->
-          <div class="col-resources">
-            <h3 style="margin-bottom: 16px; font-size: 17px; display: flex; align-items: center; gap: 8px;">
-              <span>📺</span> Verified NPTEL & SWAYAM Video Playlists
-            </h3>
-            <p style="font-size: 0.9em; color: #666; margin-bottom: 16px;">
-              ${todayData?.disclaimer || 'All links are sourced from official institutional records (zero hallucination).'}
-            </p>
-            ${resources.length === 0 ? `<p class="text-muted">No external resources scheduled for today's modules.</p>` : `
-              <div class="resources-list" style="display: flex; flex-direction: column; gap: 12px;">
-                ${resources.map(res => `
-                  <div class="resource-card" style="border: 1px solid var(--border-color, #e5e7eb); border-radius: 8px; padding: 14px; background: white;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                      <strong style="font-size: 14px; color: var(--text-primary);">${res.title}</strong>
-                      <span class="badge ${res.coverage_status === 'Playlist found' ? 'badge-success' : 'badge-neutral'}" style="font-size: 11px;">
-                        ${res.coverage_status || 'Verified'}
-                      </span>
-                    </div>
-                    <p class="text-muted" style="font-size: 12.5px; margin: 6px 0 10px 0;">
-                      Provider: <strong>${res.provider || res.platform || 'NPTEL'}</strong> • Course: <strong>${res.display_code || res.course_title || 'Core Requirement'}</strong>
-                    </p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <a href="${res.url || '#'}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-                        Open Lecture Playlist ↗
-                      </a>
-                      <span class="badge badge-info">${res.difficulty || 'Intermediate'}</span>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            `}
-          </div>
+        <h3 style="margin-top:18px;">This semester's courses</h3>
+        <div class="grid-2">${d.courses.map((c) => `<div class="card"><strong>${esc(c.course_id || '')} ${esc(c.title || '')}</strong> <span class="small muted">${c.credits ?? ''} cr • ${c.weekly_hours ?? '-'} h/wk</span>
+          <div class="pill-row">${(c.skills || []).map((s) => badge(skill(s))).join(' ')}</div>
+          ${c.primary ? `<div>${link(c.primary.url, c.primary.title)} <span class="small muted">${esc(c.primary.provider)} • ${esc(c.primary.coverage_status)}</span></div>` : '<div class="small muted">No lecture resource in the knowledge base for this course.</div>'}
+          ${c.backups.length ? `<details><summary class="small">Alternative resources (${c.backups.length})</summary>${c.backups.map((b) => `<div class="small">${link(b.url, b.title)}</div>`).join('')}</details>` : ''}</div>`).join('') || '<p class="muted">No courses this semester.</p>'}</div>`;
 
-          <!-- Right Column: Micro-Tasks & Check-in Quizzes -->
-          <div class="col-tasks">
-            <h3 style="margin-bottom: 16px; font-size: 17px; display: flex; align-items: center; gap: 8px;">
-              <span>✍️</span> Continuous Skill Tasks & Quizzes
-            </h3>
-            <p class="text-muted" style="font-size:0.9em; margin-bottom: 12px;">
-              Practice submissions are evaluated by <strong>Agent 3 (Assessment Agent)</strong>. Insufficient scores trigger a remediation proposal.
-            </p>
-            ${exercises.length > 0 ? `
-              <div class="exercises-list" style="display: flex; flex-direction: column; gap: 16px;">
-                ${exercises.slice(0, 4).map((ex, idx) => `
-                  <div class="exercise-card" style="border: 1px solid var(--border-color, #e5e7eb); border-radius: 8px; padding: 16px; background: white;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                      <span class="badge badge-info" style="font-size: 11px;">Task ${idx + 1}</span>
-                      <span class="badge badge-neutral" style="font-size: 11px;">${(ex.skill_id || '').replace('SKILL_', '')}</span>
-                    </div>
-                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 12px;">${ex.prompt || ex.question_text || 'Demonstrate mastery in core concepts.'}</p>
-                    <form class="micro-task-form" data-ex-id="${ex.exercise_id}" data-skill-id="${ex.skill_id}">
-                      ${ex.options && ex.options.length > 0 ? `
-                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
-                          ${ex.options.map((opt, oIdx) => `
-                            <label style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; cursor: pointer;">
-                              <input type="radio" name="ans_${ex.exercise_id}" value="${opt}" ${oIdx === 0 ? 'checked' : ''} />
-                              <span>${opt}</span>
-                            </label>
-                          `).join('')}
-                        </div>
-                      ` : `
-                        <input type="text" name="ans_${ex.exercise_id}" class="form-control" placeholder="Enter your response..." style="margin-bottom:12px; width:100%;" required />
-                      `}
-                      <button type="submit" class="btn btn-primary" style="font-size: 12.5px; padding: 6px 14px;">Complete Task & Adapt Plan →</button>
-                    </form>
-                    <div class="feedback-area" id="fb_${ex.exercise_id}" style="display: none; margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px;"></div>
-                  </div>
-                `).join('')}
-              </div>
-            ` : `
-              <div style="background:#fcfcfc; border:1px solid #e5e5e5; border-radius:6px; padding:16px;">
-                <strong>Skill Focus: Active Practice</strong>
-                <p style="font-size:0.85em; color:#555; margin:6px 0 12px 0;">Complete diagnostic and check-in tasks to demonstrate mastery.</p>
-                <button class="btn btn-secondary btn-sm" onclick="window.location.hash='#diagnostic'">Take Practice Diagnostic</button>
-              </div>
-            `}
-          </div>
-        </div>
-      `;
-
-      // Attach task submission listeners
-      document.querySelectorAll('.micro-task-form').forEach(form => {
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const exId = form.getAttribute('data-ex-id');
-          const skillId = form.getAttribute('data-skill-id');
-          const radioSel = form.querySelector(`input[name="ans_${exId}"]:checked`);
-          const textInput = form.querySelector(`input[name="ans_${exId}"][type="text"]`);
-          const answerVal = radioSel ? radioSel.value : (textInput ? textInput.value : '');
-          if (!answerVal) return;
-
-          const fbEl = document.getElementById(`fb_${exId}`);
-          try {
-            const res = await api.submitExercise(state.studentId, {
-              skill_id: skillId,
-              exercise_id: exId,
-              student_answer: answerVal
-            });
-
-            fbEl.style.display = 'block';
-            if (res.passed || res.status === 'success') {
-              fbEl.style.background = '#dcfce7';
-              fbEl.style.color = '#15803d';
-              fbEl.innerHTML = `<strong>✓ Topic Mastered!</strong> ${res.feedback || 'Response verified.'}<br/><small>Roadmap updated: ${res.diff_summary || 'Accelerated forward.'}</small>`;
-            } else {
-              fbEl.style.background = '#fee2e2';
-              fbEl.style.color = '#b91c1c';
-              fbEl.innerHTML = `<strong>✕ Remediation Added!</strong> ${res.feedback || 'Foundational gap identified.'}<br/><small>Roadmap updated: ${res.diff_summary || 'Review drills inserted.'}</small>`;
-            }
-          } catch (err) {
-            alert(`Task evaluation failed: ${err.message}`);
-          }
-        });
-      });
-    } catch (err) {
-      loading.innerHTML = `<p class="text-danger">Failed to load learning resources: ${err.message}</p>`;
-    }
+      body.querySelectorAll('button[data-q]').forEach((b) => b.addEventListener('click', async () => {
+        const qid = b.dataset.q; const sel = body.querySelector(`input[name="${qid}"]:checked`);
+        const fb = b.parentElement.querySelector('.fb');
+        if (!sel) { fb.textContent = 'Choose an option first.'; return; }
+        b.disabled = true;
+        try {
+          const r = await api.submitPractice(state.studentId, qid, sel.value);
+          fb.innerHTML = `<div class="alert ${r.is_correct ? 'alert-success' : 'alert-error'}">${r.is_correct ? 'Correct.' : `Not quite. Answer: ${esc(r.correct_answer)}.`} ${esc(r.explanation || '')}<br/>Roadmap v${r.old_version} → v${r.new_version}.<br/>${md(r.what_changed_and_why || '')}</div>`;
+        } catch (err) { fb.innerHTML = errorBox(err); b.disabled = false; }
+      }));
+    } catch (err) { body.className = ''; body.innerHTML = errorBox(err); }
   }
 }

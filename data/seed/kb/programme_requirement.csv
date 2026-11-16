@@ -96,7 +96,7 @@ REQ_EE_EE6L014,BTECH_EE,8,Smart Grid Technology,elective,3.0,3.0,,EE6L014,electi
 REQ_EE_EE6L015,BTECH_EE,8,Advanced High Voltage Engineering,elective,3.0,3.0,,EE6L015,elective,verified,IITBBS_EE_CURRICULUM_2016_17
 REQ_EE_EE6L017,BTECH_EE,8,Distribution System Engineering,elective,3.0,3.0,,EE6L017,elective,verified,IITBBS_EE_CURRICULUM_2016_17
 REQ_EE_EE6L018,BTECH_EE,8,Power System Planning,elective,3.0,3.0,,EE6L018,elective,verified,IITBBS_EE_CURRICULUM_2016_17
-REQ_EE_EC2L005,BTECH_EE,3,Basic Electronics,common_core,4.0,4.0,,EC2L005,common core,verified,IITBBS_EE_CURRICULUM_2016_17
+REQ_EE_EC2L005,BTECH_EE,3,Basic Electronics,common_core,4.0,4.0,,EC2L005,common core,syllabus_only,IITBBS_EE_CURRICULUM_2016_17
 REQ_EE_EC6L004,BTECH_EE,7,Advanced Digital Signal Processing,elective,3.0,3.0,,EC6L004,vertical elective,verified,IITBBS_EE_CURRICULUM_2016_17
 REQ_MM_EC2L005,BTECH_MM,3,Basic Electronics,common_core,4.0,4.0,,EC2L005,common core,verified,IITBBS_MME_CURRICULUM_2016_17
 REQ_MM_ML2L002,BTECH_MM,3,Thermodynamics of Materials,core,3.0,3.0,,ML2L002,core,verified,IITBBS_MME_CURRICULUM_2016_17

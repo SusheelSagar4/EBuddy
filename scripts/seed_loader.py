@@ -62,6 +62,13 @@ def reset_database(conn):
         conn.commit()
     print("Schemas and tables successfully recreated.")
 
+INTEGRITY_WARNINGS: Dict[str, str] = {}
+RESERVED_COLUMN_NAMES = {"order", "user", "group", "limit", "offset", "check", "default"}
+STUDENT_FK_SAMPLE_TABLES = {"student.story_draft", "student.decision_option"}
+
+def fname_for_warning(path: str) -> str:
+    return os.path.basename(path)
+
 def validate_integrity_rules(file_path: str, headers: List[str], rows: List[List[str]]) -> None:
     """
     Enforces PS Data Integrity Rules (§3):
@@ -93,6 +100,15 @@ def validate_integrity_rules(file_path: str, headers: List[str], rows: List[List
                 f"[DATA INTEGRITY VIOLATION] File '{fname}' mixes SAMPLE- rows with real verified rows at line {r_num}! "
                 f"PS Rule: The import script must refuse to load a file that mixes SAMPLE- rows with real rows."
             )
+
+        if v_idx is not None and vby_idx is None:
+            # Legacy table without a verified_by column: the rule cannot be enforced row by row.
+            # Reported once per file as a data-audit warning instead of blocking the whole reset.
+            if str(row[v_idx]).strip().lower() in ["true", "t", "1"] and fname not in INTEGRITY_WARNINGS:
+                INTEGRITY_WARNINGS[fname] = (
+                    "rows are flagged verified=TRUE but the table has no verified_by / source_type columns; "
+                    "treat as 'verified by the ingesting team, verifier not recorded'")
+            continue
 
         if v_idx is not None and v_idx < len(row):
             val_v = str(row[v_idx]).strip().lower()
@@ -130,8 +146,24 @@ def load_csv(conn, file_path: str, table_name: str) -> int:
         validate_integrity_rules(file_path, headers, rows)
 
         placeholders = ", ".join(["%s"] * len(headers))
-        cols = ", ".join(headers)
+        # Quote the few header names that are SQL reserved words (e.g. mba_template_phases.order)
+        cols = ", ".join(f'"{h}"' if h.strip().lower() in RESERVED_COLUMN_NAMES else h for h in headers)
         query = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders});"
+
+        # Student-state sample rows must reference an existing student; orphans are skipped, not invented.
+        if table_name in STUDENT_FK_SAMPLE_TABLES and "student_id" in headers:
+            sid_idx = headers.index("student_id")
+            with conn.cursor() as cur:
+                cur.execute("SELECT student_id FROM student.student")
+                known = {r[0] for r in cur.fetchall()}
+            kept = [r for r in rows if r[sid_idx] in known]
+            if len(kept) != len(rows):
+                INTEGRITY_WARNINGS[fname_for_warning(file_path)] = (
+                    f"{len(rows) - len(kept)} sample row(s) reference a student_id that is not in student.student "
+                    f"(e.g. '{next(r[sid_idx] for r in rows if r[sid_idx] not in known)}'); skipped, not loaded")
+            rows = kept
+            if not rows:
+                return 0
 
         # Field index lookups for table-specific data fixes
         header_map = {h: i for i, h in enumerate(headers)}
@@ -203,6 +235,83 @@ def load_json(conn, file_path: str, table_name: str, cols: List[str]) -> int:
         conn.commit()
     return len(rows)
 
+def load_core_faculty_profiles(conn, file_path: str, table_name: str) -> int:
+    """
+    Core-to-Core faculty profiles share ids with kb.faculty (same people). They are merged into the
+    existing rows (UPDATE) so that faculty_area / paper_author foreign keys resolve; no rows are added.
+    """
+    if not os.path.exists(file_path):
+        return 0
+    with open(file_path, encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            vals = {k: (None if (v is None or str(v).strip() == "") else v) for k, v in r.items()}
+            cur.execute(
+                """
+                INSERT INTO kb.faculty (faculty_id, display_name, title, is_person, department, designation, lab_name,
+                                        profile_url, email_public, takes_ug_students, source_url, retrieved_on, verified)
+                VALUES (%(faculty_id)s, %(name)s, %(designation)s, TRUE, %(department)s, %(designation)s, %(lab_name)s,
+                        %(profile_url)s, %(email_public)s, %(takes_ug_students)s, %(source_url)s, %(retrieved_on)s, %(verified)s)
+                ON CONFLICT (faculty_id) DO UPDATE SET
+                    department = EXCLUDED.department, designation = EXCLUDED.designation, lab_name = EXCLUDED.lab_name,
+                    profile_url = EXCLUDED.profile_url, email_public = EXCLUDED.email_public,
+                    takes_ug_students = EXCLUDED.takes_ug_students, source_url = EXCLUDED.source_url,
+                    retrieved_on = EXCLUDED.retrieved_on, verified = EXCLUDED.verified
+                """, vals)
+            n += 1
+        conn.commit()
+    if any(str(r.get("verified", "")).lower() in ("true", "t", "1") for r in rows):
+        INTEGRITY_WARNINGS[os.path.basename(file_path) + " (core_to_core)"] = (
+            "rows are flagged verified=TRUE but carry no verified_by; lab names, e-mail addresses and profile URLs "
+            "follow a generated pattern and should be re-checked by a human before being shown as verified")
+    return n
+
+def load_career_tracks(conn) -> int:
+    """Loads the SDE / Data Analyst / AI-ML track knowledge base (sde/, da/, aiml/ output CSVs) into kb.track_*."""
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+    try:
+        from app.kb.track_repo import TrackRepo
+    except Exception as e:  # pragma: no cover
+        print(f"  [WARN] career tracks not loaded: {e}")
+        return 0
+    repo = TrackRepo()
+    n = {"kb.track": 0, "kb.track_phase": 0, "kb.track_resource": 0, "kb.track_event": 0, "kb.track_question": 0}
+    with conn.cursor() as cur:
+        for t in repo.list_tracks():
+            cur.execute("INSERT INTO kb.track (track_id, goal_id, name, total_est_hours, source_id) VALUES (%s,%s,%s,%s,%s)",
+                        (t["track_id"], t["goal_id"], t["name"], sum(p["est_hours"] for p in t["phases"]), t["source_id"]))
+            n["kb.track"] += 1
+            seen_res = set()
+            for p in t["phases"]:
+                cur.execute("INSERT INTO kb.track_phase (track_id, phase_id, phase_order, name, objective, est_hours, hours_basis, pass_threshold_pct) "
+                            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
+                            (t["track_id"], p["phase_id"], p["order"], p["name"], p.get("objective"), p["est_hours"], p.get("hours_basis"), p.get("pass_threshold_pct")))
+                n["kb.track_phase"] += 1
+                for r in p["resources"]:
+                    if r["resource_id"] in seen_res:
+                        continue
+                    seen_res.add(r["resource_id"])
+                    cur.execute("INSERT INTO kb.track_resource (resource_id, track_id, phase_id, title, provider, url, resource_type, topic, link_verified) "
+                                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                                (r["resource_id"], t["track_id"], p["phase_id"], r["title"], r.get("provider"), r.get("url"), r.get("resource_type"), r.get("topic"), bool(r.get("link_verified"))))
+                    n["kb.track_resource"] += 1
+            for e in t["events"]:
+                cur.execute("INSERT INTO kb.track_event (event_id, track_id, name, category, organiser, expected_window, start_month, min_phase_required, is_home_campus) "
+                            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                            (e["event_id"], t["track_id"], e["name"], e.get("category"), e.get("organiser"), e.get("window"), e.get("start_month"), e.get("min_phase_required"), bool(e.get("is_home_campus"))))
+                n["kb.track_event"] += 1
+            for q in t.get("questions", []):
+                cur.execute("INSERT INTO kb.track_question (question_id, track_id, phase_id, kb_skill_id, difficulty_num, question_type, stem, options, correct_option_text, explanation) "
+                            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                            (q["question_id"], t["track_id"], q.get("phase_id"), q.get("kb_skill_id"), q.get("difficulty_num"), q.get("question_type"), q["stem"], json.dumps(q.get("options", [])), q.get("correct_option_text"), q.get("explanation")))
+                n["kb.track_question"] += 1
+        conn.commit()
+    for k, v in n.items():
+        print(f"  {k:35s}: {v:5d} rows loaded from sde/ da/ aiml/ track outputs")
+    return sum(n.values())
+
 def load_all_seeds(conn):
     print("Loading seed files from data/seed/ in topological FK order...")
     seed_kb = os.path.join(os.path.dirname(__file__), "..", "data", "seed", "kb")
@@ -246,9 +355,12 @@ def load_all_seeds(conn):
         (load_csv, os.path.join(seed_kb, "project_keyword.csv"), "kb.project_keyword"),
         (load_csv, os.path.join(seed_kb, "keyword_skill.csv"), "kb.keyword_skill"),
         (load_csv, os.path.join(seed_kb, "data_issue.csv"), "kb.data_issue"),
+        (load_csv, os.path.join(seed_kb, "track_phase_skill.csv"), "kb.track_phase_skill"),
 
         # Core to Core feature tables (Section 5 & 6)
         (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "academic_calendar.csv"), "kb.academic_calendar"),
+        (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "research_areas.csv"), "kb.research_area"),
+        (load_core_faculty_profiles, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "faculty.csv"), "kb.faculty"),
         (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "area_skills.csv"), "kb.area_skill"),
         (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "faculty_areas.csv"), "kb.faculty_area"),
         (load_csv, os.path.join(os.path.dirname(__file__), "..", "data", "seed", "core_to_core", "papers.csv"), "kb.paper"),
@@ -326,13 +438,22 @@ def load_all_seeds(conn):
             # Table seed file does not exist yet (e.g. Phase 3 student seeds)
             pass
 
+    total_loaded += load_career_tracks(conn)
+
     # Clear ops.reprocess_queue so initial seed insertions don't leave spurious pending events
     with conn.cursor() as cur:
         cur.execute("TRUNCATE TABLE ops.reprocess_queue;")
+        # Tell any running application instance to drop its in-memory state and reload the seeds
+        cur.execute("INSERT INTO ops.reprocess_queue (entity_type, entity_id, action, status) VALUES ('system.reset', 'ALL', 'RESET', 'pending');")
+        cur.execute("SELECT pg_notify('reprocess_channel', '{\"table\": \"system_reset\", \"action\": \"RESET\"}');")
         conn.commit()
-    print("  ops.reprocess_queue: Truncated to 0 (clean state after initial seed load)")
+    print("  ops.reprocess_queue: cleared; system.reset marker queued for running application instances")
 
     print(f"\nTotal rows loaded: {total_loaded}")
+    if INTEGRITY_WARNINGS:
+        print("\n--- Data-audit warnings (non-blocking) ---")
+        for fn, msg in sorted(INTEGRITY_WARNINGS.items()):
+            print(f"  [WARN] {fn}: {msg}")
     
     print("\n--- Verified PostgreSQL Database Row Counts ---")
     verified_tables = [

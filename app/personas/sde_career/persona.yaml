@@ -1,0 +1,17 @@
+persona_id: sde_career
+goal_id: GOAL_TRACK_SDE
+display_name: SDE Career Track
+description: 'B.Tech EE or MME student at IIT Bhubaneswar preparing for Software Development Engineer roles alongside the degree: programming, DSA, CS core subjects, system design, portfolio projects, hackathons and interview readiness.'
+applicable_programmes:
+- BTECH_EE
+- BTECH_MM
+target_semester_range:
+- 1
+- 8
+eligibility_notes: Open to B.Tech EE/MM students in any year. Degree courses stay mandatory; the track is paced inside the student's weekly-hours cap.
+planner_weights:
+  cgpa_protection: 0.6
+  skill_acceleration: 0.85
+  workload_smoothing: 0.7
+status: draft_for_review
+track_id: sde

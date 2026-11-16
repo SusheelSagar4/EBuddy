@@ -1,0 +1,16 @@
+persona_id: core_to_mba
+goal_id: GOAL_MBA_CAT
+display_name: MBA / Management Pathway
+description: B.Tech EE or MME student at IIT Bhubaneswar considering a management career (CAT and similar entrances) alongside the degree, building on the engineering foundation.
+applicable_programmes:
+- BTECH_EE
+- BTECH_MM
+target_semester_range:
+- 1
+- 8
+eligibility_notes: Open to B.Tech EE/MM students. The Core-to-MBA module holds the adaptive QA/DILR/VARC diagnostic, profile audit, mock calibration and shortlist; cut-offs are shown only from verified rows.
+planner_weights:
+  cgpa_protection: 0.8
+  skill_acceleration: 0.65
+  workload_smoothing: 0.8
+status: draft_for_review

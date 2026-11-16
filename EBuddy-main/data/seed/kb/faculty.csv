@@ -1,0 +1,52 @@
+faculty_id,display_name,title,group_name,is_person
+FAC_DR_ABHIK_JANA,Dr. Abhik Jana,Dr.,,True
+FAC_DR_AKSHAY_K,Dr. Akshay K,Dr.,,True
+FAC_DR_ANISH_KARMAKAR_SMMME,Dr. Anish Karmakar (SMMME),Dr.,,True
+FAC_DR_ANKIT_RAVINDRA_DESHMUKH,Dr. Ankit Ravindra Deshmukh,Dr.,,True
+FAC_DR_BARATHRAM_RAMKUMAR,Dr. Barathram Ramkumar,Dr.,,True
+FAC_DR_BIRENJITH_SASIDHARAN,Dr. Birenjith Sasidharan,Dr.,,True
+FAC_DR_CHANDRASHEKHAR_NARAYAN_BHENDE,Dr. Chandrashekhar Narayan Bhende,Dr.,,True
+FAC_DR_CHANDRASHEKHAR_PERUMALLA,Dr. Chandrashekhar Perumalla,Dr.,,True
+FAC_DR_DEBALINA_GHOSH,Dr. Debalina Ghosh,Dr.,,True
+FAC_DR_DEBAPRASANNA_SAHOO,Dr. Debaprasanna Sahoo,Dr.,,True
+FAC_DR_DEBAPRATIM_GHOSH,Dr. Debapratim Ghosh,Dr.,,True
+FAC_DR_DIPANKAR_DE,Dr. Dipankar De,Dr.,,True
+FAC_DR_HIMANSHU_PADOLE,Dr. Himanshu Padole,Dr.,,True
+FAC_DR_NAVJEET_BAGGA,Dr. Navjeet Bagga,Dr.,,True
+FAC_DR_NIJWM_WARY,Dr. Nijwm Wary,Dr.,,True
+FAC_DR_NILADRI_BIHARI_PUHAN,Dr. Niladri Bihari Puhan,Dr.,,True
+FAC_DR_NITYA_TIWARI,Dr. Nitya Tiwari,Dr.,,True
+FAC_DR_OLIVE_RAY,Dr. Olive Ray,Dr.,,True
+FAC_DR_PRASANT_KUMAR_SAHU,Dr. Prasant Kumar Sahu,Dr.,,True
+FAC_DR_RAMU_NAIR,Dr. Ramu Nair,Dr.,,True
+FAC_DR_SAYAN_DEY,Dr. Sayan Dey,Dr.,,True
+FAC_DR_SRINIVAS_BHASKAR_KARANKI,Dr. Srinivas Bhaskar Karanki,Dr.,,True
+FAC_DR_SUDIPTA_SAHA,Dr. Sudipta Saha,Dr.,,True
+FAC_DR_VIJAY_SHANKAR_PASUPUREDDI,Dr. Vijay Shankar Pasupureddi,Dr.,,True
+FAC_INTERDISCIPLINARY_TEAM_SECS_SCHOOL_OF_INFRASTRUCTURE,Interdisciplinary Team (SECS & School of Infrastructure),,Interdisciplinary Team (SECS & School of Infrastructure),False
+FAC_POWER_ELECTRONICS_GROUP,Power Electronics Group,,Power Electronics Group,False
+FAC_PROF_BIBHU_DATTA_SAHOO,Prof. Bibhu Datta Sahoo,Prof.,,True
+FAC_PROF_C_N_BHENDE,Prof. C. N. Bhende,Prof.,,True
+FAC_PROF_SUBHRANSU_RANJAN_SAMANTARAY,Prof. Subhransu Ranjan Samantaray,Prof.,,True
+FAC_PROF_S_DASGUPTA,Prof. S. Dasgupta,Prof.,,True
+FAC_SECS_COMM_GROUP,SECS Comm. Group,,SECS Comm. Group,False
+FAC_SECS_CONTROL_POWER_TEAM,SECS Control/Power Team,,SECS Control/Power Team,False
+FAC_SECS_FACULTY_TEAM,SECS Faculty Team,,SECS Faculty Team,False
+FAC_SECS_IOT_VLSI_TEAM,SECS IoT/VLSI Team,,SECS IoT/VLSI Team,False
+FAC_SECS_POWER_GROUP,SECS Power Group,,SECS Power Group,False
+FAC_MM_01,Dr. Snigdha Ghosh,Assistant Professor,SMMME,true
+FAC_MM_02,Dr. Srikant Gollapudi,Associate Professor,SMMME,true
+FAC_MM_03,Dr. Santanu Mandal,Assistant Professor,SMMME,true
+FAC_MM_04,Dr. Miral Verma,Assistant Professor,SMMME,true
+FAC_MM_05,Dr. Maya Katapadi Kini,Assistant Professor,SMMME,true
+FAC_MM_06,Dr. Rama Krushna Sabat,Associate Professor,SMMME,true
+FAC_MM_07,Dr. Soobhankar Pati,Associate Professor,SMMME,true
+FAC_MM_08,Prof. Animesh Mandal,Professor,SMMME,true
+FAC_MM_09,Dr. Sivaiah Bathula,Associate Professor,SMMME,true
+FAC_MM_10,Dr. Amritendu Roy,Associate Professor & HoS,SMMME,true
+FAC_MM_11,Dr. Kodanda Ram Mangipudi,Associate Professor,SMMME,true
+FAC_MM_12,Dr. Partha Sarathi De,Associate Professor,SMMME,true
+FAC_MM_13,Dr. Kisor Kumar Sahu,Associate Professor,SMMME,true
+FAC_MM_14,Prof. Brahma Deo,MGM Chair Professor,SMMME,true
+FAC_MM_15,Dr. Anuj Dash,Assistant Professor,SMMME,true
+FAC_MM_16,Dr. Sudipta Pramanik,Assistant Professor,SMMME,true

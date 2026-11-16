@@ -1,8 +1,0 @@
-﻿highest_completed_phase_id,highest_completed_phase_order,fests_unlocked,hackathons_unlocked,competitions_unlocked,max_fests_per_recommendation,max_hackathons_per_recommendation,max_competitions_per_recommendation,message_to_user
-NONE_YET,0,TRUE,FALSE,FALSE,3,0,0,Explore top tech fests for inspiration; hackathons and competitions will unlock after you finish Phase 1 (Classical ML).
-0_Foundations,1,TRUE,FALSE,FALSE,3,0,0,Great progress on foundations; continue to Phase 1 (Classical ML) to unlock hands-on hackathons and competitive challenges!
-1_Classical_ML,2,TRUE,TRUE,TRUE,2,2,2,Congratulations on completing Classical ML! Hackathons and machine learning competitions are now fully unlocked.
-2_Deep_Learning,3,TRUE,TRUE,TRUE,2,2,2,"Deep learning unlocked! You are now well-prepared for computer vision, audio, and neural network challenges."
-3_Projects,4,TRUE,TRUE,TRUE,2,2,2,"With project benchmarks complete, test your skills in production buildathons and competitive Kaggle/Zindi circuits."
-4_Specialization,5,TRUE,TRUE,TRUE,2,2,2,"Specialization mastered! You can tackle advanced Generative AI, agentic LLM, and reinforcement learning hackathons."
-5_Research,6,TRUE,TRUE,TRUE,2,2,2,Full research capability unlocked! Compete in top-tier conference benchmark tracks and frontier AI challenges.

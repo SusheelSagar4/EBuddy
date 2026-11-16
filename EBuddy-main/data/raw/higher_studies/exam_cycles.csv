@@ -1,0 +1,8 @@
+exam_id,cycle,organiser,reg_open,reg_close,exam_dates,admit_card_date,result_date,fee_inr,source_url,retrieved_on,verified,notes
+GATE,2027,IIT Madras,2026-09-02 or 2026-10-05 (sources conflict; verify),2026-10-16 incl. late fee,"6, 7, 13, 14, 20, 21 Feb 2027",2027-01-04,2027-03-19,(verify),https://gate2027.iitm.ac.in/,2026-11-14,FALSE,Registration closed; data correction window 10-14 Nov 2026
+CAT,2026,Not officially confirmed,2026-08-03,2026-09-15,29 Nov 2026 (3 sessions),(verify),First week of Jan 2027 (tentative),(verify),https://www.talkdrill.com/blog/exams/mba-interview/cat-2026-dates-result-and-shortlists/,2026-11-14,FALSE,Confirm on iimcat.ac.in
+XAT,2027,XLRI,2026-07-15,2026-12-06,"3 Jan 2027, 2-5 pm",2026-12-20 (tentative),Late Jan 2027 (verify),(verify),https://cracku.in/xat-2027-exam-date,2026-11-14,FALSE,Aggregator source; confirm on xatonline.in
+GRE,Year-round,ETS,Rolling,Rolling,"Year-round, centre or at home",N/A,Official scores in about 8-10 days (verify),(verify),https://www.ets.org/gre/test-takers/general-test/prepare/test-structure.html,2026-11-14,FALSE,
+GMAT,Year-round,GMAC,Rolling,Rolling,"Year-round, centre or online",N/A,(verify),(verify),https://www.mba.com/exams-and-exam-prep/gmat-exam/gmat-focus-evolving-score-scale/amp,2026-11-14,FALSE,
+TOEFL,Year-round,ETS,Rolling,Rolling,Year-round,N/A,(verify),(verify),https://www.ets.org/toefl/test-takers/ibt/scores/understand-scores.html,2026-11-14,TRUE,New 1-6 score scale from 21 Jan 2026
+IELTS,Year-round,IELTS partners,Rolling,Rolling,Year-round,N/A,(verify),(verify),https://ielts.org/take-a-test/test-types/ielts-academic-test,2026-11-14,FALSE,

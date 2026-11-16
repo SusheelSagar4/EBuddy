@@ -169,7 +169,7 @@ def list_goals(programme_id: Optional[str] = Query(None)):
     
     for g in all_goals:
         gid = g.goal_id
-        is_cross = gid in ["GOAL_CROSS_SDE_DATA", "GOAL_UPSC_COMPETITIVE", "GOAL_TECH_STARTUP"]
+        is_cross = not (gid.startswith("GOAL_EE_") or gid.startswith("GOAL_MM_"))  # career tracks, MBA, UPSC, startup
         
         if not programme_id:
             filtered.append(g)
@@ -259,24 +259,32 @@ def get_next_diagnostic(student_id: str):
     onboarding_service.ensure_student_onboarded(student_id)
     goal = onboarding_service.goals.get(student_id)
     
-    # Candidate skills for goal
-    reqs = plan_service.goal_requirements.get(goal.goal_id if goal else "", [])
-    candidate_skills = [r.skill_id for r in reqs] or ["SKILL_CIRCUIT_ANALYSIS", "SKILL_POWER_ELECTRONICS", "SKILL_ELECTRIC_MACHINES"]
-    
+    # Candidate skills: the goal's skills that have verified bank items (nothing is generated on the fly)
+    reqs = plan_service.requirements_for(goal.goal_id if goal else "")
+    bank_skills = {ex.skill_id for ex in diagnostic_service.diagnostic_engine.item_bank}
+    candidate_skills = [r.skill_id for r in reqs if r.skill_id in bank_skills]
+    uncovered = [r.skill_id for r in reqs if r.skill_id not in bank_skills]
+    if not candidate_skills:
+        st = onboarding_service.students.get(student_id)
+        fallback = ["SKILL_PHYSICAL_METALLURGY", "SKILL_THERMODYNAMICS_MAT"] if (st and "MM" in st.programme_id) else \
+                   ["SKILL_CIRCUIT_ANALYSIS", "SKILL_POWER_ELECTRONICS", "SKILL_ELECTRIC_MACHINES"]
+        candidate_skills = fallback
+    prior = diagnostic_service.get_prior(student_id, candidate_skills)
+
     state = diagnostic_service.get_diagnostic_state(student_id)
     if state["is_complete"]:
         return {
             "complete": True,
             "message": "Adaptive diagnostic assessment complete.",
-            "state": state
+            "state": state, "prior": prior, "uncovered_skills": uncovered
         }
 
     item = diagnostic_service.get_next_question(student_id, candidate_skills)
     if not item:
         return {
             "complete": True,
-            "message": "Assessment complete.",
-            "state": state
+            "message": "Assessment complete (no further verified items for these skills).",
+            "state": state, "prior": prior, "uncovered_skills": uncovered
         }
 
     return {
@@ -292,7 +300,7 @@ def get_next_diagnostic(student_id: str):
             "status": item.status,
             "source_id": item.source_id
         },
-        "state": state
+        "state": state, "prior": prior, "uncovered_skills": uncovered, "candidate_skills": candidate_skills
     }
 
 @router.post("/diagnostic/{student_id}/answer")
@@ -300,29 +308,25 @@ def submit_diagnostic_answer_ui(student_id: str, req: DiagnosticAnswerRequest):
     """Submits answer, evaluates via CAT engine, updates theta ability and confidence."""
     onboarding_service.ensure_student_onboarded(student_id)
     
-    # Find exercise from item bank or build instance
-    item_ex = None
-    for ex in diagnostic_service.diagnostic_engine.item_bank:
-        if ex.exercise_id == req.exercise_id:
-            item_ex = ex
-            break
-            
+    # Grade against the server-side key of the item that was actually served (options were shuffled)
+    item_ex = getattr(diagnostic_service, "served_keys", {}).get((student_id, req.exercise_id))
     if not item_ex:
-        item_ex = Exercise(
-            exercise_id=req.exercise_id,
-            skill_id=req.skill_id,
-            title=f"Diagnostic Item {req.exercise_id}",
-            question_text="Diagnostic question",
-            exercise_type="mcq",
-            options=["A", "B", "C", "D"],
-            correct_answer=req.student_answer,
-            status="draft_for_review",
-            source_id="AI_DRAFT"
-        )
+        item_ex = next((ex for ex in diagnostic_service.diagnostic_engine.item_bank if ex.exercise_id == req.exercise_id), None)
+    if not item_ex:
+        raise HTTPException(status_code=404, detail=f"Exercise {req.exercise_id} is not in the verified item bank.")
+    plan_service.get_or_create(student_id)
 
     res = roadmap_orchestrator.submit_assessment(student_id, item_ex, req.student_answer)
+    diagnostic_service.active_sessions.setdefault(student_id, []).append({
+        "exercise_id": item_ex.exercise_id, "skill_id": item_ex.skill_id, "answer": req.student_answer,
+        "is_correct": res["is_correct"], "score": res["score"], "difficulty": item_ex.difficulty_0_100})
     state = diagnostic_service.get_diagnostic_state(student_id)
     res["diagnostic_state"] = state
+    if state["is_complete"]:
+        # the diagnostic is assessed (strong) evidence: re-plan as soon as it converges
+        rp = plan_service.create_or_update_plan(student_id, trigger="diagnostic_complete",
+                                                reasons=[f"Adaptive diagnostic finished after {state['answers_count']} items (ability estimate {state['ability_estimate']})."])
+        res["replanned"] = {"version": rp["version"], "what_changed_and_why": rp["what_changed_and_why"]}
     return res
 
 # -----------------------------------------------------------------------------
@@ -336,6 +340,10 @@ def handle_chat_message(req: ChatQueryRequest):
     Always includes cited KB codes.
     """
     onboarding_service.ensure_student_onboarded(req.student_id)
+    try:
+        plan_service.get_or_create(req.student_id)
+    except Exception:
+        pass
     llm_ready = _is_llm_configured()
 
     try:
@@ -376,6 +384,8 @@ def handle_chat_message(req: ChatQueryRequest):
         "proposal": chat_res.get("proposal"),
         "cited_kb_codes": cited_codes,
         "llm_configured": llm_ready,
+        "llm_used": bool(chat_res.get("llm_used")),
+        "guardrail": chat_res.get("guardrail", {"blocked": False, "category": "ok"}),
         "disclaimer": chat_res.get("disclaimer", "Official institutional regulations supersede AI advisories.")
     }
 
@@ -453,7 +463,13 @@ def list_available_tables():
             "kb.skill",
             "kb.goal",
             "kb.exercise",
-            "kb.resource"
+            "kb.resource",
+            "kb.track_phase",
+            "kb.track_resource",
+            "kb.track_event",
+            "student.student",
+            "student.skill_evidence",
+            "plan.plan"
         ]
     }
 
@@ -466,7 +482,13 @@ def get_table_data(table_name: str, db: Session = Depends(get_db)):
         "kb.skill",
         "kb.goal",
         "kb.exercise",
-        "kb.resource"
+        "kb.resource",
+        "kb.track_phase",
+        "kb.track_resource",
+        "kb.track_event",
+        "student.student",
+        "student.skill_evidence",
+        "plan.plan"
     ]
     if table_name not in allowed:
         raise HTTPException(status_code=400, detail=f"Table {table_name} is not permitted for preview.")
@@ -501,18 +523,9 @@ def get_table_data(table_name: str, db: Session = Depends(get_db)):
 
 @router.post("/admin/reload-seed")
 def reload_seed_data():
-    """Runs scripts/seed_loader.py --reset to reset and reload KB seed data."""
-    try:
-        res = subprocess.run(
-            ["python", "scripts/seed_loader.py", "--reset"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return {
-            "status": "success",
-            "message": "Seed data reloaded successfully.",
-            "output_summary": res.stdout[-300:] if len(res.stdout) > 300 else res.stdout
-        }
-    except subprocess.CalledProcessError as e:
-        raise HTTPException(status_code=500, detail=f"Seed reset failed: {e.stderr}")
+    """Resets PostgreSQL and the in-memory state to the original seed (same as POST /api/admin/reset)."""
+    from app.services.reprocess_service import reprocess_service
+    res = reprocess_service.reset_all()
+    if res["database"]["attempted"] and not res["database"]["ok"]:
+        raise HTTPException(status_code=500, detail=f"Seed reset failed: {res['database']['detail']}")
+    return {"status": "success", "message": "Seed data reloaded successfully.", "output_summary": res["database"]["detail"], **res}

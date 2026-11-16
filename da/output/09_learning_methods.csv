@@ -1,7 +1,0 @@
-﻿method_id,name,when_to_use,how
-DA-L1,Learn by querying,SQL and pandas modules,Type every example and change it; solve 5 practice problems per session
-DA-L2,Error log,"After every quiz, test or mock",Tag each wrong answer by skill and mistake type; the next week targets the top 3 tags
-DA-L3,Spaced review,"Formulas, SQL syntax and statistics definitions","Review on day 1, 3, 7 and 21 after learning"
-DA-L4,Question-first analysis,Projects and EDA,Write the business question before touching the data; every chart answers one question
-DA-L5,Publish as you go,Projects,Commit to GitHub weekly; write a short README per project
-DA-L6,Semester-aware load,Always,"Lighter study in mid-sem and end-sem weeks, heavier in breaks"

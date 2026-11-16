@@ -13,7 +13,32 @@ router = APIRouter(prefix="/api/sim", tags=["Simulator"])
 
 class QuizSimulationRequest(BaseModel):
     skill_id: str
-    score: float # 0.0 to 100.0
+    score: float # 0.0 to 100.0 (fractions 0-1 are accepted and scaled)
+    source_type: Optional[str] = "quiz"
+    notes: Optional[str] = None
+
+class PresetRequest(BaseModel):
+    skill_id: Optional[str] = None
+    score: Optional[float] = None
+    course_id: Optional[str] = None
+    goal_id: Optional[str] = None
+
+@router.get("/presets")
+def list_presets():
+    from app.services.adapt_service import PRESETS
+    return {"presets": [{"preset": k, "label": v} for k, v in PRESETS.items()]}
+
+@router.post("/{student_id}/preset/{preset}")
+def run_simulation_preset(student_id: str, preset: str, req: PresetRequest = PresetRequest()):
+    """
+    1-click adaptation presets: strong_quiz | weak_quiz | course_rejection | goal_switch.
+    Applies the event, re-plans deterministically and returns the PlanDiff with the reasons for every change.
+    """
+    try:
+        return adapt_service.run_preset(student_id, preset.replace("-", "_"), skill_id=req.skill_id, score=req.score,
+                                        course_id=req.course_id, goal_id=req.goal_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 class MidsemStressSimulationRequest(BaseModel):
     week_number: int = 8
@@ -34,6 +59,7 @@ def simulate_quiz_score(student_id: str, req: QuizSimulationRequest):
     Calculates updated skill state, triggers re-planning, returns PlanDiff and explanation.
     """
     try:
+        onboarding_service.ensure_student_onboarded(student_id)
         res = adapt_service.adapt_to_quiz_score(
             student_id=student_id,
             skill_id=req.skill_id,

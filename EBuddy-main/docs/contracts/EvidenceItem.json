@@ -1,0 +1,69 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "evidence_id": {
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "skill_id": {
+      "title": "Skill Id",
+      "type": "string"
+    },
+    "source_type": {
+      "enum": [
+        "diagnostic",
+        "exercise",
+        "quiz",
+        "course_grade",
+        "self_declaration"
+      ],
+      "title": "Source Type",
+      "type": "string"
+    },
+    "score": {
+      "title": "Score",
+      "type": "number"
+    },
+    "reliability": {
+      "default": 1.0,
+      "title": "Reliability",
+      "type": "number"
+    },
+    "attempts": {
+      "default": 1,
+      "title": "Attempts",
+      "type": "integer"
+    },
+    "time_spent_min": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Time Spent Min"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "title": "Recorded At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "student_id",
+    "skill_id",
+    "source_type",
+    "score",
+    "recorded_at"
+  ],
+  "title": "EvidenceItem",
+  "type": "object"
+}

@@ -1,0 +1,17 @@
+persona_id: aiml_career
+goal_id: GOAL_TRACK_AIML
+display_name: AI / ML Career Track
+description: 'B.Tech EE or MME student at IIT Bhubaneswar preparing for AI and Machine Learning roles alongside the degree: maths and Python foundations, classical ML, deep learning, projects, specialisation and research exposure.'
+applicable_programmes:
+- BTECH_EE
+- BTECH_MM
+target_semester_range:
+- 1
+- 8
+eligibility_notes: Open to B.Tech EE/MM students in any year. The full roadmap is long (about 1,600 hours); the planner states honestly how much fits before graduation at the student's weekly-hours cap.
+planner_weights:
+  cgpa_protection: 0.6
+  skill_acceleration: 0.85
+  workload_smoothing: 0.7
+status: draft_for_review
+track_id: aiml

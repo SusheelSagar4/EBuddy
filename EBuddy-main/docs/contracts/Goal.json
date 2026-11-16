@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "goal_id": {
+      "title": "Goal Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "status": {
+      "default": "verified",
+      "title": "Status",
+      "type": "string"
+    },
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    },
+    "verified": {
+      "default": true,
+      "title": "Verified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "goal_id",
+    "name",
+    "category",
+    "description",
+    "source_id"
+  ],
+  "title": "Goal",
+  "type": "object"
+}

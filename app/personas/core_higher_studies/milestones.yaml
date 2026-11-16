@@ -1,0 +1,15 @@
+- semester_target: 4
+  title: Route decision
+  description: Compare the M.Tech, MS (Research), PhD and PSU routes in the Core-to-M.Tech module and record one primary route.
+- semester_target: 5
+  title: Syllabus-to-course map
+  description: Map completed and upcoming degree courses to the target exam syllabus; list uncovered topics.
+- semester_target: 6
+  title: Subject-wise timed tests
+  description: One timed test per core subject completed so far, each at 60% or better, with an error log.
+- semester_target: 7
+  title: Full mocks and score band
+  description: At least 2 full-length mocks; the score band is shown only after 2 mocks.
+- semester_target: 8
+  title: Applications and interviews
+  description: Applications tracked in the Core-to-M.Tech module; 1 technical mock interview with rubric feedback.

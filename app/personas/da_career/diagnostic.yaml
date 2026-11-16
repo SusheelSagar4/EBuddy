@@ -1,0 +1,9 @@
+blueprint:
+  target_skills:
+  - SKILL_DATA_ANALYTICS
+  - SKILL_DATABASES_SQL
+  - SKILL_PROBABILITY_STATS
+  item_counts: 5
+  difficulty_range:
+  - 30.0
+  - 80.0

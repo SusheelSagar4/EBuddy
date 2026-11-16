@@ -37,8 +37,26 @@ class RuleEngine(IRuleEngine):
             return total_semester_credits <= 18.0
         return total_semester_credits <= 26.0
 
+    def _rule_params(self, rule_id: str) -> dict:
+        import json
+        if not hasattr(self, "_rules_cache"):
+            self._rules_cache = {}
+            path = os.path.join(self.seed_dir, "academic_rule.json")
+            if os.path.exists(path):
+                with open(path, "r", encoding="utf-8") as f:
+                    for r in json.load(f):
+                        self._rules_cache[r["rule_id"]] = r.get("parameters", {})
+        return self._rules_cache.get(rule_id, {})
+
+    def minor_cutoff(self) -> float:
+        return float(self._rule_params("RULE_MINOR_ELIGIBILITY").get("min_cgpa", 8.0))
+
     def check_minor_eligibility(self, student: StudentProfile) -> bool:
-        # Eligible if completed Sem IV with CGPA >= 8.0
+        # Eligible from Sem V with CGPA >= cutoff (RULE_MINOR_ELIGIBILITY, unsourced baseline) and no active backlog.
+        # The comparison is exact: 7.99 is NOT eligible, 8.00 is.
+        p = self._rule_params("RULE_MINOR_ELIGIBILITY")
         cgpa = student.cgpa or 0.0
-        return student.current_semester >= 5 and cgpa >= 8.00 and student.backlogs == 0
+        return (student.current_semester >= int(p.get("start_semester", 5))
+                and cgpa >= float(p.get("min_cgpa", 8.0))
+                and student.backlogs == 0)
 

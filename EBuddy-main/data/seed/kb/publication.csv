@@ -1,0 +1,103 @@
+publication_id,faculty_id,title,journal_or_venue,year,approx_citations,citations_as_of,selection_only,doi,source_id
+PUB_MM_001,FAC_MM_01,A dynamic mixed-control model for BOF metal–slag–gas reactions,Metall. Mater. Trans. B,2021,31,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_002,FAC_MM_01,BOF process dynamics,Mineral Processing and Extractive Metallurgy,2019,30,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_003,FAC_MM_01,Flow phenomena in the dripping zone of blast furnace: a review,Steel Research Int.,2017,28,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_004,FAC_MM_01,A formulation of multi-interface shrinking core model for gaseous reduction of hematite,Metall. Mater. Trans. B,2025,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_005,FAC_MM_01,Modelling of iron oxide reduction with hydrogen (with Åbo Akademi),Computer Aided Chemical Engineering,2023,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_006,FAC_MM_01,Development of criteria for assessing gas channelling inside the blast furnace,Ironmaking & Steelmaking,2025,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_007,FAC_MM_01,Mathematical modeling of CO2 bubble interaction with Fe–x melt,Metall. Mater. Trans. B,2026,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_008,FAC_MM_02,Grain size distribution effects on the corrosion behaviour of materials,Corrosion Science,2012,447,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_009,FAC_MM_02,Development of novel grain morphology during hot extrusion of Mg AZ21 alloy,Acta Materialia,2010,106,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_010,FAC_MM_02,"Corrosion, SCC and corrosion fatigue of magnesium alloy bioimplants",Corrosion Reviews,2022,84,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_011,FAC_MM_02,An overview of creep in tungsten and its alloys,Int. J. Refractory Metals & Hard Materials,2019,84,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_012,FAC_MM_02,Validated numerical modelling of galvanic corrosion of Zn and Al coatings (with C.A. Schuh),Corrosion Science,2014,68,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_013,FAC_MM_02,Creep mechanisms in Ti–3Al–2.5V tubing under internal gas pressurisation,Acta Materialia,2008,65,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_014,FAC_MM_02,Recycling silicon from end-of-life solar modules for Si–Al composites,Composites Part A,2026,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_015,FAC_MM_03,Fe–Mn–Cu alloy as biodegradable material with enhanced antimicrobial properties,Materials Letters,2019,57,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_016,FAC_MM_03,"In vitro and in vivo degradability, biocompatibility and antimicrobial characteristics of Cu-added Fe–Mn alloy",J. Mater. Sci. Technol.,2021,53,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_017,FAC_MM_03,Effects of multiscale porosity on degradation and biocompatibility of Fe–Mn–Cu scaffolds,J. Mater. Chem. B,2021,37,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_018,FAC_MM_03,Cobalt-free refractory high entropy alloys for total joint arthroplasty,J. Alloys Compd.,2023,25,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_019,FAC_MM_03,Enhanced degradation resistance of a thermomechanically processed novel Mg alloy,J. Magnesium and Alloys,2024,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_020,FAC_MM_03,Controlled nano-Cu precipitation in Fe–20Mn–3Cu alloys,Acta Biomaterialia,2023,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_021,FAC_MM_03,Functional medium entropy alloys for joint replacement,Acta Biomaterialia,2024,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_022,FAC_MM_04,Grain growth stagnation in solid-state thin films: a phase-field study,J. Applied Physics,2021,20,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_023,FAC_MM_04,Concurrent thermal grooving and grain growth in a polycrystalline thin film: 3D phase-field study,Acta Materialia,2023,19,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_024,FAC_MM_04,Nanoparticle formation through dewetting of a solid-state thin film,J. Alloys Compd.,2020,18,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_025,FAC_MM_04,Universal behaviour of a thermal groove in a moving grain boundary,Scripta Materialia,2022,13,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_026,FAC_MM_04,Step flow mechanism in dissolutive wetting Cu/Ni systems,Acta Materialia,2025,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_027,FAC_MM_04,Effect of surface energy anisotropy on hole growth in a single-crystalline thin film,Scripta Materialia,2023,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_028,FAC_MM_04,Solute segregation in a moving grain boundary: a phase-field approach,MSMSE,2024,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_029,FAC_MM_05,"Size-dependent strength, slip transfer and slip compatibility in nanotwinned silver",Acta Materialia,2020,41,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_030,FAC_MM_05,Nanocrystalline equiatomic CoCrFeNi alloy thin films: are they single phase fcc?,Surface & Coatings Technology,2021,32,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_031,FAC_MM_05,Microstructure evolution and thermal stability of CoCrFeNi films on (0001) α-Al2O3,Acta Materialia,2020,29,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_032,FAC_MM_05,Influence of titania on creep in superplastic zirconia,J. American Ceramic Society,2010,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_033,FAC_MM_05,Dislocation plasticity and detwinning under thermal stresses in nanotwinned Ag films,Acta Materialia,2020,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_034,FAC_MM_05,Equiatomic CoCrFeNi thin films on c-sapphire: role of twins and orientation relationships,Advanced Engineering Materials,2024,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_035,FAC_MM_06,Ductility enhancement in Mg–0.2% Ce alloys,Acta Materialia,2018,155,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_036,FAC_MM_06,Nano-ZnO particle addition to monolithic magnesium,J. Alloys Compd.,2014,72,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_037,FAC_MM_06,Twinning and texture randomisation in Mg and Mg–Ce alloys,Int. J. Plasticity,2019,62,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_038,FAC_MM_06,Texture and microstructure evolution of CP titanium during hot rolling: role of strain paths,Materials & Design,2016,62,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_039,FAC_MM_06,Superplasticity in high-temperature magnesium alloy WE43,Mater. Sci. Eng. A,2017,57,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_040,FAC_MM_06,Exploring thermoelectric performance of NiFeMnAl and ZnFeVAl quaternary Heusler compounds,Mater. Sci. Eng. B,2025,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_041,FAC_MM_07,Role of Fe3+ doping vs secondary phases on transport in LiTi2(PO4)3 solid electrolyte,Materials Today Communications,2023,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_042,FAC_MM_07,Role of Mn substitution in hydrogen storage performance of FeTi,Int. J. Hydrogen Energy,2022,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_043,FAC_MM_07,Electro-deoxidation for producing FeTi from low-grade ilmenite for hydrogen storage,J. Sustainable Metallurgy,2021,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_044,FAC_MM_07,Induration of low-grade ilmenite pellets for direct reduction,Powder Technology,2021,63,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_045,FAC_MM_07,Si anode performance with fluoroethylene carbonate additive,J. Applied Electrochemistry,2021,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_046,FAC_MM_08,Effect of TiB2 particles on sliding wear behaviour of Al–4Cu alloy,Wear,2007,236,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_047,FAC_MM_08,Sliding wear behaviour of T6-treated A356–TiB2 in-situ composites,Wear,2009,165,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_048,FAC_MM_08,Effect of TiB2 particles on ageing response of Al–4Cu alloy,Mater. Sci. Eng. A,2004,165,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_049,FAC_MM_08,Ageing behaviour of A356 reinforced with in-situ TiB2,Mater. Sci. Eng. A,2008,137,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_050,FAC_MM_08,Mechanical alloying and properties of immiscible Cu–20Mo alloy,J. Alloys Compd.,2015,95,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_051,FAC_MM_08,Selective leaching of Al from hypereutectic Al–Si to make nanoporous Si anodes for Li-ion batteries,Electrochimica Acta,2019,49,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_052,FAC_MM_09,Giant enhancement in thermoelectric performance of copper selenide via nanoscale defects,Nano Energy,2015,225,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_053,FAC_MM_09,Enhanced figure-of-merit in spark-plasma-sintered nanostructured n-type SiGe,Applied Physics Letters,2012,207,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_054,FAC_MM_09,Doping effect on thermoelectric performance of p-type SnSe,J. Alloys Compd.,2016,198,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_055,FAC_MM_09,Al 5083/SiCp nanocomposites by ball milling and SPS,Mater. Sci. Eng. A,2012,150,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_056,FAC_MM_09,Role of nanoscale defects in p-type nanostructured SiGe,Nanoscale,2015,110,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_057,FAC_MM_09,Advancement in half-Heusler thermoelectric materials,Materials Science in Semiconductor Processing,2024,77,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_058,FAC_MM_10,Multiferroic memories,Advances in Condensed Matter Physics,2012,199,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_059,FAC_MM_10,Room-temperature nanoscale ferroelectricity in magnetoelectric epitaxial thin films,Physical Review Letters,2013,130,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_060,FAC_MM_10,Electronic structure and spontaneous polarisation in magnetoelectric gallium ferrite,J. Phys.: Condens. Matter,2011,84,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_061,FAC_MM_10,PMN-PT/CNT polymer composite film for energy harvesting,Applied Surface Science,2018,82,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_062,FAC_MM_10,Review of polymer-matrix piezoelectric composite coatings for energy harvesting,J. Coatings Technol. Res.,2024,44,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_063,FAC_MM_10,Machine-learning-aided discovery of Bi-based double perovskites for solar cells,Solar Energy,2024,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_064,FAC_MM_10,Equimolar AlCuFeMn: a novel oxidation-resistant alloy,Intermetallics,2021,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_065,FAC_MM_11,Topology-dependent scaling laws for stiffness and strength of nanoporous gold,Acta Materialia,2016,115,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_066,FAC_MM_11,Multiscale modelling of damage and failure in 2D metallic foams,J. Mech. Phys. Solids,2011,68,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_067,FAC_MM_11,FIB-nanotomography method for 3D reconstruction of open nanoporous structures,Ultramicroscopy,2016,62,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_068,FAC_MM_11,Multiscale modelling of charge-induced deformation of nanoporous gold,J. Mech. Phys. Solids,2014,56,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_069,FAC_MM_11,Morphological similarity and structure-dependent scaling of nanoporous gold,Acta Materialia,2017,39,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_070,FAC_MM_11,Nanotwinning and bimodal structure in cryorolled austenitic stainless steel,Scientific Reports,2020,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_071,FAC_MM_11,Role of network topology on tensile behaviour of random open cellular structures,Materialia,2022,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_072,FAC_MM_12,Combinatorial synthesis of high-entropy alloys: a single-phase BCC FeMnCoCrAl solid solution,J. Alloys Compd.,2017,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_073,FAC_MM_12,Equimolar AlCuFeMn: a novel oxidation-resistant alloy,Intermetallics,2021,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_074,FAC_MM_12,Corrosion behaviour of AlCuFeMn alloy in aqueous NaCl,Materials Chemistry and Physics,2022,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_075,FAC_MM_12,Effect of friction stir processing on corrosion of Al–TiB2 composite,Trans. Nonferrous Met. Soc. China,2019,42,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_076,FAC_MM_12,Aqueous corrosion behaviour of cast CoCrFeMnNi alloy,J. Mater. Eng. Perform.,2019,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_077,FAC_MM_12,"Microstructure, indentation and first-principles study of AlCuFeMn",Materialia,2019,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_078,FAC_MM_13,Non-flammable dicationic ionic liquid as Li-ion battery electrolyte additive,Scientific Reports,2020,144,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_079,FAC_MM_13,Rapid chemical and topological ordering in supercooled liquid CuZr,Physical Review B,2011,98,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_080,FAC_MM_13,Detecting hidden structures in glasses by multiresolution network clustering,European Physical Journal E,2011,98,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_081,FAC_MM_13,"Corrosion, SCC and corrosion fatigue of Mg alloy bioimplants",Corrosion Reviews,2022,82,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_082,FAC_MM_13,Smart-contract vulnerability classification using AWD-LSTM,IOP SciNotes,2020,70,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_083,FAC_MM_13,Sculpting artificial edges in monolayer MoS2 for SERS hotspots,ACS Nano,2020,66,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_084,FAC_MM_13,Phase-separation-mediated devitrification of Al88Y7Fe5 glasses,Acta Materialia,2010,61,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_085,FAC_MM_14,Fundamentals of Steelmaking Metallurgy (with R. Boom),Prentice Hall,1993,440,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_086,FAC_MM_14,Simultaneous dephosphorisation and desulphurisation of molten pig iron,Ironmaking & Steelmaking,1984,185,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_087,FAC_MM_14,Multicomponent mixed-transport-control theory for slag/metal reactions,Ironmaking & Steelmaking,1984,115,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_088,FAC_MM_14,Effect of MgO and Al2O3 in BOF slag on morphology and phosphorus distribution,Ironmaking & Steelmaking,2005,100,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_089,FAC_MM_14,Scrap dissolution in molten iron under coupled heat and mass transfer,Metall. Mater. Trans. B,2013,75,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_090,FAC_MM_14,"Control of slag formation, foaming, slopping and chaos in BOF",Trans. IIM,2013,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_091,FAC_MM_15,Pseudo-binary and pseudo-ternary diffusion couple methods for multicomponent systems and HEAs,Philosophical Magazine,2019,54,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_092,FAC_MM_15,Solving multicomponent diffusion in equiatomic NiCoFeCr medium-entropy alloy,Acta Materialia,2020,52,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_093,FAC_MM_15,Recent advances in understanding diffusion in multiprincipal element systems,Annual Review of Materials Research,2022,44,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_094,FAC_MM_15,PINN-based inverse method for diffusion coefficients in NiCoFeCr,Scripta Materialia,2022,29,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_095,FAC_MM_15,Diffusion coefficients in NiCoFeCrAl via an inventive diffusion-couple design,Acta Materialia,2023,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_096,FAC_MM_15,Practising pseudo-binary diffusion couple method in ternary and multicomponent systems,Acta Materialia,2025,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_097,FAC_MM_16,Influence of cold rolling on microstructure of 2205 duplex stainless steel,Steel Research Int.,2014,57,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_098,FAC_MM_16,Low-density steels: effect of Al addition,JOM,2014,56,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_099,FAC_MM_16,"Fusion vs friction stir welding of mild steel: microstructure, texture, properties",Mater. Sci. Eng. A,2019,48,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_100,FAC_MM_16,ε-martensite nucleation and deformation in a high-Mn steel,Mater. Sci. Eng. A,2018,38,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_101,FAC_MM_16,Electron microscopy of an additively manufactured FeCo alloy,Additive Manufacturing,2021,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026
+PUB_MM_102,FAC_MM_16,Additively manufactured Ti6Al7Nb circular honeycomb for energy absorption,Mater. Sci. Eng. A,2022,,2026-11-13,true,,IITBBS_SMMME_FACULTY_2026

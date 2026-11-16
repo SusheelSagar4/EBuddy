@@ -1,0 +1,18 @@
+persona_id: core_higher_studies
+goal_id: GOAL_EE_RES_HIGHER_STUDIES
+display_name: Higher Studies (M.Tech / MS / PhD)
+description: B.Tech EE or MME student at IIT Bhubaneswar aiming for higher studies and research (M.Tech / MS / PhD through GATE or research admission) in their own discipline.
+applicable_programmes:
+- BTECH_EE
+- BTECH_MM
+target_semester_range:
+- 1
+- 8
+eligibility_notes: Open to B.Tech EE/MM students. GATE cycle eligibility, programme cut-offs and deadlines are handled by the Core-to-M.Tech module; unverified dates are shown as 'not confirmed yet'.
+planner_weights:
+  cgpa_protection: 0.8
+  skill_acceleration: 0.7
+  workload_smoothing: 0.75
+status: draft_for_review
+additional_goal_ids:
+- GOAL_MM_RES_HIGHER_STUDIES

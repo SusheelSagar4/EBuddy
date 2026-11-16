@@ -26,10 +26,9 @@ def build_sde_quiz_pipeline(base_dir=None):
 
     # Potential input file locations
     candidate_dirs = [
-        base_dir,
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data"),
         os.path.join(base_dir, "sde", "data"),
-        os.path.join(base_dir, "EBuddy-main"),
-        os.path.join(base_dir, "EBuddy-main", "sde", "data")
+        base_dir,
     ]
 
     def find_file(fname):
@@ -319,9 +318,9 @@ def build_sde_quiz_pipeline(base_dir=None):
     assert sum(r["count_unique_problems"] for r in topic_roadmap_rows) == 1193
 
     # Output CSV definitions
+    # Single canonical destination: sde/output/quiz/
     out_dirs = [
-        os.path.join(base_dir, "sde", "output"),
-        os.path.join(base_dir, "output"),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output", "quiz"),
     ]
 
     for od in out_dirs:

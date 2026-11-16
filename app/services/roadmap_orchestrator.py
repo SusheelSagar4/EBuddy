@@ -20,6 +20,7 @@ from app.agents.agent_4_query import QueryAdaptationAgent
 from app.services.onboarding_service import onboarding_service
 from app.services.diagnostic_service import diagnostic_service
 from app.services.plan_service import plan_service
+from app.db import persistence
 
 logger = logging.getLogger("ebuddy.orchestrator")
 
@@ -42,7 +43,7 @@ class RoadmapOrchestrator:
     """
     def __init__(self, seed_dir: str = "data/seed/kb"):
         self.seed_dir = seed_dir
-        self.agent_1 = RoadmapPlannerAgent(seed_dir)
+        self.agent_1 = plan_service.agent_1  # shared instance: ONE writer, one KB view
         self.agent_2 = LearningResourceAgent(seed_dir)
         self.agent_3 = AssessmentMasteryAgent()
         self.agent_4 = QueryAdaptationAgent()
@@ -55,173 +56,53 @@ class RoadmapOrchestrator:
         self.memory_summaries: Dict[str, str] = {} # student_id -> rolling conversation summary
 
     def _load_memory_summary(self, student_id: str) -> Optional[str]:
-        try:
-            import psycopg
-            conn = psycopg.connect("postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy", connect_timeout=1)
-            with conn.cursor() as cur:
-                cur.execute("SELECT summary_text FROM ops.memory_summary WHERE student_id = %s ORDER BY updated_at DESC LIMIT 1;", (student_id,))
-                row = cur.fetchone()
-                if row:
-                    return row[0]
-            conn.close()
-        except Exception:
-            pass
-        return self.memory_summaries.get(student_id)
+        return persistence.load_memory_summary(student_id) or self.memory_summaries.get(student_id)
 
     def _save_memory_summary(self, student_id: str, summary_text: str):
         self.memory_summaries[student_id] = summary_text
-        try:
-            import psycopg
-            conn = psycopg.connect("postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy", connect_timeout=1)
-            with conn.cursor() as cur:
-                cur.execute(
-                    "INSERT INTO ops.memory_summary (student_id, summary_text) VALUES (%s, %s);",
-                    (student_id, summary_text)
-                )
-            conn.commit()
-            conn.close()
-        except Exception:
-            pass
+        persistence.save_memory_summary(student_id, summary_text)
 
     def _persist_proposal_to_db(self, proposal: ChangeProposal):
-        """Optionally persists change proposal to PostgreSQL plan.change_proposal."""
-        try:
-            import psycopg
-            conn = psycopg.connect("postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy", connect_timeout=1)
-            import json
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                    INSERT INTO plan.change_proposal 
-                    (proposal_id, student_id, proposer_agent, proposal_type, status, reasoning, target_week, target_semester, proposed_modifications, impact_summary, student_feedback)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (proposal_id) DO UPDATE SET
-                    status = EXCLUDED.status,
-                    student_feedback = EXCLUDED.student_feedback,
-                    resolved_at = CURRENT_TIMESTAMP
-                    """,
-                    (
-                        proposal.proposal_id,
-                        proposal.student_id,
-                        proposal.proposer_agent,
-                        proposal.proposal_type,
-                        proposal.status,
-                        proposal.reasoning,
-                        proposal.target_week,
-                        proposal.target_semester,
-                        json.dumps(proposal.proposed_modifications),
-                        proposal.impact_summary,
-                        proposal.student_feedback
-                    )
-                )
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.debug(f"Unable to persist proposal to DB: {e}")
+        """Mirrors a change proposal to plan.change_proposal (best effort)."""
+        persistence.persist_proposal(proposal.model_dump(mode="json"))
 
-    def _persist_version_to_db(self, record: RoadmapVersionRecord, plan: Plan):
-        """Persists committed roadmap version record to PostgreSQL plan.roadmap_version."""
-        try:
-            import psycopg
-            conn = psycopg.connect("postgresql://ebuddy_user:ebuddy_password@127.0.0.1:5432/ebuddy", connect_timeout=1)
-            import json
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                    INSERT INTO plan.roadmap_version 
-                    (plan_id, student_id, version_number, commit_reason, approved_proposal_id, plan_snapshot, diff_from_previous)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    """,
-                    (
-                        record.plan_id,
-                        record.student_id,
-                        record.version_number,
-                        record.commit_reason,
-                        record.approved_proposal_id,
-                        json.dumps(plan.model_dump(), default=str),
-                        json.dumps({"summary": record.diff_summary})
-                    )
-                )
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.debug(f"Unable to persist roadmap version to DB: {e}")
+    def reset(self):
+        self.proposals.clear(); self.student_proposals.clear(); self.version_history.clear()
+        self.weekly_roadmaps.clear(); self.memory_summaries.clear()
+
+    def _record_version(self, student_id: str, plan: Plan, reason: str, proposal_id: Optional[str], diff_summary: str):
+        rec = RoadmapVersionRecord(
+            version_id=f"VER_{student_id}_{plan.version}_{uuid.uuid4().hex[:6]}", plan_id=plan.plan_id, student_id=student_id,
+            version_number=plan.version, commit_reason=reason, approved_proposal_id=proposal_id, total_items=len(plan.items),
+            total_credits=sum((it.credits or 0.0) for it in plan.items if it.item_type == "course"),
+            diff_summary=diff_summary, committed_at=datetime.now(timezone.utc))
+        self.version_history.setdefault(student_id, []).append(rec)
+        return rec
 
     def create_initial_roadmap(self, student_id: str) -> Dict[str, Any]:
-        """Invokes Agent 1 to create the initial Version 1 roadmap."""
+        """Agent 1 builds the roadmap (all remaining semesters); the plan service validates, diffs and stores it."""
         student = onboarding_service.students.get(student_id)
         if not student:
             raise ValueError(f"Student {student_id} not onboarded")
-
-        goal = onboarding_service.goals.get(student_id)
-        completed = onboarding_service.completed_courses.get(student_id, [])
-        constraints = onboarding_service.constraints.get(student_id, [])
-        preferences = onboarding_service.preferences.get(student_id, [])
-        states = diagnostic_service.skill_states.get(student_id, [])
-
-        # Calculate gaps
-        reqs = plan_service.goal_requirements.get(goal.goal_id, [])
-        gaps = plan_service.gap_analyzer.analyze_gaps(goal, reqs, states)
-
-        # Agent 1 produces Plan v1
-        v1_plan = self.agent_1.create_initial_roadmap(
-            student=student,
-            goal=goal,
-            gaps=gaps,
-            constraints=constraints,
-            preferences=preferences,
-            completed_course_ids=completed
-        )
-
-        plan_service.plans[student_id] = v1_plan
-
-        # Generate initial Week 1 schedule
-        weekly = self.agent_1.generate_weekly_roadmap(
-            plan=v1_plan,
-            semester_number=student.current_semester,
-            week_number=1,
-            daily_hours=2.0
-        )
-        self.weekly_roadmaps[student_id] = weekly
-
-        # Record Version 1 in history
-        rec = RoadmapVersionRecord(
-            version_id=f"VER_{student_id}_1_{uuid.uuid4().hex[:6]}",
-            plan_id=v1_plan.plan_id,
-            student_id=student_id,
-            version_number=1,
-            commit_reason="Initial baseline roadmap created by Agent 1 (Roadmap Planner)",
-            approved_proposal_id=None,
-            total_items=len(v1_plan.items),
-            total_credits=sum(self.agent_1.course_repo.get_by_id(it.course_id).credits for it in v1_plan.items if it.course_id and self.agent_1.course_repo.get_by_id(it.course_id)),
-            diff_summary="Baseline Roadmap v1 initial commitment.",
-            committed_at=datetime.now(timezone.utc)
-        )
-        self.version_history.setdefault(student_id, []).append(rec)
-        self._persist_version_to_db(rec, v1_plan)
-
+        res = plan_service.create_or_update_plan(student_id, trigger="initial" if not plan_service.get_plan(student_id) else "manual_regen")
+        plan = plan_service.get_plan(student_id)
+        weekly = self.get_weekly_roadmap(student_id, week_number=1)
+        self._record_version(student_id, plan, "Roadmap built by Agent 1 (Roadmap Planner)", None,
+                             plan.plan_diff.summary if plan.plan_diff else "Baseline roadmap")
         return {
-            "plan": v1_plan.model_dump(),
+            "plan": res["plan"],
             "weekly_roadmap": weekly.model_dump(),
-            "version": 1,
-            "validation": v1_plan.validation_report.model_dump() if v1_plan.validation_report else None
+            "version": plan.version,
+            "validation": res["validation"],
         }
 
     def get_weekly_roadmap(self, student_id: str, week_number: int = 1) -> WeeklyRoadmap:
         """Retrieves or generates the weekly roadmap for the student, enforcing weekly hours budget if set."""
-        current_plan = plan_service.get_plan(student_id)
-        if not current_plan:
-            raise ValueError(f"No active plan found for student {student_id}")
-
+        current_plan = plan_service.get_or_create(student_id)
         student = onboarding_service.students.get(student_id)
         sem = student.current_semester if student else 1
 
-        budget = None
-        for c in onboarding_service.constraints.get(student_id, []):
-            if getattr(c, "is_active", True) and getattr(c, "constraint_type", "") in ["weekly_hours", "max_weekly_hours", "study_hours"]:
-                p = getattr(c, "parameters", {})
-                budget = float(p.get("max_hours") or p.get("weekly_hours") or p.get("hours") or 0.0)
-                break
+        budget = plan_service.planner.parse_constraints(onboarding_service.constraints.get(student_id, []))["weekly_hours"]
 
         weekly = self.agent_1.generate_weekly_roadmap(current_plan, semester_number=sem, week_number=week_number, weekly_hours_budget=budget)
         self.weekly_roadmaps[student_id] = weekly
@@ -229,9 +110,7 @@ class RoadmapOrchestrator:
 
     def get_today_learning(self, student_id: str) -> Dict[str, Any]:
         """Invokes Agent 2 to recommend today's verified resources from the KB."""
-        current_plan = plan_service.get_plan(student_id)
-        if not current_plan:
-            raise ValueError(f"No active plan found for student {student_id}")
+        current_plan = plan_service.get_or_create(student_id)
 
         states = {s.skill_id: s for s in diagnostic_service.skill_states.get(student_id, [])}
         prefs = onboarding_service.preferences.get(student_id, [])
@@ -247,8 +126,13 @@ class RoadmapOrchestrator:
         eval_result = self.agent_3.evaluate_submission(student_id, exercise, student_answer, existing_ev)
 
         # Update evidence and states
-        diagnostic_service.evidence_ledger.setdefault(student_id, []).append(eval_result["new_evidence_item"])
-        diagnostic_service.skill_states[student_id] = eval_result["updated_states"]
+        # An objectively graded item is assessed (strong) evidence
+        new_ev = eval_result["new_evidence_item"]
+        if exercise.exercise_type in ("mcq", "numeric"):
+            new_ev = new_ev.model_copy(update={"source_type": "diagnostic", "notes": f"Adaptive item {exercise.exercise_id}"})
+        diagnostic_service.evidence_ledger.setdefault(student_id, []).append(new_ev)
+        diagnostic_service.skill_states[student_id] = diagnostic_service.state_updater.update_states(
+            student_id, diagnostic_service.evidence_ledger[student_id])
 
         proposal: Optional[ChangeProposal] = None
         # Insufficient mastery trigger -> Propose remediation
@@ -369,47 +253,47 @@ class RoadmapOrchestrator:
         })
         self.proposals[proposal_id] = approved_prop
 
-        current_plan = plan_service.get_plan(student_id)
+        current_plan = plan_service.get_or_create(student_id)
         student = onboarding_service.students.get(student_id)
         completed = onboarding_service.completed_courses.get(student_id, [])
+        constraints = onboarding_service.constraints.get(student_id, [])
+        mods = approved_prop.proposed_modifications or {}
+        why = [f"You approved a {approved_prop.proposal_type} proposal from {approved_prop.proposer_agent}: {approved_prop.reasoning}"]
 
-        new_plan, committed_prop = self.agent_1.commit_approved_proposal(
-            current_plan=current_plan,
-            student=student,
-            proposal=approved_prop,
-            completed_course_ids=completed
-        )
+        # Proposals that change an INPUT (goal, weekly hours) are applied to the input and the whole
+        # roadmap is re-planned deterministically; item-level proposals are committed by Agent 1 directly.
+        replanned = False
+        if approved_prop.proposal_type == "goal_pivot" and mods.get("target_goal_id"):
+            onboarding_service.switch_goal(student_id, mods["target_goal_id"])
+            replanned = True
+        elif approved_prop.proposal_type == "workload_reduction" and mods.get("weekly_hours_cap"):
+            onboarding_service.set_constraint(student_id, "weekly_hours", {"max_hours": float(mods["weekly_hours_cap"])})
+            replanned = True
+
+        if replanned:
+            plan_service.create_or_update_plan(student_id, trigger=f"proposal:{approved_prop.proposal_type}", reasons=why)
+            new_plan = plan_service.get_plan(student_id)
+            committed_prop = approved_prop.model_copy(update={"status": "committed", "resolved_at": datetime.now(timezone.utc)})
+        else:
+            new_plan, committed_prop = self.agent_1.commit_approved_proposal(
+                current_plan=current_plan, student=student, proposal=approved_prop, completed_course_ids=completed)
+            report = plan_service.validator.validate_plan(new_plan, student, completed_course_ids=completed, constraints=constraints)
+            if not report.passed:
+                failed = approved_prop.model_copy(update={"status": "validation_failed", "resolved_at": datetime.now(timezone.utc)})
+                self.proposals[proposal_id] = failed
+                self._persist_proposal_to_db(failed)
+                raise ValueError(f"Plan validation failed for proposal {proposal_id}: {'; '.join(report.messages)}")
+            diff = plan_service._compute_plan_diff(current_plan, new_plan, trigger=f"proposal:{approved_prop.proposal_type}", reasons=why)
+            new_plan = new_plan.model_copy(update={
+                "validation_report": report, "plan_diff": diff,
+                "what_changed_and_why": plan_service._generate_explanation(current_plan, new_plan, diff, None)})
+            plan_service.commit(student_id, new_plan, trigger=f"proposal:{approved_prop.proposal_type}")
 
         self.proposals[proposal_id] = committed_prop
-
-        # Update canonical plan in plan_service
-        plan_service.plans[student_id] = new_plan
-
-        # Regenerate updated weekly schedule
-        updated_weekly = self.agent_1.generate_weekly_roadmap(
-            plan=new_plan,
-            semester_number=student.current_semester,
-            week_number=committed_prop.target_week or 1
-        )
-        self.weekly_roadmaps[student_id] = updated_weekly
-
-        # Record Version Record
+        updated_weekly = self.get_weekly_roadmap(student_id, week_number=min(16, max(1, committed_prop.target_week or 1)))
         diff_summary = f"Roadmap adapted via {committed_prop.proposer_agent} ({committed_prop.proposal_type}): {committed_prop.impact_summary}"
-        ver_record = RoadmapVersionRecord(
-            version_id=f"VER_{student_id}_{new_plan.version}_{uuid.uuid4().hex[:6]}",
-            plan_id=new_plan.plan_id,
-            student_id=student_id,
-            version_number=new_plan.version,
-            commit_reason=committed_prop.reasoning,
-            approved_proposal_id=proposal_id,
-            total_items=len(new_plan.items),
-            total_credits=sum(self.agent_1.course_repo.get_by_id(it.course_id).credits for it in new_plan.items if it.course_id and self.agent_1.course_repo.get_by_id(it.course_id)),
-            diff_summary=diff_summary,
-            committed_at=datetime.now(timezone.utc)
-        )
-        self.version_history.setdefault(student_id, []).append(ver_record)
+        self._record_version(student_id, new_plan, committed_prop.reasoning, proposal_id, diff_summary)
         self._persist_proposal_to_db(committed_prop)
-        self._persist_version_to_db(ver_record, new_plan)
 
         return {
             "proposal_id": proposal_id,
@@ -418,6 +302,7 @@ class RoadmapOrchestrator:
             "roadmap_modified": True,
             "new_version": new_plan.version,
             "diff_summary": diff_summary,
+            "plan_diff": new_plan.plan_diff.model_dump() if new_plan.plan_diff else None,
             "new_plan": new_plan.model_dump(),
             "updated_weekly_roadmap": updated_weekly.model_dump()
         }

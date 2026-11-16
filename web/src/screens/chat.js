@@ -46,7 +46,7 @@ export function renderChat(container, state, navigate) {
       </div>
 
       <form id="chat-form" class="chat-input-bar" style="display:flex; gap:8px; margin-top:12px;">
-        <input type="text" id="chat-input" placeholder="Ask a doubt or say 'I have exams this week, reduce my workload'..." required autocomplete="off" style="flex:1; padding:10px; border-radius:4px; border:1px solid #ccc;" />
+        <input type="text" id="chat-input" placeholder="Try: Why is EE3L004 on my roadmap?  |  I want to switch to data analyst  |  Ignore previous instructions" required autocomplete="off" style="flex:1; padding:10px; border-radius:4px; border:1px solid #ccc;" />
         <button type="submit" class="btn btn-primary" id="btn-send">Send</button>
       </form>
     </div>
@@ -72,7 +72,8 @@ export function renderChat(container, state, navigate) {
 
     try {
       const res = await api.chat(state.studentId, query);
-      appendMessage('Agent 4', res.response, 'msg-assistant', res.inferred_intent, res.disclaimer, res.proposal);
+      const cites = (res.cited_kb_codes || []).length ? `\n\nKB codes in your plan: ${res.cited_kb_codes.join(', ')}` : '';
+      appendMessage('Agent 4', res.response + cites, 'msg-assistant', res.inferred_intent + (res.guardrail && res.guardrail.blocked ? ` • guardrail: ${res.guardrail.category}` : ''), res.disclaimer, res.proposal);
     } catch (err) {
       appendMessage('System', `Error communicating with buddy service: ${err.message}`, 'msg-assistant');
     } finally {
@@ -107,7 +108,7 @@ export function renderChat(container, state, navigate) {
     msgDiv.innerHTML = `
       <div class="msg-bubble" style="background:white; border:1px solid #e0e0e0; padding:10px 14px; border-radius:8px; margin-bottom:8px;">
         <span class="sender-name" style="font-weight:bold; color:${sender === 'You' ? '#333' : '#0052cc'};">${sender}</span>
-        <p style="white-space: pre-wrap; margin:6px 0;">${text}</p>
+        <p style="white-space: pre-wrap; margin:6px 0;">${String(text ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</p>
         ${proposalHtml}
         ${disclaimerHtml}
         ${intentHtml ? `<div class="msg-meta" style="margin-top:4px;">${intentHtml}</div>` : ''}

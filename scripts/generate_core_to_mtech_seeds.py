@@ -221,8 +221,8 @@ def generate_course_topic_map():
         # EE Courses
         ("EE2L001", "SAMPLE-TOPIC-EE-CIRCUITS", "full"),
         ("EE2L002", "SAMPLE-TOPIC-EE-SIGNALS", "full"),
-        ("EE3L001", "SAMPLE-TOPIC-EE-MACHINES", "full"),
-        ("EE3L002", "SAMPLE-TOPIC-EE-POWER", "full"),
+        ("EE2L003", "SAMPLE-TOPIC-EE-MACHINES", "full"),
+        ("EE3L007", "SAMPLE-TOPIC-EE-POWER", "full"),
         ("EE3L003", "SAMPLE-TOPIC-EE-CONTROL", "full"),
         ("EE3L004", "SAMPLE-TOPIC-EE-POWER-ELEC", "full"),
         ("EE2L004", "SAMPLE-TOPIC-EE-ANALOG", "full"),

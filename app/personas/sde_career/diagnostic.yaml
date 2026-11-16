@@ -1,0 +1,8 @@
+blueprint:
+  target_skills:
+  - SKILL_DATA_STRUCTURES_ALGO
+  - SKILL_PROGRAMMING_DS
+  item_counts: 5
+  difficulty_range:
+  - 30.0
+  - 80.0

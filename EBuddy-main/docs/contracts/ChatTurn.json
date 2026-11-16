@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "ContextCard": {
+      "additionalProperties": false,
+      "properties": {
+        "student_id": {
+          "title": "Student Id",
+          "type": "string"
+        },
+        "programme_id": {
+          "title": "Programme Id",
+          "type": "string"
+        },
+        "current_semester": {
+          "title": "Current Semester",
+          "type": "integer"
+        },
+        "cgpa": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cgpa"
+        },
+        "goal_id": {
+          "title": "Goal Id",
+          "type": "string"
+        },
+        "goal_name": {
+          "title": "Goal Name",
+          "type": "string"
+        },
+        "skill_gaps": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Skill Gaps",
+          "type": "array"
+        },
+        "current_plan_items": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Current Plan Items",
+          "type": "array"
+        },
+        "verified_facts": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Verified Facts",
+          "type": "array"
+        },
+        "unverified_advisories": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Unverified Advisories",
+          "type": "array"
+        },
+        "disclaimer": {
+          "default": "Strict Guardrail: The buddy never states dates, cut-offs, fees or credit limits unless verified in official institutional records; otherwise it states 'not confirmed yet' and directs the student to the official IIT Bhubaneswar administration.",
+          "title": "Disclaimer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "student_id",
+        "programme_id",
+        "current_semester",
+        "goal_id",
+        "goal_name",
+        "skill_gaps",
+        "current_plan_items",
+        "verified_facts",
+        "unverified_advisories"
+      ],
+      "title": "ContextCard",
+      "type": "object"
+    },
+    "Intent": {
+      "enum": [
+        "plan_query",
+        "domain_concept",
+        "goal_change",
+        "diagnostic_request",
+        "progress_check",
+        "clarification",
+        "off_topic"
+      ],
+      "title": "Intent",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "turn_id": {
+      "title": "Turn Id",
+      "type": "string"
+    },
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "user_message": {
+      "title": "User Message",
+      "type": "string"
+    },
+    "inferred_intent": {
+      "$ref": "#/$defs/Intent"
+    },
+    "context_card": {
+      "$ref": "#/$defs/ContextCard"
+    },
+    "model_response": {
+      "title": "Model Response",
+      "type": "string"
+    },
+    "plan_affected": {
+      "default": false,
+      "title": "Plan Affected",
+      "type": "boolean"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "turn_id",
+    "student_id",
+    "user_message",
+    "inferred_intent",
+    "context_card",
+    "model_response",
+    "created_at"
+  ],
+  "title": "ChatTurn",
+  "type": "object"
+}

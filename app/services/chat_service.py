@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from app.contracts.chat import Intent, ContextCard, ChatTurn
 from app.llm.tasks.intent_router import IntentRouter
 from app.llm.tasks.explainer import Explainer
+from app.llm import guardrails
 from app.services.onboarding_service import onboarding_service
 from app.services.diagnostic_service import diagnostic_service
 from app.services.plan_service import plan_service
@@ -116,45 +117,12 @@ class ChatService:
         )
 
     def is_prompt_injection(self, text: str) -> bool:
-        """
-        Scans for prompt injection attacks, jailbreaks, instruction overrides, or adversarial delimiters.
-        """
-        text_lower = text.lower()
-        patterns = [
-            r"(ignore|disregard|forget|bypass)\s+(all\s+)?(previous|prior|system)\s+instructions?",
-            r"system\s+prompt",
-            r"(disregard|ignore|bypass)\s+(the\s+)?rules?",
-            r"developer\s+mode",
-            r"jailbreak",
-            r"override\s+instructions?",
-            r"print\s+your\s+(prompt|instructions?)",
-            r"you\s+are\s+now\s+dan",
-            r"<system_instruction>",
-            r"grant\s+100%\s+mastery",
-            r"bypass\s+academic"
-        ]
-        for pat in patterns:
-            if re.search(pat, text_lower):
-                return True
-        return False
+        """Deterministic prompt-injection screen (shared implementation in app/llm/guardrails.py)."""
+        return guardrails.screen_message(text)["category"] == "prompt_injection"
 
     def is_off_topic(self, text: str) -> bool:
-        """
-        Scans for queries completely unrelated to academic learning, curriculum, courses, research, or career.
-        """
-        text_lower = text.lower()
-        off_topic_patterns = [
-            r"\b(write|compose)\s+(a\s+)?(poem|song|story|movie|fanfic|joke)\b",
-            r"\b(recipe|cooking|bake|bake a cake)\b",
-            r"\b(minecraft|fortnite|valorant|gta|roblox)\b",
-            r"\b(who\s+won|score\s+of)\s+(cricket|football|match|game)\b",
-            r"\b(horoscope|astrology|zodiac)\b",
-            r"\b(political|election|democrat|republican)\b"
-        ]
-        for pat in off_topic_patterns:
-            if re.search(pat, text_lower):
-                return True
-        return False
+        """Deterministic off-topic / integrity screen (shared implementation in app/llm/guardrails.py)."""
+        return guardrails.screen_message(text)["category"] in ("off_topic", "academic_integrity", "too_long")
 
     def handle_side_question(self, student_id: str, message: str, pinned: Dict[str, Any]) -> Optional[str]:
         """

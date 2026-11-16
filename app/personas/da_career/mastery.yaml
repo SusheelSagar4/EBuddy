@@ -1,0 +1,11 @@
+criteria_id: MASTERY_DA_CAREER
+goal_id: GOAL_TRACK_DA
+criteria:
+  min_skill_level: 75.0
+  required_project_milestones: 1
+  required_timed_assessments: 2
+  min_diagnostic_score: 70.0
+  timed_quiz_threshold: 70.0
+  rubric_project_threshold: 70.0
+  required_mock_interviews: 1
+  mock_interview_threshold: 65.0

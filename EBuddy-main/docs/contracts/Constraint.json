@@ -1,0 +1,35 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "constraint_id": {
+      "title": "Constraint Id",
+      "type": "string"
+    },
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "constraint_type": {
+      "title": "Constraint Type",
+      "type": "string"
+    },
+    "parameters": {
+      "additionalProperties": true,
+      "title": "Parameters",
+      "type": "object"
+    },
+    "is_active": {
+      "default": true,
+      "title": "Is Active",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "constraint_id",
+    "student_id",
+    "constraint_type",
+    "parameters"
+  ],
+  "title": "Constraint",
+  "type": "object"
+}

@@ -96,81 +96,250 @@ def list_papers(limit: int = 20):
     papers = list(core_kb_repo.papers.values())[:limit]
     return {"count": len(papers), "papers": [p.model_dump() for p in papers]}
 
+class StudentEditRequest(BaseModel):
+    name: Optional[str] = None
+    cgpa: Optional[float] = None
+    backlogs: Optional[int] = None
+    current_semester: Optional[int] = None
+    weekly_hours_cap: Optional[float] = None
+    credit_cap: Optional[float] = None
+    clear_credit_cap: Optional[bool] = None
+    goal_id: Optional[str] = None
+
+class EvidenceEditRequest(BaseModel):
+    evidence_id: Optional[str] = None     # edit an existing ledger row ...
+    skill_id: Optional[str] = None        # ... or add a new one
+    source_type: Optional[str] = "diagnostic"
+    score: float
+
+class CourseEditRequest(BaseModel):
+    credits: Optional[float] = None
+    title: Optional[str] = None
+
+class RuleEditRequest(BaseModel):
+    parameters: Dict[str, Any]
+
 @router.get("/students")
 def list_students():
-    students = list(onboarding_service.students.values())
-    return {"count": len(students), "students": [s.model_dump() for s in students]}
+    """All synthetic profiles (seed) with a flag for those currently loaded in memory."""
+    rows = onboarding_service.get_all_synthetic_students()
+    for r in rows:
+        r["loaded"] = r["student_id"] in onboarding_service.students
+        live = onboarding_service.students.get(r["student_id"])
+        if live:
+            r.update({"cgpa": live.cgpa, "backlogs": live.backlogs, "current_semester": live.current_semester, "name": live.name})
+        plan = plan_service.get_plan(r["student_id"])
+        r["plan_version"] = plan.version if plan else None
+    extra = [s for sid, s in onboarding_service.students.items() if sid not in {r["student_id"] for r in rows}]
+    return {"count": len(rows) + len(extra), "students": rows + [dict(s.model_dump(mode="json"), loaded=True) for s in extra]}
+
+@router.get("/students/{student_id}")
+def get_student_detail(student_id: str):
+    try:
+        st = onboarding_service.ensure_student_onboarded(student_id)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    from app.engine.skill_state import reliability_tier_for
+    names = plan_service.planner.skill_names
+    cons = plan_service.planner.parse_constraints(onboarding_service.constraints.get(student_id, []))
+    plan = plan_service.get_plan(student_id)
+    return {
+        "student": st.model_dump(mode="json"),
+        "goal_id": onboarding_service.goals[student_id].goal_id, "goal_name": onboarding_service.goals[student_id].name,
+        "weekly_hours_cap": cons["weekly_hours"], "credit_cap": cons["credit_cap"], "avoid_courses": sorted(cons["avoid"]),
+        "transcript": onboarding_service.transcripts.get(student_id, []),
+        "evidence": [{"evidence_id": e.evidence_id, "skill_id": e.skill_id, "skill_name": names.get(e.skill_id, e.skill_id),
+                      "source_type": e.source_type, "score": e.score,
+                      "reliability_tier": e.reliability_tier or reliability_tier_for(e.source_type), "notes": e.notes}
+                     for e in diagnostic_service.evidence_ledger.get(student_id, [])],
+        "skill_states": [s.model_dump(mode="json") for s in diagnostic_service.skill_states.get(student_id, [])],
+        "plan_version": plan.version if plan else None,
+        "versions": plan_service.version_log.get(student_id, []),
+    }
 
 @router.patch("/students/{student_id}")
-def update_student(student_id: str, req: StudentProfileUpdateRequest):
-    student = onboarding_service.students.get(student_id)
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found.")
-    
-    updated_dict = student.model_dump()
-    if req.name is not None:
-        updated_dict["name"] = req.name
-    if req.cgpa is not None:
-        updated_dict["cgpa"] = req.cgpa
-    if req.backlogs is not None:
-        updated_dict["backlogs"] = req.backlogs
-    if req.current_semester is not None:
-        updated_dict["current_semester"] = req.current_semester
-
+def update_student(student_id: str, req: StudentEditRequest):
+    """Edits a profile; the roadmap is re-processed immediately and the response carries the new version + diff."""
+    from app.services.reprocess_service import reprocess_service
     from app.contracts.student import StudentProfile
-    onboarding_service.students[student_id] = StudentProfile(**updated_dict)
+    from app.db import persistence
+    try:
+        student = onboarding_service.ensure_student_onboarded(student_id)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Student not found.")
+    if req.cgpa is not None and not 0 <= req.cgpa <= 10:
+        raise HTTPException(status_code=400, detail="cgpa must be between 0 and 10")
+    if req.current_semester is not None and not 1 <= req.current_semester <= 8:
+        raise HTTPException(status_code=400, detail="current_semester must be between 1 and 8")
+    if req.goal_id is not None and onboarding_service.goal_repo.get_by_id(req.goal_id) is None:
+        raise HTTPException(status_code=400, detail=f"Unknown goal {req.goal_id}")
+    plan_service.get_or_create(student_id)
 
-    # Immediately trigger re-processing per hard constraint:
-    reprocess_result = trigger_reprocessing(student_id, ReprocessRequest(reason="Admin edited student profile attributes."))
-    return {"status": "success", "student": onboarding_service.students[student_id].model_dump(), "reprocess": reprocess_result}
+    d = student.model_dump()
+    fields = {}
+    for k in ("name", "cgpa", "backlogs", "current_semester"):
+        v = getattr(req, k)
+        if v is not None and v != d.get(k):
+            d[k] = v
+            fields[k] = v
+    if "current_semester" in fields:
+        d["year"] = (d["current_semester"] + 1) // 2
+        fields["year"] = d["year"]
+    onboarding_service.students[student_id] = StudentProfile(**d)
+    if fields:
+        persistence.write_student_profile(student_id, fields)
+    changed = list(fields)
+    if req.weekly_hours_cap is not None:
+        onboarding_service.set_constraint(student_id, "weekly_hours", {"max_hours": float(req.weekly_hours_cap)})
+        changed.append("weekly_hours_cap")
+    if req.credit_cap is not None:
+        onboarding_service.set_constraint(student_id, "credit_cap", {"max_credits": float(req.credit_cap)})
+        changed.append("credit_cap")
+    elif req.clear_credit_cap:
+        onboarding_service.set_constraint(student_id, "credit_cap", None)
+        changed.append("credit_cap")
+    if req.goal_id is not None and req.goal_id != onboarding_service.goals[student_id].goal_id:
+        onboarding_service.switch_goal(student_id, req.goal_id)
+        changed.append("goal_id")
+
+    reprocess_result = reprocess_service.reprocess_student(
+        student_id, f"Admin edited student profile ({', '.join(changed) or 'no field changed'}).", trigger="admin_edit")
+    return {"status": "success", "changed_fields": changed, "student": onboarding_service.students[student_id].model_dump(),
+            "reprocess": reprocess_result}
+
+@router.patch("/students/{student_id}/evidence")
+def edit_evidence(student_id: str, req: EvidenceEditRequest):
+    """Edits or adds a diagnostic / assessment score; skill state and roadmap are re-processed immediately."""
+    from app.services.reprocess_service import reprocess_service
+    from app.db import persistence
+    try:
+        onboarding_service.ensure_student_onboarded(student_id)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Student not found.")
+    if not 0 <= req.score <= 100:
+        raise HTTPException(status_code=400, detail="score must be between 0 and 100")
+    plan_service.get_or_create(student_id)
+    ledger = diagnostic_service.evidence_ledger.get(student_id, [])
+    if req.evidence_id:
+        idx = next((i for i, e in enumerate(ledger) if e.evidence_id == req.evidence_id), None)
+        if idx is None:
+            raise HTTPException(status_code=404, detail="Evidence row not found.")
+        old = ledger[idx]
+        ledger[idx] = old.model_copy(update={"score": float(req.score)})
+        diagnostic_service.set_ledger(student_id, ledger)
+        if old.evidence_id.startswith("EV_DB_"):
+            persistence.update_evidence_score(int(old.evidence_id.split("_")[-1]), float(req.score))
+        reason = (f"Admin edited {old.source_type} score for {plan_service.planner.skill_names.get(old.skill_id, old.skill_id)}: "
+                  f"{old.score:.0f} -> {req.score:.0f}.")
+    else:
+        if not req.skill_id or req.skill_id not in plan_service.planner.skill_names:
+            raise HTTPException(status_code=400, detail="A valid skill_id (or an evidence_id) is required.")
+        diagnostic_service.add_evidence(student_id, req.skill_id, req.source_type or "diagnostic", req.score, notes="Added by admin")
+        persistence.insert_evidence(student_id, req.skill_id, req.source_type or "diagnostic", req.score, None, "Added by admin")
+        reason = f"Admin added {req.source_type} score {req.score:.0f} for {plan_service.planner.skill_names[req.skill_id]}."
+    return {"status": "success", "reprocess": reprocess_service.reprocess_student(student_id, reason, trigger="admin_edit")}
 
 @router.post("/students/{student_id}/reprocess")
 def trigger_reprocessing(student_id: str, req: ReprocessRequest):
-    """
-    Hard constraint: Any edit must trigger re-processing immediately:
-    recompute skill state, readiness, matches and the current plan, and save a new plan version with a reason.
-    """
+    """Re-runs skill state -> gaps -> planner -> validator and stores a new plan version with the reason."""
+    from app.services.reprocess_service import reprocess_service
     student = onboarding_service.students.get(student_id)
     if not student:
         raise HTTPException(status_code=404, detail="Student not found.")
-
-    # 1. Recompute skill states from evidence ledger
     ev_list = diagnostic_service.evidence_ledger.get(student_id, [])
-    diagnostic_service.state_updater.update_states(student_id, ev_list)
     states = diagnostic_service.skill_states.get(student_id, [])
-
-    # 2. Recompute readiness gate
     target_area = "AREA_EE_POWER_SYS" if "EE" in student.programme_id else "AREA_MM_ALLOYS"
-    gate_result = readiness_gate_engine.evaluate_gate(
-        student_id=student_id,
-        target_area_id=target_area,
-        skill_states=states,
-        evidence_ledger=ev_list
-    )
-
-    # 3. Recompute faculty matches
-    matches = faculty_matcher_engine.rank_faculty(
-        student_department=student.programme_id,
-        target_area_ids=[target_area],
-        skill_states=states,
-        top_k=5
-    )
-
-    # 4. Save new plan version
-    new_plan_info = None
+    gate_result = readiness_gate_engine.evaluate_gate(student_id=student_id, target_area_id=target_area,
+                                                      skill_states=states, evidence_ledger=ev_list)
+    matches = faculty_matcher_engine.rank_faculty(student_department=student.programme_id, target_area_ids=[target_area],
+                                                  skill_states=states, top_k=5)
     try:
-        new_plan_info = plan_service.create_or_update_plan(student_id)
+        new_plan_info = reprocess_service.reprocess_student(student_id, req.reason, trigger="admin_edit")
     except Exception as e:
         new_plan_info = {"status": "skipped", "error": str(e)}
-
     return {
-        "status": "reprocessed",
-        "student_id": student_id,
-        "reason": req.reason,
-        "readiness_gate": gate_result.model_dump(),
-        "top_matches_count": len(matches),
-        "plan_update": new_plan_info,
-        "timestamp": datetime.now().isoformat()
+        "status": "reprocessed", "student_id": student_id, "reason": req.reason,
+        "readiness_gate": gate_result.model_dump(), "top_matches_count": len(matches),
+        "plan_update": new_plan_info, "timestamp": datetime.now().isoformat()
+    }
+
+@router.get("/courses")
+def list_courses(q: Optional[str] = None, limit: int = 40):
+    info = plan_service.planner.course_info
+    rows = [{"course_id": cid, "title": i["title"], "credits": i["credits"], "status": i.get("status")} for cid, i in sorted(info.items())]
+    if q:
+        ql = q.lower()
+        rows = [r for r in rows if ql in r["course_id"].lower() or ql in r["title"].lower()]
+    return {"count": len(rows), "courses": rows[:limit]}
+
+@router.patch("/courses/{course_id}")
+def edit_course(course_id: str, req: CourseEditRequest):
+    """Edits course data (credits / title); every loaded student whose plan uses the course is re-processed immediately."""
+    from app.services.reprocess_service import reprocess_service
+    from app.db import persistence
+    if req.credits is not None and not 0 < req.credits <= 12:
+        raise HTTPException(status_code=400, detail="credits must be between 0 and 12")
+    fields = {k: v for k, v in {"credits": req.credits, "title": req.title}.items() if v is not None}
+    try:
+        res = reprocess_service.apply_course_update(course_id, fields)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    if res["changes"]:
+        persistence.write_course(course_id, fields)
+    return {"status": "success", **res}
+
+@router.get("/rules")
+def list_rules():
+    return {"rules": list(plan_service.validator.academic_rules.values())}
+
+@router.patch("/rules/{rule_id}")
+def edit_rule(rule_id: str, req: RuleEditRequest):
+    """Edits an academic rule's parameters (e.g. the minor CGPA cutoff); all loaded plans are re-processed."""
+    from app.services.reprocess_service import reprocess_service
+    from app.db import persistence
+    try:
+        res = reprocess_service.apply_rule_update(rule_id, req.parameters)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    persistence.write_rule_parameters(rule_id, res["new_parameters"])
+    return {"status": "success", **res}
+
+@router.post("/reset")
+def reset_system():
+    """Restores the original seed state: PostgreSQL (drop + reseed) and all in-memory students, evidence and plans."""
+    from app.services.reprocess_service import reprocess_service
+    return reprocess_service.reset_all()
+
+@router.get("/reprocess-log")
+def reprocess_log():
+    from app.services.reprocess_service import reprocess_service
+    return reprocess_service.status()
+
+@router.get("/overview")
+def admin_overview():
+    """One call for the Admin screen: system status, LLM mode, KB and track statistics, profile coverage."""
+    import json, os
+    from app.llm.client import llm_client
+    from app.kb.track_repo import track_repo
+    from app.db import persistence
+    from app.config import settings
+    manifest = {}
+    mp = os.path.join("data", "seed", "student", "profile_manifest.json")
+    if os.path.exists(mp):
+        with open(mp, "r", encoding="utf-8") as f:
+            manifest = json.load(f)
+    tables = ["kb.course", "kb.skill", "kb.goal", "kb.resource", "kb.exercise", "kb.track_resource", "kb.track_event",
+              "kb.track_question", "student.student", "student.skill_evidence", "student.completed_course", "plan.plan", "ops.llm_call_log"]
+    planner = plan_service.planner
+    return {
+        "database": {"available": persistence.db_available(), "sync_enabled": persistence.sync_enabled(),
+                     "row_counts": persistence.table_counts(tables), "adminer_port": settings.ADMINER_PORT},
+        "llm": llm_client.status(),
+        "kb": {"courses": len(planner.course_info), "skills": len(planner.skill_names),
+               "goals": len(onboarding_service.goal_repo.list_all()), "personas": len(persona_registry.list_all())},
+        "tracks": track_repo.stats(),
+        "profiles": manifest,
+        "memory": {"students_loaded": len(onboarding_service.students), "plans": len(plan_service.plans)},
     }
 
 # =============================================================

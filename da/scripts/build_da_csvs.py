@@ -125,9 +125,7 @@ def resolve_file(filename):
         os.path.join(script_dir, "data", filename),
         os.path.join(os.getcwd(), filename),
         os.path.join(os.getcwd(), "data", filename),
-        os.path.join(os.getcwd(), "data_analyst", "data", filename),
         os.path.join(os.getcwd(), "da", "data", filename),
-        os.path.join(os.path.dirname(script_dir), "data_analyst", "data", filename),
         os.path.join(os.path.dirname(script_dir), "da", "data", filename),
     ]
     for c in candidates:
@@ -658,37 +656,8 @@ def build():
     # 4. Writing Output CSV Files (BOM utf-8-sig)
     # ----------------------------------------------------
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    candidate_dirs = []
-    if os.path.basename(script_dir) == "scripts":
-        pkg_root = os.path.dirname(script_dir)
-        repo_root = os.path.dirname(pkg_root)
-        candidate_dirs.extend([
-            os.path.join(pkg_root, "output"),
-            os.path.join(repo_root, "output"),
-            os.path.join(repo_root, "da", "output"),
-            os.path.join(repo_root, "data_analyst", "output"),
-        ])
-    else:
-        candidate_dirs.extend([
-            os.path.join(script_dir, "output"),
-            os.path.join(script_dir, "da", "output"),
-            os.path.join(script_dir, "data_analyst", "output"),
-        ])
-
-    candidate_dirs.extend([
-        os.path.join(os.getcwd(), "output"),
-        os.path.join(os.getcwd(), "da", "output"),
-        os.path.join(os.getcwd(), "data_analyst", "output"),
-    ])
-
-    # Deduplicate and filter out any invalid paths
-    unique_out_dirs = []
-    for d in candidate_dirs:
-        norm_d = os.path.abspath(d)
-        if "scripts" in os.path.basename(norm_d) or norm_d.endswith(os.path.join("scripts", "output")):
-            continue
-        if norm_d not in unique_out_dirs:
-            unique_out_dirs.append(norm_d)
+    # Single canonical destination: da/output/curriculum/
+    unique_out_dirs = [os.path.join(os.path.dirname(script_dir), "output", "curriculum")]
 
     for out_d in unique_out_dirs:
         os.makedirs(out_d, exist_ok=True)

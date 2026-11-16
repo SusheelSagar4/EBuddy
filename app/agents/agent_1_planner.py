@@ -30,6 +30,20 @@ class RoadmapPlannerAgent:
         self.resource_repo = ResourceRepo(seed_dir)
         self.course_repo = CourseRepo(seed_dir)
 
+    def build_roadmap(self, student: StudentProfile, goal: Goal, gaps: List[Dict[str, Any]], constraints: List[Constraint],
+                      preferences: List[Preference], completed_course_ids: Optional[List[str]] = None,
+                      skill_states: Optional[List[SkillState]] = None, aims_text: Optional[str] = None, version: int = 1,
+                      horizon: str = "degree", evidence: Optional[list] = None, interests: Optional[list] = None) -> Plan:
+        """
+        Builds a candidate roadmap version with the deterministic planner (multi-semester by default).
+        Agent 1 is the only component allowed to produce roadmap versions; validation, diffing and storage
+        happen in the plan service before anything is shown to the student.
+        """
+        return self.planner_engine.generate_plan(
+            student=student, goal=goal, gaps=gaps, constraints=constraints, preferences=preferences,
+            completed_course_ids=completed_course_ids, skill_states=skill_states, aims_text=aims_text,
+            version=version, horizon=horizon, evidence=evidence, interests=interests)
+
     def create_initial_roadmap(
         self,
         student: StudentProfile,
@@ -48,7 +62,7 @@ class RoadmapPlannerAgent:
             preferences=preferences,
             completed_course_ids=completed_course_ids
         )
-        report = self.validator_engine.validate_plan(base_plan, student, completed_course_ids)
+        report = self.validator_engine.validate_plan(base_plan, student, completed_course_ids, constraints=constraints)
         validated_plan = base_plan.model_copy(update={
             "version": 1,
             "validation_report": report
@@ -69,7 +83,7 @@ class RoadmapPlannerAgent:
         If weekly_hours_budget is provided, prunes daily tasks to fit within budget
         and explicitly records deferred tasks.
         """
-        semester_courses = [it for it in plan.items if it.item_type == "course" and it.semester_number == semester_number]
+        semester_courses = [it for it in plan.items if it.item_type == "course" and (it.semester_number or semester_number) == semester_number]
         focus_skills = []
         target_course_ids = []
         for c in semester_courses:
@@ -243,15 +257,16 @@ class RoadmapPlannerAgent:
                 )
             ))
 
-        candidate_plan = Plan(
-            plan_id=f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
-            student_id=student.student_id,
-            goal_id=current_plan.goal_id,
-            version=current_plan.version + 1,
-            items=new_items,
-            is_active=True,
-            created_at=datetime.now(timezone.utc)
-        )
+        # Keep the plan's horizon, evidence ledger and advisories; only the items and version change.
+        candidate_plan = current_plan.model_copy(update={
+            "plan_id": f"PLAN_{student.student_id}_{uuid.uuid4().hex[:8]}",
+            "version": current_plan.version + 1,
+            "items": new_items,
+            "validation_report": None,
+            "plan_diff": None,
+            "is_active": True,
+            "created_at": datetime.now(timezone.utc),
+        })
 
         # Strict deterministic validation check
         report = self.validator_engine.validate_plan(candidate_plan, student, completed_course_ids)

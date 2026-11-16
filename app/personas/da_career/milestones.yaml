@@ -1,0 +1,18 @@
+- semester_target: 3
+  title: Foundation quiz
+  description: Foundation quiz (spreadsheets, descriptive statistics, SQL basics) at 70% or better.
+- semester_target: 4
+  title: Timed SQL test
+  description: Timed SQL test at 70% or better and one pandas exercise published as a notebook.
+- semester_target: 5
+  title: Portfolio project 1
+  description: Retail sales cleaning and EDA project scored against its 4 rubric criteria.
+- semester_target: 6
+  title: Dashboard project and first data hackathon
+  description: One BI dashboard project and one data hackathon or competition entry.
+- semester_target: 7
+  title: Case interview practice
+  description: At least 2 timed analytics case interviews with written feedback before the placement season.
+- semester_target: 8
+  title: Offer decision or continued preparation
+  description: Record the outcome and, if needed, a continued-preparation plan.

@@ -277,14 +277,11 @@ def generate_plan(student_id: str):
 
 @router.get("/{student_id}/plan")
 def get_plan(student_id: str):
-    plan = plan_service.get_plan(student_id)
-    if not plan:
-        try:
-            return plan_service.create_or_update_plan(student_id)
-        except Exception:
-            pass
-    if not plan:
-        raise HTTPException(status_code=404, detail="Plan not found")
+    try:
+        onboarding_service.ensure_student_onboarded(student_id)
+        plan = plan_service.get_or_create(student_id)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Plan not found: {e}")
     data = plan.model_dump()
     data["plan"] = plan.model_dump()
     data["version"] = plan.version
@@ -320,7 +317,7 @@ def get_learn_resources(student_id: str, skill_id: Optional[str] = None):
             if it.course_id:
                 course_ids.add(it.course_id)
     if not course_ids:
-        course_ids = {"EE2L001", "EE3L001", "EE3L002"} if prog == "BTECH_EE" else {"ML2L002", "ML2L005", "ML3L003"}
+        course_ids = {"EE2L001", "EE3L004", "EE3L007"} if prog == "BTECH_EE" else {"ML2L002", "ML2L005", "ML3L003"}
 
     res_file = os.path.join("data", "seed", "kb", "resource.csv")
     resources = []
@@ -370,7 +367,8 @@ def get_weekly_roadmap(student_id: str, week: int = Query(1, ge=1, le=16)):
 @router.get("/{student_id}/roadmap/versions")
 def get_roadmap_versions(student_id: str):
     versions = roadmap_orchestrator.get_version_history(student_id)
-    return {"student_id": student_id, "versions": [v.model_dump() for v in versions]}
+    return {"student_id": student_id, "versions": [v.model_dump() for v in versions],
+            "version_log": plan_service.version_log.get(student_id, [])}
 
 @router.get("/{student_id}/learn/today")
 def get_learn_today(student_id: str):
@@ -421,7 +419,7 @@ def get_student_budget(student_id: str, week_number: int = 1):
         raise HTTPException(status_code=404, detail="Student not found.")
     
     courses = onboarding_service.student_completed_courses.get(student_id, [])
-    enrolled = ["EE2L001", "EE3L001"] if "EE" in student.programme_id else ["ML2L002", "ML2L005"]
+    enrolled = ["EE2L001", "EE3L004"] if "EE" in student.programme_id else ["ML2L002", "ML2L005"]
     
     budget = budget_engine.calculate_weekly_budget(
         declared_hours=15.0,
@@ -439,7 +437,7 @@ def get_weekly_focus(student_id: str, week_number: int = 1):
         raise HTTPException(status_code=404, detail="Student not found.")
 
     states = diagnostic_service.skill_states.get(student_id, [])
-    enrolled = ["EE2L001", "EE3L001"] if "EE" in student.programme_id else ["ML2L002", "ML2L005"]
+    enrolled = ["EE2L001", "EE3L004"] if "EE" in student.programme_id else ["ML2L002", "ML2L005"]
     goal = onboarding_service.goals.get(student_id)
     gtype = "core_industry" if (goal and "industry" in goal.name.lower()) else "core_research"
 

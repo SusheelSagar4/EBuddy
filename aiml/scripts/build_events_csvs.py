@@ -25,7 +25,7 @@ def resolve_file(filename):
 
 FILE_A = resolve_file("top7_iit_fests_26-27.xlsx")
 FILE_B = resolve_file("ai_ml_hackathons_and_top7_iit_fests_2026-2027.xlsx")
-OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output"))
+OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output", "events"))
 
 # Competition rules
 COMP_PLATFORMS = {"Kaggle", "Zindi", "DrivenData", "Codabench / Synapse"}
@@ -760,15 +760,6 @@ def build():
         w.writeheader()
         w.writerows(domain_map_rows)
 
-    # Sync to inner EBuddy-main/output if directory exists
-    inner_output_dir = os.path.join("EBuddy-main", "output")
-    if os.path.isdir("EBuddy-main"):
-        os.makedirs(inner_output_dir, exist_ok=True)
-        for fname in ["01_events_master.csv", "02_phase_eligibility.csv", "03_recommendation_rules.csv", "04_domain_to_phase_map.csv"]:
-            src = os.path.join(OUTPUT_DIR, fname)
-            dst = os.path.join(inner_output_dir, fname)
-            with open(src, "rb") as sf, open(dst, "wb") as df:
-                df.write(sf.read())
 
     # 8. Assertions
     print("\n" + "=" * 80)

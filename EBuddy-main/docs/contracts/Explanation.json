@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "title": "Subject",
+      "type": "string"
+    },
+    "audience": {
+      "default": "student",
+      "title": "Audience",
+      "type": "string"
+    },
+    "short_summary": {
+      "title": "Short Summary",
+      "type": "string"
+    },
+    "detailed_rationale": {
+      "title": "Detailed Rationale",
+      "type": "string"
+    },
+    "citations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Citations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "subject",
+    "short_summary",
+    "detailed_rationale"
+  ],
+  "title": "Explanation",
+  "type": "object"
+}

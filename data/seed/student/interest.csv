@@ -1,0 +1,159 @@
+student_id,topic,weight,reliability_tier,declared_strength
+CONF_STU_EE_POWER_01,Power systems and smart grid,0.9,weak,strong
+CONF_STU_EE_POWER_01,Renewable energy integration,0.7,weak,moderate
+CONF_STU_EE_POWER_02,Power systems and smart grid,0.9,weak,strong
+CONF_STU_EE_POWER_02,Renewable energy integration,0.7,weak,moderate
+CONF_STU_EE_POWER_03,Power systems and smart grid,0.9,weak,strong
+CONF_STU_EE_POWER_03,Renewable energy integration,0.7,weak,moderate
+CONF_STU_EE_EDGE_BACKLOG,Power systems and smart grid,0.9,weak,strong
+CONF_STU_EE_EDGE_BACKLOG,Renewable energy integration,0.7,weak,moderate
+CONF_STU_EE_EDGE_CGPA_CUTOFF,Power systems and smart grid,0.9,weak,strong
+CONF_STU_EE_EDGE_CGPA_CUTOFF,Renewable energy integration,0.7,weak,moderate
+CONF_STU_EE_EDGE_GOAL_PIVOT,Power systems and smart grid,0.9,weak,strong
+CONF_STU_EE_EDGE_GOAL_PIVOT,Renewable energy integration,0.7,weak,moderate
+CONF_STU_EE_EDGE_CONFLICT,Power systems and smart grid,1.0,weak,strong
+CONF_STU_EE_EDGE_CONFLICT,Renewable energy integration,0.7,weak,moderate
+CONF_STU_EE_EDGE_CONFLICT,Power electronics converters,0.5,weak,moderate
+CONF_STU_MME_PROCESS_01,Iron and steelmaking,0.9,weak,strong
+CONF_STU_MME_PROCESS_01,Materials processing,0.7,weak,moderate
+CONF_STU_MME_PROCESS_02,Iron and steelmaking,0.9,weak,strong
+CONF_STU_MME_PROCESS_02,Materials processing,0.7,weak,moderate
+CONF_STU_MME_PROCESS_03,High-entropy alloys,0.9,weak,strong
+CONF_STU_MME_PROCESS_03,Physical metallurgy,0.7,weak,moderate
+CONF_STU_UPSC_01,Polity and governance,0.9,weak,strong
+CONF_STU_UPSC_01,Economy,0.7,weak,moderate
+CONF_STU_UPSC_02,Polity and governance,0.9,weak,strong
+CONF_STU_UPSC_02,Economy,0.7,weak,moderate
+CONF_STU_UPSC_03,Polity and governance,0.9,weak,strong
+CONF_STU_UPSC_03,Economy,0.7,weak,moderate
+CONF_STU_STARTUP_01,Customer discovery,0.9,weak,strong
+CONF_STU_STARTUP_01,MVP building,0.7,weak,moderate
+CONF_STU_STARTUP_02,Customer discovery,0.9,weak,strong
+CONF_STU_STARTUP_02,MVP building,0.7,weak,moderate
+CONF_STU_STARTUP_03,Customer discovery,0.9,weak,strong
+CONF_STU_STARTUP_03,MVP building,0.7,weak,moderate
+SYN_EE_S1_001,Power systems and smart grid,0.9,weak,strong
+SYN_EE_S1_001,Renewable energy integration,0.7,weak,moderate
+SYN_EE_S2_002,Power systems and smart grid,0.9,weak,strong
+SYN_EE_S2_002,Renewable energy integration,0.7,weak,moderate
+SYN_EE_S6_003,VLSI design,0.9,weak,strong
+SYN_EE_S6_003,Embedded systems,0.7,weak,moderate
+SYN_EE_S7_004,Power systems and smart grid,0.9,weak,strong
+SYN_EE_S7_004,Renewable energy integration,0.7,weak,moderate
+SYN_EE_S8_005,VLSI design,0.9,weak,strong
+SYN_EE_S8_005,Embedded systems,0.7,weak,moderate
+SYN_MM_S1_006,High-entropy alloys,0.9,weak,strong
+SYN_MM_S1_006,Physical metallurgy,0.7,weak,moderate
+SYN_MM_S2_007,Iron and steelmaking,0.9,weak,strong
+SYN_MM_S2_007,Materials processing,0.7,weak,moderate
+SYN_MM_S6_008,High-entropy alloys,0.9,weak,strong
+SYN_MM_S6_008,Physical metallurgy,0.7,weak,moderate
+SYN_MM_S7_009,Iron and steelmaking,0.9,weak,strong
+SYN_MM_S7_009,Materials processing,0.7,weak,moderate
+SYN_MM_S8_010,High-entropy alloys,0.9,weak,strong
+SYN_MM_S8_010,Physical metallurgy,0.7,weak,moderate
+SYN_MM_S5_011,High-entropy alloys,1.0,weak,strong
+SYN_MM_S5_011,Physical metallurgy,0.7,weak,moderate
+SYN_MM_S5_011,Materials characterization,0.5,weak,moderate
+SYN_EE_S1_012,Programming and data structures,0.9,weak,strong
+SYN_EE_S1_012,System design,0.7,weak,moderate
+SYN_EE_S3_013,Programming and data structures,1.0,weak,strong
+SYN_EE_S3_013,System design,0.7,weak,moderate
+SYN_EE_S3_013,Competitive programming,0.5,weak,moderate
+SYN_EE_S4_014,Programming and data structures,0.9,weak,strong
+SYN_EE_S4_014,System design,0.7,weak,moderate
+SYN_EE_S5_015,Programming and data structures,0.9,weak,strong
+SYN_EE_S5_015,System design,0.7,weak,moderate
+SYN_EE_S6_016,Programming and data structures,0.9,weak,strong
+SYN_EE_S6_016,System design,0.7,weak,moderate
+SYN_EE_S7_017,Programming and data structures,0.9,weak,strong
+SYN_EE_S7_017,System design,0.7,weak,moderate
+SYN_MM_S2_018,Programming and data structures,0.9,weak,strong
+SYN_MM_S2_018,System design,0.7,weak,moderate
+SYN_MM_S4_019,Programming and data structures,0.9,weak,strong
+SYN_MM_S4_019,System design,0.7,weak,moderate
+SYN_MM_S5_020,Programming and data structures,0.9,weak,strong
+SYN_MM_S5_020,System design,0.7,weak,moderate
+SYN_MM_S8_021,Programming and data structures,0.9,weak,strong
+SYN_MM_S8_021,System design,0.7,weak,moderate
+SYN_EE_S2_022,Data analytics and dashboards,0.9,weak,strong
+SYN_EE_S2_022,SQL databases,0.7,weak,moderate
+SYN_EE_S3_023,Data analytics and dashboards,1.0,weak,strong
+SYN_EE_S3_023,SQL databases,0.7,weak,moderate
+SYN_EE_S3_023,Probability and statistics,0.5,weak,moderate
+SYN_EE_S5_024,Data analytics and dashboards,0.9,weak,strong
+SYN_EE_S5_024,SQL databases,0.7,weak,moderate
+SYN_EE_S6_025,Data analytics and dashboards,0.9,weak,strong
+SYN_EE_S6_025,SQL databases,0.7,weak,moderate
+SYN_MM_S3_026,Data analytics and dashboards,0.9,weak,strong
+SYN_MM_S3_026,SQL databases,0.7,weak,moderate
+SYN_MM_S4_027,Data analytics and dashboards,0.9,weak,strong
+SYN_MM_S4_027,SQL databases,0.7,weak,moderate
+SYN_MM_S6_028,Data analytics and dashboards,0.9,weak,strong
+SYN_MM_S6_028,SQL databases,0.7,weak,moderate
+SYN_MM_S7_029,Data analytics and dashboards,0.9,weak,strong
+SYN_MM_S7_029,SQL databases,0.7,weak,moderate
+SYN_EE_S1_030,Machine learning,0.9,weak,strong
+SYN_EE_S1_030,Deep learning,0.7,weak,moderate
+SYN_EE_S4_031,Machine learning,0.9,weak,strong
+SYN_EE_S4_031,Deep learning,0.7,weak,moderate
+SYN_EE_S5_032,Machine learning,1.0,weak,strong
+SYN_EE_S5_032,Deep learning,0.7,weak,moderate
+SYN_EE_S5_032,Artificial intelligence,0.5,weak,moderate
+SYN_EE_S7_033,Machine learning,0.9,weak,strong
+SYN_EE_S7_033,Deep learning,0.7,weak,moderate
+SYN_MM_S2_034,Machine learning,0.9,weak,strong
+SYN_MM_S2_034,Deep learning,0.7,weak,moderate
+SYN_MM_S3_035,Machine learning,1.0,weak,strong
+SYN_MM_S3_035,Deep learning,0.7,weak,moderate
+SYN_MM_S3_035,Artificial intelligence,0.5,weak,moderate
+SYN_MM_S5_036,Machine learning,0.9,weak,strong
+SYN_MM_S5_036,Deep learning,0.7,weak,moderate
+SYN_MM_S8_037,Machine learning,0.9,weak,strong
+SYN_MM_S8_037,Deep learning,0.7,weak,moderate
+SYN_EE_S3_038,Research in signals and systems,0.9,weak,strong
+SYN_EE_S3_038,Control systems,0.7,weak,moderate
+SYN_EE_S5_039,Research in signals and systems,0.9,weak,strong
+SYN_EE_S5_039,Control systems,0.7,weak,moderate
+SYN_EE_S6_040,Research in signals and systems,1.0,weak,strong
+SYN_EE_S6_040,Control systems,0.7,weak,moderate
+SYN_EE_S6_040,Power systems research,0.5,weak,moderate
+SYN_EE_S7_041,Research in signals and systems,0.9,weak,strong
+SYN_EE_S7_041,Control systems,0.7,weak,moderate
+SYN_MM_S4_042,Research in physical metallurgy,0.9,weak,strong
+SYN_MM_S4_042,Thermodynamics of materials,0.7,weak,moderate
+SYN_MM_S5_043,Research in physical metallurgy,0.9,weak,strong
+SYN_MM_S5_043,Thermodynamics of materials,0.7,weak,moderate
+SYN_MM_S6_044,Research in physical metallurgy,0.9,weak,strong
+SYN_MM_S6_044,Thermodynamics of materials,0.7,weak,moderate
+SYN_MM_S8_045,Research in physical metallurgy,0.9,weak,strong
+SYN_MM_S8_045,Thermodynamics of materials,0.7,weak,moderate
+SYN_EE_S4_046,Management and consulting,0.9,weak,strong
+SYN_EE_S4_046,Quantitative aptitude,0.7,weak,moderate
+SYN_EE_S5_047,Management and consulting,0.9,weak,strong
+SYN_EE_S5_047,Quantitative aptitude,0.7,weak,moderate
+SYN_EE_S7_048,Management and consulting,0.9,weak,strong
+SYN_EE_S7_048,Quantitative aptitude,0.7,weak,moderate
+SYN_EE_S8_049,Management and consulting,0.9,weak,strong
+SYN_EE_S8_049,Quantitative aptitude,0.7,weak,moderate
+SYN_MM_S3_050,Management and consulting,1.0,weak,strong
+SYN_MM_S3_050,Quantitative aptitude,0.7,weak,moderate
+SYN_MM_S3_050,Operations and supply chain,0.5,weak,moderate
+SYN_MM_S6_051,Management and consulting,0.9,weak,strong
+SYN_MM_S6_051,Quantitative aptitude,0.7,weak,moderate
+SYN_MM_S7_052,Management and consulting,0.9,weak,strong
+SYN_MM_S7_052,Quantitative aptitude,0.7,weak,moderate
+SYN_EE_S1_053,Polity and governance,0.9,weak,strong
+SYN_EE_S1_053,Economy,0.7,weak,moderate
+SYN_EE_S5_054,Polity and governance,0.9,weak,strong
+SYN_EE_S5_054,Economy,0.7,weak,moderate
+SYN_MM_S2_055,Polity and governance,0.9,weak,strong
+SYN_MM_S2_055,Economy,0.7,weak,moderate
+SYN_MM_S4_056,Polity and governance,0.9,weak,strong
+SYN_MM_S4_056,Economy,0.7,weak,moderate
+SYN_EE_S5_057,Customer discovery,0.9,weak,strong
+SYN_EE_S5_057,MVP building,0.7,weak,moderate
+SYN_MM_S3_058,Customer discovery,0.9,weak,strong
+SYN_MM_S3_058,MVP building,0.7,weak,moderate
+SYN_MM_S1_059,Customer discovery,0.9,weak,strong
+SYN_MM_S1_059,MVP building,0.7,weak,moderate

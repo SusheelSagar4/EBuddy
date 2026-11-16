@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "detail_level": {
+      "default": "full",
+      "title": "Detail Level",
+      "type": "string"
+    },
+    "status": {
+      "default": "verified",
+      "title": "Status",
+      "type": "string"
+    },
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    },
+    "verified": {
+      "default": true,
+      "title": "Verified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "source_id"
+  ],
+  "title": "ResearchProject",
+  "type": "object"
+}

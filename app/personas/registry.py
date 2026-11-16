@@ -77,7 +77,7 @@ class PersonaRegistry:
         if not os.path.exists(self.base_dir):
             return
 
-        for item in os.listdir(self.base_dir):
+        for item in sorted(os.listdir(self.base_dir)):
             item_path = os.path.join(self.base_dir, item)
             if os.path.isdir(item_path) and os.path.exists(os.path.join(item_path, "persona.yaml")):
                 try:
@@ -92,6 +92,19 @@ class PersonaRegistry:
 
     def list_all(self) -> List[PersonaPackage]:
         return list(self._personas.values())
+
+    def for_goal(self, goal_id: Optional[str]) -> Optional[PersonaPackage]:
+        """Persona serving a goal: primary goal_id first, then additional_goal_ids (deterministic order)."""
+        if not goal_id:
+            return None
+        pkgs = sorted(self._personas.values(), key=lambda p: p.spec.persona_id)
+        for pkg in pkgs:
+            if pkg.spec and pkg.spec.goal_id == goal_id:
+                return pkg
+        for pkg in pkgs:
+            if pkg.spec and goal_id in (pkg.spec.additional_goal_ids or []):
+                return pkg
+        return None
 
 # Global singleton registry
 persona_registry = PersonaRegistry()

@@ -403,7 +403,10 @@ def test_11_student_constraints_hard_while_institute_rules_are_warnings():
         completed_course_ids=["MA1L001", "MA1L002", "EE1L001", "CS1L001", "EC2L001", "EC2L002", "EE2L001"]
     )
     # Default plan must not exceed 24.0 credits
-    total_default_credits = sum(planner.course_info.get(it.course_id, {}).get("credits", 4.0) for it in plan_capped.items if it.item_type == "course")
+    # Open degree slots (course_id None) carry their own reserved credits on the item.
+    total_default_credits = sum(
+        (it.credits if it.credits is not None else planner.course_info.get(it.course_id, {}).get("credits", 4.0))
+        for it in plan_capped.items if it.item_type == "course")
     assert total_default_credits <= 24.0, f"Default plan exceeded student limit: {total_default_credits} > 24.0"
 
     # The overload course (minor course) must be in optional_overload_proposals

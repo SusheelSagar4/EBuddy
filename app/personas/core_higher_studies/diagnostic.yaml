@@ -1,0 +1,10 @@
+blueprint:
+  target_skills:
+  - SKILL_CIRCUIT_ANALYSIS
+  - SKILL_SIGNALS_SYSTEMS
+  - SKILL_PHYSICAL_METALLURGY
+  - SKILL_THERMODYNAMICS_MAT
+  item_counts: 5
+  difficulty_range:
+  - 30.0
+  - 80.0

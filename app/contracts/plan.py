@@ -21,6 +21,13 @@ class PlanItem(BaseContract):
     phase: Optional[str] = None # 'Phase 1: Foundation', 'Phase 2: Core Depth', 'Phase 3: Applied Mastery'
     prep_hours_weekly: Optional[float] = None
     reason: StructuredReason
+    # --- v1.4.0 additions (optional, backwards compatible) ---
+    title: Optional[str] = None            # human-readable title resolved from the KB (never LLM-written)
+    credits: Optional[float] = None        # course credits copied from kb.course
+    track_id: Optional[str] = None         # career track (sde / da / aiml) this item belongs to
+    track_phase_id: Optional[str] = None   # phase id inside the career-track roadmap
+    url: Optional[str] = None              # KB resource URL (resource items only)
+    planning_status: Optional[str] = None  # current | planned | deferred | beyond_horizon
 
 class ValidationCheck(BaseContract):
     check_name: str
@@ -41,6 +48,9 @@ class PlanDiff(BaseContract):
     removed_items: List[PlanItem] = []
     modified_items: List[Dict[str, Any]] = []
     summary: str
+    # v1.4.0: what triggered the re-plan and the deterministic reasons behind each change
+    trigger: Optional[str] = None
+    reasons: List[str] = []
 
 class Plan(BaseContract):
     plan_id: str
@@ -54,6 +64,10 @@ class Plan(BaseContract):
     plan_diff: Optional[PlanDiff] = None
     what_changed_and_why: Optional[str] = None
     mismatch_warning: Optional[Dict[str, Any]] = None
+    # v1.4.0: evidence-weight ledger, multi-semester horizon summary and persona advisories
+    evidence_summary: Optional[Dict[str, Any]] = None
+    horizon: Optional[Dict[str, Any]] = None
+    advisories: List[str] = []
     is_active: bool = True
     created_at: datetime
 

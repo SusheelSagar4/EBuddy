@@ -1,0 +1,76 @@
+student_id,programme_id,year,current_semester,cgpa,is_synthetic,persona_tag,name,backlogs,first_year_track,edge_case_tags,aims
+CONF_STU_EE_POWER_01,BTECH_EE,3,5,8.20,TRUE,ee_power_core,Ananya Roy,0,A,,I want to work towards power systems and smart grid.
+CONF_STU_EE_POWER_02,BTECH_EE,2,4,7.50,TRUE,ee_power_core,Karthik Nair,0,A,,I want to work towards power systems and smart grid.
+CONF_STU_EE_POWER_03,BTECH_EE,2,3,8.80,TRUE,ee_power_core,Priya Das,0,A,,I want to work towards power systems and smart grid.
+CONF_STU_EE_EDGE_BACKLOG,BTECH_EE,3,5,6.80,TRUE,ee_power_core,Vikram Seth,1,A,ACTIVE_BACKLOG,I want to work towards power systems and smart grid.
+CONF_STU_EE_EDGE_CGPA_CUTOFF,BTECH_EE,3,5,7.95,TRUE,ee_power_core,Sneha Patel,0,A,CGPA_ON_MINOR_CUTOFF,I want to work towards power systems and smart grid.
+CONF_STU_EE_EDGE_GOAL_PIVOT,BTECH_EE,2,4,8.40,TRUE,ee_power_core,Rahul Verma,0,A,MID_DEGREE_GOAL_SWITCH,I want to work towards power systems and smart grid.
+CONF_STU_EE_EDGE_CONFLICT,BTECH_EE,2,3,7.60,TRUE,ee_power_core,Tanvi Sen,0,A,INTEREST_EVIDENCE_CLASH,I want to work towards power systems and smart grid.
+CONF_STU_MME_PROCESS_01,BTECH_MM,3,5,8.25,TRUE,mme_materials_core,Rohan Sharma,0,A,,I want to work towards iron and steelmaking.
+CONF_STU_MME_PROCESS_02,BTECH_MM,2,4,7.80,TRUE,mme_materials_core,Ananya Ghosh,0,A,,I want to work towards iron and steelmaking.
+CONF_STU_MME_PROCESS_03,BTECH_MM,2,3,8.60,TRUE,mme_materials_core,Vikram Iyer,0,A,,I want to work towards high-entropy alloys.
+CONF_STU_UPSC_01,BTECH_EE,2,3,8.20,TRUE,btech_upsc,Aarav Sharma,0,A,,I want to work towards polity and governance.
+CONF_STU_UPSC_02,BTECH_MM,3,6,7.40,TRUE,btech_upsc,Ananya Mishra,0,A,,I want to work towards polity and governance.
+CONF_STU_UPSC_03,BTECH_EE,4,8,7.90,TRUE,btech_upsc,Rohan Verma,0,A,,I want to work towards polity and governance.
+CONF_STU_STARTUP_01,BTECH_EE,2,3,8.20,TRUE,student_startup,Aarav Sharma,0,A,,I want to work towards customer discovery.
+CONF_STU_STARTUP_02,BTECH_MM,3,6,7.40,TRUE,student_startup,Ananya Mishra,0,A,,I want to work towards customer discovery.
+CONF_STU_STARTUP_03,BTECH_EE,4,8,7.90,TRUE,student_startup,Rohan Verma,0,A,,I want to work towards customer discovery.
+SYN_EE_S1_001,BTECH_EE,1,1,8.60,TRUE,ee_power_core,Manav Agarwal,0,A,,I want to work towards power systems and smart grid.
+SYN_EE_S2_002,BTECH_EE,1,2,7.20,TRUE,ee_power_core,Tanvi Yadav,0,A,TIGHT_WEEKLY_HOURS,I want to work towards power systems and smart grid.
+SYN_EE_S6_003,BTECH_EE,3,6,8.00,TRUE,ee_power_core,Esha Mahapatra,0,B,CGPA_ON_MINOR_CUTOFF,I want to work towards vlsi design.
+SYN_EE_S7_004,BTECH_EE,4,7,6.40,TRUE,ee_power_core,Farhan Panda,1,A,ACTIVE_BACKLOG,I want to work towards power systems and smart grid.
+SYN_EE_S8_005,BTECH_EE,4,8,9.10,TRUE,ee_power_core,Gauri Dash,0,A,,I want to work towards vlsi design.
+SYN_MM_S1_006,BTECH_MM,1,1,7.90,TRUE,mme_materials_core,Akash Iyer,0,B,,I want to work towards high-entropy alloys.
+SYN_MM_S2_007,BTECH_MM,1,2,8.40,TRUE,mme_materials_core,Vidya Yadav,0,A,,I want to work towards iron and steelmaking.
+SYN_MM_S6_008,BTECH_MM,3,6,7.99,TRUE,mme_materials_core,Farhan Fernandes,0,A,CGPA_ON_MINOR_CUTOFF,I want to work towards high-entropy alloys.
+SYN_MM_S7_009,BTECH_MM,4,7,6.10,TRUE,mme_materials_core,Bhavna Sahoo,1,B,ACTIVE_BACKLOG;TIGHT_CREDIT_CAP,I want to work towards iron and steelmaking.
+SYN_MM_S8_010,BTECH_MM,4,8,8.70,TRUE,mme_materials_core,Uday Gupta,0,A,,I want to work towards high-entropy alloys.
+SYN_MM_S5_011,BTECH_MM,3,5,7.00,TRUE,mme_materials_core,Varun Lal,0,A,INTEREST_EVIDENCE_CLASH,I want to work towards high-entropy alloys.
+SYN_EE_S1_012,BTECH_EE,1,1,8.90,TRUE,sde_career,Naveen Fernandes,0,B,,I want to work towards programming and data structures.
+SYN_EE_S3_013,BTECH_EE,2,3,8.30,TRUE,sde_career,Omkar Panda,0,A,INTEREST_EVIDENCE_CLASH,I want to work towards programming and data structures.
+SYN_EE_S4_014,BTECH_EE,2,4,7.60,TRUE,sde_career,Omkar Verma,0,A,MID_DEGREE_GOAL_SWITCH,I want to work towards programming and data structures.
+SYN_EE_S5_015,BTECH_EE,3,5,8.00,TRUE,sde_career,Farhan Sahoo,0,B,CGPA_ON_MINOR_CUTOFF,I want to work towards programming and data structures.
+SYN_EE_S6_016,BTECH_EE,3,6,6.90,TRUE,sde_career,Akash Unni,1,A,ACTIVE_BACKLOG,I want to work towards programming and data structures.
+SYN_EE_S7_017,BTECH_EE,4,7,8.50,TRUE,sde_career,Rohit Agarwal,0,A,CGPA_ON_OVERLOAD_CUTOFF;TIGHT_WEEKLY_HOURS,I want to work towards programming and data structures.
+SYN_MM_S2_018,BTECH_MM,1,2,7.40,TRUE,sde_career,Omkar Sahoo,0,B,,I want to work towards programming and data structures.
+SYN_MM_S4_019,BTECH_MM,2,4,8.10,TRUE,sde_career,Manav Lal,0,A,MID_DEGREE_GOAL_SWITCH,I want to work towards programming and data structures.
+SYN_MM_S5_020,BTECH_MM,3,5,7.70,TRUE,sde_career,Neha Nayak,0,A,TIGHT_WEEKLY_HOURS,I want to work towards programming and data structures.
+SYN_MM_S8_021,BTECH_MM,4,8,8.20,TRUE,sde_career,Meera Chatterjee,0,B,TIGHT_CREDIT_CAP,I want to work towards programming and data structures.
+SYN_EE_S2_022,BTECH_EE,1,2,7.80,TRUE,da_career,Harsh Dash,0,A,TIGHT_CREDIT_CAP,I want to work towards data analytics and dashboards.
+SYN_EE_S3_023,BTECH_EE,2,3,6.70,TRUE,da_career,Akash Ojha,0,A,INTEREST_EVIDENCE_CLASH,I want to work towards data analytics and dashboards.
+SYN_EE_S5_024,BTECH_EE,3,5,8.01,TRUE,da_career,Chirag Panda,0,B,CGPA_ON_MINOR_CUTOFF,I want to work towards data analytics and dashboards.
+SYN_EE_S6_025,BTECH_EE,3,6,7.30,TRUE,da_career,Saanvi Mahapatra,0,A,MID_DEGREE_GOAL_SWITCH,I want to work towards data analytics and dashboards.
+SYN_MM_S3_026,BTECH_MM,2,3,8.50,TRUE,da_career,Yash Dash,0,A,CGPA_ON_OVERLOAD_CUTOFF,I want to work towards data analytics and dashboards.
+SYN_MM_S4_027,BTECH_MM,2,4,7.10,TRUE,da_career,Jatin Dash,0,B,TIGHT_WEEKLY_HOURS,I want to work towards data analytics and dashboards.
+SYN_MM_S6_028,BTECH_MM,3,6,6.50,TRUE,da_career,Deepa Kulkarni,1,A,ACTIVE_BACKLOG,I want to work towards data analytics and dashboards.
+SYN_MM_S7_029,BTECH_MM,4,7,8.30,TRUE,da_career,Kavya Unni,0,A,MID_DEGREE_GOAL_SWITCH,I want to work towards data analytics and dashboards.
+SYN_EE_S1_030,BTECH_EE,1,1,9.30,TRUE,aiml_career,Neha Verma,0,B,,I want to work towards machine learning.
+SYN_EE_S4_031,BTECH_EE,2,4,8.80,TRUE,aiml_career,Aarav Agarwal,0,A,,I want to work towards machine learning.
+SYN_EE_S5_032,BTECH_EE,3,5,7.99,TRUE,aiml_career,Kavya Fernandes,0,A,CGPA_ON_MINOR_CUTOFF;INTEREST_EVIDENCE_CLASH,I want to work towards machine learning.
+SYN_EE_S7_033,BTECH_EE,4,7,7.50,TRUE,aiml_career,Manav Yadav,0,B,MID_DEGREE_GOAL_SWITCH;TIGHT_WEEKLY_HOURS,I want to work towards machine learning.
+SYN_MM_S2_034,BTECH_MM,1,2,8.00,TRUE,aiml_career,Lakshmi Verma,0,A,,I want to work towards machine learning.
+SYN_MM_S3_035,BTECH_MM,2,3,7.20,TRUE,aiml_career,Diya Tripathy,0,A,INTEREST_EVIDENCE_CLASH,I want to work towards machine learning.
+SYN_MM_S5_036,BTECH_MM,3,5,8.60,TRUE,aiml_career,Diya Lal,0,B,TIGHT_CREDIT_CAP,I want to work towards machine learning.
+SYN_MM_S8_037,BTECH_MM,4,8,6.80,TRUE,aiml_career,Diya Verma,1,A,ACTIVE_BACKLOG,I want to work towards machine learning.
+SYN_EE_S3_038,BTECH_EE,2,3,9.00,TRUE,core_higher_studies,Yash Sahoo,0,A,,I want to work towards research in signals and systems.
+SYN_EE_S5_039,BTECH_EE,3,5,8.49,TRUE,core_higher_studies,Esha Lal,0,B,CGPA_ON_OVERLOAD_CUTOFF,I want to work towards research in signals and systems.
+SYN_EE_S6_040,BTECH_EE,3,6,7.70,TRUE,core_higher_studies,Vidya Mahapatra,0,A,INTEREST_EVIDENCE_CLASH,I want to work towards research in signals and systems.
+SYN_EE_S7_041,BTECH_EE,4,7,8.40,TRUE,core_higher_studies,Deepa Rao,0,A,TIGHT_WEEKLY_HOURS,I want to work towards research in signals and systems.
+SYN_MM_S4_042,BTECH_MM,2,4,8.90,TRUE,core_higher_studies,Sahil Mahapatra,0,B,,I want to work towards research in physical metallurgy.
+SYN_MM_S5_043,BTECH_MM,3,5,8.00,TRUE,core_higher_studies,Lakshmi Sahoo,0,A,CGPA_ON_MINOR_CUTOFF,I want to work towards research in physical metallurgy.
+SYN_MM_S6_044,BTECH_MM,3,6,7.40,TRUE,core_higher_studies,Deepa Yadav,0,A,MID_DEGREE_GOAL_SWITCH,I want to work towards research in physical metallurgy.
+SYN_MM_S8_045,BTECH_MM,4,8,8.10,TRUE,core_higher_studies,Pooja Unni,0,B,,I want to work towards research in physical metallurgy.
+SYN_EE_S4_046,BTECH_EE,2,4,7.90,TRUE,core_to_mba,Deepa Behera,0,A,,I want to work towards management and consulting.
+SYN_EE_S5_047,BTECH_EE,3,5,8.20,TRUE,core_to_mba,Rhea Panda,0,A,MID_DEGREE_GOAL_SWITCH,I want to work towards management and consulting.
+SYN_EE_S7_048,BTECH_EE,4,7,7.00,TRUE,core_to_mba,Harsh Hegde,0,B,TIGHT_WEEKLY_HOURS,I want to work towards management and consulting.
+SYN_EE_S8_049,BTECH_EE,4,8,8.60,TRUE,core_to_mba,Zoya Joshi,0,A,,I want to work towards management and consulting.
+SYN_MM_S3_050,BTECH_MM,2,3,7.60,TRUE,core_to_mba,Rhea Agarwal,0,A,INTEREST_EVIDENCE_CLASH,I want to work towards management and consulting.
+SYN_MM_S6_051,BTECH_MM,3,6,6.60,TRUE,core_to_mba,Rohit Dash,1,B,ACTIVE_BACKLOG,I want to work towards management and consulting.
+SYN_MM_S7_052,BTECH_MM,4,7,8.40,TRUE,core_to_mba,Kunal Hegde,0,A,TIGHT_CREDIT_CAP,I want to work towards management and consulting.
+SYN_EE_S1_053,BTECH_EE,1,1,8.10,TRUE,btech_upsc,Pranav Agarwal,0,A,,I want to work towards polity and governance.
+SYN_EE_S5_054,BTECH_EE,3,5,7.20,TRUE,btech_upsc,Chirag Sahoo,0,B,TIGHT_WEEKLY_HOURS,I want to work towards polity and governance.
+SYN_MM_S2_055,BTECH_MM,1,2,7.00,TRUE,btech_upsc,Arjun Sahoo,0,A,,I want to work towards polity and governance.
+SYN_MM_S4_056,BTECH_MM,2,4,6.30,TRUE,btech_upsc,Harsh Unni,1,A,ACTIVE_BACKLOG,I want to work towards polity and governance.
+SYN_EE_S5_057,BTECH_EE,3,5,8.50,TRUE,student_startup,Jatin Unni,0,B,CGPA_ON_OVERLOAD_CUTOFF;MID_DEGREE_GOAL_SWITCH,I want to work towards customer discovery.
+SYN_MM_S3_058,BTECH_MM,2,3,7.80,TRUE,student_startup,Aditi Joshi,0,A,TIGHT_CREDIT_CAP,I want to work towards customer discovery.
+SYN_MM_S1_059,BTECH_MM,1,1,8.30,TRUE,student_startup,Dev Ojha,0,A,,I want to work towards customer discovery.

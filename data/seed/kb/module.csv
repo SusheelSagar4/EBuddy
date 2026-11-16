@@ -1,15 +1,15 @@
 module_id,course_id,resource_id,title,order_no,est_minutes,objectives,is_placeholder
-MOD_EE2L001_01,EE2L001,RES_NPTEL_EE2L001_01,Transient and Sinusoidal Steady State Analysis,1,180,"RL, RC, RLC transient solutions using differential equations and Laplace transforms.",false
-MOD_EE2L001_02,EE2L001,RES_NPTEL_EE2L001_01,Two-Port Network Parameters and Resonance,2,180,"Z, Y, ABCD, h parameters, series and parallel resonance, quality factor Q.",false
-MOD_EE2L003_01,EE2L003,RES_NPTEL_EE2L003_01,Magnetic Circuits and Transformers,1,240,"Core loss, equivalent circuits, efficiency optimization, parallel operation.",false
-MOD_EE2L003_02,EE2L003,RES_NPTEL_EE2L003_01,Induction and Synchronous Machines,2,240,"Rotating magnetic fields, torque-slip dynamics, V-curves, synchronous reactance.",false
-MOD_EE3L001_01,EE3L001,RES_NPTEL_EE3L001_01,Power Semiconductor Switches and DC-DC Converters,1,240,"IGBT/MOSFET switching dynamics, Buck, Boost, Buck-Boost converters in CCM/DCM.",false
-MOD_EE3L001_02,EE3L001,RES_NPTEL_EE3L001_01,Inverters and Pulse Width Modulation,2,240,"Single-phase and three-phase voltage source inverters, sinusoidal PWM, harmonic mitigation.",false
-MOD_EE3L002_01,EE3L002,RES_NPTEL_EE3L002_01,Transmission Line Modeling and Per-Unit System,1,240,"Line inductance and capacitance, ABCD parameters, surge impedance loading, per-unit normalization.",false
-MOD_EE3L002_02,EE3L002,RES_NPTEL_EE3L002_01,Fault Analysis and Load Flow Studies,2,240,"Symmetrical components, SLG/LL/LLG fault calculations, Gauss-Seidel and Newton-Raphson power flow.",false
-MOD_ML2L002_01,ML2L002,RES_NPTEL_ML2L002_01,First and Second Laws Applied to Metallurgical Systems,1,240,"Enthalpy, entropy, Gibbs free energy of reactions, Ellingham diagrams for oxides.",false
-MOD_ML2L002_02,ML2L002,RES_NPTEL_ML2L002_01,Solution Thermodynamics and Phase Equilibria,2,240,"Activity, partial molar properties, Raoult and Henry laws, regular solution models, binary phase diagrams.",false
-MOD_ML2L005_01,ML2L005,RES_NPTEL_ML2L005_01,Crystal Imperfections and Diffusion Kinetics,1,240,"Point defects, dislocation slip systems, Fick's first and second laws of diffusion, Kirkendall effect.",false
-MOD_ML2L005_02,ML2L005,RES_NPTEL_ML2L005_01,Phase Transformations and Heat Treatment of Steels,2,240,"Nucleation and growth kinetics, TTT/CCT diagrams, pearlite, bainite, martensite, tempering.",false
-MOD_ML3L003_01,ML3L003,RES_NPTEL_ML3L003_01,Elasticity and Dislocation Plasticity,1,240,"Stress-strain tensors, Schmid's law, yield criteria (von Mises, Tresca), Hall-Petch grain boundary strengthening.",false
-MOD_ML3L003_02,ML3L003,RES_NPTEL_ML3L003_01,Fracture Fatigue and Creep Mechanics,2,240,"Griffith crack theory, stress intensity factor K_IC, S-N fatigue curves, dislocation climb in high-temperature creep.",false
+MOD_EE2L001_01,EE2L001,RES_EE2L001_PRIMARY,Transient and Sinusoidal Steady State Analysis,1,180,"RL, RC, RLC transient solutions using differential equations and Laplace transforms.",false
+MOD_EE2L001_02,EE2L001,RES_EE2L001_PRIMARY,Two-Port Network Parameters and Resonance,2,180,"Z, Y, ABCD, h parameters, series and parallel resonance, quality factor Q.",false
+MOD_EE2L003_01,EE2L003,RES_EE2L003_PRIMARY,Magnetic Circuits and Transformers,1,240,"Core loss, equivalent circuits, efficiency optimization, parallel operation.",false
+MOD_EE2L003_02,EE2L003,RES_EE2L003_PRIMARY,Induction and Synchronous Machines,2,240,"Rotating magnetic fields, torque-slip dynamics, V-curves, synchronous reactance.",false
+MOD_EE3L004_01,EE3L004,RES_EE3L004_PRIMARY,Power Semiconductor Switches and DC-DC Converters,1,240,"IGBT/MOSFET switching dynamics, Buck, Boost, Buck-Boost converters in CCM/DCM.",false
+MOD_EE3L004_02,EE3L004,RES_EE3L004_PRIMARY,Inverters and Pulse Width Modulation,2,240,"Single-phase and three-phase voltage source inverters, sinusoidal PWM, harmonic mitigation.",false
+MOD_EE3L007_01,EE3L007,RES_EE3L007_PRIMARY,Transmission Line Modeling and Per-Unit System,1,240,"Line inductance and capacitance, ABCD parameters, surge impedance loading, per-unit normalization.",false
+MOD_EE3L007_02,EE3L007,RES_EE3L007_PRIMARY,Fault Analysis and Load Flow Studies,2,240,"Symmetrical components, SLG/LL/LLG fault calculations, Gauss-Seidel and Newton-Raphson power flow.",false
+MOD_ML2L002_01,ML2L002,RES_MM_ML2L002_PRIMARY,First and Second Laws Applied to Metallurgical Systems,1,240,"Enthalpy, entropy, Gibbs free energy of reactions, Ellingham diagrams for oxides.",false
+MOD_ML2L002_02,ML2L002,RES_MM_ML2L002_PRIMARY,Solution Thermodynamics and Phase Equilibria,2,240,"Activity, partial molar properties, Raoult and Henry laws, regular solution models, binary phase diagrams.",false
+MOD_ML2L005_01,ML2L005,RES_MM_ML2L005_PRIMARY,Crystal Imperfections and Diffusion Kinetics,1,240,"Point defects, dislocation slip systems, Fick's first and second laws of diffusion, Kirkendall effect.",false
+MOD_ML2L005_02,ML2L005,RES_MM_ML2L005_PRIMARY,Phase Transformations and Heat Treatment of Steels,2,240,"Nucleation and growth kinetics, TTT/CCT diagrams, pearlite, bainite, martensite, tempering.",false
+MOD_ML3L003_01,ML3L003,RES_MM_ML3L003_PRIMARY,Elasticity and Dislocation Plasticity,1,240,"Stress-strain tensors, Schmid's law, yield criteria (von Mises, Tresca), Hall-Petch grain boundary strengthening.",false
+MOD_ML3L003_02,ML3L003,RES_MM_ML3L003_PRIMARY,Fracture Fatigue and Creep Mechanics,2,240,"Griffith crack theory, stress intensity factor K_IC, S-N fatigue curves, dislocation climb in high-temperature creep.",false

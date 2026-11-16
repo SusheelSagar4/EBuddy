@@ -1,0 +1,9 @@
+- skill_id: SKILL_QUANT_APTITUDE
+  required_level: 80.0
+  importance: 1.0
+- skill_id: SKILL_VERBAL_ABILITY
+  required_level: 80.0
+  importance: 1.0
+- skill_id: SKILL_DILR
+  required_level: 80.0
+  importance: 1.0

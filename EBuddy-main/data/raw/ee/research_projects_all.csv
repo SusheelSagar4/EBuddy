@@ -1,0 +1,140 @@
+S.No,Research Area,Project Name,Funding Agency
+1,Power Systems & Energy,"Design, Development and Demonstration of a Centralized Protection and Monitoring (CPM) System within a Distribution Substation including DER","Central Power Research Institute, Bangalore"
+2,Power Systems & Energy,Centre of Excellence on Energy Aware Urban Infrastructure,"SERB, DST (Project Lead: IIT Kharagpur)"
+3,Power Systems & Energy,Development of Coordinated Protection and Control Scheme for Microgrid,SERB Science and Technology Award for Research
+4,Power Systems & Energy,Development of IoT Enabled Phasor and Power Quality Monitoring Devices for Smart Power Grids,"Core Research Grant, SERB, DST"
+5,Power Systems & Energy,Design and Development of Dynamic phasor and Frequency estimator complying IEEE C37.118 standard,"TARE, SERB, DST"
+6,Power Systems & Energy,Smart Grid Visualization - Applications of Virtual Reality,"VARCoE, IIT Bhubaneswar"
+7,Power Systems & Energy,Design and Development of Tools for Detection and Prevention of Cyber Attacks in Smart Grid EMS,CPRI Bangalore
+8,Power Systems & Energy,"Design and Development of Low cost Time Synchronized devices for WAMs in Smart-Grids (IIT BBSR-Virginia Tech, USA)","SPARC, MHRD"
+9,Power Systems & Energy,INDO-US: US-India collaborative for smart distribution System with Storage,DST (India) - DoE (USA) consortia
+10,Power Systems & Energy,Brushless DC Machine based Solar pumping system,"Solar Energy Research Initiative 2016, DST"
+11,Power Systems & Energy,Development of intelligent relaying scheme for micro-grids with DG penetration,"Central Power Research Institute, Bangalore"
+12,Power Systems & Energy,Development of a comprehensive wide-area based back-up protection scheme for power transmission network,"DST, New Delhi (SERB)"
+13,Power Systems & Energy,Design and development of an adaptive distance relay for Flexible AC transmission systems,"DST, New Delhi (Fast track, Young Scientist)"
+14,Power Systems & Energy,House hold energy consumption survey,"Warwick Manufacturing Group, UK"
+15,Power Systems & Energy,Vetting of CAPEX Plan of TPCODL,"GRIDCO, Odisha"
+16,Power Systems & Energy,Analysis of the Project Specific Tariff of Lower Baitarani SHEP,"GRIDCO, Odisha"
+17,Power Systems & Energy,Dynamic maximum power point tracking of grid connected PV system,(not stated)
+18,Power Systems & Energy,Smart Grid Security Control Using Nature-Inspired Decentralised Cooperative Metaheuristic Strategies,DST - TARE
+19,Power Systems & Energy,HUB and SPOKE consortium for 2W and 3W Electric Drives - advanced IM and Synchronous Reluctance Drives for e2W/e3W,NFTDC
+20,Power Systems & Energy,Driver behaviour modelling for autonomous driving,KPIT
+21,Power Systems & Energy,Solar Powered DC System for Domestic Electrification and Rural Application,Planning & Coordination Dept.
+22,Power Systems & Energy,Integration and intelligent management of renewable via ICT for smart Micro-Grid networks,DST
+23,Power Systems & Energy,Preparation of DPR for the proposed National Institute for New Energy & Innovation at Bhubaneswar,"Ministry of New and Renewable Energy, GoI"
+24,Power Systems & Energy,Minimization of Storage Requirements in Renewable-Rich Microgrid Systems through Coordinated Control of Resources,"SERB, DST (Early Career Research Award)"
+25,Power Systems & Energy,Grid Interconnection protocols for largely dispersed minigrids/microgrids for electrification of rural India,"Indo-Norway Joint Research Projects, DST & Research Council of Norway"
+26,Power Systems & Energy,Design and Development of Grid Interactive Adaptive Controls for Frequency Regulation from Large Scale PV Systems,CPRI (Research Scheme on Power)
+27,Power Systems & Energy,Reliability Enhancement in PV Rich Microgrids with Plug-in-Hybrid EVs and Data Centres,EU ERIGrid (H2020)
+28,Power Systems & Energy,Grid Interconnection protocols for Largely Dispersed minigrids/microgrids,EU ERIGrid (H2020)
+29,Power Systems & Energy,Intelligent DC Microgrid,NIT Warangal
+30,Power Systems & Energy,Audit for 33kV Power Supply Work,IISER Berhampur
+31,Power Systems & Energy,"AR-VR Based Application Modules for Learning, Manpower Training and Emergency Response in Electrical Substations","VARCoE, IIT Bhubaneswar"
+32,Power Systems & Energy,Vetting of Guidelines for Solar Powered Fencing,"Dept. of Energy, Govt. of Odisha"
+33,Power Systems & Energy,Power Quality Enhancement and Control of Distributed Generation in Grid Interactive Systems,"SEED Grant, IIT Bhubaneswar"
+34,Power Systems & Energy,Design and Development of Affordable Movable Solar PV Water Pumping System,"RKVY, Odisha State Govt"
+35,Power Systems & Energy,UK India Clean Energy Research Institute (WP-4),DST
+36,Power Systems & Energy,Design and Implementation of High Speed Low Power Embedded Signal Processor Based Custom Devices for PQ Improvement,DST-SERB
+37,Power Systems & Energy,Renewable Energy EMPOWERing European and InDian communities (RE-EMPOWERED),DST
+38,Power Systems & Energy,Cost-Effective Floating-Solar Energy Generation Technologies for Nearly Zero-Energy Villages,DST-SERD
+39,Power Systems & Energy,Adapting FDM for additive manufacturing of aluminium alloys in the semisolid state,DST-SERB
+40,Power Systems & Energy,Grid-tied multilevel photovoltaic inverter with batteries power balancing,JUICE Flexible Funding (UK)
+41,Power Systems & Energy,UVC Disinfection Chamber,IIT Bhubaneswar Special Project
+42,Power Systems & Energy,Vetting of Schematic Drawing with transmission loss calculation for 6.6KV/415V OHDC line,Megha Engineering & Infrastructure Ltd
+43,Power Systems & Energy,"Vetting of Electrical and E&I Designs - Rairakhol block, Sambalpur",Voltas Limited
+44,Power Systems & Energy,"Vetting of Electrical and E&I Designs - Bramhagiri & Krushnaprasad blocks, Puri",Voltas Limited
+45,Power Systems & Energy,Vetting of Electrical and E&M Designs - Puri-Ganjam Project,M/s GVPR Engineers Limited
+46,Power Systems & Energy,Vetting of Electrical and E&M Designs - Nayagarh Project,M/s GVPR Engineers Limited
+47,Power Systems & Energy,Vetting of Electrical and E&M Designs - Nawarangpur Project,M/s GVPR Engineers Limited
+48,Power Systems & Energy,"Vetting of Electrical and E&M Designs - Nayagarh, Angul, Jajpur Project",Kalpataru Projects International Limited
+49,Power Systems & Energy,"Vetting of civil structural, electrical, mechanical and instrumentation design - 3 rural piped water supply projects (Koraput, Nabarangpur)",Larsen & Toubro - Infrastructure Vertical
+50,Power Systems & Energy,"Execution of Rural Piped water supply project, Ranipada Cluster, Banpur Block, Khurda (incl. 5 yr O&M)",UMSL Ltd
+51,Power Systems & Energy,Development of adaptive motor controller for PMSM based three-wheel Electric Vehicle,"MeitY, Govt. of India"
+52,Power Systems & Energy,Cost-effective energy management strategies for a green hydrogen based EV charging station,DST-TARE
+53,Power Systems & Energy,Photovoltaic assisted water harvesting from moisture,DST
+54,Power Systems & Energy,PV based grid-interactive and off-grid electricity system (Joint Indo-Finnish project),DST
+55,Power Systems & Energy,Control of Stand-Alone hybrid Solar-Diesel Generator-Battery Power Supply System,DST-SERB
+56,Power Systems & Energy,Classification of Switched Capacitor in the Distribution Network,IIT Bhubaneswar (Seed Money)
+57,Power Systems & Energy,Diesel engine Emission Control using Electrical Discharge based Technique for Clean Environment,DST
+58,Power Systems & Energy,NOx Removal study by Electrical Discharge: Experimental and Theoretical Validation,IIT Bhubaneswar
+59,Power Electronics & Drives,Si/SiC Hybrid semiconductor based solid state transformer for PV application,DST SERB
+60,Power Electronics & Drives,Comparison of control techniques for residential PV system with module based MPPT,IIT Bhubaneswar
+61,Power Electronics & Drives,Optimized Modulation for Triple Active Bridge Converter for EV Application with wide-band gap devices,DST SERB
+62,Power Electronics & Drives,"Design, development and analysis of Integrated Dual-Output Converter (IDOC) Technology for Renewable Integration","R&D, IIT Bhubaneswar"
+63,Power Electronics & Drives,Quadratic boost converter based multi-input power converter for renewable applications,Start-up Research Grant (SERB)
+64,Power Electronics & Drives,Solar-PV integrated On-board and Off-board Electric-Rickshaw Charging Infrastructure,DST-SERD
+65,Power Electronics & Drives,Next Generation Cost Effective Reconfigurable On-Board Battery Charger with Health and Fault Monitoring,MeitY
+66,Power Electronics & Drives,Integrated three-phase AC-DC bidirectional converter for charging of electric vehicle (EV),IIT Bhubaneswar (Seed Grant)
+67,Communications & Signal Processing,Efficient cache aided data delivery using deep reinforcement learning,DST
+68,Communications & Signal Processing,Optimization of Service Completion Time for Distributed Gradient Descent in the Presence of Straggler Nodes,IIT Bhubaneswar
+69,Communications & Signal Processing,Classical and Quantum Error Correcting Codes and Mathematics over Finite Fields for Smart Telecommunications,DST
+70,Communications & Signal Processing,Communication Efficient Gradient Aggregation for Hierarchical Networks,DST
+71,Communications & Signal Processing,Effect of Fading Correlation on the Performance of Equal Gain Combining Receiver over Hoyt Fading Channels,DST
+72,Communications & Signal Processing,Aeronautical Telemetry Estimation and Equalization,"DRDO, ITR Chandipur"
+73,Communications & Signal Processing,AI powered autonomous underwater vehicle (AUV) and IoT enabled underwater acoustic sensor networks,"TIH, IIT Guwahati TIDF"
+74,Communications & Signal Processing,Achieving Reliable communications in the Internet of Things: An erasure correction coding approach,DST-SERB
+75,Communications & Signal Processing,"Light weight, Reconfigurable Cognitive Radio Platform for M2M and IoT applications",IMPRINT
+76,Communications & Signal Processing,Speech to Speech Translation for Tribal Languages using Deep Learning Framework,MeitY
+77,Communications & Signal Processing,Design and implementation of MIMO based transceiver for emergency applications,DST
+78,Communications & Signal Processing,Speech enhancement for hearing impaired listeners,DST
+79,Communications & Signal Processing,Multi Channel speech enhancement and noise suppression using beamforming,Seed grant
+80,Communications & Signal Processing,Automated prediction of hearing loss and loudness growth curve using EEG signals,SERB-SRG
+81,Communications & Signal Processing,Real Time Implementation of Image Fusion Algorithms for IR and CCD Video,DRDO
+82,Communications & Signal Processing,Online Target Scoring System for Consistency Trials with Scintillation removal in images,DRDO
+83,Communications & Signal Processing,Design and Development of Deep Learning based App for Early Warning of Blindness,SERB
+84,Communications & Signal Processing,Cancer Modelling of Signaling Network and Prediction of Therapeutic Intervention Strategies,DST
+85,Communications & Signal Processing,Proof of concept for co-ordinate determination of fall of shot from aerial imagery,DRDO
+86,Communications & Signal Processing,Development of hybrid smart grid communications network for last mile connectivity: A D2D and PLC approach,DST-SERB
+87,Communications & Signal Processing,Design of QoS-aware gateway for reliable IoT communication networks,IIT Bhubaneswar
+88,Communications & Signal Processing,Elevating the Quality of Education in ICT towards 2030 through Multilateral Collaborations,UTFORSK
+89,Communications & Signal Processing,Design and Implementation of a Wireless Sensor Network Testbed,IIT Bhubaneswar
+90,Communications & Signal Processing,"Efficient, Smart, and Scalable Communication Protocols for Large, Heterogeneous IoT-System",PMRF Funding
+91,Communications & Signal Processing,Efficient Framework for Decentralized Real-Time Coordination and Collaboration for a Swarm of Autonomous Robots,DST SERB CRG
+92,"RF, Microwave & Antennas",Enhancement of the bandwidth of planar antennas using electromagnetic bandgap structures,DST
+93,"RF, Microwave & Antennas",Microwave-Optical Engineering and Sensing Laboratory,DST-FIST
+94,"RF, Microwave & Antennas",Add on Radar for Jamming UAVs,ATB
+95,"RF, Microwave & Antennas",Bone health classification using machine learning,SERB-CRG
+96,"RF, Microwave & Antennas",Design and Development of a Software Defined Radar for Road Safety Applications,MV-Govt of Odisha
+97,"RF, Microwave & Antennas",Design and Development of a Doppler Radar System for Inbore Measurement,ARMREB-DRDO
+98,"RF, Microwave & Antennas",Innovative Biosensor Platform Utilizing Hybrid Fiber Interferometry,SERB-CRG
+99,"RF, Microwave & Antennas",Multiband Shared Aperture Antenna Array Synthesis and Analysis for Radar Platform,CARS DRDO
+100,"RF, Microwave & Antennas",Development of Ghat Road Warning System,"STA, Govt of Odisha"
+101,"RF, Microwave & Antennas",High directivity microstrip couplers using distributed realization of lumped elements,IITBBS Seed Grant
+102,"RF, Microwave & Antennas",Single chip testsets for portable network analyzers for 5G applications,DST-SERB
+103,"RF, Microwave & Antennas","Low cost, lightweight, USB controlled RF synthesizer using broadband band-pass filters with tunable passband",DST-SERB
+104,"RF, Microwave & Antennas",Time domain measurement technique for very low frequency (10-50 MHz) antenna radiation pattern measurements,SAC-ISRO
+105,"RF, Microwave & Antennas","Tunable bandpass filters for L-, S-, and C-bands for Radar applications",LRDE-DRDO
+106,"RF, Microwave & Antennas",Virtual Class Room Development,"NKN, NIC"
+107,"RF, Microwave & Antennas",Speech-Based Access of Agricultural Commodity Prices and Weather Information in Indian Languages - Odiya,"DeitY, Govt. of India"
+108,"VLSI, Devices & Sensors",Design and Development of RF Front-End SoC (RFFE-SoC),"DLRL, DRDO"
+109,"VLSI, Devices & Sensors","Single Stage Up/Down Converter based RFSoC in 1.2 V, 65 nm CMOS for L and S-band Radar","LRDE, DRDO"
+110,"VLSI, Devices & Sensors",Dual Band Transceiver SoC,"DEAL, DRDO"
+111,"VLSI, Devices & Sensors",Scientific and Technical Consultancy - MosArt Labs,MosArt Labs
+112,"VLSI, Devices & Sensors",Marquee Semiconductor MoU,Marquee Semiconductor
+113,"VLSI, Devices & Sensors",Smart City Phase-2,"MeitY, Govt. of India"
+114,"VLSI, Devices & Sensors",Energy Efficient Mesh Architecture Based Indigenous Neuromorphic Processor for Extreme Edge IoT,"MeitY, Govt. of India"
+115,"VLSI, Devices & Sensors",Design of Dynamic MAC and PHY SoC for low power and long-range networks,"MeitY, Govt. of India"
+116,"VLSI, Devices & Sensors",Simultaneous Bidirectional Data Link over On-Chip Global MIMO Interconnect,"Carinthia University of Applied Sciences, Austria"
+117,"VLSI, Devices & Sensors",In-Band Full-Duplex Signaling with Digitally Assisted Self-Interference Cancellation,UGC
+118,"VLSI, Devices & Sensors",Ideation in collaboration with Infineon Technologies,European Union
+119,"VLSI, Devices & Sensors",Design and Development of DRFM and Superbus Systems for Long Range Missiles,"ASL, DRDO"
+120,"VLSI, Devices & Sensors",Virtual Lab on Analog and Mixed Signal VLSI Design,MHRD
+121,"VLSI, Devices & Sensors",High-speed and energy efficient CMOS transceiver design for full-duplex chip-to-chip serial link,DST-SERB
+122,"VLSI, Devices & Sensors",Receiver Equalizer design for lossy serial links in CMOS Technology,IIT Bhubaneswar Seed Grant
+123,"VLSI, Devices & Sensors",Analog Design for Serial Link,Ceremorphic Inc.
+124,"VLSI, Devices & Sensors",Analog CMOS circuit Design,Marquee Semiconductor
+125,"VLSI, Devices & Sensors",AI and ML based data analytics algorithm for Medtech System,Humor Tech Pvt. Ltd.
+126,"VLSI, Devices & Sensors",Negative Capacitance Tunnel FET for Digital/Analog Applications,"FIG, PDPM IIITDM Jabalpur"
+127,"VLSI, Devices & Sensors",Low power III-V Negative Capacitance FE for sensing applications,CSIR
+128,"VLSI, Devices & Sensors",Machine Learning Augmented Compact Modeling of a Cryogenic Nanosheet FET for Analog Front-end Readout Circuitry,SERB
+129,"VLSI, Devices & Sensors",Reliability Aware Stacked Sheet FET Design Augmented with Machine Learning,"SEED Grant, IIT Bhubaneswar"
+130,"VLSI, Devices & Sensors",Design and Development of Silicon power MOSFETs for EV Application,iVP Semiconductors
+131,"VLSI, Devices & Sensors",Design and Characterization of SiC Trench MOSFETs for Next Generation Power Electronic Applications,"ANRF, DST"
+132,"VLSI, Devices & Sensors","Simulation, Design and Feasibility Investigation of Superjunction based Power Devices in 4H-SiC",IIT Bhubaneswar
+133,"VLSI, Devices & Sensors",Investigation of Al2O3/SiO2 Interface on SiC Substrate for Charge Sheet Super Junction,INUP-i2i
+134,"VLSI, Devices & Sensors",Heavy Metal Ion Detector System for Water Quality Monitoring,SERB-SRG
+135,"VLSI, Devices & Sensors",Self-powered Microsensors for Non-invasive Diabetes Monitoring,IIT Bhubaneswar
+136,"VLSI, Devices & Sensors",Portable Real-time Sensor Unit for Trace Level Explosive Detection,DRDO
+137,Control Systems,Periodic Controller Design for Nonlinear Systems using High Gain Observer: Application to Coupled Tank System,IIT Bhubaneswar (Seed Grant)
+138,Control Systems,Development of Beam Pointing System for Directed Energy Systems,CHESS-DRDO
+

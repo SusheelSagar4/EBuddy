@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS kb.resource (
     resource_id VARCHAR(100) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     provider VARCHAR(100) NOT NULL, -- NPTEL, SWAYAM, MIT OCW, third-party
-    url TEXT NOT NULL,
+    url TEXT,                       -- NULL for books / offline references (never fabricated)
     licence VARCHAR(100),
     resource_type VARCHAR(50) DEFAULT 'playlist',
     coverage_status VARCHAR(50),
@@ -258,7 +258,10 @@ CREATE TABLE IF NOT EXISTS kb.mastery_criteria (
 
 CREATE TABLE IF NOT EXISTS kb.research_area (
     area_id VARCHAR(50) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    department VARCHAR(20),          -- Core-to-Core research areas (data/seed/core_to_core/research_areas.csv)
+    description TEXT,
+    parent_area_id VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS kb.faculty (
@@ -266,7 +269,17 @@ CREATE TABLE IF NOT EXISTS kb.faculty (
     display_name VARCHAR(255) NOT NULL,
     title VARCHAR(50),
     group_name VARCHAR(255),
-    is_person BOOLEAN NOT NULL DEFAULT TRUE
+    is_person BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Core-to-Core faculty profile fields (data/seed/core_to_core/faculty.csv), NULL where not ingested
+    department VARCHAR(20),
+    designation VARCHAR(100),
+    lab_name VARCHAR(255),
+    profile_url TEXT,
+    email_public VARCHAR(255),
+    takes_ug_students VARCHAR(20),
+    source_url TEXT,
+    retrieved_on DATE,
+    verified BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS kb.research_project (
@@ -357,7 +370,13 @@ CREATE TABLE IF NOT EXISTS student.student (
     cgpa NUMERIC(4, 2) NOT NULL DEFAULT 8.00,
     is_synthetic BOOLEAN NOT NULL DEFAULT TRUE,
     persona_tag VARCHAR(100),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    -- v1.4.0 profile fields (editable in Adminer / Admin UI; edits trigger re-processing)
+    name VARCHAR(200),
+    backlogs INT NOT NULL DEFAULT 0,
+    first_year_track VARCHAR(2) NOT NULL DEFAULT 'A',
+    edge_case_tags TEXT,                -- semicolon list: ACTIVE_BACKLOG;CGPA_ON_MINOR_CUTOFF;...
+    aims TEXT                           -- self-declared aspiration (weak evidence)
 );
 
 CREATE TABLE IF NOT EXISTS student.completed_course (
@@ -374,24 +393,29 @@ CREATE TABLE IF NOT EXISTS student.goal (
     student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
     goal_id VARCHAR(100) REFERENCES kb.goal(goal_id),
     priority INT NOT NULL DEFAULT 1,
-    target_date DATE
+    target_date DATE,
+    status VARCHAR(20) NOT NULL DEFAULT 'active',   -- active | previous (mid-degree goal switch history)
+    since_semester INT
 );
 
 CREATE TABLE IF NOT EXISTS student.interest (
     id SERIAL PRIMARY KEY,
     student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
     topic VARCHAR(100) NOT NULL,
-    weight NUMERIC(3, 2) DEFAULT 1.0
+    weight NUMERIC(3, 2) DEFAULT 1.0,
+    reliability_tier VARCHAR(10) NOT NULL DEFAULT 'weak',   -- self-declared interest is always weak evidence
+    declared_strength VARCHAR(20)
 );
 
 CREATE TABLE IF NOT EXISTS student.skill_evidence (
     evidence_id SERIAL PRIMARY KEY,
     student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
     skill_id VARCHAR(100) REFERENCES kb.skill(skill_id),
-    source_type VARCHAR(50) NOT NULL, -- diagnostic, exercise, exam, self_report
+    source_type VARCHAR(50) NOT NULL, -- course_grade, diagnostic, quiz, timed_quiz, project_rubric, mock_interview, exercise, self_declaration
     score NUMERIC(5, 2) NOT NULL,
     recorded_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    notes TEXT
+    notes TEXT,
+    reliability_tier VARCHAR(10)      -- strong (assessed) | medium (untimed practice) | weak (self-declared); NULL = derive from source_type
 );
 
 CREATE TABLE IF NOT EXISTS student.skill_state (
@@ -425,8 +449,11 @@ CREATE TABLE IF NOT EXISTS plan.plan (
     student_id VARCHAR(100) REFERENCES student.student(student_id) ON DELETE CASCADE,
     version INT NOT NULL DEFAULT 1,
     status VARCHAR(20) NOT NULL DEFAULT 'draft', -- draft, active, archived
-    trigger VARCHAR(50) NOT NULL, -- initial_diagnostic, manual_regen, admin_edit, grade_import
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    trigger VARCHAR(50) NOT NULL, -- initial, simulator:<preset>, admin_edit, db_edit, proposal, goal_switch
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    goal_id VARCHAR(100),
+    reason TEXT,                  -- what changed and why (deterministic text)
+    plan_snapshot JSONB           -- full validated plan as served to the student
 );
 
 CREATE TABLE IF NOT EXISTS plan.plan_item (
@@ -518,7 +545,8 @@ CREATE TABLE IF NOT EXISTS ops.reprocess_queue (
     action VARCHAR(20) NOT NULL, -- INSERT, UPDATE, DELETE
     status VARCHAR(20) NOT NULL DEFAULT 'pending', -- pending, processing, completed, failed
     enqueued_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    processed_at TIMESTAMP WITH TIME ZONE
+    processed_at TIMESTAMP WITH TIME ZONE,
+    result TEXT                   -- outcome written by the re-processing worker (plans rebuilt, versions)
 );
 
 CREATE TABLE IF NOT EXISTS ops.llm_call_log (
@@ -592,7 +620,15 @@ BEGIN
         target_student := 'ALL';
     END IF;
 
-    -- Enqueue into ops.reprocess_queue
+    -- Writes made by the application itself are re-processed synchronously by the API;
+    -- they are logged as already completed so the worker does not re-plan the same edit twice.
+    IF current_setting('ebuddy.source', true) = 'api' THEN
+        INSERT INTO ops.reprocess_queue (entity_type, entity_id, action, status, processed_at, result)
+        VALUES (ent_type, ent_id, TG_OP, 'completed', CURRENT_TIMESTAMP, 're-processed synchronously by the API');
+        RETURN COALESCE(NEW, OLD);
+    END IF;
+
+    -- Enqueue into ops.reprocess_queue (direct SQL / Adminer edits)
     INSERT INTO ops.reprocess_queue (entity_type, entity_id, action, status)
     VALUES (ent_type, ent_id, TG_OP, 'pending');
 
@@ -629,6 +665,16 @@ FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
 DROP TRIGGER IF EXISTS trg_student_constraint ON student.constraint;
 CREATE TRIGGER trg_student_constraint
 AFTER INSERT OR UPDATE OR DELETE ON student.constraint
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+DROP TRIGGER IF EXISTS trg_student_student ON student.student;
+CREATE TRIGGER trg_student_student
+AFTER INSERT OR UPDATE OR DELETE ON student.student
+FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+DROP TRIGGER IF EXISTS trg_student_interest ON student.interest;
+CREATE TRIGGER trg_student_interest
+AFTER INSERT OR UPDATE OR DELETE ON student.interest
 FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
 
 DROP TRIGGER IF EXISTS trg_kb_course ON kb.course;
@@ -704,7 +750,7 @@ CREATE TABLE IF NOT EXISTS kb.paper_author (
 );
 
 CREATE TABLE IF NOT EXISTS kb.paper_chunk (
-    chunk_id SERIAL PRIMARY KEY,
+    chunk_id VARCHAR(100) PRIMARY KEY,
     paper_id VARCHAR(100) REFERENCES kb.paper(paper_id) ON DELETE CASCADE,
     page INT NOT NULL,
     chunk_index INT NOT NULL,
@@ -866,12 +912,12 @@ CREATE TABLE IF NOT EXISTS kb.mba_exam_cycle (
     exam_id VARCHAR(50) REFERENCES kb.mba_exam(id) ON DELETE CASCADE,
     cycle VARCHAR(50) NOT NULL,
     organiser TEXT,
-    reg_open DATE,
-    reg_close DATE,
+    reg_open TEXT,                   -- free text as published (some cycles are 'Rolling')
+    reg_close TEXT,
     exam_dates TEXT,
     admit_card_date TEXT,
     result_date TEXT,
-    fee NUMERIC(10,2),
+    fee TEXT,                        -- free text as published (e.g. category-wise fees)
     notes TEXT,
     source_url TEXT,
     source_type VARCHAR(50) DEFAULT 'official',
@@ -928,7 +974,7 @@ CREATE TABLE IF NOT EXISTS kb.mba_programme (
     work_ex_policy TEXT,
     selection_process TEXT,
     application_deadline DATE,
-    fees NUMERIC(12,2),
+    fees TEXT,                       -- free text as published
     official_url TEXT,
     source_url TEXT,
     source_type VARCHAR(50) DEFAULT 'official',
@@ -1501,3 +1547,75 @@ DROP TRIGGER IF EXISTS trg_student_gate_result ON student.gate_result;
 CREATE TRIGGER trg_student_gate_result
 AFTER INSERT OR UPDATE OR DELETE ON student.gate_result
 FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
+
+-- =============================================================================
+-- CAREER TRACK KNOWLEDGE BASE (SDE / Data Analyst / AI-ML) - v1.4.0
+-- Loaded by scripts/seed_loader.py from sde/output, da/output, aiml/output via app/kb/track_repo.py
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS kb.track (
+    track_id VARCHAR(20) PRIMARY KEY,
+    goal_id VARCHAR(100) REFERENCES kb.goal(goal_id),
+    name VARCHAR(200) NOT NULL,
+    total_est_hours NUMERIC(8, 1),
+    source_id VARCHAR(100) REFERENCES kb.source(source_id)
+);
+
+CREATE TABLE IF NOT EXISTS kb.track_phase (
+    track_id VARCHAR(20) REFERENCES kb.track(track_id) ON DELETE CASCADE,
+    phase_id VARCHAR(100) NOT NULL,
+    phase_order INT NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    objective TEXT,
+    est_hours NUMERIC(8, 1),
+    hours_basis VARCHAR(30),          -- source | design_default
+    pass_threshold_pct NUMERIC(5, 2),
+    PRIMARY KEY (track_id, phase_id)
+);
+
+CREATE TABLE IF NOT EXISTS kb.track_phase_skill (
+    track_id VARCHAR(20) NOT NULL,
+    phase_id VARCHAR(100) NOT NULL,
+    skill_id VARCHAR(100) REFERENCES kb.skill(skill_id),
+    required_level NUMERIC(5, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'draft_for_review',
+    source_id VARCHAR(100) REFERENCES kb.source(source_id),
+    PRIMARY KEY (track_id, phase_id, skill_id)
+);
+
+CREATE TABLE IF NOT EXISTS kb.track_resource (
+    resource_id VARCHAR(100) PRIMARY KEY,
+    track_id VARCHAR(20) REFERENCES kb.track(track_id) ON DELETE CASCADE,
+    phase_id VARCHAR(100) NOT NULL,
+    title TEXT NOT NULL,
+    provider TEXT,
+    url TEXT,
+    resource_type VARCHAR(100),
+    topic TEXT,
+    link_verified BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS kb.track_event (
+    event_id VARCHAR(100) PRIMARY KEY,
+    track_id VARCHAR(20) REFERENCES kb.track(track_id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    category VARCHAR(30),
+    organiser TEXT,
+    expected_window TEXT,
+    start_month VARCHAR(10),
+    min_phase_required VARCHAR(100),
+    is_home_campus BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS kb.track_question (
+    question_id VARCHAR(100) PRIMARY KEY,
+    track_id VARCHAR(20) REFERENCES kb.track(track_id) ON DELETE CASCADE,
+    phase_id VARCHAR(100),
+    kb_skill_id VARCHAR(100) REFERENCES kb.skill(skill_id),
+    difficulty_num INT,
+    question_type VARCHAR(20),
+    stem TEXT NOT NULL,
+    options JSONB,
+    correct_option_text TEXT,
+    explanation TEXT
+);

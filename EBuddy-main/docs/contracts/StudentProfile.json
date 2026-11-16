@@ -1,0 +1,64 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "student_id": {
+      "title": "Student Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "programme_id": {
+      "title": "Programme Id",
+      "type": "string"
+    },
+    "current_semester": {
+      "title": "Current Semester",
+      "type": "integer"
+    },
+    "cgpa": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cgpa"
+    },
+    "backlogs": {
+      "default": 0,
+      "title": "Backlogs",
+      "type": "integer"
+    },
+    "is_synthetic": {
+      "default": false,
+      "title": "Is Synthetic",
+      "type": "boolean"
+    },
+    "created_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Created At"
+    }
+  },
+  "required": [
+    "student_id",
+    "name",
+    "programme_id",
+    "current_semester"
+  ],
+  "title": "StudentProfile",
+  "type": "object"
+}

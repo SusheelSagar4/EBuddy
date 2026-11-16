@@ -1,0 +1,9 @@
+blueprint:
+  target_skills:
+  - SKILL_QUANT_APTITUDE
+  - SKILL_VERBAL_ABILITY
+  - SKILL_DILR
+  item_counts: 5
+  difficulty_range:
+  - 30.0
+  - 80.0

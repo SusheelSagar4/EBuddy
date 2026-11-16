@@ -1,0 +1,17 @@
+persona_id: da_career
+goal_id: GOAL_TRACK_DA
+display_name: Data Analyst Career Track
+description: 'B.Tech EE or MME student at IIT Bhubaneswar preparing for Data Analyst roles alongside the degree: spreadsheets, SQL, Python/pandas, statistics, BI dashboards, portfolio projects, data hackathons and case interviews.'
+applicable_programmes:
+- BTECH_EE
+- BTECH_MM
+target_semester_range:
+- 1
+- 8
+eligibility_notes: Open to B.Tech EE/MM students in any year. Degree courses stay mandatory; the track is paced inside the student's weekly-hours cap.
+planner_weights:
+  cgpa_protection: 0.65
+  skill_acceleration: 0.8
+  workload_smoothing: 0.75
+status: draft_for_review
+track_id: da

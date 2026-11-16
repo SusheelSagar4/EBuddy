@@ -16,9 +16,18 @@ class DiagnosticService:
         self.skill_states: Dict[str, List[SkillState]] = {}
         self.active_sessions: Dict[str, List[Dict[str, Any]]] = {}
 
+    def get_prior(self, student_id: str, candidate_skills: List[str]) -> Dict[str, Any]:
+        return self.diagnostic_engine.prior_from_evidence(self.skill_states.get(student_id, []), candidate_skills)
+
     def get_next_question(self, student_id: str, candidate_skills: List[str]) -> Optional[Exercise]:
         answers = self.active_sessions.get(student_id, [])
-        return self.diagnostic_engine.select_next_item(candidate_skills, answers)
+        prior = self.get_prior(student_id, candidate_skills)
+        self.served_keys = getattr(self, "served_keys", {})
+        item = self.diagnostic_engine.select_next_item(candidate_skills, answers, prior_difficulty=prior["start_difficulty"])
+        if item is not None:
+            # remember the (shuffled) answer key server-side; it is never sent to the browser
+            self.served_keys[(student_id, item.exercise_id)] = item
+        return item
 
     def submit_answer(
         self,
@@ -37,7 +46,8 @@ class DiagnosticService:
             "skill_id": exercise.skill_id,
             "answer": student_answer,
             "is_correct": is_correct,
-            "score": score
+            "score": score,
+            "difficulty": exercise.difficulty_0_100
         })
 
         # Append to evidence ledger
@@ -88,9 +98,35 @@ class DiagnosticService:
         }
 
     def reset_session(self, student_id: str):
+        """Starts a fresh adaptive session. The evidence ledger is append-only and is never wiped here."""
         self.active_sessions[student_id] = []
-        self.evidence_ledger[student_id] = []
-        self.skill_states[student_id] = []
+
+    def set_ledger(self, student_id: str, evidence: List[EvidenceItem]):
+        """Replaces a student's ledger (seed / DB reload) and recomputes skill states."""
+        self.evidence_ledger[student_id] = list(evidence)
+        self.skill_states[student_id] = self.state_updater.update_states(student_id, self.evidence_ledger[student_id])
+
+    def add_evidence(self, student_id: str, skill_id: str, source_type: str, score: float,
+                     notes: Optional[str] = None, reliability_tier: Optional[str] = None) -> EvidenceItem:
+        """Appends one evidence item and recomputes the skill states (deterministic)."""
+        ev = EvidenceItem(
+            evidence_id=f"EV_{source_type.upper()}_{uuid.uuid4().hex[:8]}", student_id=student_id, skill_id=skill_id,
+            source_type=source_type, score=float(score), reliability=1.0, attempts=1,
+            recorded_at=datetime.now(timezone.utc), reliability_tier=reliability_tier, notes=notes)
+        self.evidence_ledger.setdefault(student_id, []).append(ev)
+        self.skill_states[student_id] = self.state_updater.update_states(student_id, self.evidence_ledger[student_id])
+        return ev
+
+    def clear_all(self):
+        self.evidence_ledger.clear(); self.skill_states.clear(); self.active_sessions.clear()
+
+    def record_answer(self, student_id: str, exercise_id: str, skill_id: str, is_correct: bool, difficulty: float = 0.5) -> EvidenceItem:
+        """Records one objectively graded answer as diagnostic evidence (used by the fixed-form diagnostic)."""
+        session = self.active_sessions.setdefault(student_id, [])
+        session.append({"exercise_id": exercise_id, "skill_id": skill_id, "is_correct": is_correct,
+                        "score": 100.0 if is_correct else 0.0, "difficulty": difficulty * 100.0})
+        return self.add_evidence(student_id, skill_id, "diagnostic", 100.0 if is_correct else 0.0,
+                                 notes=f"Diagnostic item {exercise_id}")
 
 diagnostic_service = DiagnosticService()
 

@@ -728,17 +728,14 @@ def main():
 
     # Write files to output locations
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    repo_root = os.path.dirname(os.path.dirname(script_dir))
-    dest_dirs = [
-        os.path.join(repo_root, "output"),
-        os.path.join(repo_root, "sde", "output")
-    ]
+    # Single canonical destination: sde/output/events/
+    dest_dirs = [os.path.join(os.path.dirname(script_dir), "output", "events")]
 
     for d in dest_dirs:
         os.makedirs(d, exist_ok=True)
         
         # File 1: 01_events_master.csv (and 01_sde_events_master.csv)
-        f1_names = [os.path.join(d, "01_events_master.csv"), os.path.join(d, "01_sde_events_master.csv")]
+        f1_names = [os.path.join(d, "01_events_master.csv")]
         for f1_path in f1_names:
             with open(f1_path, mode="w", encoding="utf-8-sig", newline="") as fp:
                 writer = csv.DictWriter(fp, fieldnames=list(master_rows[0].keys()), quoting=csv.QUOTE_MINIMAL)
@@ -746,7 +743,7 @@ def main():
                 writer.writerows(master_rows)
 
         # File 2: 02_phase_eligibility.csv (and 02_sde_phase_eligibility.csv)
-        f2_names = [os.path.join(d, "02_phase_eligibility.csv"), os.path.join(d, "02_sde_phase_eligibility.csv")]
+        f2_names = [os.path.join(d, "02_phase_eligibility.csv")]
         for f2_path in f2_names:
             with open(f2_path, mode="w", encoding="utf-8-sig", newline="") as fp:
                 writer = csv.DictWriter(fp, fieldnames=list(phase_elig_rows[0].keys()), quoting=csv.QUOTE_MINIMAL)
@@ -754,7 +751,7 @@ def main():
                 writer.writerows(phase_elig_rows)
 
         # File 3: 03_recommendation_rules.csv (and 03_sde_recommendation_rules.csv)
-        f3_names = [os.path.join(d, "03_recommendation_rules.csv"), os.path.join(d, "03_sde_recommendation_rules.csv")]
+        f3_names = [os.path.join(d, "03_recommendation_rules.csv")]
         for f3_path in f3_names:
             with open(f3_path, mode="w", encoding="utf-8-sig", newline="") as fp:
                 writer = csv.DictWriter(fp, fieldnames=list(rec_rules_rows[0].keys()), quoting=csv.QUOTE_MINIMAL)

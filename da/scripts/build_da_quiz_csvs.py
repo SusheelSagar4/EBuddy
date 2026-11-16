@@ -111,24 +111,15 @@ QUIZ_RULES_CONFIG = [
 
 
 def build_da_quiz_pipeline(base_dir=None):
+    pkg_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if base_dir is None:
-        cur = os.path.dirname(os.path.abspath(__file__))
-        if os.path.exists(os.path.join(cur, "Data_Analyst_Questions.xlsx")):
-            base_dir = cur
-        elif os.path.exists(os.path.join(cur, "..", "Data_Analyst_Questions.xlsx")):
-            base_dir = os.path.abspath(os.path.join(cur, ".."))
-        elif os.path.exists(os.path.join(cur, "..", "..", "Data_Analyst_Questions.xlsx")):
-            base_dir = os.path.abspath(os.path.join(cur, "..", ".."))
-        else:
-            base_dir = cur
+        base_dir = os.path.dirname(pkg_root)
 
+    # Canonical input location is da/data/; base_dir kept for explicit overrides.
     candidate_dirs = [
-        base_dir,
-        os.path.join(base_dir, "data_analyst", "data"),
+        os.path.join(pkg_root, "data"),
         os.path.join(base_dir, "da", "data"),
-        os.path.join(base_dir, "EBuddy-main"),
-        os.path.join(base_dir, "EBuddy-main", "data_analyst", "data"),
-        os.path.join(base_dir, "EBuddy-main", "da", "data"),
+        base_dir,
     ]
 
     def find_file(fname):
@@ -612,13 +603,9 @@ def build_da_quiz_pipeline(base_dir=None):
     print("STEP 8: WRITING CSV DELIVERABLES TO TARGET DIRECTORIES")
     print("=" * 80)
 
+    # Single canonical destination: da/output/quiz/
     out_dirs = [
-        os.path.join(base_dir, "output"),
-        os.path.join(base_dir, "data_analyst", "output"),
-        os.path.join(base_dir, "da", "output"),
-        os.path.join(base_dir, "EBuddy-main", "output"),
-        os.path.join(base_dir, "EBuddy-main", "data_analyst", "output"),
-        os.path.join(base_dir, "EBuddy-main", "da", "output"),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output", "quiz"),
     ]
 
     for od in out_dirs:

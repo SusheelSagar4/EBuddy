@@ -1,3 +1,15 @@
+# ==============================================================================
+# Personalised Learning Buddy (IIT Bhubaneswar) - full stack
+#
+#   docker compose up            # builds the app image on first run, then starts everything
+#
+#   Web app   http://localhost:8000/app/      (APP_PORT)
+#   API docs  http://localhost:8000/docs
+#   Adminer   http://localhost:8080           (ADMINER_PORT)  server: db  user/password/database below
+#
+# linux/amd64, CPU only (no GPU). No .env file is required: every value has a default and the
+# app runs in offline deterministic mode until LLM_MODEL / LLM_API_KEY are provided.
+# ==============================================================================
 services:
   db:
     image: postgres:16-alpine
@@ -11,43 +23,61 @@ services:
       - ./docker/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ebuddy_user} -d ${POSTGRES_DB:-ebuddy}"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 12
     restart: unless-stopped
 
   adminer:
-    image: adminer:latest
+    image: adminer:4.8.1
     container_name: ebuddy_adminer
     platform: linux/amd64
     ports:
       - "${ADMINER_PORT:-8080}:8080"
     environment:
       ADMINER_DEFAULT_SERVER: db
+    # Listen on IPv4 explicitly: the image default ([::]:8080) fails on hosts without IPv6.
+    command: ["php", "-S", "0.0.0.0:8080", "-t", "/var/www/html"]
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
   app:
     build:
       context: .
       dockerfile: docker/Dockerfile
+    image: ebuddy-app:latest
     container_name: ebuddy_app
     platform: linux/amd64
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
-      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER:-ebuddy_user}:${POSTGRES_PASSWORD:-ebuddy_password}@db:5432/${POSTGRES_DB:-ebuddy}
-      - LITELLM_LOCAL_MODEL_COST_MAP=True
-      - LITELLM_TELEMETRY=False
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ebuddy_user}:${POSTGRES_PASSWORD:-ebuddy_password}@db:5432/${POSTGRES_DB:-ebuddy}
+      POSTGRES_USER: ${POSTGRES_USER:-ebuddy_user}
+      POSTGRES_DB: ${POSTGRES_DB:-ebuddy}
+      ADMINER_PORT: ${ADMINER_PORT:-8080}
+      LLM_MODEL: ${LLM_MODEL:-fake}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_API_BASE: ${LLM_API_BASE:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-}
+      LITELLM_LOCAL_MODEL_COST_MAP: "True"
+      LITELLM_TELEMETRY: "False"
     ports:
       - "${APP_PORT:-8000}:8000"
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
+      interval: 15s
+      timeout: 6s
+      retries: 10
+      start_period: 40s
     restart: unless-stopped
 
 volumes:

@@ -59,7 +59,32 @@ def _load_default_item_bank(csv_path: Optional[str] = None) -> List[Exercise]:
                 source_id="AI_DRAFT",
                 verified=False
             ))
+    items.extend(_load_track_bank_items())
     return items
+
+def _load_track_bank_items() -> List[Exercise]:
+    """MCQ items of the career-track question banks (Data Analyst), mapped to knowledge-base skills."""
+    out: List[Exercise] = []
+    try:
+        from app.kb.track_repo import TrackRepo
+        repo = TrackRepo()
+    except Exception:
+        return out
+    for t in repo.list_tracks():
+        for q in t.get("questions", []):
+            if q["question_type"] != "mcq" or len(q["options"]) < 2 or not q["correct_option_text"]:
+                continue
+            letters = ["A", "B", "C", "D", "E"]
+            opts = [f"{letters[i]}: {o}" for i, o in enumerate(q["options"])]
+            correct = next((o for o in opts if o.split(": ", 1)[1] == q["correct_option_text"]), None)
+            if not correct:
+                continue
+            out.append(Exercise(
+                exercise_id=q["question_id"], skill_id=q["kb_skill_id"], title=f"{t['name']} bank: {q['track_skill_name']}",
+                question_text=q["stem"], exercise_type="mcq", options=opts, correct_answer=correct,
+                difficulty_0_100={1: 30.0, 2: 55.0, 3: 80.0}.get(q["difficulty_num"], 50.0),
+                status="draft_for_review", source_id="TRACK_DA_KB" if t["track_id"] == "da" else "AI_DRAFT", verified=False))
+    return out
 
 class AdaptiveDiagnostic(IAdaptiveDiagnostic):
     """
@@ -155,7 +180,7 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
             correct_answer=new_correct_answer or new_correct_letter,
             difficulty_0_100=exercise.difficulty_0_100,
             status=exercise.status,
-            source_id="AI_DRAFT",
+            source_id=exercise.source_id,
             verified=exercise.verified
         )
 
@@ -199,10 +224,39 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
 
         return current_ability, round(confidence, 2)
 
+    # Evidence reliability weights used for the starting point of the adaptive test (PS Section 4)
+    PRIOR_TIER_WEIGHTS = {"strong": 1.0, "mixed": 1.0, "medium": 0.6, "weak": 0.0}
+
+    def prior_from_evidence(self, skill_states: List[Any], candidate_skills: List[str]) -> Dict[str, Any]:
+        """
+        Starting difficulty from what is already KNOWN about the student.
+        Assessed evidence (grades, earlier diagnostics, timed quizzes) sets the start; self-declared
+        interest has weight 0 here - a student cannot talk their way to harder (or fewer) questions.
+        """
+        used, ignored, num, den = [], [], 0.0, 0.0
+        for s in skill_states or []:
+            if s.skill_id not in candidate_skills:
+                continue
+            basis = getattr(s, "evidence_basis", None) or ("weak" if s.confidence <= 0.2 else "strong")
+            w = self.PRIOR_TIER_WEIGHTS.get(basis, 0.0) * max(0.0, s.confidence)
+            row = {"skill_id": s.skill_id, "level": s.estimated_level, "basis": basis, "weight": round(w, 2)}
+            if w > 0:
+                used.append(row); num += s.estimated_level * w; den += w
+            else:
+                ignored.append(row)
+        start = 50.0 if den == 0 else max(20.0, min(85.0, num / den))
+        return {
+            "start_difficulty": round(start, 1),
+            "basis": "assessed evidence" if den > 0 else "no assessed evidence: neutral start at 50",
+            "used": used, "ignored_self_declared": ignored,
+            "rule": "strong/medium evidence weighted by confidence; self-declared evidence weight 0",
+        }
+
     def select_next_item(
         self,
         candidate_skills: List[str],
-        previous_answers: List[Dict[str, Any]]
+        previous_answers: List[Dict[str, Any]],
+        prior_difficulty: Optional[float] = None
     ) -> Optional[Exercise]:
         if self.is_complete(previous_answers):
             return None
@@ -210,7 +264,7 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
         asked_exercise_ids = {a["exercise_id"] for a in previous_answers}
 
         if not previous_answers:
-            target_diff = 50.0
+            target_diff = prior_difficulty if prior_difficulty is not None else 50.0
         else:
             last_ans = previous_answers[-1]
             last_diff = float(last_ans.get("difficulty", 50.0))
@@ -230,21 +284,20 @@ class AdaptiveDiagnostic(IAdaptiveDiagnostic):
                     best_item = ex
 
         if not best_item:
+            if self.item_bank:
+                # A real bank is loaded but has no item left for these skills: stop instead of inventing a question.
+                return None
+            # Empty bank = engine-only simulation (unit tests of the difficulty staircase): placeholder items.
             next_idx = len(previous_answers) + 1
             skill = candidate_skills[(next_idx - 1) % len(candidate_skills)] if candidate_skills else "SKILL_CIRCUIT_ANALYSIS"
             best_item = Exercise(
-                exercise_id=f"DIAG_EX_{next_idx}",
-                skill_id=skill,
+                exercise_id=f"DIAG_EX_{next_idx}", skill_id=skill,
                 title=f"Diagnostic Question {next_idx} on {skill}",
                 question_text=f"Adaptive diagnostic item evaluating proficiency in {skill}.",
                 exercise_type="mcq",
                 options=["A: Option Alpha", "B: Option Beta", "C: Option Gamma", "D: Option Delta"],
-                correct_answer="A: Option Alpha",
-                difficulty_0_100=target_diff,
-                status="draft_for_review",
-                source_id="AI_DRAFT",
-                verified=False
-            )
+                correct_answer="A: Option Alpha", difficulty_0_100=target_diff,
+                status="draft_for_review", source_id="AI_DRAFT", verified=False)
 
         return self.shuffle_exercise_options(best_item, self.rng)
 

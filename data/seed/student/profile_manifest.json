@@ -1,0 +1,70 @@
+{
+  "generator": "scripts/generate_75_student_profiles.py",
+  "seed": 20261115,
+  "total_profiles": 75,
+  "is_synthetic": true,
+  "contains_real_student_data": false,
+  "by_programme": {
+    "BTECH_EE": 41,
+    "BTECH_MM": 34
+  },
+  "by_year": {
+    "year_1": 12,
+    "year_2": 22,
+    "year_3": 25,
+    "year_4": 16
+  },
+  "by_persona": {
+    "aiml_career": 8,
+    "btech_upsc": 7,
+    "core_higher_studies": 8,
+    "core_to_mba": 7,
+    "da_career": 8,
+    "ee_power_core": 12,
+    "mme_materials_core": 9,
+    "sde_career": 10,
+    "student_startup": 6
+  },
+  "by_goal": {
+    "GOAL_EE_CORE_POWER": 10,
+    "GOAL_EE_CORE_VLSI": 2,
+    "GOAL_EE_RES_HIGHER_STUDIES": 4,
+    "GOAL_MBA_CAT": 7,
+    "GOAL_MM_ADVANCED_MATERIALS": 5,
+    "GOAL_MM_PROCESS_ENGINEER": 4,
+    "GOAL_MM_RES_HIGHER_STUDIES": 4,
+    "GOAL_STARTUP_FOUNDER": 6,
+    "GOAL_TRACK_AIML": 8,
+    "GOAL_TRACK_DA": 8,
+    "GOAL_TRACK_SDE": 10,
+    "GOAL_UPSC_CSE": 7
+  },
+  "edge_case_counts": {
+    "ACTIVE_BACKLOG": 8,
+    "CGPA_ON_MINOR_CUTOFF": 7,
+    "CGPA_ON_OVERLOAD_CUTOFF": 4,
+    "INTEREST_EVIDENCE_CLASH": 8,
+    "MID_DEGREE_GOAL_SWITCH": 9,
+    "TIGHT_CREDIT_CAP": 6,
+    "TIGHT_WEEKLY_HOURS": 8
+  },
+  "evidence_rows_by_reliability_tier": {
+    "medium": 13,
+    "strong": 1027,
+    "weak": 41
+  },
+  "rows": {
+    "student": 75,
+    "completed": 1972,
+    "goal": 84,
+    "interest": 158,
+    "evidence": 1081,
+    "constraint": 81,
+    "preference": 75
+  },
+  "grading_scale_assumed": "EX=10, A=9, B=8, C=7, D=6, P=5, F=0 (design assumption; confirm with institute regulations)",
+  "notes": [
+    "The KB holds no sourced honours rule; the honours-type cutoff is represented by the 8.50 overload threshold of RULE_SEM_CREDIT_CAP_REGULAR (unsourced baseline).",
+    "MME first-year courses are the institute common core assumed from the EE curriculum document (MME document omits Sem I-II)."
+  ]
+}

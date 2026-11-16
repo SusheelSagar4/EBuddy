@@ -1,41 +1,24 @@
 #!/bin/sh
+# Entry point of the app container.
+#   (default)   wait for PostgreSQL, seed it if empty, start the web server
+#   reset       restore the database to the original seed state and exit
 set -e
+cd /app
 
-echo "=== EBuddy Web Application Initializing ==="
-
-python -c "
-import os, sys, time, psycopg
-
-db_url = os.environ.get('DATABASE_URL', 'postgresql://ebuddy_user:ebuddy_password@db:5432/ebuddy')
-if '+psycopg' in db_url:
-    db_url = db_url.replace('+psycopg', '')
-
-print('Checking PostgreSQL database connection...')
-for i in range(30):
-    try:
-        conn = psycopg.connect(db_url, connect_timeout=3)
-        with conn.cursor() as cur:
-            cur.execute('SELECT COUNT(*) FROM kb.course;')
-            cnt = cur.fetchone()[0]
-            print(f'Database connected. Existing courses count: {cnt}')
-            if cnt == 0:
-                print('Database empty! Triggering seed load...')
-                sys.exit(10)
-            else:
-                print('Database already seeded.')
-                sys.exit(0)
-    except Exception as e:
-        print(f'Waiting for database (attempt {i+1}/30)...')
-        time.sleep(1)
-
-print('Database wait timed out.')
-sys.exit(1)
-" || STATUS=$?
-
-if [ "$STATUS" = "10" ]; then
-    echo "Running database seed loader..."
-    python scripts/seed_loader.py --reset
+if [ "$1" = "reset" ]; then
+    echo "=== Restoring the database to the original seed state ==="
+    exec python scripts/seed_loader.py --reset
 fi
 
-echo "Starting Uvicorn HTTP server on 0.0.0.0:8000..."
+echo "=== EBuddy starting ==="
+STATUS=0
+python docker/wait_for_db.py || STATUS=$?
+if [ "$STATUS" = "10" ]; then
+    echo "Seeding database..."
+    python scripts/seed_loader.py --reset
+elif [ "$STATUS" != "0" ]; then
+    echo "WARNING: database not reachable; starting in seed-file mode (plans are computed in memory)."
+fi
+
+echo "Starting web server on 0.0.0.0:8000 (web app at /app/)"
 exec uvicorn app.main:app --host 0.0.0.0 --port 8000

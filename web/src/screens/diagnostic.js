@@ -1,104 +1,50 @@
 import { api } from '../api/client.js';
+import { esc, badge, skill, needStudent, errorBox, md } from '../ui.js';
 
-export function renderDiagnostic(container, state, navigate) {
-  if (!state.studentId) {
-    container.innerHTML = `
-      <div class="screen-card alert-warning">
-        <p>Please complete onboarding first to set up your core engineering goals.</p>
-        <button class="btn btn-primary" onclick="window.location.hash='#onboard'">Go to Onboarding</button>
-      </div>
-    `;
-    return;
-  }
-
+export function renderDiagnostic(container, state) {
+  if (!state.studentId) return needStudent(container);
   container.innerHTML = `
     <div class="screen-card">
-      <div class="screen-header">
-        <h2>Technical Skills Baseline Diagnostic Test</h2>
-        <p class="subtitle">Real technical assessment to analyze your baseline proficiency in core skills, so your buddy does not assign redundant coursework.</p>
-      </div>
-      <div id="diagnostic-loading" class="loading-state">Selecting technical skill diagnostic questions for your core engineering path...</div>
-      <div id="diagnostic-content" style="display: none;"></div>
-    </div>
-  `;
+      <div class="screen-header"><h2>Adaptive diagnostic</h2>
+        <p class="subtitle">5 to 8 questions, one at a time. Difficulty starts from your assessed evidence (grades, earlier tests) - self-ratings carry no weight here - and moves up or down with each answer.</p></div>
+      <div class="filters"><button class="btn btn-primary" id="dg-start">Start a new diagnostic</button></div>
+      <div id="dg-body"></div>
+    </div>`;
+  const body = document.getElementById('dg-body');
+  document.getElementById('dg-start').addEventListener('click', async () => {
+    try { await api.startDiagnostic(state.studentId); next(); } catch (err) { body.innerHTML = errorBox(err); }
+  });
 
-  loadQuestions();
-
-  async function loadQuestions() {
+  async function next(lastFeedback = '') {
+    body.innerHTML = '<div class="loading-state">Selecting the next question...</div>';
     try {
-      const data = await api.getDiagnostic(state.studentId);
-      const loading = document.getElementById('diagnostic-loading');
-      const content = document.getElementById('diagnostic-content');
-      if (loading) loading.style.display = 'none';
-      if (!content) return;
-      content.style.display = 'block';
-
-      const questions = data.questions || [];
-      if (questions.length === 0) {
-        content.innerHTML = `
-          <div class="alert alert-info">
-            <p>Diagnostic complete or baseline established for your profile.</p>
-            <button class="btn btn-primary" id="btn-proceed">View Phase-wise Personalised Plan →</button>
-          </div>
-        `;
-        document.getElementById('btn-proceed').addEventListener('click', () => navigate('#plan'));
+      const d = await api.nextDiagnostic(state.studentId);
+      const st = d.state; const pr = d.prior || {};
+      const priorBox = `<div class="alert alert-info small"><strong>Starting point: difficulty ${pr.start_difficulty} (${esc(pr.basis || '')}).</strong>
+        ${(pr.used || []).length ? ` Used: ${pr.used.map((u) => `${skill(u.skill_id)} ${u.level} (${u.basis}, weight ${u.weight})`).join('; ')}.` : ''}
+        ${(pr.ignored_self_declared || []).length ? ` Ignored (self-declared, weight 0): ${pr.ignored_self_declared.map((u) => `${skill(u.skill_id)} ${u.level}`).join('; ')}.` : ''}
+        ${(d.uncovered_skills || []).length ? `<br/>No verified question bank yet for: ${d.uncovered_skills.map(skill).join(', ')} - these are not tested here and nothing is generated.` : ''}</div>`;
+      if (d.complete) {
+        body.innerHTML = `${lastFeedback}${priorBox}<div class="alert alert-success"><strong>${esc(d.message)}</strong><br/>Answered ${st.answers_count} • ability estimate ${st.ability_estimate} • confidence ${st.confidence}</div>
+          <div class="filters"><a class="btn btn-primary" href="#plan">See the roadmap</a><a class="btn btn-outline" href="#progress">See mastery</a></div>`;
         return;
       }
-
-      content.innerHTML = `
-        <div class="diagnostic-intro" style="margin-bottom: 20px; padding: 12px 16px; background: rgba(59, 130, 246, 0.08); border-left: 4px solid var(--accent-primary, #2563eb); border-radius: 4px;">
-          <strong>Target Discipline:</strong> ${data.goal_name || 'Core Engineering Track'}<br/>
-          <small class="text-muted">Answer these 5 technical questions to benchmark your foundation. Unattempted questions will default to baseline proficiency.</small>
-        </div>
-        <form id="diag-form">
-          <div class="questions-list">
-            ${questions.map((q, idx) => `
-              <div class="question-card" style="margin-bottom: 20px; padding: 16px; border: 1px solid var(--border-color, #e5e7eb); border-radius: 8px;">
-                <div class="q-header" style="display: flex; gap: 8px; margin-bottom: 12px; align-items: center;">
-                  <span class="badge badge-info">Q${idx + 1}</span>
-                  <span class="badge badge-neutral">Skill: ${q.skill_id.replace('SKILL_', '')}</span>
-                  <span class="badge badge-neutral">Est. Difficulty: ${q.difficulty_level || 'Intermediate'}</span>
-                </div>
-                <p class="q-prompt" style="font-size: 15px; font-weight: 500; margin-bottom: 14px;">${q.prompt || q.question_text}</p>
-                <div class="q-options" style="display: flex; flex-direction: column; gap: 10px;">
-                  ${(q.options || []).map((opt, oIdx) => `
-                    <label class="option-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 12px; border-radius: 6px; background: rgba(0,0,0,0.02);">
-                      <input type="radio" name="q_${q.exercise_id}" value="${opt}" ${oIdx === 0 ? 'checked' : ''} />
-                      <span style="font-size: 14px;">${opt}</span>
-                    </label>
-                  `).join('')}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-          <div class="form-actions" style="margin-top: 24px;">
-            <button type="submit" class="btn btn-primary" style="padding: 10px 24px; font-size: 15px;">Analyze My Technical Skills & Build Phase-wise Plan →</button>
-          </div>
-        </form>
-      `;
-
-      document.getElementById('diag-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const answers = {};
-        questions.forEach(q => {
-          const sel = document.querySelector(`input[name="q_${q.exercise_id}"]:checked`);
-          if (sel) answers[q.exercise_id] = sel.value;
-        });
-
+      const ex = d.exercise;
+      body.innerHTML = `${lastFeedback}${priorBox}
+        <div class="card"><div class="pill-row">${badge(`Question ${st.answers_count + 1} of ${st.min_items}-${st.max_items}`, 'info')} ${badge(skill(ex.skill_id))} ${badge(`difficulty ${ex.difficulty_0_100}`)} ${badge(ex.status.replace(/_/g, ' '), 'warning')}</div>
+          <p style="margin:10px 0;">${esc(ex.question_text)}</p>
+          ${ex.options.map((o) => `<label style="display:block;margin:5px 0;"><input type="radio" name="dg-opt" value="${esc(o)}"> ${esc(o)}</label>`).join('')}
+          <div class="filters"><button class="btn btn-primary" id="dg-submit">Submit answer</button><span class="small muted">Ability estimate so far: ${st.ability_estimate} (confidence ${st.confidence})</span></div></div>`;
+      document.getElementById('dg-submit').addEventListener('click', async () => {
+        const sel = body.querySelector('input[name="dg-opt"]:checked');
+        if (!sel) return;
         try {
-          const res = await api.submitDiagnostic(state.studentId, { answers });
-          const avgScore = res.score ? (res.score * 100).toFixed(1) : (res.average_score || 70).toFixed(1);
-          alert(`Technical skills analyzed!\nDiagnostic Baseline Score: ${avgScore}%\nPlan will now be synthesized in structured phases.`);
-          navigate('#plan');
-        } catch (err) {
-          alert(`Error submitting diagnostic: ${err.message}`);
-        }
+          const r = await api.answerDiagnostic(state.studentId, ex.exercise_id, ex.skill_id, sel.value);
+          const fb = `<div class="alert ${r.is_correct ? 'alert-success' : 'alert-error'} small">${r.is_correct ? 'Correct - the next question is harder.' : 'Incorrect - the next question is easier.'} ${esc(r.feedback || '')}
+            ${r.replanned ? `<br/><strong>Roadmap re-planned to v${r.replanned.version}.</strong><br/>${md(r.replanned.what_changed_and_why || '')}` : ''}</div>`;
+          next(fb);
+        } catch (err) { body.insertAdjacentHTML('beforeend', errorBox(err)); }
       });
-    } catch (err) {
-      document.getElementById('diagnostic-loading').innerHTML = `
-        <p class="text-error">Error loading diagnostic: ${err.message}</p>
-        <button class="btn btn-secondary" onclick="window.location.hash='#plan'">Skip directly to Plan</button>
-      `;
-    }
+    } catch (err) { body.innerHTML = errorBox(err); }
   }
 }

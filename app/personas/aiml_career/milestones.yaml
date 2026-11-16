@@ -1,0 +1,18 @@
+- semester_target: 3
+  title: Python and maths foundations
+  description: 'Foundations checkpoint: Python data stack plus linear algebra, calculus and probability refresh.'
+- semester_target: 4
+  title: First classical ML model
+  description: Train, validate and document one classical ML model end to end on a public tabular dataset.
+- semester_target: 5
+  title: Classical ML checkpoint
+  description: Timed classical ML checkpoint at 70% or better; unlocks hackathons and competitions in the track knowledge base.
+- semester_target: 6
+  title: Deep learning project
+  description: One deep learning project with tracked experiments and a written report.
+- semester_target: 7
+  title: Specialisation and interview readiness
+  description: Choose one specialisation area; at least 1 timed ML mock interview with written feedback.
+- semester_target: 8
+  title: Capstone or research exposure
+  description: Capstone project or paper-reading log aligned with the B.Tech project where possible.

@@ -156,12 +156,13 @@ class TestUPSCPlanAdjustments(unittest.TestCase):
             ('exercise', 'EE3P004', ['SKILL_POWER_ELECTRONICS']),
             ('course', 'EE3P005', ['SKILL_INSTRUMENTATION']),
             ('exercise', 'EE3P005', ['SKILL_INSTRUMENTATION']),
+            # Lateral - 2 is "any one from the options": exactly one of EE3L005 / EE3L006 is planned
+            # (the earlier snapshot scheduled both options of the pick-one slot).
             ('course', 'EE3L005', ['SKILL_CONTROL_SYSTEMS']),
             ('exercise', 'EE3L005', ['SKILL_CONTROL_SYSTEMS']),
-            ('course', 'EE3L006', []),
-            ('exercise', 'EE3L006', []),
-            ('course', 'EC6L012', []),
-            ('exercise', 'EC6L012', []),
+            # Breadth - 3: the pool is not enumerated in the source curriculum and nothing in the KB is
+            # clearly relevant to this goal, so the slot stays open (credits reserved, no course guessed).
+            ('course', None, []),
             ('milestone', None, ['SKILL_ELECTRIC_MACHINES', 'SKILL_POWER_SYSTEMS', 'SKILL_CIRCUIT_ANALYSIS', 'SKILL_POWER_ELECTRONICS', 'SKILL_RENEWABLE_ENERGY'])
         ]
         actual_structure = [(it.item_type, it.course_id, it.reason.target_skills) for it in plan.items]

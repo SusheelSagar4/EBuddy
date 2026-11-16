@@ -1,0 +1,18 @@
+engagement_id,consultant_name,faculty_id,client,amount_lakhs,amount_raw,duration_years,start_year,end_year,source_id
+CONS_MM_01,Dr. Partha Sarathi De,FAC_MM_12,Ratnamani Steels,1.5,₹ 1.5 Lakhs,2024,2024,2024,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_02,Dr. Rama Krushna Sabat,FAC_MM_06,M/s Forge … Ltd,5.2,₹ 5.20 Lakhs,2023,2023,2023,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_03,Dr. Soobhankar Pati,FAC_MM_07,"Chief Engineer, RD & QP (R & B), BBSR",4.8,₹ 4.8 Lakhs,2023,2023,2023,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_04,Dr. Rama Krushna Sabat,FAC_MM_06,M/s Jindal Stainless Steel Ltd,6.2,₹ 6.2 Lakhs,2022–23,2022,2023,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_05,Prof. Brahma Deo,FAC_MM_14,Shri Mahavir Ferro Alloys (P) Ltd,13.0,₹ 13 Lakhs,2022,2022,2022,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_06,Dr. Rama Krushna Sabat,FAC_MM_06,M/s The Ramco Cements Ltd,4.7,₹ 4.7 Lakhs,2021,2021,2021,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_07,Dr. Partha Sarathi De,FAC_MM_12,M/s Deem Roll Tech Ltd,3.8,₹ 3.8 Lakhs,2021–22,2021,2022,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_08,Dr. Rama Krushna Sabat,FAC_MM_06,Indian Oil Corporation Ltd,2.9,₹ 2.9 Lakhs,2021,2021,2021,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_09,Dr. Soobhankar Pati,FAC_MM_07,"M/s Rungta Mines Ltd c/o R&D & Q.P. (R&B), Govt. of Odisha",4.8,₹ 4.8 Lakhs,2021,2021,2021,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_10,Prof. Brahma Deo,FAC_MM_14,Tata Steel Ltd,31.9,₹ 31.9 Lakhs,2020–21,2020,2021,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_11,Dr. Rama Krushna Sabat,FAC_MM_06,,4.2,₹ 4.2 Lakhs,,,,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_12,Dr. Partha Sarathi De,FAC_MM_12,Indian Oil Corporation Ltd,0.6,₹ 0.6 Lakhs,2020–21,2020,2021,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_13,Prof. Brahma Deo,FAC_MM_14,"Deem Roll Tech. Ltd., Ahmedabad",44.1,₹ 44.1 Lakhs,2019,2019,2019,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_14,Prof. Brahma Deo,FAC_MM_14,"Jindal Stainless Steel Ltd., Jajpur, Orissa",44.0,₹ 44 Lakhs,2018–19,2018,2019,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_15,Prof. Brahma Deo,FAC_MM_14,"TATA Steel Long Products Limited, Joda (Pradeep Phosphates Ltd)",35.7,₹ 35.7 Lakhs,2019–20,2019,2020,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_16,Prof. Brahma Deo,FAC_MM_14,Tata Sponge Iron Ltd,13.0,₹ 13 Lakhs,2017–18,2017,2018,IITBBS_SMMME_PROJECTS_2026
+CONS_MM_17,Dr. Soobhankar Pati,FAC_MM_07,Ganesh Sponge (P) Ltd,0.3,₹ 0.3 Lakh,2015,2015,2015,IITBBS_SMMME_PROJECTS_2026

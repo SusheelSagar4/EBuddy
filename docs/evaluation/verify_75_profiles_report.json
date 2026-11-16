@@ -1,0 +1,111 @@
+{
+  "generated_at": "2026-11-16 09:14:44 UTC",
+  "profiles": 75,
+  "profiles_all_checks_passed": 75,
+  "failures": 0,
+  "plans_built": 75,
+  "course_items_checked": 2024,
+  "distinct_course_codes_used": 112,
+  "hallucinated_course_codes": 0,
+  "resource_items_checked": 283,
+  "semesters_planned": 326,
+  "per_check": {
+    "C01": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "validator passed"
+    },
+    "C02": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "course codes exist"
+    },
+    "C03": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "resource ids exist"
+    },
+    "C04": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "prerequisites"
+    },
+    "C05": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "no duplicates"
+    },
+    "C06": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "multi-semester"
+    },
+    "C07": {
+      "pass": 6,
+      "fail": 0,
+      "na": 69,
+      "name": "credit cap"
+    },
+    "C08": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "weekly hours cap"
+    },
+    "C09": {
+      "pass": 9,
+      "fail": 0,
+      "na": 66,
+      "name": "baseline warning labelled"
+    },
+    "C10": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "deterministic"
+    },
+    "C11": {
+      "pass": 8,
+      "fail": 0,
+      "na": 67,
+      "name": "backlog first"
+    },
+    "C12": {
+      "pass": 11,
+      "fail": 0,
+      "na": 64,
+      "name": "CGPA cutoffs"
+    },
+    "C13": {
+      "pass": 8,
+      "fail": 0,
+      "na": 67,
+      "name": "interest vs evidence"
+    },
+    "C14": {
+      "pass": 9,
+      "fail": 0,
+      "na": 66,
+      "name": "goal switch"
+    },
+    "C15": {
+      "pass": 14,
+      "fail": 0,
+      "na": 61,
+      "name": "tight caps explained"
+    },
+    "C16": {
+      "pass": 75,
+      "fail": 0,
+      "na": 0,
+      "name": "goal skills covered"
+    }
+  },
+  "failed": []
+}

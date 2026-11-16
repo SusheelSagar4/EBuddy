@@ -1,0 +1,2 @@
+exam_id,paper,topic,subtopics,weightage_by_year_json,resource_ids,source_url,verified
+GATE,ME (Mechanical),Engineering Mathematics,"Linear algebra, calculus, differential equations, probability, numerical methods (verify against 2027 syllabus)","Fill from last 5 papers, e.g. {""2026"": n, ""2025"": n}",R7,https://gate2027.iitm.ac.in/,FALSE

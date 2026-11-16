@@ -22,7 +22,7 @@ def resolve_file(filename):
 
 EXCEL_FILE = resolve_file("AI_ML_Learning_Roadmap_KnowledgeBase-v2.xlsx")
 SHEET_NAME = "AI_ML_Learning_Roadmap"
-OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output"))
+OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output", "curriculum"))
 
 PHASE_ORDER = [
     "0_Foundations",
@@ -473,15 +473,6 @@ def build():
         writer.writeheader()
         writer.writerows(prereq_rows)
 
-    # Also sync to inner EBuddy-main/output if directory exists
-    inner_output_dir = os.path.join("EBuddy-main", "output")
-    if os.path.isdir("EBuddy-main"):
-        os.makedirs(inner_output_dir, exist_ok=True)
-        for fname in ["01_roadmap.csv", "02_phase_resources.csv", "03_prerequisites.csv"]:
-            src = os.path.join(OUTPUT_DIR, fname)
-            dst = os.path.join(inner_output_dir, fname)
-            with open(src, "rb") as sf, open(dst, "wb") as df:
-                df.write(sf.read())
 
     # ----------------------------------------------------
     # Assertions

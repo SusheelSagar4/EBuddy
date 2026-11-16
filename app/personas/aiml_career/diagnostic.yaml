@@ -1,0 +1,9 @@
+blueprint:
+  target_skills:
+  - SKILL_PROBABILITY_STATS
+  - SKILL_PROGRAMMING_DS
+  - SKILL_AI_ML
+  item_counts: 5
+  difficulty_range:
+  - 30.0
+  - 80.0

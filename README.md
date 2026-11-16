@@ -1,256 +1,193 @@
 # Adobe Personalised Learning Buddy (IIT Bhubaneswar)
 
-An AI-powered adaptive academic buddy for undergraduate students at **IIT Bhubaneswar**, covering **B.Tech Electrical Engineering (EE)** and **B.Tech Metallurgical and Materials Engineering (MME / SMMME)**, alongside non-core career pathways in **Software Development Engineering (SDE)**, **AI & Machine Learning (AI/ML)**, and **Data Analytics (DA)**.
+An adaptive academic buddy for IIT Bhubaneswar undergraduates in **B.Tech Electrical Engineering (EE)** and **B.Tech Metallurgical and Materials Engineering (MME)**. It covers the loop **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery** for core, SDE, Data Analyst, AI/ML, higher studies, MBA, UPSC and startup goals.
 
-The system guides students through the complete learning cycle: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**, strictly bounded by institutional academic rules, verifiable prerequisite DAGs, multi-schema PostgreSQL persistence, higher-studies pathways (GATE, CAT, GRE, GMAT, TOEFL, IELTS), and a four-agent collaborative architecture.
+A deterministic engine (Python) decides every course, credit load, schedule and mastery verdict. The LLM, reached only through LiteLLM, explains and converses; it never chooses courses. With no API key the app runs fully in an offline deterministic mode.
+
+Submission overview: [`docs/INTER_IIT_MASTER_SUBMISSION.md`](docs/INTER_IIT_MASTER_SUBMISSION.md). Change history of the latest upgrade: [`docs/CHANGELOG_CLAUDE_RUN.md`](docs/CHANGELOG_CLAUDE_RUN.md).
+
+---
+
+## 1. Quick start
+
+```bash
+docker compose up
+```
+
+| What | Where |
+|---|---|
+| Web app | http://localhost:8000/app/ |
+| API docs | http://localhost:8000/docs |
+| Health | http://localhost:8000/health |
+| Adminer | http://localhost:8080 (system PostgreSQL, server `db`, user `ebuddy_user`, password `ebuddy_password`, database `ebuddy`) |
+| Older server-rendered pages | http://localhost:8000/ |
+
+The first start builds the app image (`linux/amd64`, CPU only, 759 MB when built in the development sandbox), waits for PostgreSQL and seeds it. No `.env` file is required. To use a live model, copy `.env.example` to `.env` and set `LLM_MODEL` and `LLM_API_KEY` (and `LLM_API_BASE` for a custom endpoint).
+
+Reset to the original seed state, either way:
+
+```bash
+make reset
+```
+
+or the **Reset everything to the original seed** button on the Admin screen (`POST /api/admin/reset`).
+
+### Without Docker
+
+```bash
+pip install -r requirements.txt
+```
+```bash
+python scripts/seed_loader.py --reset
+```
+```bash
+python -m uvicorn app.main:app --port 8000
+```
+
+A local PostgreSQL 16 with the user and database from `.env.example` is needed for the second command. Without a database the app still runs from the seed files; plans are then held in memory only.
+
+---
+
+## 2. Web app screens (`web/`, served at `/app/`)
+
+| Screen | What it does |
+|---|---|
+| Profiles & Goals | Pick one of 75 synthetic profiles (filters for branch, year, goal, edge case), switch goal, or onboard a new student |
+| Diagnostic | Adaptive test, one question at a time; starting difficulty comes from assessed evidence, self-ratings carry no weight |
+| Roadmap | Every remaining semester: courses with the reason for each, validator checks, career-track phases, evidence the plan relies on, version history |
+| Learn & Practise | Resource cards for this semester's courses and the current track phase, checkpoints, projects, graded quick checks, unlocked hackathons; milestones and institute pointers for UPSC and startup |
+| Adapt Simulator | One-click presets: strong quiz, weak quiz with remedial prerequisite, course rejection, goal switch. Shows the plan diff and why each change happened |
+| Mastery | Course completion and demonstrated proficiency in two separate ledgers |
+| Buddy Chat | Grounded answers ("why is EE3L004 on my roadmap"), change proposals, deterministic refusal of injection and off-topic prompts |
+| Core to MBA, Core to M.Tech | Dedicated modules from earlier work (section 9) |
+| Admin & Data | Edit profiles, scores, course data and rules with immediate re-processing; reset; re-processing log; link to Adminer |
+
+The UI uses no CDN, web font or external script.
+
+---
+
+## 3. Architecture
 
 ```mermaid
 flowchart LR
-    Student["Student Web UI<br/>(Zero-CDN, Local Assets)"] --> Gateway["FastAPI Server<br/>(:8000)"]
-    Adminer["Adminer DB Viewer<br/>(:8080)"] --> DB[("PostgreSQL 16<br/>(4 Schemas: kb, student, plan, ops)")]
-    
-    subgraph MultiAgentSystem["Four-Agent Collaborative System"]
-        Agent1["Agent 1: Academic Planner<br/>(Single Writer for Roadmap & Proposals)"]
-        Agent2["Agent 2: Learning Material Orchestrator<br/>(KB Resource & Video Retrieval)"]
-        Agent3["Agent 3: Assessment & Diagnostic<br/>(Adaptive CAT Theta Convergence)"]
-        Agent4["Agent 4: Query Explainer<br/>(Grounded RAG & Citations)"]
-    end
-
-    Gateway --> MultiAgentSystem
-    Agent1 <--> DB
-    Agent2 <--> DB
-    Agent3 <--> DB
-    Agent4 <--> DB
-    MultiAgentSystem --> LiteLLM["LiteLLM Wrapper<br/>(Air-Gapped, Local Pricing)"]
-    DB -- "pg_notify('reprocess_channel')" --> Gateway
+    UI["Web app (web/)"] --> API["FastAPI (app/api)"]
+    API --> SVC["Services: plan, adapt, mastery, reprocess, chat"]
+    SVC --> A1["Agent 1: Roadmap Planner (only writer of plan versions)"]
+    SVC --> A2["Agent 2: Learning resources"]
+    SVC --> A3["Agent 3: Assessment"]
+    SVC --> A4["Agent 4: Query / chat"]
+    A1 --> ENG["Deterministic engine: planner, validator, skill state, gaps, mastery, diagnostic"]
+    ENG --> KB["Knowledge base: data/seed + sde/ da/ aiml/ outputs"]
+    A4 --> GR["Guardrails (deterministic)"] --> LLM["LiteLLM gateway (app/llm/client.py)"]
+    SVC <--> DB[("PostgreSQL: kb, student, plan, ops")]
+    ADM["Adminer"] --> DB
+    DB -- "triggers -> ops.reprocess_queue" --> SVC
 ```
+
+- Agents 2, 3 and 4 can only raise change proposals; Agent 1 commits a new roadmap version after the validator passes.
+- `app/engine` and `app/kb` never import `app/llm` or `app/api`; `litellm` is imported only in `app/llm/client.py` (enforced by `tests/unit/test_import_boundaries.py`).
+- Student-stated limits (credit cap, weekly hours, rejected courses) are hard. Institute credit rules in the seed are unsourced baselines and produce labelled warnings.
 
 ---
 
-## 1. Quick Start
+## 4. Configuration
 
-### Run the Complete Stack in 3 Commands
+All settings come from environment variables; see [`.env.example`](.env.example) for the full list with comments.
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `LLM_MODEL` | `fake` | Model string for LiteLLM; `fake` means offline deterministic mode |
+| `LLM_API_KEY` | empty | Provider key |
+| `LLM_API_BASE` | empty | Optional custom endpoint |
+| `EMBEDDING_MODEL` | empty | Embedding model for LiteLLM |
+| `LLM_TIMEOUT_SECONDS`, `LLM_MAX_RETRIES` | 12, 2 | Per-call timeout and retries before the deterministic fallback |
+| `LLM_BREAKER_THRESHOLD`, `LLM_BREAKER_COOLDOWN_SECONDS` | 3, 60 | Circuit breaker |
+| `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST_PORT` | see file | Database container |
+| `DATABASE_URL`, `LOCAL_DATABASE_URL` | see file | Connection strings outside Compose |
+| `EBUDDY_DB_SYNC` | `auto` | `off` keeps everything in memory (tests) |
+| `REPROCESS_POLL_SECONDS` | 2 | Poll interval for direct database edits |
+| `APP_PORT`, `ADMINER_PORT` | 8000, 8080 | Host ports |
+
+---
+
+## 5. Data
+
+| Location | Content |
+|---|---|
+| `data/raw/` | Source material: EE and MME curricula, playlists, research projects, library publications, higher-studies, UPSC and startup tables |
+| `data/seed/kb/` | Knowledge base seeds: 136 courses, 64 prerequisite edges, 319 resources, 60 exercises, 66 skills, 17 goals, 2,312 relevance tags, 38 logged data issues |
+| `data/seed/student/` | 75 synthetic profiles: transcript with grades, goals, declared interests, evidence with reliability tier, constraints |
+| `data/seed/personas/<id>/students.csv` | Per-persona rosters used by the conformance tests |
+| `data/seed/core_to_core`, `mba`, `core_to_mba`, `core_to_mtech` | Feature-module seeds from earlier work |
+| `sde/`, `da/`, `aiml/` | Career tracks: `data/` (source workbooks), `scripts/` (pipelines), `output/{curriculum,events,quiz}/` (generated CSVs read by the app) |
+
+Career tracks as loaded by `app/kb/track_repo.py`:
+
+| Track | Phases | Resources | Events | Assessment material |
+|---|---|---|---|---|
+| SDE | 8 | 105 | 41 | 1,193 unique practice problems (links) |
+| Data Analyst | 5 | 23 | 35 | 47-question bank |
+| AI/ML | 6 | 55 | 62 | none yet |
+
+Regenerate the track CSVs from their workbooks, or the profiles:
 
 ```bash
-# 1. Copy environment template
-cp .env.example .env
-
-# 2. Set your LLM provider key in .env (or leave blank to run in offline deterministic mode)
-# Edit .env: set LLM_API_KEY=your_key_here, LLM_MODEL=openai/gpt-4o-mini
-
-# 3. Start the entire containerized stack (PostgreSQL 16, Adminer, FastAPI Web UI)
-docker compose up --build
+make tracks
+```
+```bash
+make profiles
 ```
 
-On first boot, the application automatically verifies database connectivity, applies migrations/DDL, seeds PostgreSQL if empty with all 2,399+ verified rows, and exposes:
-- **Learning Buddy Web UI:** [http://localhost:8000](http://localhost:8000)
-- **Interactive OpenAPI Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Adminer DB Viewer:** [http://localhost:8080](http://localhost:8080)
-  - *System:* PostgreSQL
-  - *Server:* `db` (or `localhost` if connecting from host)
-  - *Username:* `ebuddy_user`
-  - *Password:* `ebuddy_password`
-  - *Database:* `ebuddy`
+Known data limits are listed in `docs/DATA_GAPS.md` and in section 10 of `docs/CHANGELOG_CLAUDE_RUN.md`.
 
-### Windows Host Automation (`scripts\dev.ps1`)
-On Windows environments without `make`, use the built-in PowerShell control script:
-```powershell
-# Start services
-.\scripts\dev.ps1 up
+---
 
-# Reset database to clean seed state (idempotent, reloads all schemas & seeds)
-.\scripts\dev.ps1 reset
+## 6. Personas and profiles
 
-# Run data quality & DAG audit report (generates docs/data_quality_report.md)
-.\scripts\dev.ps1 check-data
+Nine persona packages in `app/personas/`: `ee_power_core`, `mme_materials_core`, `sde_career`, `da_career`, `aiml_career`, `core_higher_studies`, `core_to_mba`, `btech_upsc`, `student_startup`. Each holds `persona.yaml`, `requirements.yaml`, `mastery.yaml`, `milestones.yaml`, `diagnostic.yaml` and `policy.py`.
 
-# Run full test suite (58 passed tests + 49 subtests)
-.\scripts\dev.ps1 test
+The 75 profiles (41 EE, 34 MME, years 1 to 4) are written by `scripts/generate_75_student_profiles.py` and include tagged edge cases: active backlog (8), CGPA on the minor cutoff (7), CGPA on the 8.50 overload cutoff (4), interest versus evidence clash (8), mid-degree goal switch (9), tight weekly hours (8), tight credit cap (6). All profiles are synthetic.
 
-# View service health and status
-.\scripts\dev.ps1 status
+---
+
+## 7. Re-processing and reset
+
+- An edit through the Admin screen or API re-runs skill state, gaps, planner and validator at once and returns the new version with its diff and reason.
+- An edit made directly in the database (Adminer) fires a trigger into `ops.reprocess_queue`; a background worker picks it up within about 2 seconds and re-plans the affected students that are loaded.
+- `make reset` or the Admin button restore the seed.
+
+---
+
+## 8. Tests and verification
+
+```bash
+python -m pytest tests -q
+```
+```bash
+python scripts/verify_all_75_profiles.py
+```
+```bash
+python scripts/run_conformance.py
+```
+```bash
+python scripts/check_data.py
+```
+```bash
+python scripts/check_placeholders.py
+```
+```bash
+python scripts/evaluate_scorecard.py
 ```
 
----
-
-## 2. Web UI Pages & Capabilities
-
-The user interface is an air-gapped, zero-CDN web shell (vanilla HTML5, CSS3, ES6 JavaScript) served directly by FastAPI with zero external network requests:
-
-| Page Route | Title | Core Features |
-|---|---|---|
-| **`/`** | **Home / Profile Selector** | Switch between synthetic persona profiles (`CONF_STU_EE_POWER_01`, `CONF_STU_MME_PROCESS_01`, etc.), displaying branch, semester, CGPA, and completed courses with synthetic data disclaimers. |
-| **`/goals`** | **Goal Selection** | Browse available institutional goals filtered by branch plus cross-branch pathways (Power Systems, VLSI, SDE & Data, Core Metallurgy, UPSC Prep, etc.) with skill requirement badges. |
-| **`/roadmap`** | **Academic Roadmap** | Visual semester roadmap highlighting fixed institutional core courses, ranked electives (skill-overlap driven), minor pathways, and unachievable student overload proposals. Traceable KB codes and provenance tags. |
-| **`/diagnostic`** | **Adaptive Diagnostic** | Real-time Computerized Adaptive Testing (CAT) based on 1PL Item Response Theory. Questions dynamically selected based on student ability estimate ($\theta$), stopping on convergence spread ($\le 4.0$) or question cap. Shuffled answer options. |
-| **`/chat`** | **Academic Tutor Chat** | Grounded question answering and course advice. Queries route deterministically or via LLM with strict KB citations. Course recommendations outside the student's branch produce non-blocking warnings. |
-| **`/approvals`** | **Change Proposals** | Review student-driven and system-generated roadmap changes (overload credits, schedule changes, elective swaps). Formal Accept / Reject workflow preserving audit ledger. |
-| **`/admin`** | **System Admin & DB Viewer** | System health status, database connection metrics, live row counts across all 4 schemas, and safe read-only preview of knowledge base tables with offline CSV fallbacks. |
+Last recorded results are in section 7 of `docs/CHANGELOG_CLAUDE_RUN.md` and in `docs/evaluation/verify_75_profiles_report.md`. `scripts/ci.sh` chains the boundary tests, the suite, conformance, the data check and two source scans.
 
 ---
 
-## 3. Four-Agent Architecture & Single-Writer Rule
+## 9. Feature modules documented before the latest upgrade
 
-The core logic is orchestrated by four specialized agents operating under strict dependency boundaries:
+The three sections below were written for earlier work on the Core to Core, Core to MBA and Core to M.Tech modules. Their code was not changed in the latest upgrade apart from shared engine and seed-loader fixes, and the figures in them were **not re-verified**. In particular, rows described as "verified" in these seeds have no confirmable verifier (see the changelog).
 
-```mermaid
-flowchart TD
-    User([Student / System Request]) --> Router{Task Classifier}
-    
-    Router -->|Roadmap / Schedule / Overload| A1[Agent 1: Academic Planner]
-    Router -->|Learning Resources / Practice| A2[Agent 2: Learning Material Orchestrator]
-    Router -->|Diagnostic Test / Evaluation| A3[Agent 3: Assessment & Diagnostic]
-    Router -->|Academic Query / Explanation| A4[Agent 4: Query Explainer]
-    
-    A1 -->|Single Writer| PlanDB[(plan.plan & plan.change_proposal)]
-    A2 -->|Read-Only Retrieval| ResDB[(kb.resource & kb.exercise)]
-    A3 -->|CAT Theta Convergence| TestDB[(kb.exercise & student.skill_evidence)]
-    A4 -->|Deterministic / LLM Grounded| Repos[(KB Repositories)]
-    
-    A2 -.->|Propose Resource/Task| A1
-    A3 -.->|Report Weak Skills| A1
-    A4 -.->|Propose Elective Change| A1
-```
-
-1. **Agent 1: Academic Planner (`app/agents/agent_1_planner.py`)**
-   - **Exclusive Single-Writer Authority:** Agent 1 is the sole agent permitted to create, mutate, or version records in `plan.plan` and `plan.change_proposal`.
-   - **Hard Student Constraints vs. Warning Baselines:** Student constraints (credit cap, weekly hours, headroom, avoid-course, not-together) are **hard** boundaries and never breached. Unsourced institutional baselines emit labelled non-blocking warnings.
-   - **Deterministic DAG Scheduling:** Topological sort resolves prerequisite dependencies before dependent semesters.
-2. **Agent 2: Learning Material Orchestrator (`app/agents/agent_2_learning.py`)**
-   - Retrieves curated NPTEL, SWAYAM, and YouTube resources from `kb.resource` and practice items from `kb.exercise`.
-   - Cannot directly edit the student plan; issues structured `ChangeProposal` records to Agent 1.
-3. **Agent 3: Assessment & Diagnostic (`app/agents/agent_3_assessment.py`)**
-   - Implements Computerized Adaptive Testing (CAT) with continuous ability updates ($\theta$).
-   - Dynamically selects exercises at current ability, stopping when $n \ge 5$ and the range of the last 3 thetas $\le 4.0$, or $n \ge 8$.
-   - Shuffles options at serve-time; scores deterministically against verified keys.
-4. **Agent 4: Query Explainer (`app/agents/agent_4_query.py`)**
-   - Answers student curriculum questions using grounded retrieval from KB repositories.
-   - Never calls LiteLLM directly; delegates to `app/llm/client.py` with full call logging in `ops.llm_call_log`.
-
----
-
-## 4. Models & Air-Gapped LLM Gateway
-
-- **Primary LLM:** `openai/gpt-4o-mini` (Configured default in `.env.example`; supports `gemini/gemini-1.5-flash`, `azure/<deployment>`, or `ollama/<model>` purely via environment variables).
-- **LiteLLM Gateway:** All model interactions route exclusively through `app/llm/client.py`. No agent or engine imports `litellm` directly, enforcing strict architectural layering.
-- **Strict Air-Gap & Cost Isolation:**
-  - `LITELLM_LOCAL_MODEL_COST_MAP=True`: Prohibits runtime fetching of remote cost maps from GitHub.
-  - `LITELLM_TELEMETRY=False`: Disables all outbound usage reporting.
-- **Deterministic Independence:** All prerequisite resolution, academic rule validation, credit limits, CAT item selection, and DAG scheduling execute in deterministic Python with zero model dependencies.
-
----
-
-## 5. Configuration Reference
-
-All application settings are read dynamically from environment variables without code modification:
-
-| Variable | Default Value | Purpose |
-|---|---|---|
-| `LLM_MODEL` | `openai/gpt-4o-mini` | Model string passed directly to LiteLLM wrapper. |
-| `LLM_API_KEY` | *(empty in example)* | API credential for configured provider. |
-| `LLM_API_BASE` | *(empty)* | Optional custom endpoint (Ollama, Azure, LiteLLM proxy). |
-| `EMBEDDING_MODEL` | `text-embedding-3-small` | Model for vector representations if active. |
-| `LITELLM_LOCAL_MODEL_COST_MAP` | `True` | Forces LiteLLM to use local pricing tables (no GitHub fetch). |
-| `LITELLM_TELEMETRY` | `False` | Completely disables third-party usage reporting. |
-| `DATABASE_URL` | `postgresql+psycopg://...` | Connection URI with connection pooling and timeouts. |
-| `APP_PORT` | `8000` | Exposed FastAPI application port. |
-| `ADMINER_PORT` | `8080` | Exposed Adminer database viewer port. |
-
----
-
-## 6. Academic Institutional Data & Raw Sources
-
-The project ingests and structures official institutional data for IIT Bhubaneswar across two engineering schools, the Central Library, and higher-studies pathways:
-
-### Canonical Raw Data Structure (`data/raw/`)
-
-| Directory | Branch / Domain | Contents & Source Files | Structured Ingest Outputs |
-|---|---|---|---|
-| **`data/raw/ee/`** | **Electrical Engineering (EE)** | • `curriculum_semester_table.csv`<br/>• `curriculum_syllabus_only.csv`<br/>• `curriculum_notes_discrepancies.csv`<br/>• `video_playlists.csv` (90 courses)<br/>• `research_projects_v2.csv` (68 projects with PI)<br/>• `research_projects_all.csv` (138 projects) | • 87 courses (85 semester + 2 syllabus-only)<br/>• 13 requirement slots<br/>• 64 resolved prerequisite edges<br/>• 163 video resource URLs<br/>• 138 research projects<br/>• 35 faculty & group entities |
-| **`data/raw/mme/`** | **Metallurgical & Materials Engg (MME / SMMME)** | • `curriculum_semester_table.csv`<br/>• `curriculum_notes_discrepancies.csv`<br/>• `video_playlists.csv` (45 courses)<br/>• `faculty_profiles.csv` (16 faculty)<br/>• `research_projects_sponsored.csv` (45 projects)<br/>• `research_projects_consultancy.csv` (17 projects)<br/>• `research_projects_seed.csv` (13 projects) | • 49 net new courses (136 total across both)<br/>• 12 net new slots (25 total)<br/>• 84 net new slot options (186 total)<br/>• 85 video resource URLs (248 total)<br/>• 75 research projects (213 total)<br/>• 16 verified faculty profiles (51 total) |
-| **`data/raw/library/`** | **Central Library Publications** | • `publications.csv` (3,000 research publications)<br/>• `publications_electrical.csv` (765 EE papers)<br/>• `publications_metallurgy.csv` (176 MME papers)<br/>• `publications_summary.csv` | • Structured catalog converted from HTML/Excel records with author, department, and citation indexing. |
-| **`data/raw/higher_studies/`** | **Higher Studies Database** | • 22 CSV tables covering GATE, CAT, GRE, GMAT, TOEFL, IELTS (`admission_stats.csv`, `exam_cycles.csv`, `exams.csv`, `institutions.csv`, `milestones.csv`, `paths.csv`, `prep_methods.csv`, `prep_templates.csv`, `programmes.csv`, `resources.csv`, `study_plans.csv`, `survey_responses.csv`, `syllabus_topics.csv`, `template_phases.csv`, `template_check.csv`, etc.) | • Relational schema for institutional admission trends, target percentiles, syllabus topic mapping, and multi-phase prep milestones. |
-
-### Course Video Playlists & Learning Resources
-Curated video learning resources from NPTEL, YouTube, and SWAYAM have been ingested, mapped to curriculum courses, and validated with zero fabricated links:
-
-| Programme | Catalog Courses Mapped | Total URLs in `kb.resource` | Course Links in `kb.resource_course` | Coverage Status Breakdown |
-|---|---|---|---|---|
-| **Electrical Engineering (EE)** | 90 courses | **163 URLs** | 160 links (81 distinct courses) | • Playlist found: 73 URLs<br/>• Partial / related: 40 URLs<br/>• Not confirmed: 33 URLs<br/>• Lab theory: 17 URLs |
-| **Metallurgical Engg (MME)** | 45 courses | **85 URLs** | 71 links (46 distinct courses) | • Playlist found: 16 URLs<br/>• Partial / related: 24 URLs<br/>• Not confirmed: 33 URLs<br/>• Lab theory: 12 URLs |
-| **Combined in Database** | **135 courses** | **252 URLs** | **231 links** (127 distinct courses) | **All marked `link_verified = false`** |
-
-*Data Hygiene Rules Enforced:*
-1. **Link Verification Safety:** Every resource has `link_verified = false` until verified by live network health checks.
-2. **No False Coverage:** Playlists with `"Not confirmed"` status are cataloged for review but **never** claimed as confirmed coverage.
-3. **No Fabricated Data:** Courses designated `"No video applicable"` (e.g. seminars, internships) generate 0 dummy links.
-4. **Multi-Role Mapping:** Primary, Backup 1, Backup 2, and Lab Theory links are explicitly tagged.
-
----
-
-## 7. Knowledge Base Data Topology & Storage Map
-
-The database architecture is partitioned into four explicit schemas: `kb` (Knowledge Base), `student` (Profiles & Ledger), `plan` (Deterministic Plans & Proposals), and `ops` (Reprocessing & LLM Audit Logs).
-
-| Schema & Table | Seed File Path | Rows (DB) | Role & Provenance Status |
-|---|---|---|---|
-| `kb.source` | `data/seed/kb/source.csv` | 14 | Audit citations, institutional sources, and `AI_DRAFT` provenance tag. |
-| `kb.department` | `data/seed/kb/department.csv` | 6 | Academic schools (SECS, SMMME, SMS, SIF, SBS, SHSSM). |
-| `kb.programme` | `data/seed/kb/programme.csv` | 2 | Degree programs (`BTECH_EE`, `BTECH_MME`). |
-| `kb.course` | `data/seed/kb/course.csv` | 136 | Unified course catalog (87 EE, 49 MME, 4 shared). Audited against raw tables. |
-| `kb.course_alias` | `data/seed/kb/course_alias.csv` | 158 | Prerequisite name-to-code resolution dictionary. |
-| `kb.course_prerequisite` | `data/seed/kb/course_prerequisite.csv` | 64 | Deterministic DAG prerequisite edges (EE verified). |
-| `kb.course_offering` | `data/seed/kb/course_offering.csv` | 185 | Track-aware semester offerings (Track A vs. Track B). |
-| `kb.programme_requirement` | `data/seed/kb/programme_requirement.csv` | 141 | Degree requirement slots derived directly from raw semester tables. |
-| `kb.slot_option` | `data/seed/kb/slot_option.csv` | 186 | Courses fulfilling elective/lateral slots (102 EE + 84 MME). |
-| `kb.resource` | `data/seed/kb/resource.csv` | 252 | Video, textbook, and public reference learning resources. |
-| `kb.resource_course` | `data/seed/kb/resource_course.csv` | 231 | Course-to-resource mapping with role designations. |
-| `kb.resource_skill` | `data/seed/kb/resource_skill.csv` | 5 | Resource-to-skill coverage for skills lacking institute courses (e.g., DB/SQL, OS). |
-| `kb.minor_course` | `data/seed/kb/minor_course.csv` | 5 | Dynamic minor course options for CSE and AI minors (`draft_for_review`). |
-| `kb.exercise` | `data/seed/kb/exercise.csv` | 61 | Calibrated practice items with difficulties, topics, and shuffled options. |
-| `kb.skill` | `data/seed/kb/skill.csv` | 37 | Reconciled skill taxonomy (`SKILL_*`), mapped to courses and resources. |
-| `kb.course_skill` | `data/seed/kb/course_skill.csv` | 80 | Validated course-to-skill mappings with PK `(course_code, skill_id)`. |
-| `kb.goal` | `data/seed/kb/goal.csv` | 11 | Career, higher studies, and research pathways. |
-| `kb.goal_skill_requirement` | `data/seed/kb/goal_skill_requirement.csv` | 41 | Required skill proficiency thresholds per goal. |
-| `kb.relevance_tags` | `data/seed/kb/relevance_tags.csv` | 1,496 | Skill-first elective relevance matrix (`AI_DRAFT`, `draft_for_review`). |
-| `kb.faculty` | `data/seed/kb/faculty.csv` | 51 | Faculty entities (44 individual persons, 7 groups). |
-| `kb.research_project` | `data/seed/kb/research_project.csv` | 213 | Institute projects (138 EE + 75 MME: sponsored/consultancy/seed). |
-| `kb.project_faculty` | `data/seed/kb/project_faculty.csv` | 149 | PI and Co-PI project affiliations. |
-| `kb.project_keyword` | `data/seed/kb/project_keyword.csv` | 240 | Searchable keywords linked to research projects. |
-| `student.student` | `data/seed/personas/*/students.csv` | 8 | Synthetic student profiles with distinct academic standings and constraints. |
-| `plan.plan` | *(generated)* | — | Student study plans with versioning and validation reports. |
-| `plan.change_proposal` | *(generated)* | — | Human-in-the-loop proposals for elective swaps and overload requests. |
-| `ops.llm_call_log` | *(generated)* | — | Complete audit trail of prompt, context, token usage, and latency. |
-| `ops.reprocess_queue` | *(trigger populated)* | — | Reactive event queue driven by PostgreSQL triggers. |
-
----
-
-## 8. System Reset & Reactive Re-processing
-
-### Idempotent Database Reset
-To drop and reseed the database to a verified state:
-- **Windows (PowerShell):**
-  ```powershell
-  .\scripts\dev.ps1 reset
-  ```
-- **Linux / macOS:**
-  ```bash
-  make reset
-  ```
-*Both scripts run `scripts/seed_loader.py --reset`, executing `docker/init.sql` and loading all 2,399+ seed rows in strict foreign-key dependency order. Running reset twice yields 100% identical row counts.*
-
-### Reactive Re-processing Triggers
-Native PostgreSQL triggers on editable tables publish change events into `ops.reprocess_queue` and dispatch `pg_notify('reprocess_channel', ...)` notifications:
-```sql
-CREATE TRIGGER trg_reprocess_kb_course
-AFTER INSERT OR UPDATE OR DELETE ON kb.course
-FOR EACH ROW EXECUTE FUNCTION ops.notify_reprocess_event();
-```
-A background listener consumes these events, re-evaluates impacted student skill states, re-runs the DAG planner and deterministic validator, and records plan diffs with `trigger = 'admin_edit'`.
-
----
-
-## 8. Core to Core Engineering Roadmap & Research Track
+### A. Core to Core engineering and research track
 
 The **Core to Core** feature serves students who want to grow inside their own core engineering branch (**Electrical Engineering** or **Metallurgical and Materials Engineering**). It follows the Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
 
@@ -271,7 +208,7 @@ flowchart TD
     Gate -- "Goal: Core Industry" --> Industry["7-9. Core Industry Milestones<br/>(GATE Phases, Simulation Tools, PSUs)"]
 ```
 
-### A. Non-Negotiable Rules & Hard Constraints
+#### A. Non-Negotiable Rules & Hard Constraints
 - **Zero Rigid Timetables:** The buddy **NEVER** generates day-by-day or hour-by-hour timetables. It outputs weekly focus goals, an hours budget, suggested activities, and study approaches. The student decides when to execute.
 - **Never Contact on Student's Behalf:** Draft emails, CV bullets, and interview questions are generated for the student to review, personalize, and send themselves. The buddy never communicates with faculty.
 - **Air-Gapped LiteLLM Gateway:** All LLM completions and embeddings route through LiteLLM reading `LLM_MODEL`, `LLM_API_KEY`, `LLM_API_BASE`, and `EMBEDDING_MODEL` from environment variables. Local cost map is locked (`True`) and telemetry is disabled (`False`). Tested model: `openai/gpt-4o-mini`.
@@ -280,7 +217,7 @@ flowchart TD
 - **Data Quality & No SAMPLE- Mix:** All 44 faculty and 120 publications are verified IIT Bhubaneswar institutional records. Seed files contain zero unverified rows, and mixing `SAMPLE-` rows with verified data is strictly prohibited.
 - **CGPA Protection Guarantee:** Core-course academic support always takes precedence over extra research or skill work during midsem/endsem exam weeks (calendar factor 0.4 / 0.2) or whenever course proficiency falls below 75%.
 
-### B. LLM vs. Deterministic Split
+#### B. LLM vs. Deterministic Split
 
 | Component | Deterministic Core (Python / SQL) | LiteLLM Model (`gpt-4o-mini` @ Temp 0.0) |
 |---|---|---|
@@ -292,7 +229,7 @@ flowchart TD
 | **Paper Reader** | Retrieves chunk IDs, page citations, and open-access flags. | Explains difficult technical terms and provides section glossaries. |
 | **Pacing & Adaptation** | Enforces 10-day follow-up logic and midsem budget reduction. | Synthesizes weekly reflection into encouraging feedback. |
 
-### C. Core to Core Data Storage Map (`data/seed/core_to_core/`)
+#### C. Core to Core Data Storage Map (`data/seed/core_to_core/`)
 
 | Table Name | Seed File Path | Verified Rows | Description & Key Schema Fields |
 |---|---|---|---|
@@ -308,7 +245,7 @@ flowchart TD
 | `kb.taster_task` | `data/seed/core_to_core/taster_tasks.csv` | 8 | Research exploratory tasks (abstract synthesis, problem solving, short write-ups) with rubrics. |
 | `kb.industry_milestone` | `data/seed/core_to_core/industry_milestones.csv` | 12 | Core industry pathway: GATE syllabus phases, simulation tools (MATLAB, ANSYS), clubs, PSUs. |
 
-### D. Simulation Endpoints (`/api/sim`)
+#### D. Simulation Endpoints (`/api/sim`)
 The system provides documented simulation hooks to test adaptive behaviors in real-time:
 - **Scenario A (`POST /api/sim/{student_id}/scenario/midsem-stress`):** Simulates low quiz performance during midsem exam week. The buddy dynamically triggers CGPA protection, shrinks weekly hours by calendar factor 0.4, and shifts 70-80% of study budget to core-course recovery.
 - **Scenario B (`POST /api/sim/{student_id}/scenario/professor-no-reply`):** Simulates approaching a faculty member with 11 days elapsed without reply. The buddy automatically recommends a polite follow-up template and offers the next top-ranked faculty match.
@@ -316,111 +253,11 @@ The system provides documented simulation hooks to test adaptive behaviors in re
 
 ---
 
-## 9. Non-Core Career Pathways & Domain Packages (SDE, AI/ML & DA)
-
-The repository integrates three specialized, non-core career transformation packages equipping core engineering undergraduates (EE and MME) to transition into high-growth software and data domains:
-
-```mermaid
-flowchart TD
-    CoreLearner(["IIT BBS Core Student (EE / MME)"]) --> Tracks{Non-Core Domain Track}
-    
-    Tracks -->|SDE Pathway| SDE["Software Development Engineer (sde/)"]
-    Tracks -->|AI/ML Pathway| AIML["AI & Machine Learning (aiml/)"]
-    Tracks -->|Data Analyst Pathway| DA["Data Analytics (data_analyst/)"]
-    
-    SDE --> SDE_Out["Curriculum (35 Steps) • Tiers A/B/C (105 Rows)<br/>Checkpoints (35) • GitHub Repos (35) • Portfolios (8)<br/>Events & Hackathons (41) • LeetCode Problem Bank (1,193)"]
-    AIML --> AIML_Out["Roadmap (6 Phases, 1,624 hrs) • Curated Resources (55)<br/>CBSE Math Prereqs (16 Chapters)<br/>Top IIT Fests (7) • Hackathons (25) • Competitions (30)"]
-    DA --> DA_Out["5 Phases (20 Skills, 314 hrs) • Modules (44)<br/>Portfolio Projects (3) • Rubric Items (12)<br/>Hackathons & Contests (35) • Verified Quiz Bank (47)"]
-```
-
-### A. Software Development Engineer Package (`sde/`)
-
-1. **Curriculum & Tiered Content (`sde/scripts/build_sde_csvs.py`):**
-   - **8-Phase Roadmap (`01_sde_roadmap_overview.csv`):** `1_Programming_Foundations` through `8_Interview_Prep`.
-   - **Tiered Learning Pedagogy (`02_phase_learning_content.csv`):** 35 steps × 3 tiers (105 total rows).
-     - **Tier A (Introductory):** Recommended primary watch playlist.
-     - **Tier B (Conceptual Deep Dive):** Mathematical / architectural foundations.
-     - **Tier C (Hands-on Practice):** Applied coding problems and implementations.
-   - **Proof-of-Learning Checkpoints (`03_topic_checkpoints.csv`):** Actionable criteria for every step.
-   - **High-Impact GitHub Repositories (`04_project_repos.csv`):** 35 curated repositories (13 marked `HIGH` priority, e.g. `codecrafters-io/build-your-own-x`, `donnemartin/system-design-primer`).
-   - **Flagship Portfolio Projects (`05_portfolio_projects.csv`):** 8 structured projects with target phases.
-
-2. **SDE Competitions & Hackathons (`sde/scripts/build_sde_events_csvs.py`):**
-   - **Master Event Catalog (`01_events_master.csv`):** 41 curated events (2 Tech Fests, 26 Hackathons, 13 Programming Competitions, e.g., ICPC India Regionals, TCS CodeVita, Microsoft Imagine Cup).
-   - **Stage Eligibility Gating (`02_phase_eligibility.csv`):** Fests unlocked at `NONE_YET`; hackathons and contests unlock at `P1_Programming_and_Dev_Basics`.
-   - **Recommendation Rules (`03_recommendation_rules.csv`):** 14 machine-readable rules governing diversity quotas (max 2 per organizer), registration filters, and hiring preferences (`YES` > `POSSIBLE` > `EXPOSURE_ONLY`).
-
-3. **SDE Diagnostic Assessment Bank (`sde/scripts/build_sde_quiz_csvs.py`):**
-   - **Raw Extraction (`01_problem_bank_raw.csv`):** 1,519 LeetCode DSA problems across Easy (259), Medium (684), and Hard (576) workbooks with 100% hyperlink resolution.
-   - **Conflict Resolution & Deduplication (`02_problems_unique.csv`):** 1,193 unique problems. Cleanly isolates 320 cross-file difficulty conflicts as `AMBIGUOUS` (safe for topic practice), preserving 873 calibrated problems for difficulty-based scoring.
-   - **15 Canonical Topics (`03_topics_roadmap_map.csv`):** Mapped to SDE steps 4–26 with automated quiz readiness verdicts: 9 `READY`, 4 `LIMITED`, 2 `INSUFFICIENT`.
-
----
-
-### B. AI & Machine Learning Package (`aiml/`)
-
-1. **Curriculum & Knowledge Base Pipeline (`aiml/scripts/build_csvs.py`):**
-   - **6-Phase Roadmap (`01_roadmap.csv`):** `0_Foundations`, `1_Classical_ML`, `2_Deep_Learning`, `3_Projects`, `4_Specialization`, `5_Research` (1,624 total estimated hours).
-   - **Curated Resources (`02_phase_resources.csv`):** 55 high-quality resources spanning Stanford CS229, Fast.ai, DeepLearning.AI, Karpathy’s Zero-to-Hero, and Hugging Face.
-   - **CBSE/NCERT High School Math Expansion (`03_prerequisites.csv`):** Maps foundational requirements into 16 structured CBSE Class 11–12 chapters (calculus, linear algebra, vector algebra, coordinate geometry, probability).
-
-2. **Events & Hackathons Pipeline (`aiml/scripts/build_events_csvs.py`):**
-   - **Master Event Catalog (`01_events_master.csv`):** 62 events (7 Top IIT Tech Fests: Mood Indigo, Techfest, Shaastra, Kshitij, Techkriti, Wissenaire; 25 Hackathons; 30 Leaderboard Competitions: Kaggle, DrivenData, Zindi).
-   - **Stage-Wise Unlocking (`02_phase_eligibility.csv`):** Exposure fests available to novices; hackathons/competitions unlock upon completing `1_Classical_ML`.
-   - **Domain Mapping (`04_domain_to_phase_map.csv`):** Closed-vocabulary technical classification across 16 canonical domains.
-
----
-
-### C. Data Analyst Package (`data_analyst/` / alias `da/`)
-
-1. **Curriculum & Projects Pipeline (`data_analyst/scripts/build_da_csvs.py`):**
-   - **5 Canonical Phases (`01_da_roadmap_overview.csv`):** `DA-PH1` (Foundations) through `DA-PH5` (Storytelling, Portfolio, Interviews).
-   - **Curriculum Modules & Resources (`02_phase_modules_resources.csv`):** 44 modules across 20 skills with 78 module-resource join rows. Total curriculum duration: 314 hours.
-   - **20-Skill Catalog (`03_skills_catalog.csv`):** Tools, SQL, Python, Business, Visualization, Statistics with verified prerequisite DAGs.
-   - **Portfolio Projects & Rubrics (`05_projects.csv`, `06_project_rubric_items.csv`):** 3 real-world portfolio projects (UCI Online Retail, NYC TLC Trip Data, World Bank Open Data) with 12 structured rubric criteria.
-   - **Flexible Pacing Profiles (`07_pacing_templates.csv`):** 12 months (6 hrs/wk), 6 months (12 hrs/wk), and 3 months (24 hrs/wk).
-
-2. **Data Analyst Events & Hackathons (`data_analyst/scripts/build_da_events_csvs.py`):**
-   - **Curated Indian Event Catalog (`01_events_master.csv`):** 35 events (12 Hackathons, 23 Competitions).
-   - **Home Campus Boost:** Rule `R07` gives recommendation preference to IIT Bhubaneswar events (Wissenaire, TechZephyr).
-   - **Diversity Quota:** Rule `R11` caps recommendations from any single host at 2.
-
-3. **Data Analyst Assessment Engine (`data_analyst/scripts/build_da_quiz_csvs.py`):**
-   - **Master Question Bank (`01_question_bank.csv`):** 47 questions (32 MCQs, 10 Numeric, 5 SQL).
-   - **Source Position Bias Mitigation:** In the raw source, 81.25% of correct MCQ answers were option `b`. Rule `G02` enforces dynamic option shuffling and grades strictly by option text.
-   - **Deterministic Grading:** Numeric tolerance ($\le \max(0.01, 1\%)$) and in-memory SQL result-set diffing.
-   - **17 Checkpoints (`05_quiz_checkpoints.csv`):** 12 cluster checks, 4 phase-end barrier tests, and 1 final cumulative quiz.
-
----
-
-### Executing the Domain Pipelines
-
-All pipelines include intelligent path resolution and can be run from the repository root:
-
-```bash
-# 1. AI/ML Transformation Pipelines
-python build_csvs.py
-python build_events_csvs.py
-
-# 2. SDE Transformation Pipelines
-python build_sde_csvs.py
-python build_sde_events_csvs.py
-python build_sde_quiz_csvs.py
-
-# 3. Data Analyst Transformation Pipelines
-python build_da_csvs.py
-python build_da_events_csvs.py
-python build_da_quiz_csvs.py
-```
-*Pipelines can also be run directly within their package directories (`python sde/scripts/build_sde_csvs.py`, etc.).*
-
----
-
-## 10. Core to MBA Pathway (Feature Documentation)
+### B. Core to MBA pathway
 
 The **Core to MBA** feature guides core engineering students (**B.Tech EE & B.Tech MM**) who are considering management careers. It builds around their engineering foundations and follows the Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
 
-### A. Key Architectural Modules
+#### A. Key Architectural Modules
 1. **Decision View (`app/engine/mba_decision.py`):** Neutral side-by-side comparative timelines and requirements for 5 routes: Stay Core Research, Stay Core Industry, Core Higher Studies (GATE), MBA Now (CAT Fresher), and MBA After 2-3 Years Core Work Experience.
 2. **Career Map (`app/engine/mba_career_map.py`):** Verified management pathways leveraging engineering skills (EE: power and energy management, semiconductor product management; MM: metals supply chain, materials sourcing, green steel consulting). Zero unverified salary or placement claims.
 3. **Adaptive Diagnostic & Profile Audit (`app/engine/mba_diagnostic.py`, `app/engine/mba_profile_audit.py`):** Short adaptive test across QA, DILR, VARC (max 15 items) and 6-criterion profile audit against 4-level descriptive benchmarks.
@@ -431,15 +268,15 @@ The **Core to MBA** feature guides core engineering students (**B.Tech EE & B.Te
 8. **Interview Prep (`app/engine/mba_interview.py`):** Technical viva on branch fundamentals (circuits, power, metallurgy, heat treatment), general PI, and WAT essays evaluated on official rubrics.
 9. **Re-Plan & Core Pivot (`app/engine/mba_replan.py`):** Post-result alternatives when below target, and seamless lateral switch-back to Core Engineering (Industry or Research) preserving 100% of diagnostic evidence with version diffs.
 
-### B. Seed Data Locations
+#### B. Seed Data Locations
 - General MBA Tables (17 CSVs): `/data/seed/mba/mba_*.csv`
 - Core to MBA Specialized Tables (7 CSVs): `/data/seed/core_to_mba/*.csv`
 
-### C. Deterministic Split & Tested Models
+#### C. Deterministic Split & Tested Models
 - **Deterministic Split:** All hours budgets, IRT skill estimations, rubric benchmarks, percentile bands, shortlist tiers, clashes, and version diffs are computed by 100% deterministic Python/SQL engines.
 - **Tested Models:** Tuned and validated on `openai/gpt-4o-mini` (default), fully compatible with `gemini/gemini-1.5-flash`, `azure/...`, or local `ollama/...` via LiteLLM.
 
-### D. Verification & Scorecard
+#### D. Verification & Scorecard
 - **Comprehensive Test Suite:** `tests/test_core_to_mba.py` (15/15 tests passing).
 - **Evaluation Scorecard:** `scripts/evaluate_mba_scorecard.py` evaluated across 32 synthetic student profiles (16 EE, 16 MM) with 100% pass rates across all verification gates. Report available at `docs/core_to_mba_scorecard.md`.
 
@@ -447,7 +284,7 @@ The **Core to MBA** feature guides core engineering students (**B.Tech EE & B.Te
 
 ---
 
-## 11. Core to M.Tech Higher Studies Pathway (Feature Documentation)
+### C. Core to M.Tech higher studies pathway
 
 The **Core to M.Tech** feature serves core-branch undergraduate students (**Electrical Engineering** and **Metallurgical & Materials Engineering**) at IIT Bhubaneswar who intend to pursue advanced academic degrees or PSU technical careers in India. It implements the complete Adobe PS learning loop: **Assess → Personalise → Learn → Practise → Adapt → Demonstrate Mastery**.
 
@@ -469,7 +306,7 @@ flowchart TD
     Interview --> Replan["9. Post-Result Re-Planning<br/>(Actual Score Re-Tiering, Realistic Alternatives, Pivot Diff)"]
 ```
 
-### A. Non-Negotiable Hard Constraints & PS Compliance
+#### A. Non-Negotiable Hard Constraints & PS Compliance
 - **Zero Rigid Timetables:** The buddy **NEVER** outputs hourly schedules or calendar slot bookings. It computes weekly focus goals, recommended activities, and an hours budget scaled by academic calendar phases. The student retains autonomous execution control.
 - **Strictly Grounded Deterministic Core:** All decisions regarding GATE exam year eligibility, paper combinations, syllabus topic priority ($Priority = Weightage \times (1 - Mastery) \times PrerequisiteFactor$), template phase durations, score band estimation, Reach/Target/Safe tiering, and application deadlines are executed in deterministic Python and SQL. LiteLLM is utilized solely for conversational delivery, side-question synthesis, and non-ghostwriting feedback.
 - **Air-Gapped Operation & Zero Outbound Calls:** Zero runtime scraping, zero Google Scholar / GATE portal HTTP calls, and zero external web fonts/scripts. All syllabus topics, exam dates, cut-offs, and PYQ items are loaded from local CSV seed files.
@@ -477,7 +314,7 @@ flowchart TD
 - **Data Integrity & Traceability Protocol:** Every fact row stored in `data/seed/core_to_mtech/` carries `source_url, source_type, retrieved_on, cycle, verified, verified_by`. Any row marked `verified=TRUE` without a human verifier name and official source is rejected at startup. Currently, all generated seed rows are explicitly flagged with `verified=FALSE` and prefixed `SAMPLE-`.
 - **CGPA Protection Priority:** When academic stress rises (midsem/endsem exam weeks with calendar factors 0.4 / 0.2, or active backlogs > 0), the buddy curtails pure GATE preparation and reallocates study hours to semester courses, emphasizing "double-benefit" subjects that serve both semester grades and GATE syllabus coverage.
 
-### B. LLM vs. Deterministic Split
+#### B. LLM vs. Deterministic Split
 
 | Component | Deterministic Core (Python / SQL) | LiteLLM Model (`gpt-4o-mini` @ Temp 0.0) |
 |---|---|---|
@@ -489,7 +326,7 @@ flowchart TD
 | **Interview & SOP Prep** | Evaluates technical mock responses against 4-point rubrics; checks SOPs for evidence-grounded formatting. | Conducts simulated viva voce and provides non-ghostwriting structural critique. |
 | **Post-Result Re-Planning** | Identifies below-target results; computes viable alternatives (MS(R), retake, core industry); generates plan diffs. | Provides realistic counseling and empathetic guidance. |
 
-### C. Seed Data Storage Map (`data/seed/core_to_mtech/`)
+#### C. Seed Data Storage Map (`data/seed/core_to_mtech/`)
 
 The feature introduces 17 relational seed tables fully restored by `scripts/seed_loader.py --reset`:
 
@@ -520,7 +357,7 @@ Student State Tables (`docker/init.sql`):
 - `student.interview_session`: Simulated viva records with rubric evaluations across conceptual and problem-solving metrics.
 - `student.gate_result`: Official scorecard recording triggering post-result re-planning and plan diff generation.
 
-### D. Data Traceability & Mandatory Human Verification List
+#### D. Data Traceability & Mandatory Human Verification List
 Before final submission to the Adobe evaluation panel, the team must replace sample records with verified data in compliance with §3 and §17:
 1. **GATE 2027 Official Notification & Syllabus:** Verify IIT Madras organising institute URLs, application deadlines, and topic descriptions for EE and MT papers.
 2. **Institute Admission Cut-Offs:** Update `kb.admission_stat` with official COAP/CCMT closing rounds from institutional websites.
@@ -528,7 +365,7 @@ Before final submission to the Adobe evaluation panel, the team must replace sam
 4. **Human Verifier Sign-off:** For each confirmed row, set `verified = TRUE`, record the student researcher's name in `verified_by`, and ensure `source_type = 'official'`.
 5. **Data Quality Report:** Ingestion integrity and missing field audits are tracked in [docs/core_to_mtech_data_quality_report.md](file:///c:/Users/panda/OneDrive/Desktop/EBuddy_main/docs/core_to_mtech_data_quality_report.md).
 
-### E. Simulation & Verification Endpoints (`/api/sim`)
+#### E. Simulation & Verification Endpoints (`/api/sim`)
 Four dedicated endpoints allow instant end-to-end testing of dynamic adaptation behaviors:
 - **`POST /api/sim/{student_id}/scenario/strong-vs-weak-mock`:** Evaluates score band estimation and tiering adjustments under rising vs. falling mock score trends.
 - **`POST /api/sim/{student_id}/scenario/placement-clash`:** Simulates campus placement drive collision with peak mock season, surfacing options with explicit trade-offs.
@@ -539,160 +376,28 @@ Four dedicated endpoints allow instant end-to-end testing of dynamic adaptation 
 
 ---
 
-## 12. Testing & Quality Assurance
-
-The repository includes a comprehensive 6-stage CI verification pipeline and rigorous test suites:
-
-```bash
-# 1. Run the complete automated test suite (58 tests, 49 subtests)
-python -m pytest tests -q
-
-# 2. Run Core-to-MBA and Core-to-Core verification suites
-python -m pytest tests/test_core_to_mba.py -q
-python -m pytest tests/test_core_to_core.py -q
-
-# 3. Run the Evaluation Scorecard across 32 synthetic profiles
-python scripts/evaluate_mba_scorecard.py
-python scripts/evaluate_scorecard.py
-
-# 4. Run the full CI pipeline (Windows PowerShell)
-.\scripts\ci.ps1
-
-# 4b. Run the full CI pipeline (Linux / macOS Bash)
-./scripts/ci.sh
-
-# 5. Run the live Web UI smoke test against running container
-powershell -ExecutionPolicy Bypass -File .\scripts\ui_smoke.ps1
-```
-
-### CI Pipeline Verification Stages (`scripts/ci.ps1`):
-1. **Import Boundary Validation:** Asserts that `litellm` is never imported inside `app/agents/` or `app/engine/`. All LLM calls pass through `app/llm/client.py`.
-2. **Automated Test Suites:** Runs all unit, integration, and UI endpoint tests (58 passed in < 9s).
-3. **Persona Conformance Matrix:** Evaluates 7 synthetic student profiles against 9 academic invariants (100% GREEN).
-4. **Knowledge-Base Integrity Audit:** Audits course codes, prerequisite DAGs, and provenance labels.
-5. **Secret & Model Name Scan:** Ensures no API keys or hard-coded vendor model names are committed.
-6. **Zero-Outbound Air-Gap Scan:** Scans templates, static assets, and backend code to guarantee zero external CDNs, fonts, or network requests.
-
 ---
 
-## 12. Compliance Checklist
-
-| Rule # | Requirement | Implementation & Verification |
-|---|---|---|
-| **Rule 1** | LiteLLM Only via Client | Gateway in `app/llm/client.py`; verified by `test_import_boundaries.py`. |
-| **Rule 2** | Configuration by Env Vars Only | `app/config.py` uses Pydantic BaseSettings; verified by secret & model scans. |
-| **Rule 3** | `.env.example` Committed | Default tuned to `openai/gpt-4o-mini`; verified by automated tests. |
-| **Rule 4** | Single-command Start, < 5 GB, linux/amd64 | `docker compose up --build` starts `app`, `db`, and `adminer` seamlessly. |
-| **Rule 5** | No Secrets in Image | `.env` ignored in `.gitignore` and `.dockerignore`. |
-| **Rule 6** | Plain CSV/JSON Seeds & Idempotent Reset | `scripts/seed_loader.py --reset` loads 2,399+ rows idempotently in topological order. |
-| **Rule 7** | Data Control & Reactive Re-processing | Native PG triggers on editable tables fire `pg_notify` to `ops.reprocess_queue`. |
-| **Rule 8** | Zero Outbound Network Traffic | Zero CDNs, zero Google Fonts, local static assets; verified by `test_no_external_references.py`. |
-| **Rule 9** | Data Ethics & Provenance | Synthetic profiles tagged `is_synthetic = true`. AI-drafted content tagged `source_id = AI_DRAFT`, `status = draft_for_review`. |
-| **Rule 10** | Never Fabricate Academic Data | Raw data strictly derived from `data/raw/`. Mismatches marked `unsourced`. |
-| **Rule 11** | Valid KB Course Codes | Verified by deterministic foreign keys and topological DAG resolution. |
-| **Rule 12** | Deterministic Plan Validator | Student constraints are strictly hard-blocked; unsourced baselines emit non-blocking warnings. |
-
----
-
-## 14. Project Directory Layout
+## 10. Repository layout
 
 ```
-.
-├── app/
-│   ├── agents/                           # Four-agent collaborative system
-│   │   ├── agent_1_planner.py            # Exclusive writer for roadmaps & proposals
-│   │   ├── agent_2_learning.py           # Resource & practice orchestrator
-│   │   ├── agent_3_assessment.py         # Adaptive CAT diagnostic assessor
-│   │   └── agent_4_query.py              # Grounded curriculum query explainer
-│   ├── api/                              # REST API endpoints
-│   │   ├── admin.py                      # Admin & schema endpoints (Core, MBA, MTech)
-│   │   ├── health.py                     # Health & database probe
-│   │   ├── mba.py                        # Core to MBA API routes
-│   │   ├── simulator.py                  # Simulation endpoints (/api/sim)
-│   │   ├── student.py                    # Student profile, onboarding, and core/MBA routes
-│   │   └── ui_routes.py                  # Web UI JSON APIs (roadmap, chat, diagnostic, admin)
-│   ├── contracts/                        # Strict Pydantic contracts & schemas
-│   │   ├── core_to_core.py               # Core engineering research/industry contracts
-│   │   ├── core_to_mba.py                # Core to MBA pathway contracts
-│   │   ├── core_to_mtech.py              # Core to M.Tech higher studies contracts
-│   │   └── plan.py                       # Plan & PlanItem contracts
-│   ├── engine/                           # Deterministic algorithmic core
-│   │   ├── planner.py                    # Topological prerequisite DAG planner
-│   │   ├── diagnostic.py                 # 1PL IRT adaptive testing engine
-│   │   ├── faculty_matcher.py            # Core research faculty ranker (44 faculty)
-│   │   ├── budget.py                     # Study budget & CGPA protection
-│   │   ├── eligibility.py                # GATE eligibility, paper mapping, and rule checking
-│   │   ├── gate_diagnostic.py            # IRT adaptive diagnostic & Bayesian mastery
-│   │   ├── gate_planner.py               # Syllabus priority scoring & template pacing
-│   │   ├── gate_readiness_shortlist.py   # Calibrated score band & Reach/Target/Safe tiering
-│   │   ├── gate_conflicts_and_tracker.py # Placement/exam clashes & counselling trackers
-│   │   ├── gate_interview_and_replan.py  # Viva rubrics, SOP review, and post-result replanning
-│   │   ├── mba_planner.py                # MBA preparation planner
-│   │   ├── mba_diagnostic.py             # MBA CAT adaptive diagnostic engine
-│   │   ├── mba_interview.py              # Technical & HR interview evaluation
-│   │   ├── mba_profile_audit.py          # Profile audit & scorecard evaluation
-│   │   ├── relevance.py                  # Skill-first elective relevance scorer
-│   │   └── validator.py                  # Hard vs warning constraint validator
-│   ├── kb/                               # Repositories (repositories.py, core_to_mtech_repo.py, core_to_mba_repo.py)
-│   ├── llm/client.py                     # Air-gapped LiteLLM client with ops logging
-│   ├── static/                           # Air-gapped static assets (CSS, JS; zero CDNs)
-│   ├── templates/                        # Jinja2 HTML templates for all 7 UI pages
-│   └── main.py                           # FastAPI application entrypoint
-├── data/
-│   ├── raw/                              # Canonical institutional data sources
-│   └── seed/                             # Structured relational seed data
-│       ├── core_to_core/                 # Faculty, publications, taster tasks, calendar
-│       ├── core_to_mba/                  # Career paths, interview topics, decision options
-│       ├── core_to_mtech/                # 17 air-gapped seed files (exams, topics, programmes, cut-offs, PSUs)
-│       ├── higher_studies/               # 14 relational tables for higher studies pathways
-│       ├── kb/                           # Courses, skills, goals, resources, exercises
-│       ├── mba/                          # 17 general MBA seed CSVs (CAT, institutes, syllabi)
-│       ├── personas/                     # Synthetic test personas
-│       └── student/                      # Student profiles, completed courses, and goals
-├── sde/                                  # Software Development Engineer (SDE) domain package
-├── aiml/                                 # AI & Machine Learning (AI/ML) domain package
-├── data_analyst/                         # Data Analyst (DA) domain package
-├── docker/
-│   ├── Dockerfile                        # Multi-stage slim Docker image (linux/amd64)
-│   ├── entrypoint.sh                     # Container initialization & seed loader check
-│   └── init.sql                          # DDL creating schemas kb, student, plan, ops + triggers
-├── docs/
-│   ├── core_to_core_scorecard.md         # Core-to-core evaluation results
-│   ├── core_to_mba_architecture.md       # Core-to-MBA architecture overview
-│   ├── core_to_mba_scorecard.md          # 32-profile MBA evaluation scorecard
-│   ├── core_to_mtech_architecture.md     # Full architectural summary of Core to M.Tech
-│   ├── core_to_mtech_data_quality_report.md # Automated data integrity report for M.Tech seeds
-│   ├── core_to_mtech_scorecard.md        # Evaluation scorecard across 32 synthetic profiles
-│   ├── technical/                        # Architecture, contracts, and schema documentation
-│   ├── UI.md                             # Web UI design & airgap compliance documentation
-│   └── CHANGELOG.md                      # Detailed changelog across all phases
-├── scripts/
-│   ├── ci.ps1 / ci.sh                    # Automated 6-stage CI verification runner
-│   ├── dev.ps1                           # Windows automation (up, down, reset, test, check-data)
-│   ├── evaluate_mba_scorecard.py         # MBA evaluation scorecard evaluator
-│   ├── evaluate_scorecard.py             # Core-to-core & M.Tech scorecard evaluator
-│   ├── generate_core_to_mtech_seeds.py   # Air-gapped generator for 17 Core to M.Tech CSVs
-│   ├── seed_loader.py                    # Multi-schema database seed loader and reset engine
-│   └── ui_smoke.ps1                      # Live Web UI smoke test script
-├── tests/
-│   ├── api/test_ui_endpoints.py          # UI REST endpoint & HTML page rendering tests
-│   ├── conformance/                      # Persona conformance test suite
-│   ├── integration/                      # Multi-agent & curriculum integration tests
-│   ├── unit/                             # Agent features, import boundary, & zero-external checks
-│   ├── test_core_to_core.py              # Core-to-Core verification tests (15 tests)
-│   ├── test_core_to_mba.py               # Core-to-MBA verification tests (15 tests)
-│   ├── test_core_to_mtech.py             # Core to M.Tech unit & integration test suite (16 tests)
-│   ├── test_evaluation_scorecard.py      # Core-to-core scorecard test
-│   ├── test_mba_evaluation_scorecard.py  # MBA scorecard test
-│   ├── test_mtech_evaluation_scorecard.py# M.Tech evaluation scorecard automated test (5 tests)
-│   ├── test_db_free.py                   # Offline compliance & syntax unit tests
-│   └── test_db_dependent.py              # PostgreSQL integration tests
-├── web/                                  # Zero-CDN fast frontend UI
-│   ├── index.html                        # Single-page application entrypoint
-│   └── src/
-│       ├── app.js                        # Client-side router (#home, #chat, #c2c, #mba, #mtech)
-│       └── screens/                      # Screens (chat.js, c2c.js, mba.js, mtech.js, admin.js)
-├── .env.example                          # Committed environment variable template
-├── docker-compose.yml                    # Multi-container orchestration (app, db, adminer)
-└── requirements.txt                      # Project Python dependencies
+app/
+  api/         FastAPI routers (buddy.py = web app API, simulator.py, admin.py, student.py, ui_routes.py, mba.py)
+  agents/      the four agents
+  contracts/   Pydantic contracts (version 1.4.0)
+  db/          session and best-effort persistence
+  engine/      deterministic core: planner, validator, skill_state, gaps, mastery, diagnostic, rules, relevance
+  kb/          read-only repositories, including track_repo.py
+  llm/         LiteLLM gateway, guardrails, prompts, tasks
+  personas/    nine persona packages
+  services/    plan, adapt, mastery, reprocess, onboarding, diagnostic, chat, orchestrator
+  templates/, static/   older server-rendered pages
+web/           web app (vanilla JS modules, no build step)
+data/raw/      source material
+data/seed/     seeds loaded by scripts/seed_loader.py
+sde/ da/ aiml/ career-track workbooks, pipelines and generated CSVs
+docker/        Dockerfile, entrypoint.sh, wait_for_db.py, init.sql
+scripts/       seed loader, generators, verifiers, ingestion
+tests/         unit, integration, conformance, API and upgrade tests
+docs/          submission document, changelogs, evaluation reports, decisions
 ```

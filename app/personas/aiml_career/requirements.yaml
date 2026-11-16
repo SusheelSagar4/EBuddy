@@ -1,0 +1,15 @@
+- skill_id: SKILL_AI_ML
+  required_level: 80.0
+  importance: 1.0
+- skill_id: SKILL_PROBABILITY_STATS
+  required_level: 75.0
+  importance: 0.9
+- skill_id: SKILL_ENGINEERING_MATH
+  required_level: 70.0
+  importance: 0.8
+- skill_id: SKILL_PROGRAMMING_DS
+  required_level: 70.0
+  importance: 0.8
+- skill_id: SKILL_DEEP_LEARNING
+  required_level: 70.0
+  importance: 0.8

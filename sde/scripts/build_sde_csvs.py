@@ -23,7 +23,7 @@ def resolve_file(filename):
 
 FILE_A = resolve_file("SDE_Prep_Roadmap_with_Playlists.xlsx")
 FILE_B = resolve_file("Top_SDE_Project_GitHub_Repos.xlsx")
-OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output"))
+OUTPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output", "curriculum"))
 
 # ----------------------------------------------------
 # 1. Fixed Phase Mapping (Steps 1 to 35)

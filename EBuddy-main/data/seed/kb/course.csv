@@ -1,0 +1,137 @@
+course_id,course_code,display_code,code_conflict,title,department_id,credits,ltp,mode,level,syllabus_text,learning_objectives,in_semester_table,source_id,is_placeholder
+CE1P001,CE1P001,CE1P001,false,Engineering Drawing and Graphics,COMMON,3.0,1-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+CS1L001,CS1L001,CS1L001,false,Introduction to Programing and Data Structures,CS,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+CS1P001,CS1P001,CS1P001,false,Introduction to Programing and Data Structures Laboratory,CS,4.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+CS4L003,CS4L003,CS4L003,false,Artificial Intelligence,CS,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+CS6L001,CS6L001,CS6L001,false,Computational Intelligence,CS,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+CY1L001,CY1L001,CY1L001,false,Chemistry,COMMON,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+CY1P001,CY1P001,CY1P001,false,Chemistry Laboratory,COMMON,4.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC2L001,EC2L001,EC2L001,false,Introduction to Electronics,EC,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC2L002,EC2L002,EC2L002,false,Signals and Systems,EC,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC2L005,EC2L005,EC2L005,false,Basic Electronics,EC,4.0,3-1-0,offline,UG,,,true,IITBBS_EE_CURRICULUM_2016_17,False
+EC2L006,EC2L006,EC2L006,false,Digital Electronics and Microprocessor,EC,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC2P001,EC2P001,EC2P001,false,Introduction to Electronics Laboratory,EC,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC2P002,EC2P002,EC2P002,false,Signals and Systems Laboratory,EC,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC2P006,EC2P006,EC2P006,false,Digital Electronics and Microprocessor Laboratory,EC,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC3L003,EC3L003,EC3L003,false,Digital Signal Processing,EC,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC3P002,EC3P002,EC3P002,false,Digital Signal Processing Laboratory,EC,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC4L001,EC4L001,EC4L001,false,Semiconductor Devices,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC4L002,EC4L002,EC4L002,false,Opto-Electronics,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC4L003,EC4L003,EC4L003,false,VLSI Design,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L002,EC6L002,EC6L002,false,Image and Video Processing,EC,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L004,EC6L004,EC6L004,false,Advanced Digital Signal Processing,EC,3.0,3-0-0,offline,UG,,,False,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L005,EC6L005,EC6L005,false,Statistical Signal Processing,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L012,EC6L012,EC6L012,false,Optical Communication,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L015,EC6L015,EC6L015,false,Biomedical Signal Processing,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L016,EC6L016,EC6L016,false,Computational Electromagnetics,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L017,EC6L017,EC6L017,false,Semiconductor Device Modelling,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L019,EC6L019,EC6L019,false,Fiber Optic Sensors,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L023,EC6L023,EC6L023,false,Adaptive Signal Processing,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L024,EC6L024,EC6L024,false,Array Signal Processing,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L027,EC6L027,EC6L027,false,Pattern Recognition,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L030,EC6L030,EC6L030,false,Embedded Systems,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EC6L031,EC6L031,EC6L031,false,Computer Vision,EC,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE1L001,EE1L001,EE1L001,false,Electrical Technology,EE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE1P001,EE1P001,EE1P001,false,Electrical Technology Laboratory,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE2L001,EE2L001,EE2L001,false,Network Theory,EE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE2L002,EE2L002,EE2L002,false,"Transducers, Sensors and Measurement",EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE2L003,EE2L003,EE2L003,false,Electric Machines,EE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE2L004,EE2L004,EE2L004,false,Introduction to Electromagnetic Engineering,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE2P003,EE2P003,EE2P003,false,Electric Machines Laboratory,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE2S001,EE2S001,EE2S001,false,Seminar,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L003,EE3L003,EE3L003,false,Control Systems,EE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L004,EE3L004,EE3L004,false,Power Electronics,EE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L005,EE3L005,EE3L005,false,Control System Technology,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L006,EE3L006,EE3L006,false,Signals and Circuits,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L007,EE3L007,EE3L007,false,Electrical Power Transmission and Distribution,EE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L008,EE3L008,EE3L008,false,Soft Computing and Applications,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L009,EE3L009,EE3L009,false,Utilization of Electric Power,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L010,EE3L010,EE3L010,false,Measurement and Instrumentation,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L011,EE3L011,EE3L011,false,Electromagnetic Field Theory,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3L012,EE3L012,EE3L012,false,Power System Operation and Control,EE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3P002,EE3P002,EE3P002,false,Control Systems Laboratory,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3P004,EE3P004,EE3P004,false,Power Electronics Laboratory,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3P005,EE3P005,EE3P005,false,Measurement and Instrumentation Laboratory,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE3P006,EE3P006,EE3P006,false,Power Systems Laboratory,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4D001,EE4D001,EE4D001,false,Project – Part 1,EE,4.0,0-0-6,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4D002,EE4D002,EE4D002,false,Project – Part 2,EE,6.0,0-0-9,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4L003,EE4L003,EE4L003,false,Electric Drives,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4L004,EE4L004,EE4L004,false,Advanced Electric Machines,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4L005,EE4L005,EE4L005,false,Digital Control Systems,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4L006,EE4L006,EE4L006,false,Renewable Energy Systems,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4P002,EE4P002,EE4P002,false,Renewable Energy Systems Laboratory,EE,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE4T001,EE4T001,EE4T001,false,Industrial Training Defence,EE,2.0,(not given),offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L002,EE6L002,EE6L002,false,Electric Power Quality,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L004,EE6L004,EE6L004,false,Power System Protection,EE,4.0,4-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L005,EE6L005,EE6L005,false,HVDC and Flexible AC Transmission Systems,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L007,EE6L007,EE6L007,false,Industrial Instrumentation,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L009,EE6L009,EE6L009,false,High Voltage Engineering,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L010,EE6L010,EE6L010,false,Advanced Power Electronics,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L011,EE6L011,EE6L011,false,Energy Storage Systems,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L014,EE6L014,EE6L014,false,Smart Grid Technology,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L015,EE6L015,EE6L015,false,Advanced High Voltage Engineering,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L017,EE6L017,EE6L017,false,Distribution System Engineering,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+EE6L018,EE6L018,EE6L018,false,Power System Planning,EE,3.0,3-0-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+HS1L001,HS1L001,HS1L001,false,English for Communications,COMMON,4.0,3-0-2,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+HS1L002,HS1L002,HS1L002,false,Learning English,COMMON,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+ID1T001,ID1T001,ID1T001,false,Extra Academic Activity – 1,INSTITUTE,1.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+ID1T002,ID1T002,ID1T002,false,Extra Academic Activity – 2,INSTITUTE,1.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+ID2L001,ID2L001,ID2L001,false,Introduction to Material Science and Engineering,INSTITUTE,2.0,2-0-0,offline,UG,,,true,IITBBS_EE_CURRICULUM_2016_17,False
+ID2L002,ID2L002,ID2L002,false,Introduction to Bio Science and Technology,INSTITUTE,2.0,2-0-0,offline,UG,,,true,IITBBS_EE_CURRICULUM_2016_17,False
+ID2L003,ID2L003,ID2L003,false,"Environmental Science, Technology and Management",INSTITUTE,2.0,2-0-0,offline,UG,,,true,IITBBS_EE_CURRICULUM_2016_17,False
+MA1L001,MA1L001,MA1L001,false,Mathematics – 1,INSTITUTE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+MA1L002,MA1L002,MA1L002,false,Mathematics – 2,INSTITUTE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+MA2L003,MA2L003,MA2L003,false,Probability Statistics and Stochastic Processes,INSTITUTE,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+ME1L001,ME1L001,ME1L001,false,Mechanics,COMMON,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+ME1P001,ME1P001,ME1P001,false,Introduction to Manufacturing Processes,COMMON,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+PH1L001,PH1L001,PH1L001,false,Physics,COMMON,4.0,3-1-0,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+PH1P001,PH1P001,PH1P001,false,Physics Laboratory,COMMON,2.0,0-0-3,offline,UG,,,True,IITBBS_EE_CURRICULUM_2016_17,False
+MA2L007,MA2L007,MA2L007,false,Numerical Methods,BS,4.0,3-1-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2L002,ML2L002,ML2L002,false,Thermodynamics of Materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+EC2P005,EC2P005,EC2P005,false,Basic Electronics Laboratory,EC,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2P001,ML2P001,ML2P001,false,Introduction to Materials Laboratory,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2S001,ML2S001,ML2S001,false,Seminar,MM,2.0,0-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2L003,ML2L003,ML2L003,false,Materials Processing,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2L004,ML2L004,ML2L004,false,Transport Phenomena and Kinetics of Metallurgical Processes,MM,4.0,3-1-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2L005,ML2L005,ML2L005,false,Physical Metallurgy,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2P002,ML2P002,ML2P002,false,Materials Processing Laboratory,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2P003,ML2P003,ML2P003,false,Physical Metallurgy Laboratory,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2P004,ML2P004,ML2P004,false,Thermodynamics of Materials Laboratory,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML2L006,ML2L006,ML2L006,false,Advances in nanoscience and nanotechnology,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L011,ML3L011,ML3L011,false,Recent advances in composite materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L012,ML3L012,ML3L012,false,Mineral processing plant design,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L001,ML3L001,ML3L001,false,Mineral processing,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L002,ML3L002,ML3L002,false,Corrosion and surface engineering,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L003,ML3L003,ML3L003,false,Mechanical properties and testing of materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L004,ML3L004,ML3L004,false,Phase transformation of materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L005,ML3L005,ML3L005,false,Chemical metallurgy,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3P001,ML3P001,ML3P001,false,Mechanical testing & working laboratory,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L006,ML3L006,ML3L006,false,Materials characterization,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L007,ML3L007,ML3L007,false,Iron and Steel making,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L008,ML3L008,ML3L008,false,Deformation and mechanical working of materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3L009,ML3L009,ML3L009,false,Introduction to simulation and modeling in materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3P002,ML3P002,ML3P002,false,Materials characterization laboratory – I,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML3P003,ML3P003,ML3P003,false,Simulation and modeling laboratory,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L001_CORE,ML4L001,ML4L001,true,Light metals and alloys,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L002_CORE,ML4L002,ML4L002,true,Elements of electroceramics,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L003_CORE,ML4L003,ML4L003,true,Polymers and nanocomposites,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4P001,ML4P001,ML4P001,false,Materials characterization laboratory – II,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4P002,ML4P002,ML4P002,false,Process control and instrumentation laboratory,MM,2.0,0-0-3,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4T001,ML4T001,ML4T001,false,Industrial training defense,MM,2.0,0-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4D001,ML4D001,ML4D001,false,Project – I,MM,4.0,0-0-6,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L001_ELEC,ML4L001,ML4L001,true,Joining of metals and alloys,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L002_ELEC,ML4L002,ML4L002,true,Solidification of metals and alloys,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L003_ELEC,ML4L003,ML4L003,true,Electrochemical methods in metallurgy,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L004,ML4L004,ML4L004,false,Powder metallurgy,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L005,ML4L005,ML4L005,false,Materials design and selection,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L006,ML4L006,ML4L006,false,Energy materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L007,ML4L007,ML4L007,false,Crystallography and x-ray diffraction,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L008,ML4L008,ML4L008,false,Micro Electro Mechanical Systems,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L009,ML4L009,ML4L009,false,Physics of materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L010,ML4L010,ML4L010,false,Science and technology of composite materials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L011,ML4L011,ML4L011,false,Biomaterials,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L012,ML4L012,ML4L012,false,Materials in archaeology,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L013,ML4L013,ML4L013,false,Mineral process plant design,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L014,ML4L014,ML4L014,false,"Fuels, furnaces and refractories",MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4L015,ML4L015,ML4L015,false,Materials recycling and sustainability,MM,3.0,3-0-0,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false
+ML4D002,ML4D002,ML4D002,false,Project – II,MM,6.0,0-0-9,offline,UG,,,true,IITBBS_MME_CURRICULUM_2016_17,false

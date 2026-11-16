@@ -95,9 +95,7 @@ def resolve_file(filename):
         os.path.join(script_dir, "data", filename),
         os.path.join(os.getcwd(), filename),
         os.path.join(os.getcwd(), "data", filename),
-        os.path.join(os.getcwd(), "data_analyst", "data", filename),
         os.path.join(os.getcwd(), "da", "data", filename),
-        os.path.join(os.path.dirname(script_dir), "data_analyst", "data", filename),
         os.path.join(os.path.dirname(script_dir), "da", "data", filename),
     ]
     for c in candidates:
@@ -897,36 +895,8 @@ def build():
     # 5. Writing Output CSV Files (BOM utf-8-sig)
     # ----------------------------------------------------
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    candidate_dirs = []
-    if os.path.basename(script_dir) == "scripts":
-        pkg_root = os.path.dirname(script_dir)
-        repo_root = os.path.dirname(pkg_root)
-        candidate_dirs.extend([
-            os.path.join(pkg_root, "output"),
-            os.path.join(repo_root, "output"),
-            os.path.join(repo_root, "da", "output"),
-            os.path.join(repo_root, "data_analyst", "output"),
-        ])
-    else:
-        candidate_dirs.extend([
-            os.path.join(script_dir, "output"),
-            os.path.join(script_dir, "da", "output"),
-            os.path.join(script_dir, "data_analyst", "output"),
-        ])
-
-    candidate_dirs.extend([
-        os.path.join(os.getcwd(), "output"),
-        os.path.join(os.getcwd(), "da", "output"),
-        os.path.join(os.getcwd(), "data_analyst", "output"),
-    ])
-
-    unique_out_dirs = []
-    for d in candidate_dirs:
-        norm_d = os.path.abspath(d)
-        if "scripts" in os.path.basename(norm_d) or norm_d.endswith(os.path.join("scripts", "output")):
-            continue
-        if norm_d not in unique_out_dirs:
-            unique_out_dirs.append(norm_d)
+    # Single canonical destination: da/output/events/
+    unique_out_dirs = [os.path.join(os.path.dirname(script_dir), "output", "events")]
 
     for out_d in unique_out_dirs:
         os.makedirs(out_d, exist_ok=True)
@@ -934,11 +904,8 @@ def build():
         # Primary file names
         datasets = [
             ("01_events_master.csv", file1_rows),
-            ("01_da_events_master.csv", file1_rows),
             ("02_phase_eligibility.csv", file2_rows),
-            ("02_da_phase_eligibility.csv", file2_rows),
             ("03_recommendation_rules.csv", file3_rows),
-            ("03_da_recommendation_rules.csv", file3_rows),
         ]
         
         for fname, rows in datasets:
