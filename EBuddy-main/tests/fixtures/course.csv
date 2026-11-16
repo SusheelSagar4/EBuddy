@@ -1,5 +1,0 @@
-course_id,course_code,display_code,code_conflict,title,department_id,credits,ltp,mode,level,status,source_id
-TEST_EE101,EE1L001,EE1L001,false,Basic Electrical Engineering,DEPT_EE,4.0,3-1-0,offline,UG,verified,TEST_FIXTURE
-TEST_EE201,EE2L001,EE2L001,false,Electric Circuit Theory,DEPT_EE,4.0,3-1-0,offline,UG,verified,TEST_FIXTURE
-TEST_EE301,EE3L001,EE3L001,false,Electrical Machines I,DEPT_EE,4.0,3-1-0,offline,UG,verified,TEST_FIXTURE
-

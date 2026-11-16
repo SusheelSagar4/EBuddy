@@ -1,4 +1,0 @@
-prereq_id,course_id,prereq_course_id,prereq_type,condition_type,source_id
-TEST_PR_1,TEST_EE201,TEST_EE101,hard,ANY,TEST_FIXTURE
-TEST_PR_2,TEST_EE301,TEST_EE201,hard,ANY,TEST_FIXTURE
-

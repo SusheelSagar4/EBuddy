@@ -1,4 +1,0 @@
-goal_id,skill_id,required_level,importance,source_id
-TEST_GOAL_POWER,TEST_SKILL_ALPHA,80.0,1.0,TEST_FIXTURE
-TEST_GOAL_POWER,TEST_SKILL_BETA,75.0,0.9,TEST_FIXTURE
-

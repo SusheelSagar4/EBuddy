@@ -1,7 +1,0 @@
-criteria_id: "MASTERY_POWER"
-goal_id: "GOAL_EE_CORE_POWER"
-criteria:
-  min_skill_level: 75.0
-  required_project_milestones: 1
-  required_timed_assessments: 2
-  min_diagnostic_score: 70.0

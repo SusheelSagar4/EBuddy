@@ -1,4 +1,0 @@
-skill_id,name,domain,description,level_scale,status,source_id
-TEST_SKILL_ALPHA,Circuit Network Analysis,Electrical Theory,Solving RLC networks,0-100,verified,TEST_FIXTURE
-TEST_SKILL_BETA,Rotational Machines,Energy Conversion,Principles of transformers and induction machines,0-100,verified,TEST_FIXTURE
-

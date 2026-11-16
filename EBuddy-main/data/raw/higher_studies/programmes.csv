@@ -1,2 +1,0 @@
-id,institution_id,degree,specialisation,exams_accepted,min_cgpa,branches_eligible,duration_months,fees,funding,application_deadline,research_areas,official_url,retrieved_on,verified
-EX1,IITBBS,M.Tech,Thermal Science and Engineering (example),GATE ME,(from brochure),"ME, related branches (from brochure)",24,(from brochure),Institute assistantship (from brochure),(from brochure),(from department page),(add),,FALSE

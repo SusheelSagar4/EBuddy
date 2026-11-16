@@ -1,2 +1,0 @@
-id,branch,year,cgpa,backlogs,weekly_hours,target_paths,constraints_json
-S-EX1,Mechanical,3,7.9,0,8,"P1,P4","{""no_coaching"": true, ""placements_too"": true}"

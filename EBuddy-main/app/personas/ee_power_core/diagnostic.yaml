@@ -1,7 +1,0 @@
-blueprint:
-  target_skills:
-    - "SKILL_CIRCUIT_ANALYSIS"
-    - "SKILL_ELECTRIC_MACHINES"
-    - "SKILL_POWER_ELECTRONICS"
-  item_counts: 5
-  difficulty_range: [40.0, 80.0]
