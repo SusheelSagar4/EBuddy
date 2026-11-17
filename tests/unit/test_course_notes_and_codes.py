@@ -102,6 +102,9 @@ def test_chat_describes_both_courses_behind_a_code():
     text = chat_service.handle_side_question(BOTH_IN_ONE_SEMESTER, "What is ML4L001?", {"plan_version": 1})
     assert "Light metals and alloys" in text and "Joining of metals and alloys" in text
     assert text.count(CODE_CLASH_WARNING) == 2
+    # each course block keeps its citation line
+    assert text.count("**Citation:**") == 2
+    assert "ML4L001 Light metals and alloys" in text and "ML4L001 Joining of metals and alloys" in text
 
 
 def test_why_is_this_course_on_my_roadmap_finds_clashing_codes():

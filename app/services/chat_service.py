@@ -158,7 +158,8 @@ class ChatService:
                 cinfo = self.course_repo._courses[cid]
                 lines = [f"**Course Information ({cinfo.display_code} - {cinfo.title}):**",
                          f"- **Credits:** {cinfo.credits} | **L-T-P:** {cinfo.ltp or 'not recorded'}",
-                         f"- **Level:** {cinfo.level} | **Mode:** {cinfo.mode.capitalize()}"]
+                         f"- **Level:** {cinfo.level} | **Mode:** {cinfo.mode.capitalize()}",
+                         f"- **Citation:** {cinfo.student_citation()}"]
                 lines += [f"- **Note:** {n['text']}" for n in course_notes.notes_for(cid)]
                 blocks.append("\n".join(lines))
             return ("\n\n".join(blocks) +
